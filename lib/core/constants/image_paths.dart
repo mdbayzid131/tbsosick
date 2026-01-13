@@ -1,5 +1,7 @@
 class ImagePaths {
   ///<=====================Icons ===============>
+  static String deleteIcon="assets/icons/delete.svg";
+
 
 
 
@@ -10,5 +12,13 @@ class ImagePaths {
   static String appLOgo="assets/logos/appLogo.png";
   static String googleIcon="assets/icons/googleIcon.svg";
   static String appleIcon="assets/icons/apple_icon.svg";
+  static String chosePlanIcon="assets/icons/chose_plan_icon.svg";
+  static String homeIcon="assets/icons/home icon.svg";
+  static String calenderIcon="assets/icons/calender.svg";
+  static String libraryIcon="assets/icons/library.svg";
+
+
+
+
 
 }

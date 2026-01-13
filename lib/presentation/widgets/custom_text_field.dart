@@ -17,6 +17,8 @@ class CustomTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final VoidCallback? onTap;
   final List<TextInputFormatter>? inputFormatters;
+  final Color? fillColior;
+
 
 
   const CustomTextField({
@@ -32,7 +34,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     this.readOnly = false,
     this.keyboardType = TextInputType.text,
-    this.onTap, this.inputFormatters,
+    this.onTap, this.inputFormatters, this.fillColior,
   });
 
   @override
@@ -88,7 +90,7 @@ class CustomTextField extends StatelessWidget {
             suffixIcon: suffixIcon,
 
             filled: true,
-            fillColor: const Color(0xffF2F2F7),
+            fillColor: fillColior ?? Color(0xffF2F2F7),
 
             /// ====== BORDER STATES ======
             border: OutlineInputBorder(

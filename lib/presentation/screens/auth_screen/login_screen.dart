@@ -4,9 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/core/constants/app_color.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom1.dart';
 
 import '../../../../routes/routes.dart';
 import '../../../core/constants/image_paths.dart';
+import '../../controllers/form_validation.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -22,10 +24,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  RxBool isPasswordVisible = false.obs;
+
   RxBool obscureText = true.obs;
 
   // final _authController = Get.find<AuthController>();
+  final _formValidationController = Get.find<FormValidationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: 80.h),
 
               ///================= App Logo =========================///
-              Image.asset('assets/dummy_image/appLogo.png'),
+              Image.asset(
+                'assets/dummy_image/appLogo.png',
+                height: 80.h,
+                fit: BoxFit.contain,
+              ),
               SizedBox(height: 24.h),
 
               ///================= Welcome Text =========================///
@@ -70,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         size: 20.sp,
                       ),
                       isLabelVisible: false,
-                      // validator: _authController.validEmail,
+                 validator: _formValidationController.validEmail,
                       hintText: 'Email',
                       label: 'Email',
                       controller: emailController,
@@ -82,7 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Obx(
                       () => CustomTextField(
                         isLabelVisible: false,
-                        // validator: _authController.validPassword,
+                validator: _formValidationController.validPassword,
+
                         obscureText: obscureText.value,
                         prefixIcon: GestureDetector(
                           onTap: () {
@@ -110,6 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // isLoading: _authController.isLoading.value,
                       label: 'Login',
                       onPressed: () {
+                        Get.toNamed(RoutePages.bottomNabBarScreen);
                         // if (_formKey.currentState!.validate()) {
                         //   _authController.login(
                         //     email: emailController.text.trim(),
@@ -126,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.center,
                       child: TextButton(
                         onPressed: () {
-                          // Get.toNamed(RoutePages.forgetPassword);
+                          showResetPasswordBottomSheet(context);
                         },
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
@@ -188,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           SvgPicture.asset(ImagePaths.appleIcon, height: 20.h),
                           SizedBox(width: 10.w),
                           Text(
-                            'Continue with Google',
+                            'Continue with Apple',
                             style: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               fontWeight: FontWeight.w700,
@@ -220,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           SvgPicture.asset(ImagePaths.googleIcon, height: 20.h),
                           SizedBox(width: 10.w),
                           Text(
-                            'Continue with Apple',
+                            'Continue with Google',
                             style: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               fontWeight: FontWeight.w700,
@@ -246,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            // Get.toNamed(RoutePages.signUpScreen);
+                            Get.toNamed(RoutePages.signUpScreen);
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 4.w),

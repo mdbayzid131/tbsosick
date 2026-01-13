@@ -23,22 +23,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(375, 812),
+      designSize: Size(383, 876),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            appBarTheme: AppBarTheme(
-              backgroundColor: Color(0xffF9FAFB),
-              scrolledUnderElevation: 0,
-            ),
+            // appBarTheme: AppBarTheme(
+            //   backgroundColor: Color(0xffF9FAFB),
+            //   scrolledUnderElevation: 0,
+            // ),
             scaffoldBackgroundColor: Color(0xffF9FAFB),
           ),
           initialRoute: RoutePages.onboardingScreen,
           getPages: pages,
-          // initialBinding: HomeBinding(),
+          initialBinding: HomeBinding(),
         );
       },
     );

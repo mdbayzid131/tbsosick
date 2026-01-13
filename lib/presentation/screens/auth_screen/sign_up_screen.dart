@@ -1,9 +1,13 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/core/constants/app_color.dart';
+
 import '../../../core/constants/image_paths.dart';
-import '../../controllers/auth_controller.dart';
+import '../../../routes/routes.dart';
+import '../../controllers/form_validation.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -15,274 +19,314 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  ///<================= FORM & TEXT CONTROLLERS =========================>///
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController nameController = TextEditingController();
+
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController countryController = TextEditingController();
-  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
-  ///<================= GETX AUTH CONTROLLER =========================>///
-  final AuthController _authController = Get.find<AuthController>();
+  RxBool obscureText = true.obs;
+  RxBool confirmObscureText = true.obs;
+
+  // final _authController = Get.find<AuthController>();
+  final _formValidationController = Get.find<FormValidationController>();
+
 
   @override
   void dispose() {
-    nameController.dispose();
     emailController.dispose();
-    phoneController.dispose();
-    countryController.dispose();
-    newPasswordController.dispose();
+    nameController.dispose();
+    passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 0),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: 10.h),
 
-                ///<================= TOP LOGO =========================>///
-                Center(
-                  child: Image.asset(
-                    ImagePaths.giftZees,
-                    width: 218.h,
-                    fit: BoxFit.contain,
-                  ),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 80.h),
+
+              ///================= App Logo =========================///
+              Image.asset(
+                'assets/dummy_image/appLogo.png',
+                height: 80.h,
+                fit: BoxFit.contain,
+              ),
+              SizedBox(height: 24.h),
+
+              ///================= Welcome Text =========================///
+              Text("SMRTSCRUB", style: AppColors.titleTextStyle),
+              Text(
+                "Surgical Preference Cards",
+                style: GoogleFonts.arimo(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xff8E8E93),
                 ),
+              ),
 
-                SizedBox(height: 24.h),
+              SizedBox(height: 32.h),
 
-                ///<================= SIGN UP FORM =========================>///
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      ///<================= NAME FIELD =========================>///
-                      CustomTextField(
-                        validator: _authController.validName,
-                        controller: nameController,
-                        hintText: 'Enter your name',
-                        label: 'Name',
+              ///================= Login Form =========================///
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    ///================= Name Field =========================///
+                    CustomTextField(
+                      prefixIcon: Icon(
+                        Icons.person_outline,
+                        color: const Color(0xff8E8E93),
+                        size: 20.sp,
                       ),
-                      SizedBox(height: 10.h),
+                      isLabelVisible: false,
+                      validator: _formValidationController.validName,
 
-                      ///<================= EMAIL FIELD =========================>///
-                      CustomTextField(
-                        validator: _authController.validEmail,
-                        controller: emailController,
-                        hintText: 'Enter your email',
-                        label: 'Email',
+                      hintText: 'Full Name',
+                      label: 'Email',
+                      controller: nameController,
+                    ),
+
+                    SizedBox(height: 16.h),
+
+                    ///================= Email Field =========================///
+                    CustomTextField(
+                      validator: _formValidationController.validEmail,
+
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                        color: const Color(0xff8E8E93),
+                        size: 20.sp,
                       ),
-                      SizedBox(height: 10.h),
+                      isLabelVisible: false,
+                      // validator: _authController.validEmail,
+                      hintText: 'Email',
+                      label: 'Email',
+                      controller: emailController,
+                    ),
 
-                      ///<================= PHONE FIELD =========================>///
-                      CustomTextField(
-                        validator: _authController.validPhone,
-                        controller: phoneController,
-                        hintText: 'Enter your number',
-                        label: 'Phone Number',
-                      ),
-                      SizedBox(height: 10.h),
+                    SizedBox(height: 16.h),
 
-                      ///<================= COUNTRY DROPDOWN =========================>///
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Country',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xff333333),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-
-                      Obx(
-                        () => DropdownButtonFormField<String>(
-                          dropdownColor: const Color(0xffFFFAF8),
-                          initialValue:
-                              _authController.selectedCountry.value.isEmpty
-                              ? null
-                              : _authController.selectedCountry.value,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: const Color(0xffEDE8FC),
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 14.h,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          icon: const Icon(
-                            Icons.keyboard_arrow_down_outlined,
-                            color: Color(0xff333333),
-                          ),
-                          hint: Text(
-                            "Select your country",
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                          items: _authController.countries.map((country) {
-                            return DropdownMenuItem(
-                              value: country,
-                              child: Text(
-                                country,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xff333333),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            _authController.selectedCountry.value = value!;
+                    ///================= Password Field =========================///
+                    Obx(
+                      () => CustomTextField(
+                        isLabelVisible: false,
+                        validator: _formValidationController.validPassword,
+                        obscureText: obscureText.value,
+                        prefixIcon: GestureDetector(
+                          onTap: () {
+                            obscureText.value = !obscureText.value;
                           },
-                          validator: (value) =>
-                              value == null ? "Please select a country" : null,
-                        ),
-                      ),
-
-                      SizedBox(height: 10.h),
-
-                      ///<================= PASSWORD FIELD =========================>///
-                      Obx(
-                        () => CustomTextField(
-                          validator: _authController.validPassword,
-                          controller: newPasswordController,
-                          label: 'Password',
-                          hintText: 'Enter your password',
-                          obscureText:
-                              _authController.isNewPasswordVisible.value,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              _authController.toggle(
-                                _authController.isNewPasswordVisible,
-                              );
-                            },
-                            icon: Icon(
-                              _authController.isNewPasswordVisible.value
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              size: 18.sp,
-                              color: const Color(0xff909090),
-                            ),
+                          child: Icon(
+                            obscureText.value
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: const Color(0xff8E8E93),
+                            size: 20.sp,
                           ),
                         ),
+
+                        hintText: 'Password',
+                        label: 'Password',
+                        controller: passwordController,
                       ),
+                    ),
 
-                      SizedBox(height: 10.h),
-
-                      ///<================= CONFIRM PASSWORD FIELD =========================>///
-                      Obx(
-                        () => CustomTextField(
-                          validator: _authController.validPassword,
-                          controller: confirmPasswordController,
-                          label: 'Confirm Password',
-                          hintText: 'Re-enter your password',
-                          obscureText:
-                              _authController.isConfirmPasswordVisible.value,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              _authController.toggle(
-                                _authController.isConfirmPasswordVisible,
-                              );
-                            },
-                            icon: Icon(
-                              _authController.isConfirmPasswordVisible.value
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              size: 18.sp,
-                              color: const Color(0xff909090),
+                    SizedBox(height: 20.h),
+                    Obx(
+                      () => CustomTextField(
+                        isLabelVisible: false,
+                        validator: (value) =>
+                            _formValidationController.validConfirmPassword(
+                              value,
+                              passwordController.text,
                             ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 24.h),
-
-                      ///<================= SIGN UP BUTTON =========================>///
-                      Obx(
-                        ()=> CustomElevatedButton(
-                          isLoading: _authController.isLoading.value,
-                          label: 'Sign Up',
-                          onPressed: () {
-                            if (!_formKey.currentState!.validate()) return;
-
-                            if (newPasswordController.text.trim() !=
-                                confirmPasswordController.text.trim()) {
-                              return;
-                            }
-
-                            _authController.signup(
-                              name: nameController.text,
-                              email: emailController.text.trim(),
-                              phone: phoneController.text.trim(),
-                              country: _authController.selectedCountry.value,
-                              password: newPasswordController.text,
-                            );
+                        obscureText: confirmObscureText.value,
+                        prefixIcon: GestureDetector(
+                          onTap: () {
+                            confirmObscureText.value =
+                                !confirmObscureText.value;
                           },
+                          child: Icon(
+                            confirmObscureText.value
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: const Color(0xff8E8E93),
+                            size: 20.sp,
+                          ),
                         ),
+
+                        hintText: 'Confirm Password',
+                        label: 'Password',
+                        controller: confirmPasswordController,
                       ),
+                    ),
 
-                      SizedBox(height: 12.h),
+                    SizedBox(height: 20.h),
 
-                      ///<================= LOGIN REDIRECT =========================>///
-                      Row(
+                    ///================= Login Button =========================///
+                    CustomElevatedButton(
+                      // isLoading: _authController.isLoading.value,
+                      label: 'Create Account',
+                      onPressed: () {
+                        // if (_formKey.currentState!.validate()) {
+                        //   _authController.login(
+                        //     email: emailController.text.trim(),
+                        //     password: passwordController.text, context: context,
+                        //   );
+                        // }
+
+                        Get.toNamed(RoutePages.welcomePage);
+                      },
+                    ),
+
+                    SizedBox(height: 15.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: .5.h,
+                          width: 115.w,
+                          color: Color(0xffC6C6C8),
+                        ),
+                        SizedBox(width: 10.w),
+                        Text(
+                          'OR',
+                          style: GoogleFonts.arimo(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xff8E8E93),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+
+                        Container(
+                          height: .5.h,
+                          width: 115.w,
+                          color: Color(0xffC6C6C8),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 15.h),
+
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 48.h),
+                        backgroundColor: Color(0xff000000),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                      ),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          SvgPicture.asset(ImagePaths.appleIcon, height: 20.h),
+                          SizedBox(width: 10.w),
                           Text(
-                            "Already have an account?",
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: const Color(0xff333333),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => Get.back(),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 4.w),
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: const Color(0xffFD7839),
-                                ),
-                              ),
+                            'Continue with Apple',
+                            style: GoogleFonts.arimo(
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
                             ),
                           ),
                         ],
                       ),
+                    ),
+                    SizedBox(height: 20.h),
 
-                      SizedBox(height: 20.h),
-                    ],
-                  ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 48.h),
+                        backgroundColor: Color(0xffffffff),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.r),
+                          side: BorderSide(
+                            color: AppColors.primary,
+                            width: 1.1,
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(ImagePaths.googleIcon, height: 20.h),
+                          SizedBox(width: 10.w),
+                          Text(
+                            'Continue with Google',
+                            style: GoogleFonts.arimo(
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+
+                    ///================= Sign Up Redirect =========================///
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account?",
+                          style: GoogleFonts.arimo(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xff8E8E93),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                      Get.back();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 4.w),
+                            child: Text(
+                              "Sign In",
+                              style: GoogleFonts.arimo(
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 30.h),
+                    Text(
+                      'By continuing, you agree to SMRTSCRUB s Terms of service and Privacy policy',
+                      style: GoogleFonts.arimo(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xff8E8E93),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
-*/
