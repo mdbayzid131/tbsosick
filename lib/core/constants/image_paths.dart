@@ -1,6 +1,7 @@
 class ImagePaths {
   ///<=====================Icons ===============>
   static String deleteIcon="assets/icons/delete.svg";
+  static String searchIcon="assets/icons/search_icon.svg";
 
 
 

@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 
+import '../../../routes/routes.dart';
 import 'notification_bottom.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,97 +17,109 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // fixed header
-        heder_section(),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // fixed header
+          heder_section(),
 
-        // scrollable body
-        Expanded(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Quick Actions',
+          // scrollable body
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Quick Actions',
+                    style: GoogleFonts.roboto(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xff1C1B1F),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 12.h),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: _quickActionCard(
+                        title: 'Create Preference card',
+                        onTap: () {
+                          Get.toNamed(RoutePages.newPreferenceCard);
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: _quickActionCard(
+                        title: 'Create Private Card',
+                        onTap: () {
+                          Get.toNamed(RoutePages.newPrivateCard);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 20.h),
+
+                Row(
+                  children: [
+                    Text(
+                      'Preference card favorites',
                       style: GoogleFonts.roboto(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xff1C1B1F),
                       ),
                     ),
-                  ),
-
-                  SizedBox(height: 12.h),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _quickActionCard(
-                          title: 'Create Preference card',
-                          onTap: () {},
-                        ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: _quickActionCard(
-                          title: 'Create Private Card',
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 20.h),
-
-                  Row(
-                    children: [
-                      Text(
-                        'Preference card favorites',
-                        style: GoogleFonts.roboto(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff1C1B1F),
-                        ),
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            Text(
-                              'View All',
-                              style: GoogleFonts.roboto(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: const Color(0xff6750A4),
-                              ),
-                            ),
-                            SizedBox(width: 4.w),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 14.sp,
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Text(
+                            'View All',
+                            style: GoogleFonts.roboto(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
                               color: const Color(0xff6750A4),
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(width: 4.w),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 14.sp,
+                            color: const Color(0xff6750A4),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
 
-                  SizedBox(height: 8.h),
+                // list items - Expanded remove করে ListView.builder এর height দিয়ে দিলাম
+                ListView.builder(
 
-                  // list items
-                  ...List.generate(
-                    3,
-                        (index) => Padding(
-                      padding: EdgeInsets.only(bottom: 10.h),
+                  shrinkWrap: true,
+                  // এটা important
+                  physics: const NeverScrollableScrollPhysics(),
+                  // এটা important - parent scroll করবে
+                  padding: EdgeInsets.zero,
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                    padding: EdgeInsets.only(bottom: 10.h),
+                    child: InkWell(
+                      onTap: () {
+                        Get.to(PreferenceCardDetails());
+                      },
+
                       child: _favoriteCard(
                         title: 'Total Knee Replacement',
                         status: 'Completed',
@@ -113,18 +129,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         doctor: 'Dr. Sarah Johnson',
                       ),
                     ),
-                  ),
+                  );
+                  },
+                ),
 
-                  SizedBox(height: 30.h),
-                ],
-              ),
+                SizedBox(height: 90.h),
+              ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
-
 
   Widget _favoriteCard({
     required String title,
@@ -332,7 +348,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Stack(
                         children: [
                           InkWell(
-                            onTap: (){showNotificationBottomSheet(context);},
+                            onTap: () {
+                              showNotificationBottomSheet(context);
+                            },
                             child: Container(
                               height: 40.w,
                               width: 40.w,

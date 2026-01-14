@@ -9,6 +9,8 @@ import '../presentation/screens/auth_screen/quick_setup/welcome_page.dart';
 import '../presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
 import '../presentation/screens/auth_screen/sign_up_screen.dart';
 import '../presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
+import '../presentation/screens/home/New Private Card/new_private_card.dart';
+import '../presentation/screens/home/Preference card/new_preference_card.dart';
 
 class RoutePages {
   static const String splashScreen = '/splashScreen';
@@ -21,6 +23,8 @@ class RoutePages {
   static const String whatYourSpeciality = '/WhatYourSpeciality';
   static const String preferredNoteMethod = '/PreferredNoteMethod';
   static const String interactiveTutorialScreen = '/InteractiveTutorialScreen';
+  static const String newPreferenceCard = '/NewPreferenceCard';
+  static const String newPrivateCard = '/NewPrivateCard';
 }
 
 final Transition transition = Transition.rightToLeft;
@@ -37,4 +41,6 @@ final pages = [
   GetPage(name: RoutePages.preferredNoteMethod, page: () =>  PreferredNoteMethod()),
   GetPage(name: RoutePages.interactiveTutorialScreen, page: () =>  InteractiveTutorialScreen()),
   GetPage(name: RoutePages.bottomNabBarScreen, page: () =>  BottomNabBarScreen()),
+  GetPage(name: RoutePages.newPreferenceCard, page: () =>  NewPreferenceCard()),
+  GetPage(name: RoutePages.newPrivateCard, page: () =>  NewPrivateCard()),
 ];

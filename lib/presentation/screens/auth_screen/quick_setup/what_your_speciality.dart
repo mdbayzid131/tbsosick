@@ -65,10 +65,6 @@ class WhatYourSpeciality extends StatelessWidget {
                     },
                     child: Obx(
                           () => Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12.w,
-                          vertical: 10.h,
-                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16.r),
@@ -79,27 +75,31 @@ class WhatYourSpeciality extends StatelessWidget {
                             width: selectedIndex.value == index ? 2 : 1,
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              specialties[index].icon,
-                              style: TextStyle(fontSize: 22.sp),
-                            ),
-
-                            const Spacer(),
-
-                            Text(
-                              specialties[index].title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.arimo(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
+                        child: Padding(
+                          padding:  EdgeInsets.all(8.0.r),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: .min,
+                            children: [
+                              Text(
+                                specialties[index].icon,
+                                style: TextStyle(fontSize: 22.sp),
                               ),
-                            ),
-                          ],
+
+                              const Spacer(),
+
+                              Text(
+                                specialties[index].title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.arimo(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

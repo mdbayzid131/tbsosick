@@ -3,13 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/image_paths.dart';
+import '../../../routes/routes.dart';
 import '../../controllers/bottom_nab_bar_controller.dart';
 import '../ProfilePage/profile_page.dart';
 import '../calendar_page/calendar_page.dart';
+import '../home/Preference card/new_preference_card.dart';
 import '../home/home_screen.dart';
 import '../library/library_screen.dart';
 
@@ -21,14 +24,13 @@ class BottomNabBarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(
-          () => Scaffold(
+      () => Scaffold(
         extendBody: true,
         body: IndexedStack(
           index: nav.currentIndex.value,
           children: const [
             HomeScreen(),
             LibraryScreen(),
-            CalendarPage(),
             CalendarPage(),
             ProfilePage(),
           ],
@@ -38,6 +40,7 @@ class BottomNabBarScreen extends StatelessWidget {
     );
   }
 }
+
 class CustomBottomBar extends StatelessWidget {
   CustomBottomBar({super.key});
 
@@ -47,9 +50,7 @@ class CustomBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 80.h,
-      decoration: const BoxDecoration(
-        color: Color(0xffF2F2F7),
-      ),
+      decoration: const BoxDecoration(color: Color(0xffF2F2F7)),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -59,14 +60,16 @@ class CustomBottomBar extends StatelessWidget {
               _icon(ImagePaths.homeIcon, 0),
               _icon(ImagePaths.libraryIcon, 1),
               SizedBox(width: 70.w),
-              _icon(ImagePaths.calenderIcon, 3),
-              ppIcon(4),
+              _icon(ImagePaths.calenderIcon, 2),
+              ppIcon(3),
             ],
           ),
 
           Positioned(
             child: GestureDetector(
-              onTap: () => nav.changePage(2),
+              onTap: () {
+                Get.toNamed(RoutePages.newPreferenceCard);
+              },
               child: _centerButton(),
             ),
           ),
@@ -106,7 +109,7 @@ class CustomBottomBar extends StatelessWidget {
         ),
         padding: EdgeInsets.all(3.w),
         child: Container(
-          decoration:  BoxDecoration(
+          decoration: BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(
               image: AssetImage(ImagePaths.appLOgo),
@@ -127,11 +130,7 @@ class CustomBottomBar extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xff9945FF),
-            Color(0xff8B3EFF),
-            Color(0xff7B35DD),
-          ],
+          colors: [Color(0xff9945FF), Color(0xff8B3EFF), Color(0xff7B35DD)],
         ),
         boxShadow: [
           BoxShadow(
@@ -143,11 +142,7 @@ class CustomBottomBar extends StatelessWidget {
         ],
       ),
       child: Center(
-        child: Icon(
-          Icons.add_outlined,
-          color: Colors.white,
-          size: 35.sp,
-        ),
+        child: Icon(Icons.add_outlined, color: Colors.white, size: 35.sp),
       ),
     );
   }
