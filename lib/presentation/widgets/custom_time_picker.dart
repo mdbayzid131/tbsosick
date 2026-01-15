@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-class CustomDatePickerField extends StatefulWidget {
+class CustomTimePickerField extends StatefulWidget {
   final String hintText;
   final String label;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final bool isLabelVisible;
 
-  const CustomDatePickerField({
+  const CustomTimePickerField({
     super.key,
     required this.hintText,
     required this.label,
@@ -19,23 +19,31 @@ class CustomDatePickerField extends StatefulWidget {
   });
 
   @override
-  State<CustomDatePickerField> createState() => _CustomDatePickerFieldState();
+  State<CustomTimePickerField> createState() => _CustomTimePickerFieldState();
 }
 
-class _CustomDatePickerFieldState extends State<CustomDatePickerField> {
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+class _CustomTimePickerFieldState extends State<CustomTimePickerField> {
+  Future<void> _selectTime(BuildContext context) async {
+    TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2009),
-      lastDate: DateTime(2101),
+      initialTime: TimeOfDay.now(),
     );
 
-    if (pickedDate != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      widget.controller.text = formattedDate;
+    if (pickedTime != null) {
+      final now = DateTime.now();
+      final selectedDateTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+
+      String formattedTime = DateFormat('hh:mm a').format(selectedDateTime);
+      widget.controller.text = formattedTime;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -55,12 +63,12 @@ class _CustomDatePickerFieldState extends State<CustomDatePickerField> {
             ),
           ),
 
-        /// ================= DATE PICKER FIELD =================
+        /// ================= TIME PICKER FIELD =================
         TextFormField(
           validator: widget.validator,
           controller: widget.controller,
           readOnly: true,
-          onTap: () => _selectDate(context),
+          onTap: () => _selectTime(context),
 
           style: TextStyle(
             fontSize: 14.sp,
@@ -77,7 +85,7 @@ class _CustomDatePickerFieldState extends State<CustomDatePickerField> {
               horizontal: 16.w,
             ),
 
-            suffixIcon: const Icon(Icons.calendar_today, color: Color(0xff9945FF)),
+            suffixIcon: const Icon(Icons.access_time, color: Color(0xff9945FF)),
 
             filled: true,
             fillColor: const Color(0xffF2F2F7),
@@ -86,7 +94,6 @@ class _CustomDatePickerFieldState extends State<CustomDatePickerField> {
               borderRadius: BorderRadius.circular(10.r),
               borderSide: BorderSide.none,
             ),
-
 
             errorStyle: TextStyle(fontSize: 11.sp, color: Colors.red),
           ),

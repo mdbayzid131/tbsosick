@@ -4,8 +4,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class PreferenceCardDetails extends StatelessWidget {
-  const PreferenceCardDetails({super.key});
+class LibraryPrivetCardDetails extends StatelessWidget {
+  const LibraryPrivetCardDetails({super.key});
 
   @override
   Widget build(BuildContext context) {

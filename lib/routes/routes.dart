@@ -11,8 +11,8 @@ import '../presentation/screens/auth_screen/sign_up_screen.dart';
 import '../presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
 import '../presentation/screens/home/New Private Card/new_private_card.dart';
 import '../presentation/screens/home/Preference card/new_preference_card.dart';
-
 class RoutePages {
+
   static const String splashScreen = '/splashScreen';
   static const String onboardingScreen = '/onboardingScreen';
   static const String bottomNabBarScreen = '/bottomNabBarScreen';

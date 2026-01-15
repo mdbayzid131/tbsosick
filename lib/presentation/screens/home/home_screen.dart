@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 
 import '../../../routes/routes.dart';
+import 'Preference card/new_preference_card.dart';
 import 'notification_bottom.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final int userId = 5252;
     return SingleChildScrollView(
       child: Column(
         children: [

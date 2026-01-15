@@ -5,9 +5,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/home/Preference%20card/sutures_container.dart';
 import 'package:tbsosick/presentation/widgets/CustomContainer.dart';
-import 'package:flutter/material.dart';
-
-import '../../library/library_screen.dart';
 import 'medical_supplies_container.dart';
 
 class NewPreferenceCard extends StatefulWidget {
@@ -55,7 +52,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
         leadingWidth: 100,
         leading: Center(
           child: InkWell(
-            onTap: (){
+            onTap: () {
               Get.back();
             },
             child: Text(
@@ -408,7 +405,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Positioning',
+                          'Positioning / Prepping',
                           style: GoogleFonts.arimo(
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w700,
@@ -449,7 +446,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Prepping / Shaving',
+                          'Operative Workflow',
                           style: GoogleFonts.arimo(
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w700,
@@ -466,7 +463,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                             fontSize: 14.sp,
                             color: const Color(0xff9E9E9E),
                           ),
-                          hintText: 'Describe prep and shaving requirements...',
+                          hintText: 'Steps of the Case',
                           hintStyle: GoogleFonts.arimo(
                             fontSize: 17.sp,
                             color: const Color(0xffC6C6C8),

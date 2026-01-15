@@ -26,16 +26,22 @@ class BottomNabBarScreen extends StatelessWidget {
     return Obx(
       () => Scaffold(
         extendBody: true,
-        body: IndexedStack(
-          index: nav.currentIndex.value,
-          children: const [
-            HomeScreen(),
-            LibraryScreen(),
-            CalendarPage(),
-            ProfilePage(),
-          ],
+        body: SafeArea(
+          top: false,
+          child: IndexedStack(
+            index: nav.currentIndex.value,
+            children: const [
+              HomeScreen(),
+              LibraryScreen(),
+              CalendarPage(),
+              ProfilePage(),
+            ],
+          ),
         ),
-        bottomNavigationBar: CustomBottomBar(),
+        bottomNavigationBar: SafeArea(
+          top: false,
+            bottom: true,
+            child: CustomBottomBar()),
       ),
     );
   }
@@ -111,10 +117,10 @@ class CustomBottomBar extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            image: DecorationImage(
-              image: AssetImage(ImagePaths.appLOgo),
-              fit: BoxFit.cover,
-            ),
+            // image: DecorationImage(
+            //   image: AssetImage(ImagePaths),
+            //   fit: BoxFit.cover,
+            // ),
           ),
         ),
       ),
