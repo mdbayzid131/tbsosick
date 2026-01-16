@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/core/constants/image_paths.dart';
 
 class EditProcedureScreen extends StatefulWidget {
   const EditProcedureScreen({super.key});
@@ -223,7 +225,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                     Row(
                       children: [
                         Icon(
-                          Icons.calendar_today,
+                          Icons.date_range_outlined,
                           size: 16.sp,
                           color: const Color(0xFF6B7280),
                         ),
@@ -241,7 +243,6 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                     SizedBox(height: 8.h),
                     TextField(
                       controller: _dateController,
-                      readOnly: true,
                       style: GoogleFonts.arimo(
                         fontSize: 15.sp,
                         color: const Color(0xFF1C1B1F),
@@ -305,7 +306,6 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                     SizedBox(height: 8.h),
                     TextField(
                       controller: _timeController,
-                      readOnly: true,
                       style: GoogleFonts.arimo(
                         fontSize: 15.sp,
                         color: const Color(0xFF1C1B1F),
@@ -540,13 +540,13 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                 },
                 child: Container(
                   width: 48.w,
-                  height: 48.h,
+                  height: 48.w,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF8B5CF6),
+                    color: const Color(0xFF6750A4),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Icon(
-                    Icons.person_add,
+                    Icons.person_add_alt_outlined,
                     color: Colors.white,
                     size: 22.sp,
                   ),
@@ -581,11 +581,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                           _teamMembers.remove(member);
                         });
                       },
-                      child: Icon(
-                        Icons.delete_outline,
-                        color: const Color(0xFFEF4444),
-                        size: 20.sp,
-                      ),
+                      child: SvgPicture.asset(ImagePaths.deleteIcon, height: 16.w, width: 16.w,)
                     ),
                   ],
                 ),

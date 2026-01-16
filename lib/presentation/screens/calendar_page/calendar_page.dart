@@ -26,19 +26,20 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: Column(
-        children: [
-          // Header section with gradient
-          _buildHeader(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Header section with gradient
+            _buildHeader(),
 
-          // Scrollable content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(16.w),
+            // Scrollable content
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Calendar widget
+                  SizedBox(height: 20.h),
                   _buildCalendar(),
 
                   SizedBox(height: 20.h),
@@ -59,8 +60,8 @@ class _CalendarPageState extends State<CalendarPage> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -81,11 +82,15 @@ class _CalendarPageState extends State<CalendarPage> {
           end: Alignment.bottomLeft,
           colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
         ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(24.r),
+          bottomRight: Radius.circular(24.r),
+        ),
       ),
       child: Text(
         'Calendar',
         style: GoogleFonts.arimo(
-          fontSize: 34.sp,
+          fontSize: 24.sp,
           fontWeight: FontWeight.w700,
           color: Colors.white,
         ),
@@ -179,7 +184,8 @@ class _CalendarPageState extends State<CalendarPage> {
             height: 40.h,
             decoration: const BoxDecoration(
               color: Color(0xFFF2F2F7),
-              shape: BoxShape.circle,),
+              shape: BoxShape.circle,
+            ),
             child: Icon(
               Icons.chevron_left,
               color: const Color(0xFF1C1B1F),
@@ -255,8 +261,12 @@ class _CalendarPageState extends State<CalendarPage> {
                   color: Color(0xFF9945FF),
                   shape: BoxShape.circle,
                 ),
-                child: InkWell(onTap: () {    showAddEventBottomSheet(context);},
-                    child: Icon(Icons.add, color: Colors.white, size: 24.sp)),
+                child: InkWell(
+                  onTap: () {
+                    showAddEventBottomSheet(context);
+                  },
+                  child: Icon(Icons.add, color: Colors.white, size: 24.sp),
+                ),
               ),
             ],
           ),
@@ -549,7 +559,6 @@ class _CalendarPageState extends State<CalendarPage> {
         ],
       ),
       child: Column(
-
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(

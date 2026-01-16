@@ -12,12 +12,13 @@ class CustomContainer extends StatelessWidget {
       padding: EdgeInsets.all(16.w),  // Padding for the container
       decoration: BoxDecoration(
         color: Colors.white,  // Background color of the container
-        borderRadius: BorderRadius.circular(16.r),  // Rounded corners
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+        borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),  // Shadow color
-            blurRadius: 12,  // Blur radius for shadow
-            offset: Offset(0, 4),  // Shadow offset
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
           ),
         ],
       ),

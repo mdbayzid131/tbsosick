@@ -168,11 +168,12 @@ class _SuturesContainerState extends State<SuturesContainer> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20.r,
-            offset: Offset(0, 4.h),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
           ),
         ],
       ),
@@ -207,12 +208,11 @@ class _SuturesContainerState extends State<SuturesContainer> {
                           color: const Color(0xFF8B5CF6),
                           size: 24.sp,
                         )
-                      : SvgPicture.asset(
-                          ImagePaths.searchIcon,
-                          height: 20.w,
-                          width: 20.w,
-                          fit: BoxFit.scaleDown,
-                        ),
+                      : Icon(
+                    Icons.search,
+                    color: const Color(0xFF8B5CF6),
+                    size: 24.sp,
+                  ),
                 ),
               ),
             ],

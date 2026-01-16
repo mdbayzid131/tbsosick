@@ -14,7 +14,7 @@ import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/custom_time_picker.dart';
 
-void showAddEventBottomSheet(BuildContext context) {
+void showEditProfileBottomSheet(BuildContext context) {
   final emailController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController timeController = TextEditingController();
@@ -53,7 +53,7 @@ void showAddEventBottomSheet(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Add Event',
+                        'Edit Profile',
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -76,45 +76,56 @@ void showAddEventBottomSheet(BuildContext context) {
           
                   SizedBox(height: 12.h),
           
-                  CustomTextField(
-                    controller: titleController,
-                    hintText: 'Enter event title',
-                    label: 'Event Title *',
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+          
+                          hintText: 'John',
+                          label: 'First Name',
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: CustomTextField(
+          
+                          hintText: 'Deo',
+                          label: 'Last Name',
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 12.h),
-                  CustomDatePickerField(
-                    hintText: 'Date',
-                    label: 'Date *',
-                    controller: dateController,
-                  ),
-                  SizedBox(height: 12.h),
-                  CustomTimePickerField(
-                    hintText: 'Time',
-                    label: 'Time *',
-                    controller: timeController,
-                  ),
-                  SizedBox(height: 12.h),
+          
                   CustomTextField(
                     controller: linkController,
-                    hintText: '',
-                    label: 'Link Preference Card',
+                    hintText: 'General Surgery',
+                    label: 'Specialty',
                   ),
                   SizedBox(height: 12.h),
                   CustomTextField(
                     controller: locationController,
-                    hintText: 'e.g., OR 3',
-                    label: 'Location ',
+                    hintText: 'City Hospital',
+                    label: 'Hospital ',
                   ),
                   SizedBox(height: 12.h),
                   CustomTextField(
-                    maxLines: 4,
                     controller: notesController,
-                    hintText: 'Additional notes...',
-                    label: 'Notes',
+                    hintText: 'john.doe@example.com',
+                    label: 'Email',
+                  ),
+                  SizedBox(height: 12.h),
+                  CustomTextField(
+                    controller: notesController,
+                    hintText: '(555) 987-6543',
+                    label: 'Phone',
                   ),
                   SizedBox(height: 25.h),
           
-                  CustomElevatedButton(label: 'Create Event', onPressed: () {}),
+                  SizedBox(
+                    height: 50.h,
+          
+                      child: CustomElevatedButton(label: 'Save Changes', onPressed: () {})),
           
                   SizedBox(height: 10.h),
                 ],

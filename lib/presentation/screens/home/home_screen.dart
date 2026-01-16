@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
+import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dart';
 
 import '../../../routes/routes.dart';
 import 'Preference card/new_preference_card.dart';
@@ -19,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final int userId = 5252;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // scrollable body
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Column(
               children: [
                 Align(
@@ -81,7 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const Spacer(),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(PreferenceCardFavorites());
+                      },
                       child: Row(
                         children: [
                           Text(
@@ -122,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Get.to(PreferenceCardDetails());
                       },
 
-                      child: _favoriteCard(
+                      child: favoriteCard(
                         title: 'Total Knee Replacement',
                         status: 'Completed',
                         statusColor: const Color(0xffE6F6EA),
@@ -144,99 +146,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _favoriteCard({
-    required String title,
-    required String status,
-    required Color statusColor,
-    required Color statusTextColor,
-    required String date,
-    required String doctor,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xffE7E0EC), width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: GoogleFonts.roboto(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xff1C1B1F),
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: statusColor,
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Text(
-                  status,
-                  style: GoogleFonts.roboto(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: statusTextColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8.h),
-          Row(
-            children: [
-              Icon(
-                Icons.access_time_outlined,
-                size: 14.sp,
-                color: const Color(0xff79747E),
-              ),
-              SizedBox(width: 4.w),
-              Text(
-                date,
-                style: GoogleFonts.roboto(
-                  fontSize: 14.sp,
-                  color: const Color(0xff79747E),
-                ),
-              ),
-              SizedBox(width: 14.w),
-              Icon(
-                Icons.person_outline_outlined,
-                size: 14.sp,
-                color: const Color(0xff79747E),
-              ),
-              SizedBox(width: 4.w),
-              Expanded(
-                child: Text(
-                  doctor,
-                  style: GoogleFonts.roboto(
-                    fontSize: 14.sp,
-                    color: const Color(0xff79747E),
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _quickActionCard({
     required String title,
@@ -301,7 +210,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Container(
               width: double.infinity,
-              height: 272.h,
               padding: EdgeInsets.only(
                 left: 20.w,
                 right: 20.w,
@@ -310,8 +218,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(32.r),
-                  bottomRight: Radius.circular(32.r),
+                  bottomLeft: Radius.circular(24.r),
+                  bottomRight: Radius.circular(24.r),
                 ),
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
@@ -419,6 +327,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 80.h),
+
                 ],
               ),
             ),
@@ -504,6 +414,99 @@ Widget _statCard({
             fontSize: 14.sp,
             color: const Color(0xff79747E),
           ),
+        ),
+      ],
+    ),
+  );
+}
+Widget favoriteCard({
+  required String title,
+  required String status,
+  required Color statusColor,
+  required Color statusTextColor,
+  required String date,
+  required String doctor,
+}) {
+  return Container(
+    padding: EdgeInsets.all(14.w),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16.r),
+      border: Border.all(color: const Color(0xffE7E0EC), width: 1.w),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.06),
+          blurRadius: 12,
+          offset: const Offset(0, 6),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: GoogleFonts.roboto(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xff1C1B1F),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: statusColor,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Text(
+                status,
+                style: GoogleFonts.roboto(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  color: statusTextColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Row(
+          children: [
+            Icon(
+              Icons.access_time_outlined,
+              size: 14.sp,
+              color: const Color(0xff79747E),
+            ),
+            SizedBox(width: 4.w),
+            Text(
+              date,
+              style: GoogleFonts.roboto(
+                fontSize: 14.sp,
+                color: const Color(0xff79747E),
+              ),
+            ),
+            SizedBox(width: 14.w),
+            Icon(
+              Icons.person_outline_outlined,
+              size: 14.sp,
+              color: const Color(0xff79747E),
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Text(
+                doctor,
+                style: GoogleFonts.roboto(
+                  fontSize: 14.sp,
+                  color: const Color(0xff79747E),
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
       ],
     ),

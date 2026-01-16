@@ -144,11 +144,12 @@ class PreferenceCardDetails extends StatelessWidget {
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10.r,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
         ],
@@ -186,11 +187,12 @@ class PreferenceCardDetails extends StatelessWidget {
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10.r,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
         ],
@@ -306,11 +308,12 @@ class PreferenceCardDetails extends StatelessWidget {
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10.r,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
         ],
@@ -349,11 +352,12 @@ class PreferenceCardDetails extends StatelessWidget {
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10.r,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
         ],
@@ -388,11 +392,12 @@ class PreferenceCardDetails extends StatelessWidget {
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10.r,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
         ],
@@ -427,11 +432,12 @@ class PreferenceCardDetails extends StatelessWidget {
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10.r,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
         ],
@@ -470,11 +476,12 @@ class PreferenceCardDetails extends StatelessWidget {
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10.r,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
         ],
@@ -525,11 +532,12 @@ class PreferenceCardDetails extends StatelessWidget {
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10.r,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
         ],
@@ -572,7 +580,7 @@ class PreferenceCardDetails extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [const Color(0xFFFFF3CD), const Color(0xFFFFE69C)],
         ),
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: const Color(0xFFFFE082), width: 1.w),
       ),
       child: Column(

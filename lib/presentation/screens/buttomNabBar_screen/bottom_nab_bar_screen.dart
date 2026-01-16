@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../../core/constants/app_color.dart';
@@ -40,8 +41,9 @@ class BottomNabBarScreen extends StatelessWidget {
         ),
         bottomNavigationBar: SafeArea(
           top: false,
-            bottom: true,
-            child: CustomBottomBar()),
+          bottom: true,
+          child: CustomBottomBar(),
+        ),
       ),
     );
   }
@@ -74,7 +76,7 @@ class CustomBottomBar extends StatelessWidget {
           Positioned(
             child: GestureDetector(
               onTap: () {
-                Get.toNamed(RoutePages.newPreferenceCard);
+                Get.to(NewPreferenceCard(), transition: Transition.downToUp);
               },
               child: _centerButton(),
             ),
@@ -85,15 +87,19 @@ class CustomBottomBar extends StatelessWidget {
   }
 
   Widget _icon(String svgPath, int index) {
-    return GestureDetector(
+    return InkWell(
       onTap: () => nav.changePage(index),
-      child: SvgPicture.asset(
-        svgPath,
-        width: 22.w,
-        height: 22.w,
-        color: nav.currentIndex.value == index
-            ? AppColors.primary
-            : const Color(0xff99A1AF),
+      child: Container(
+        height: 26.w,
+        width: 26.w,
+        child: SvgPicture.asset(
+          svgPath,
+          width: 26.w,
+          height: 26.w,
+          color: nav.currentIndex.value == index
+              ? AppColors.primary
+              : const Color(0xff99A1AF),
+        ),
       ),
     );
   }

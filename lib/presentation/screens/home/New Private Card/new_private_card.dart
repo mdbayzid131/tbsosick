@@ -95,7 +95,7 @@ class _NewPrivateCardState extends State<NewPrivateCard> {
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0.w),
             child: Column(
               children: [
                 SizedBox(height: 20.h),
@@ -185,7 +185,7 @@ class _NewPrivateCardState extends State<NewPrivateCard> {
                           hintText: 'Surgeon Name — Procedure Name',
                           hintStyle: GoogleFonts.arimo(
                             fontSize: 18.sp,
-                            color: const Color(0xffC6C6C8E),
+                            color: const Color(0xffC6C6C8),
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16.r),
@@ -203,14 +203,16 @@ class _NewPrivateCardState extends State<NewPrivateCard> {
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   decoration: BoxDecoration(
                     color: Colors.white, // Background color of the container
-                    borderRadius: BorderRadius.circular(
-                      16.r,
-                    ), // Rounded corners
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(
+                      color: const Color(0xFFE5E7EB),
+                      width: 1.w,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06), // Shadow color
-                        blurRadius: 12, // Blur radius for shadow
-                        offset: Offset(0, 4), // Shadow offset
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 8.r,
+                        offset: Offset(0, 2.h),
                       ),
                     ],
                   ),
@@ -472,7 +474,7 @@ class _NewPrivateCardState extends State<NewPrivateCard> {
                   padding: EdgeInsets.all(13.w),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFF9E6),
-                    borderRadius: BorderRadius.circular(16.r),
+                    borderRadius: BorderRadius.circular(20.r),
                     gradient: LinearGradient(
                       colors: [
                         const Color(0xFFFFF3CD),
@@ -635,7 +637,7 @@ class _NewPrivateCardState extends State<NewPrivateCard> {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            'Publish',
+                            'Save',
                             style: GoogleFonts.arimo(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w700,

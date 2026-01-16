@@ -1,4 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/presentation/screens/ProfilePage/terms_of_service.dart';
+
+import '../../../core/constants/image_paths.dart';
+import '../home/notification_bottom.dart';
+import 'Privacy & Security bottom.dart';
+import 'UpdatePaymentMethodBottom.dart';
+import 'edit_profile_bottom.dart';
+import 'log_out_bottom_sheet.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,6 +22,595 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with gradient
+            _buildHeader(),
+
+            SizedBox(height: 20.h),
+
+            // Profile card
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: _buildProfileCard(),
+            ),
+
+            SizedBox(height: 16.h),
+
+            // Premium Plan card
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: _buildPremiumPlanCard(),
+            ),
+
+            SizedBox(height: 24.h),
+
+            // Account section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Text(
+                'ACCOUNT',
+                style: GoogleFonts.arimo(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF9CA3AF),
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ),
+
+            SizedBox(height: 12.h),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 2.h),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    _buildMenuItem(
+                      icon: Icons.camera_alt_outlined,
+                      iconColor: const Color(0xFF8B5CF6),
+                      title: 'Edit Profile',
+                      onTap: () {
+                        // TODO: Navigate to edit profile
+                        showEditProfileBottomSheet(context);
+                      },
+                    ),
+                    Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
+                    _buildMenuItem(
+                      icon: Icons.notifications_outlined,
+                      iconColor: const Color(0xFF8B5CF6),
+                      title: 'Notifications',
+                      badge: 3,
+                      onTap: () {
+                        // TODO: Navigate to notifications
+                        showNotificationBottomSheet(context);
+                      },
+                    ),
+                    Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
+                    _buildMenuItem(
+                      icon: Icons.credit_card_outlined,
+                      iconColor: const Color(0xFF8B5CF6),
+                      title: 'Subscription',
+                      onTap: () {
+                        // TODO: Navigate to subscription
+                        showUpdatePackageBottomSheet(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(height: 24.h),
+
+            // Preferences section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Text(
+                'PREFERENCES',
+                style: GoogleFonts.arimo(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF9CA3AF),
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ),
+
+            SizedBox(height: 12.h),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 2.h),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    _buildMenuItem(
+                      icon: Icons.lock_outline,
+                      iconColor: const Color(0xFF6B7280),
+                      title: 'Privacy & Security',
+                      onTap: () {
+                        showPrivacyAndSecurityBottomSheet(context);
+
+                        // TODO: Navigate to privacy & security
+                      },
+                    ),
+                    Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
+                    _buildMenuItem(
+                      icon: Icons.description_outlined,
+                      iconColor: const Color(0xFF6B7280),
+                      title: 'Terms of Service',
+                      onTap: () {
+                        // TODO: Navigate to terms of service
+                        showTermsOfServiceBottomSheet(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(height: 24.h),
+
+            // Sign Out button
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: GestureDetector(
+                onTap: () {
+                  // TODO: Sign out functionality
+                  showSignOutConfirmationBottomSheet(context);
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 8.r,
+                        offset: Offset(0, 2.h),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.logout,
+                        color: const Color(0xFFEF4444),
+                        size: 20.sp,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'Sign Out',
+                        style: GoogleFonts.arimo(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFFEF4444),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            SizedBox(height: 24.h),
+
+            // Version text
+            Center(
+              child: Text(
+                'SMRTSCRUB Version 1.0.0',
+                style: GoogleFonts.arimo(
+                  fontSize: 12.sp,
+                  color: const Color(0xFF9CA3AF),
+                ),
+              ),
+            ),
+
+            SizedBox(height: 24.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Header with gradient background
+  Widget _buildHeader() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        left: 20.w,
+        right: 20.w,
+        top: 50.h,
+        bottom: 24.h,
+      ),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(24.r),
+          bottomRight: Radius.circular(24.r),
+        ),
+      ),
+      child: Text(
+        'Profile',
+        style: GoogleFonts.arimo(
+          fontSize: 24.sp,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  // Profile card with avatar and stats
+  Widget _buildProfileCard() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              // Avatar with camera icon
+              Stack(
+                children: [
+                  Container(
+                    width: 80.w,
+                    height: 80.w,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF8E3DF6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'DA',
+                        style: GoogleFonts.arimo(
+                          fontSize: 28.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      width: 28.w,
+                      height: 28.w,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF9945FF),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.w),
+                      ),
+                      child: Icon(
+                        Icons.camera_alt_outlined,
+                        color: Colors.white,
+                        size: 14.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(width: 16.w),
+              // Name and details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Dr. Anderson',
+                      style: GoogleFonts.arimo(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xff000000),
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Orthopedic Surgery',
+                      style: GoogleFonts.arimo(
+                        fontSize: 15.sp,
+                        color: const Color(0xFF6B7280),
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      'St. Mary\'s Hospital',
+                      style: GoogleFonts.arimo(
+                        fontSize: 14.sp,
+                        color: const Color(0xFF9CA3AF),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+          // Divider
+          Divider(height: 1.h, color: const Color(0xFFE5E7EB)),
+
+          // Stats row
+          Row(
+            children: [
+              Expanded(child: _buildStatItem('47', 'Cards')),
+              Container(
+                width: 1.w,
+                height: 40.h,
+                color: const Color(0xFFE5E7EB),
+              ),
+              Expanded(child: _buildStatItem('23', 'Shared')),
+              Container(
+                width: 1.w,
+                height: 40.h,
+                color: const Color(0xFFE5E7EB),
+              ),
+              Expanded(child: _buildStatItem('156', 'Completed')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Stat item widget
+  Widget _buildStatItem(String count, String label) {
+    return Column(
+      children: [
+        Text(
+          count,
+          style: GoogleFonts.arimo(
+            fontSize: 28.sp,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF1C1B1F),
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          label,
+          style: GoogleFonts.arimo(
+            fontSize: 13.sp,
+            color: const Color(0xFF9CA3AF),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Premium Plan card
+  Widget _buildPremiumPlanCard() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
+        ),
+
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row with crown icon and checkmark
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.workspace_premium,
+                    color: Colors.white,
+                    size: 24.sp,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Premium Plan',
+                    style: GoogleFonts.arimo(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: 28.w,
+                height: 28.w,
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: SvgPicture.asset(
+                  ImagePaths.chosePlanIcon,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          // Active until text
+          Text(
+            'Active until Jan 2027',
+            style: GoogleFonts.arimo(
+              fontSize: 14.sp,
+              color: Colors.white.withOpacity(0.9),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          // Features list
+          _buildFeatureItem('Unlimited cards'),
+          SizedBox(height: 8.h),
+          _buildFeatureItem('Advanced analytics'),
+          SizedBox(height: 8.h),
+          _buildFeatureItem('Priority support'),
+          SizedBox(height: 20.h),
+          // Manage Subscription button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                // TODO: Manage subscription
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 14.h),
+                elevation: 0,
+              ),
+              child: Text(
+                'Manage Subscription',
+                style: GoogleFonts.arimo(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF6750A4),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Feature item widget
+  Widget _buildFeatureItem(String text) {
+    return Row(
+      children: [
+        Container(
+          width: 6.w,
+          height: 6.h,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ),
+        ),
+        SizedBox(width: 12.w),
+        Text(
+          text,
+          style: GoogleFonts.arimo(fontSize: 15.sp, color: Colors.white),
+        ),
+      ],
+    );
+  }
+
+  // Menu item widget
+  Widget _buildMenuItem({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    int? badge,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        child: Row(
+          children: [
+            Container(
+              width: 32.w,
+              height: 32.w,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF7F0FF),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+
+              child: Icon(icon, color: iconColor, size: 24.sp),
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Text(
+                title,
+                style: GoogleFonts.arimo(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF1C1B1F),
+                ),
+              ),
+            ),
+            if (badge != null) ...[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFEF4444),
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  badge.toString(),
+                  style: GoogleFonts.arimo(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+            ],
+            Icon(
+              Icons.chevron_right,
+              color: const Color(0xFF9CA3AF),
+              size: 20.sp,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

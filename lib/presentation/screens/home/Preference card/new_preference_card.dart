@@ -69,8 +69,8 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
         title: Text(
           'New Preference Card',
           style: GoogleFonts.arimo(
-            fontSize: 17.sp,
-            fontWeight: FontWeight.w700,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
             color: Colors.black,
           ),
         ),
@@ -92,7 +92,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Column(
               children: [
                 SizedBox(height: 20.h),
@@ -182,7 +182,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           hintText: 'Surgeon Name — Procedure Name',
                           hintStyle: GoogleFonts.arimo(
                             fontSize: 18.sp,
-                            color: const Color(0xffC6C6C8E),
+                            color: const Color(0xffC6C6C8),
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16.r),
@@ -201,13 +201,17 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                   decoration: BoxDecoration(
                     color: Colors.white, // Background color of the container
                     borderRadius: BorderRadius.circular(
-                      16.r,
-                    ), // Rounded corners
+                      20.r,
+                    ),
+                    border: Border.all(
+                      color: const Color(0xFFE5E7EB),
+                      width: 1.w,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06), // Shadow color
-                        blurRadius: 12, // Blur radius for shadow
-                        offset: Offset(0, 4), // Shadow offset
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 8.r,
+                        offset: Offset(0, 2.h),
                       ),
                     ],
                   ),

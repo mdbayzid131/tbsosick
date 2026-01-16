@@ -23,7 +23,7 @@ void showResetPasswordBottomSheet(BuildContext context) {
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) {
+    builder: (context) {
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
