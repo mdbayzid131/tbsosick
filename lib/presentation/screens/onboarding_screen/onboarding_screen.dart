@@ -11,7 +11,6 @@ import 'onboardingPage3.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
-
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
@@ -38,6 +37,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
             children: [
+              SizedBox(height: 20.h),
+
               ///<================= PAGE VIEW =========================>///
               Expanded(
                 child: PageView(
@@ -64,7 +65,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       3,
-                          (index) => AnimatedContainer(
+                      (index) => AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         margin: EdgeInsets.symmetric(horizontal: 4.w),
                         width: _currentPage == index ? 28.w : 8.w,
@@ -79,27 +80,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
 
-
                   SizedBox(height: 16.h),
 
                   ///<================= BUTTON SECTION =========================>///
-
-
-                       CustomElevatedButton(
-                          label: _currentPage == 2 ? "Get Started" : "Next",
-                          onPressed: () {
-                            if (_currentPage < 2) {
-                              _pageController.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.ease,
-                              );
-                            } else {
-                              Get.toNamed(RoutePages.loginScreen);
-                            }
-                          },
-                        ),
-
-
+                  CustomElevatedButton(
+                    label: _currentPage == 2 ? "Get Started" : "Next",
+                    onPressed: () {
+                      if (_currentPage < 2) {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.ease,
+                        );
+                      } else {
+                        Get.toNamed(RoutePages.loginScreen);
+                      }
+                    },
+                  ),
 
                   SizedBox(height: 20.h),
                 ],

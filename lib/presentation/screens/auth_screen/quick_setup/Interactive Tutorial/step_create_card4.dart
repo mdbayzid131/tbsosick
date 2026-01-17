@@ -69,85 +69,87 @@ Widget StepCreateCard4() {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Card title
-                  Text(
-                    'Preference Card Summary',
-                    style: GoogleFonts.arimo(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xff101828),
-                    ),
-                  ),
-
-                  SizedBox(height: 4.h),
-
-                  Text(
-                    'Review and finalize',
-                    style: GoogleFonts.arimo(
-                      fontSize: 14.sp,
-                      color: const Color(0xff4A5565),
-                    ),
-                  ),
-
-                  SizedBox(height: 16.h),
-
-                  // Procedure block
-                  _infoBox(
-                    title: "Procedure",
-                    child: Text(
-                      'Total Knee Replacement',
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Card title
+                    Text(
+                      'Preference Card Summary',
                       style: GoogleFonts.arimo(
-                        fontSize: 14.sp,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w700,
                         color: const Color(0xff101828),
                       ),
                     ),
-                  ),
-
-                  SizedBox(height: 12.h),
-
-                  // Timeline block
-                  _infoBox(
-                    title: "Timeline",
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          ImagePaths.chosePlanIcon,
-                          width: 18.w,
-                          height: 18.w,
-                        ),
-                        SizedBox(width: 10.w),
-                        Text(
-                          'Time Out  •  08:00 AM',
-                          style: GoogleFonts.arimo(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 12.h),
-
-                  // Instrument notes block
-                  _infoBox(
-                    title: "Instrument Notes",
-                    child: Text(
-                      '"Prefer DeBakey forceps and Metzenbaum scissors for this procedure"',
+                
+                    SizedBox(height: 4.h),
+                
+                    Text(
+                      'Review and finalize',
                       style: GoogleFonts.arimo(
                         fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        fontStyle: FontStyle.italic,
-                        height: 1.4,
+                        color: const Color(0xff4A5565),
                       ),
                     ),
-                  ),
-                ],
+                
+                    SizedBox(height: 16.h),
+                
+                    // Procedure block
+                    _infoBox(
+                      title: "Procedure",
+                      child: Text(
+                        'Total Knee Replacement',
+                        style: GoogleFonts.arimo(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xff101828),
+                        ),
+                      ),
+                    ),
+                
+                    SizedBox(height: 12.h),
+                
+                    // Timeline block
+                    _infoBox(
+                      title: "Timeline",
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            ImagePaths.chosePlanIcon,
+                            width: 18.w,
+                            height: 18.w,
+                          ),
+                          SizedBox(width: 10.w),
+                          Text(
+                            'Time Out  •  08:00 AM',
+                            style: GoogleFonts.arimo(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                
+                    SizedBox(height: 12.h),
+                
+                    // Instrument notes block
+                    _infoBox(
+                      title: "Instrument Notes",
+                      child: Text(
+                        '"Prefer DeBakey forceps and Metzenbaum scissors for this procedure"',
+                        style: GoogleFonts.arimo(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.italic,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

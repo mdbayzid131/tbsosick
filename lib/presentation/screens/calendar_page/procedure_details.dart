@@ -8,67 +8,70 @@ import '../../../core/constants/image_paths.dart';
 import 'edit_procedure.dart';
 
 class ProcedureDetailsScreen extends StatelessWidget {
-  const ProcedureDetailsScreen({Key? key}) : super(key: key);
+  const ProcedureDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header section with gradient
-            _buildHeader(),
-
-            // Scrollable content
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 16.h),
-
-                  // Duration and Location cards
-                  Row(
-                    children: [
-                      Expanded(child: _buildDurationCard()),
-                      SizedBox(width: 12.w),
-                      Expanded(child: _buildLocationCard()),
-                    ],
-                  ),
-
-                  SizedBox(height: 16.h),
-
-                  // Primary Information card
-                  _buildPrimaryInformationCard(),
-
-                  SizedBox(height: 16.h),
-
-                  // Surgical Team card
-                  _buildSurgicalTeamCard(),
-
-                  SizedBox(height: 16.h),
-
-                  // Linked Preference Card
-                  _buildLinkedPreferenceCard(),
-
-                  SizedBox(height: 16.h),
-
-                  // Procedure Notes card
-                  _buildProcedureNotesCard(),
-
-                  SizedBox(height: 16.h),
-
-                  // Reminders card
-                  _buildRemindersCard(),
-
-                  SizedBox(height: 20.h),
-                ],
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Header section with gradient
+              _buildHeader(),
+        
+              // Scrollable content
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 16.h),
+        
+                    // Duration and Location cards
+                    Row(
+                      children: [
+                        Expanded(child: _buildDurationCard()),
+                        SizedBox(width: 12.w),
+                        Expanded(child: _buildLocationCard()),
+                      ],
+                    ),
+        
+                    SizedBox(height: 16.h),
+        
+                    // Primary Information card
+                    _buildPrimaryInformationCard(),
+        
+                    SizedBox(height: 16.h),
+        
+                    // Surgical Team card
+                    _buildSurgicalTeamCard(),
+        
+                    SizedBox(height: 16.h),
+        
+                    // Linked Preference Card
+                    _buildLinkedPreferenceCard(),
+        
+                    SizedBox(height: 16.h),
+        
+                    // Procedure Notes card
+                    _buildProcedureNotesCard(),
+        
+                    SizedBox(height: 16.h),
+        
+                    // Reminders card
+                    _buildRemindersCard(),
+        
+                    SizedBox(height: 20.h),
+                  ],
+                ),
               ),
-            ),
-
-            // Bottom action buttons
-            _buildBottomActions(),
-          ],
+        
+              // Bottom action buttons
+              _buildBottomActions(),
+            ],
+          ),
         ),
       ),
     );

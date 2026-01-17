@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/image_paths.dart';
@@ -13,7 +14,7 @@ class OnboardingPage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: .start,
+      mainAxisAlignment: .center,
       children: [
         ///<================= SKIP BUTTON =========================>///
         Align(
@@ -33,6 +34,7 @@ class OnboardingPage2 extends StatelessWidget {
             ),
           ),
         ),
+        Spacer(),
 
 
         ///<================= MAIN ILLUSTRATION =========================>///
@@ -50,7 +52,11 @@ class OnboardingPage2 extends StatelessWidget {
           child: Text(
             'Scrub Pockets Made for Phones',
             textAlign: TextAlign.center,
-            style: AppColors.titleTextStyle,
+            style: GoogleFonts.arimo(
+              fontSize: 28.sp,
+              fontWeight: FontWeight.w700,
+              color: Color(0xff101828),
+            ),
           ),
         ),
         SizedBox(height: 10.h),
@@ -59,9 +65,14 @@ class OnboardingPage2 extends StatelessWidget {
           child: Text(
             'Not messy notepads. Minimalist UI designed for the high-pressure OR environment.',
             textAlign: TextAlign.center,
-            style: AppColors.subTitleTextStyle,
+            style: GoogleFonts.arimo(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff4A5565),
+            ),
           ),
         ),
+        Spacer(),
       ],
     );
   }

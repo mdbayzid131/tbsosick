@@ -13,77 +13,75 @@ class PreferredNoteMethod extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF2F2F7),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20.h),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 65.h),
 
-              Text(
-                "Preferred Note Method?",
-                style: GoogleFonts.arimo(
-                  fontSize: 30.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xff101828),
+            Text(
+              "Preferred Note Method?",
+              style: GoogleFonts.arimo(
+                fontSize: 30.sp,
+                fontWeight: FontWeight.w700,
+                color: Color(0xff101828),
+              ),
+            ),
+
+            SizedBox(height: 6.h),
+
+            Text(
+              "Choose your default input method",
+              style: GoogleFonts.arimo(
+                fontSize: 16.sp,
+                color: const Color(0xff4A5565),
+              ),
+            ),
+
+            SizedBox(height: 20.h),
+
+            Column(
+              children: [
+                _optionTile(
+                  icon: Icons.mic_outlined,
+                  iconBg: Color(0xff2F6BFF),
+                  title: 'Voice to Text',
+                  subtitle: 'Dictate notes hands free',
+                  onTap: () {
+                    Get.toNamed(RoutePages.interactiveTutorialScreen);
+                  },
                 ),
-              ),
 
-              SizedBox(height: 6.h),
+                SizedBox(height: 12.h),
 
-              Text(
-                "Choose your default input method",
-                style: GoogleFonts.arimo(
-                  fontSize: 16.sp,
-                  color: const Color(0xff4A5565),
+                _optionTile(
+                  icon: Icons.chevron_right,
+                  iconBg: Color(0xff8E44FF),
+                  title: 'Rapid Checklist',
+                  subtitle: 'Quick tap through templates',
+                  onTap: () {
+                    Get.toNamed(RoutePages.interactiveTutorialScreen);
+                  },
                 ),
-              ),
 
-              SizedBox(height: 20.h),
+                SizedBox(height: 12.h),
 
-              Column(
-                children: [
-                  _optionTile(
-                    icon: Icons.mic_outlined,
-                    iconBg: Color(0xff2F6BFF),
-                    title: 'Voice to Text',
-                    subtitle: 'Dictate notes hands free',
-                    onTap: () {
-                      Get.toNamed(RoutePages.interactiveTutorialScreen);
-                    },
-                  ),
-
-                  SizedBox(height: 12.h),
-
-                  _optionTile(
-                    icon: Icons.chevron_right,
-                    iconBg: Color(0xff8E44FF),
-                    title: 'Rapid Checklist',
-                    subtitle: 'Quick tap through templates',
-                    onTap: () {
-                      Get.toNamed(RoutePages.interactiveTutorialScreen);
-                    },
-                  ),
-
-                  SizedBox(height: 12.h),
-
-                  _optionTile(
-                    icon: Icons.person_outline,
-                    iconBg: Color(0xff00C853),
-                    title: 'Freehand Entry',
-                    subtitle: 'Type custom notes',
-                    onTap: () {
-                      Get.toNamed(RoutePages.interactiveTutorialScreen);
-                    },
-                  ),
-                ],
-              ),
+                _optionTile(
+                  icon: Icons.person_outline,
+                  iconBg: Color(0xff00C853),
+                  title: 'Freehand Entry',
+                  subtitle: 'Type custom notes',
+                  onTap: () {
+                    Get.toNamed(RoutePages.interactiveTutorialScreen);
+                  },
+                ),
+              ],
+            ),
 
 
-              SizedBox(height: 20.h),
-            ],
-          ),
+            SizedBox(height: 20.h),
+          ],
         ),
       ),
     );

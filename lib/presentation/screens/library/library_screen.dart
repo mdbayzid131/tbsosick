@@ -137,6 +137,7 @@ class _LibraryScreenState extends State<LibraryScreen>
           SizedBox(height: 16.h),
           // Search bar
           Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
             height: 48.h,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -719,119 +720,123 @@ class _LibraryScreenState extends State<LibraryScreen>
             color: Colors.white,
             borderRadius: BorderRadius.circular(24.r),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Drag handle
-              Center(
-                child: Container(
-                  width: 40.w,
-                  height: 4.h,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE5E7EB),
-                    borderRadius: BorderRadius.circular(2.r),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20.h),
-              // Title
-              Text(
-                'Filters',
-                style: GoogleFonts.arimo(
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1C1B1F),
-                ),
-              ),
-              SizedBox(height: 20.h),
-              // Specialty section
-              Text(
-                'SPECIALTY',
-                style: GoogleFonts.arimo(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF9CA3AF),
-                  letterSpacing: 0.5,
-                ),
-              ),
-              SizedBox(height: 12.h),
-              // Specialty chips
-              Wrap(
-                spacing: 8.w,
-                runSpacing: 8.h,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildFilterChip('All', _selectedSpecialty == 'All', () {
-                    setModalState(() {
-                      _selectedSpecialty = 'All';
-                    });
-                  }),
-                  _buildFilterChip(
-                    'Orthopedic Surgery',
-                    _selectedSpecialty == 'Orthopedic Surgery',
-                    () {
-                      setModalState(() {
-                        _selectedSpecialty = 'Orthopedic Surgery';
-                      });
-                    },
+                  // Drag handle
+                  Center(
+                    child: Container(
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE5E7EB),
+                        borderRadius: BorderRadius.circular(2.r),
+                      ),
+                    ),
                   ),
-                  _buildFilterChip(
-                    'Cardiothoracic Surgery',
-                    _selectedSpecialty == 'Cardiothoracic Surgery',
-                    () {
-                      setModalState(() {
-                        _selectedSpecialty = 'Cardiothoracic Surgery';
-                      });
-                    },
-                  ),
-                  _buildFilterChip(
-                    'General Surgery',
-                    _selectedSpecialty == 'General Surgery',
-                    () {
-                      setModalState(() {
-                        _selectedSpecialty = 'General Surgery';
-                      });
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 24.h),
-              // Verified Only toggle
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                  SizedBox(height: 20.h),
+                  // Title
                   Text(
-                    'Verified Only',
+                    'Filters',
                     style: GoogleFonts.arimo(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.w600,
                       color: const Color(0xFF1C1B1F),
                     ),
                   ),
-                  Switch(
-                    value: _verifiedOnly,
-                    onChanged: (value) {
-                      setModalState(() {
-                        _verifiedOnly = value;
-                      });
-                    },
-                    activeThumbColor: const Color(0xFF8B5CF6),
+                  SizedBox(height: 20.h),
+                  // Specialty section
+                  Text(
+                    'SPECIALTY',
+                    style: GoogleFonts.arimo(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF9CA3AF),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  // Specialty chips
+                  Wrap(
+                    spacing: 8.w,
+                    runSpacing: 8.h,
+                    children: [
+                      _buildFilterChip('All', _selectedSpecialty == 'All', () {
+                        setModalState(() {
+                          _selectedSpecialty = 'All';
+                        });
+                      }),
+                      _buildFilterChip(
+                        'Orthopedic Surgery',
+                        _selectedSpecialty == 'Orthopedic Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Orthopedic Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        'Cardiothoracic Surgery',
+                        _selectedSpecialty == 'Cardiothoracic Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Cardiothoracic Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        'General Surgery',
+                        _selectedSpecialty == 'General Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'General Surgery';
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 24.h),
+                  // Verified Only toggle
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Verified Only',
+                        style: GoogleFonts.arimo(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF1C1B1F),
+                        ),
+                      ),
+                      Switch(
+                        value: _verifiedOnly,
+                        onChanged: (value) {
+                          setModalState(() {
+                            _verifiedOnly = value;
+                          });
+                        },
+                        activeThumbColor: const Color(0xFF8B5CF6),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 24.h),
+                  // Apply Filters button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52.h,
+                    child: CustomElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      label: 'Apply Filters',
+                    ),
                   ),
                 ],
               ),
-              SizedBox(height: 24.h),
-              // Apply Filters button
-              SizedBox(
-                width: double.infinity,
-                height: 52.h,
-                child: CustomElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  label: 'Apply Filters',
-                ),
-              ),
-            ],
+            ),
           ),
         );
       },

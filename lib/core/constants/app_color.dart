@@ -9,14 +9,5 @@ class AppColors {
   static const Color textDark = Color(0xFF1E1E1E);
   static const Color textLight = Color(0xFF6C6C6C);
 
-  static final TextStyle titleTextStyle = GoogleFonts.arimo(
-    fontSize: 30.sp,
-    fontWeight: FontWeight.w700,
-    color: Color(0xff101828),
-  );
-  static final TextStyle subTitleTextStyle = GoogleFonts.arimo(
-    fontSize: 16.sp,
-    fontWeight: FontWeight.w400,
-    color: Color(0xff4A5565),
-  );
+
 }

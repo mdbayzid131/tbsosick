@@ -123,10 +123,11 @@ class CustomBottomBar extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            // image: DecorationImage(
-            //   image: AssetImage(ImagePaths),
-            //   fit: BoxFit.cover,
-            // ),
+            image: DecorationImage(
+              image: Image.network('https://picsum.photos/250?image=9').image,
+
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),

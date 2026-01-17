@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:tbsosick/core/constants/image_paths.dart';
 
 class EditProcedureScreen extends StatefulWidget {
@@ -50,51 +51,42 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header with gradient
-            _buildHeader(),
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Header with gradient
+              _buildHeader(),
 
-            // Scrollable form content
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Column(
-                children: [
-                  SizedBox(height: 20.h),
-
-                  // Procedure Information card
-                  _buildProcedureInformationCard(),
-
-                  SizedBox(height: 16.h),
-
-                  // Personnel card
-                  _buildPersonnelCard(),
-
-                  SizedBox(height: 16.h),
-
-                  // Location & Setup card
-                  _buildLocationSetupCard(),
-
-                  SizedBox(height: 16.h),
-
-                  // Procedure Notes card
-                  _buildProcedureNotesCard(),
-
-                  SizedBox(height: 20.h),
-                ],
+              // Form content
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    _buildProcedureInformationCard(),
+                    SizedBox(height: 16.h),
+                    _buildPersonnelCard(),
+                    SizedBox(height: 16.h),
+                    _buildLocationSetupCard(),
+                    SizedBox(height: 16.h),
+                    _buildProcedureNotesCard(),
+                    SizedBox(height: 20.h),
+                  ],
+                ),
               ),
-            ),
 
-            // Bottom action buttons
-            _buildBottomActions(),
-          ],
+              // Bottom buttons
+              _buildBottomActions(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Header with gradient background
+  // Header
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
@@ -143,334 +135,117 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
     );
   }
 
-  // Procedure Information card
+  // Procedure Information Card
   Widget _buildProcedureInformationCard() {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
-      ),
+    return _buildCard(
+      title: 'Procedure Information',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section title
-          Text(
-            'Procedure Information',
-            style: GoogleFonts.arimo(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF1C1B1F),
-            ),
-          ),
-          SizedBox(height: 16.h),
-          // Procedure Name field
-          Text(
-            'Procedure Name',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF1C1B1F),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          TextField(
+          _buildTextField(
+            label: 'Procedure Name',
             controller: _procedureNameController,
-            style: GoogleFonts.arimo(
-              fontSize: 15.sp,
-              color: const Color(0xFF1C1B1F),
-            ),
-            decoration: InputDecoration(
-              hintText: 'Total Knee Replacement',
-              hintStyle: GoogleFonts.arimo(
-                fontSize: 15.sp,
-                color: const Color(0xFF9CA3AF),
-              ),
-              filled: true,
-              fillColor: const Color(0xFFF9FAFB),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 14.h,
-              ),
-            ),
+            hint: 'Total Knee Replacement',
           ),
           SizedBox(height: 16.h),
-          // Date and Time fields
+          // আগে import করুন
+
+          // তারপর এই code replace করুন
           Row(
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.date_range_outlined,
-                          size: 16.sp,
-                          color: const Color(0xFF6B7280),
-                        ),
-                        SizedBox(width: 6.w),
-                        Text(
-                          'Date',
-                          style: GoogleFonts.arimo(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF1C1B1F),
+                child: _buildTextField(
+                  label: 'Date',
+                  controller: _dateController,
+                  icon: Icons.date_range_outlined,
+                  readOnly: true,
+                  onTap: () async {
+                    final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(2030),
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: const ColorScheme.light(
+                              primary: Color(0xFF8B5CF6),
+                              onPrimary: Colors.white,
+                              onSurface: Color(0xFF1C1B1F),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8.h),
-                    TextField(
-                      controller: _dateController,
-                      style: GoogleFonts.arimo(
-                        fontSize: 15.sp,
-                        color: const Color(0xFF1C1B1F),
-                      ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color(0xFFF9FAFB),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFE5E7EB),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFE5E7EB),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF8B5CF6),
-                          ),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 14.h,
-                        ),
-                      ),
-                      onTap: () {
-                        // TODO: Show date picker
+                          child: child!,
+                        );
                       },
-                    ),
-                  ],
+                    );
+                    if (pickedDate != null) {
+                      setState(() {
+                        _dateController.text = DateFormat(
+                          'yyyy-MM-dd',
+                        ).format(pickedDate);
+                      });
+                    }
+                  },
                 ),
               ),
               SizedBox(width: 12.w),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.access_time,
-                          size: 16.sp,
-                          color: const Color(0xFF6B7280),
-                        ),
-                        SizedBox(width: 6.w),
-                        Text(
-                          'Time',
-                          style: GoogleFonts.arimo(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF1C1B1F),
+                child: _buildTextField(
+                  label: 'Time',
+                  controller: _timeController,
+                  icon: Icons.access_time,
+                  readOnly: true,
+                  onTap: () async {
+                    final TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: const ColorScheme.light(
+                              primary: Color(0xFF8B5CF6),
+                              onPrimary: Colors.white,
+                              onSurface: Color(0xFF1C1B1F),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8.h),
-                    TextField(
-                      controller: _timeController,
-                      style: GoogleFonts.arimo(
-                        fontSize: 15.sp,
-                        color: const Color(0xFF1C1B1F),
-                      ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color(0xFFF9FAFB),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFE5E7EB),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFE5E7EB),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF8B5CF6),
-                          ),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 14.h,
-                        ),
-                      ),
-                      onTap: () {
-                        // TODO: Show time picker
+                          child: child!,
+                        );
                       },
-                    ),
-                  ],
+                    );
+                    if (pickedTime != null) {
+                      setState(() {
+                        _timeController.text = pickedTime.format(context);
+                      });
+                    }
+                  },
                 ),
               ),
             ],
           ),
           SizedBox(height: 16.h),
-          // Estimated Duration field
-          Text(
-            'Estimated Duration',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF1C1B1F),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          TextField(
+          _buildTextField(
+            label: 'Estimated Duration',
             controller: _durationController,
-            style: GoogleFonts.arimo(
-              fontSize: 15.sp,
-              color: const Color(0xFF1C1B1F),
-            ),
-            decoration: InputDecoration(
-              hintText: '2-3 hours',
-              hintStyle: GoogleFonts.arimo(
-                fontSize: 15.sp,
-                color: const Color(0xFF9CA3AF),
-              ),
-              filled: true,
-              fillColor: const Color(0xFFF9FAFB),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 14.h,
-              ),
-            ),
+            hint: '2-3 hours',
           ),
         ],
       ),
     );
   }
 
-  // Personnel card
+  // Personnel Card
   Widget _buildPersonnelCard() {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
-      ),
+    return _buildCard(
+      title: 'Personnel',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section title
-          Text(
-            'Personnel',
-            style: GoogleFonts.arimo(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF1C1B1F),
-            ),
-          ),
-          SizedBox(height: 16.h),
-          // Lead Surgeon field
-          Row(
-            children: [
-              Icon(
-                Icons.person_outline,
-                size: 18.sp,
-                color: const Color(0xFF6B7280),
-              ),
-              SizedBox(width: 6.w),
-              Text(
-                'Lead Surgeon',
-                style: GoogleFonts.arimo(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF1C1B1F),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8.h),
-          TextField(
+          _buildTextField(
+            label: 'Lead Surgeon',
             controller: _leadSurgeonController,
-            style: GoogleFonts.arimo(
-              fontSize: 15.sp,
-              color: const Color(0xFF1C1B1F),
-            ),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color(0xFFF9FAFB),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 14.h,
-              ),
-            ),
+            icon: Icons.person_outline,
           ),
           SizedBox(height: 16.h),
-          // Surgical Team section
           Row(
             children: [
               Icon(
@@ -490,45 +265,16 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
             ],
           ),
           SizedBox(height: 8.h),
-          // Add team member field with button
           Row(
             children: [
               Expanded(
-                child: TextField(
+                child: _buildTextField(
                   controller: _teamMemberController,
-                  style: GoogleFonts.arimo(
-                    fontSize: 15.sp,
-                    color: const Color(0xFF1C1B1F),
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Add team member',
-                    hintStyle: GoogleFonts.arimo(
-                      fontSize: 15.sp,
-                      color: const Color(0xFF9CA3AF),
-                    ),
-                    filled: true,
-                    fillColor: const Color(0xFFF9FAFB),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 14.h,
-                    ),
-                  ),
+                  hint: 'Add team member',
+                  showLabel: false,
                 ),
               ),
               SizedBox(width: 8.w),
-              // Add button
               GestureDetector(
                 onTap: () {
                   if (_teamMemberController.text.isNotEmpty) {
@@ -555,7 +301,6 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
             ],
           ),
           SizedBox(height: 12.h),
-          // Team members list
           ...(_teamMembers.map(
             (member) => Padding(
               padding: EdgeInsets.only(bottom: 8.h),
@@ -581,7 +326,11 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                           _teamMembers.remove(member);
                         });
                       },
-                      child: SvgPicture.asset(ImagePaths.deleteIcon, height: 16.w, width: 16.w,)
+                      child: SvgPicture.asset(
+                        ImagePaths.deleteIcon,
+                        height: 16.w,
+                        width: 16.w,
+                      ),
                     ),
                   ],
                 ),
@@ -593,204 +342,43 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
     );
   }
 
-  // Location & Setup card
+  // Location & Setup Card
   Widget _buildLocationSetupCard() {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
-      ),
+    return _buildCard(
+      title: 'Location & Setup',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section title
-          Text(
-            'Location & Setup',
-            style: GoogleFonts.arimo(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF1C1B1F),
-            ),
-          ),
-          SizedBox(height: 16.h),
-          // Operating Room field
-          Row(
-            children: [
-              Icon(
-                Icons.location_on_outlined,
-                size: 18.sp,
-                color: const Color(0xFF6B7280),
-              ),
-              SizedBox(width: 6.w),
-              Text(
-                'Operating Room',
-                style: GoogleFonts.arimo(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF1C1B1F),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8.h),
-          TextField(
+          _buildTextField(
+            label: 'Operating Room',
             controller: _operatingRoomController,
-            style: GoogleFonts.arimo(
-              fontSize: 15.sp,
-              color: const Color(0xFF1C1B1F),
-            ),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color(0xFFF9FAFB),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 14.h,
-              ),
-            ),
+            icon: Icons.location_on_outlined,
           ),
           SizedBox(height: 16.h),
-          // Anesthesia Type field
-          Text(
-            'Anesthesia Type',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF1C1B1F),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          TextField(
+          _buildTextField(
+            label: 'Anesthesia Type',
             controller: _anesthesiaController,
-            style: GoogleFonts.arimo(
-              fontSize: 15.sp,
-              color: const Color(0xFF1C1B1F),
-            ),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color(0xFFF9FAFB),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 14.h,
-              ),
-            ),
           ),
         ],
       ),
     );
   }
 
-  // Procedure Notes card
+  // Procedure Notes Card
   Widget _buildProcedureNotesCard() {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Section title with icon
-          Row(
-            children: [
-              Icon(
-                Icons.description_outlined,
-                size: 20.sp,
-                color: const Color(0xFF1C1B1F),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                'Procedure Notes',
-                style: GoogleFonts.arimo(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1C1B1F),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          // Notes text field
-          TextField(
-            controller: _notesController,
-            maxLines: 5,
-            style: GoogleFonts.arimo(
-              fontSize: 15.sp,
-              color: const Color(0xFF1C1B1F),
-            ),
-            decoration: InputDecoration(
-              hintText: 'Add any special notes or requirements...',
-              hintStyle: GoogleFonts.arimo(
-                fontSize: 15.sp,
-                color: const Color(0xFF9CA3AF),
-              ),
-              filled: true,
-              fillColor: const Color(0xFFF9FAFB),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 14.h,
-              ),
-            ),
-          ),
-        ],
+    return _buildCard(
+      title: 'Procedure Notes',
+      titleIcon: Icons.description_outlined,
+      child: _buildTextField(
+        controller: _notesController,
+        hint: 'Add any special notes or requirements...',
+        maxLines: 5,
+        showLabel: false,
       ),
     );
   }
 
-  // Bottom action buttons
+  // Bottom Actions
   Widget _buildBottomActions() {
     return Container(
       padding: EdgeInsets.all(20.w),
@@ -806,19 +394,18 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
       ),
       child: Row(
         children: [
-          // Save Draft Button
           Expanded(
-            flex: 1,
             child: GestureDetector(
-              onTap: () {
-                Get.back();
-              },
+              onTap: () => Get.back(),
               child: Container(
                 height: 52.h,
                 decoration: BoxDecoration(
-                  color: Color(0xffF2F2F7),
+                  color: const Color(0xffF2F2F7),
                   borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: Color(0xFF9945FF), width: 1.w),
+                  border: Border.all(
+                    color: const Color(0xFF9945FF),
+                    width: 1.w,
+                  ),
                 ),
                 child: Center(
                   child: Text(
@@ -834,17 +421,13 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
             ),
           ),
           SizedBox(width: 12.w),
-          // Publish Button
           Expanded(
-            flex: 1,
             child: GestureDetector(
-              onTap: () {
-                Get.back();
-              },
+              onTap: () => Get.back(),
               child: Container(
                 height: 52.h,
                 decoration: BoxDecoration(
-                  color: Color(0xff9945FF),
+                  color: const Color(0xff9945FF),
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Center(
@@ -862,6 +445,125 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  // Reusable Card Widget
+  Widget _buildCard({
+    required String title,
+    required Widget child,
+    IconData? titleIcon,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              if (titleIcon != null) ...[
+                Icon(titleIcon, size: 20.sp, color: const Color(0xFF1C1B1F)),
+                SizedBox(width: 8.w),
+              ],
+              Text(
+                title,
+                style: GoogleFonts.arimo(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF1C1B1F),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          child,
+        ],
+      ),
+    );
+  }
+
+  // Reusable TextField Widget
+  Widget _buildTextField({
+    String? label,
+    required TextEditingController controller,
+    String? hint,
+    IconData? icon,
+    int maxLines = 1,
+    bool readOnly = false,
+    VoidCallback? onTap,
+    bool showLabel = true,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showLabel && (label != null || icon != null)) ...[
+          Row(
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: 16.sp, color: const Color(0xFF6B7280)),
+                SizedBox(width: 6.w),
+              ],
+              if (label != null)
+                Text(
+                  label,
+                  style: GoogleFonts.arimo(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF1C1B1F),
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+        ],
+        TextField(
+          controller: controller,
+          maxLines: maxLines,
+          readOnly: readOnly,
+          onTap: onTap,
+          style: GoogleFonts.arimo(
+            fontSize: 15.sp,
+            color: const Color(0xFF1C1B1F),
+          ),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: GoogleFonts.arimo(
+              fontSize: 15.sp,
+              color: const Color(0xFF9CA3AF),
+            ),
+            filled: true,
+            fillColor: const Color(0xFFF9FAFB),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.w,
+              vertical: 14.h,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

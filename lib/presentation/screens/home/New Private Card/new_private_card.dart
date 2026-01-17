@@ -52,7 +52,7 @@ class _NewPrivateCardState extends State<NewPrivateCard> {
     return Scaffold(
       backgroundColor: const Color(0xffF2F2F7),
       appBar: AppBar(
-        leadingWidth: 100,
+        leadingWidth: 100.w,
         leading: Center(
           child: InkWell(
             onTap: () {
@@ -90,6 +90,7 @@ class _NewPrivateCardState extends State<NewPrivateCard> {
               ),
             ),
           ),
+          SizedBox(width: 16.w),
         ],
       ),
       body: ListView(

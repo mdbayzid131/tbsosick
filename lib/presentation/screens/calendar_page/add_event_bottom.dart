@@ -36,88 +36,91 @@ void showAddEventBottomSheet(BuildContext context) {
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.all(20.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-            ),
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Add Event',
-                        style: GoogleFonts.arimo(
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () => Get.back(),
-                        child: Container(
-                          height: 32.h,
-                          width: 32.w,
-                          decoration: BoxDecoration(
-                            color: Color(0xffF2F2F7),
-                            shape: BoxShape.circle,
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.9,
+          padding: EdgeInsets.all(20.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Add Event',
+                          style: GoogleFonts.arimo(
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w700,
                           ),
-                          child: const Icon(Icons.close),
                         ),
-                      ),
-                    ],
-                  ),
-          
-                  SizedBox(height: 12.h),
-          
-                  CustomTextField(
-                    controller: titleController,
-                    hintText: 'Enter event title',
-                    label: 'Event Title *',
-                  ),
-                  SizedBox(height: 12.h),
-                  CustomDatePickerField(
-                    hintText: 'Date',
-                    label: 'Date *',
-                    controller: dateController,
-                  ),
-                  SizedBox(height: 12.h),
-                  CustomTimePickerField(
-                    hintText: 'Time',
-                    label: 'Time *',
-                    controller: timeController,
-                  ),
-                  SizedBox(height: 12.h),
-                  CustomTextField(
-                    controller: linkController,
-                    hintText: '',
-                    label: 'Link Preference Card',
-                  ),
-                  SizedBox(height: 12.h),
-                  CustomTextField(
-                    controller: locationController,
-                    hintText: 'e.g., OR 3',
-                    label: 'Location ',
-                  ),
-                  SizedBox(height: 12.h),
-                  CustomTextField(
-                    maxLines: 4,
-                    controller: notesController,
-                    hintText: 'Additional notes...',
-                    label: 'Notes',
-                  ),
-                  SizedBox(height: 25.h),
-          
-                  CustomElevatedButton(label: 'Create Event', onPressed: () {}),
-          
-                  SizedBox(height: 10.h),
-                ],
+                        InkWell(
+                          onTap: () => Get.back(),
+                          child: Container(
+                            height: 32.h,
+                            width: 32.w,
+                            decoration: BoxDecoration(
+                              color: Color(0xffF2F2F7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.close),
+                          ),
+                        ),
+                      ],
+                    ),
+                        
+                    SizedBox(height: 12.h),
+                        
+                    CustomTextField(
+                      controller: titleController,
+                      hintText: 'Enter event title',
+                      label: 'Event Title *',
+                    ),
+                    SizedBox(height: 12.h),
+                    CustomDatePickerField(
+                      hintText: 'Date',
+                      label: 'Date *',
+                      controller: dateController,
+                    ),
+                    SizedBox(height: 12.h),
+                    CustomTimePickerField(
+                      hintText: 'Time',
+                      label: 'Time *',
+                      controller: timeController,
+                    ),
+                    SizedBox(height: 12.h),
+                    CustomTextField(
+                      controller: linkController,
+                      hintText: '',
+                      label: 'Link Preference Card',
+                    ),
+                    SizedBox(height: 12.h),
+                    CustomTextField(
+                      controller: locationController,
+                      hintText: 'e.g., OR 3',
+                      label: 'Location ',
+                    ),
+                    SizedBox(height: 12.h),
+                    CustomTextField(
+                      maxLines: 4,
+                      controller: notesController,
+                      hintText: 'Additional notes...',
+                      label: 'Notes',
+                    ),
+                    SizedBox(height: 25.h),
+                        
+                    CustomElevatedButton(label: 'Create Event', onPressed: () {}),
+                        
+                    SizedBox(height: 10.h),
+                  ],
+                ),
               ),
             ),
           ),

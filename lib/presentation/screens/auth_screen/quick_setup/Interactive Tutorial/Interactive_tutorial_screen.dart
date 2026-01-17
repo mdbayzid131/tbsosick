@@ -5,7 +5,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/step_create_card3.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/step_create_card4.dart' hide StepCreateCard3;
+import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/step_create_card4.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 
 import '../../../../../core/constants/app_color.dart';
@@ -20,42 +20,48 @@ class InteractiveTutorialScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 🔹 System top safe area (status bar / notch height)
+    final double topInset = MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.white,
-              Color(0xff9945FF).withOpacity(.10),
-              Colors.white,
-            ],
+      body: SafeArea(
+        top: false,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xff9945FF).withValues(alpha: .1), Colors.white],
+            ),
           ),
-        ),
-        child: SafeArea(
           child: Column(
             children: [
+              /// 🔹 Manual safe-area spacer
+              /// This prevents UI from going under status bar / notch
+              SizedBox(height: topInset),
+
+              /// 🔹 Header section (fixed height – responsive padding inside)
               _Header(),
 
+              /// 🔹 Progress indicator
               _Progress(),
 
+              /// 🔹 Main tutorial pages
               Expanded(
                 child: PageView(
                   controller: controller.pageController,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     StepCreateCard1(),
                     StepCreateCard2(),
                     StepCreateCard3(),
                     StepCreateCard4(),
-
-                    // _StepLogMoments(),
-                    // _StepVoiceNotes(),
-                    // _StepReview(),
                   ],
                 ),
               ),
+
+              /// 🔹 Bottom spacing
+              SizedBox(height: 20.h),
             ],
           ),
         ),
@@ -66,19 +72,23 @@ class InteractiveTutorialScreen extends StatelessWidget {
 
 Widget _Header() {
   return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
     child: Row(
       children: [
+        /// 🔹 Circular icon container
         Container(
           height: 48.w,
           width: 48.w,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppColors.primary,
             shape: BoxShape.circle,
           ),
-          child: Icon(Icons.auto_fix_high, color: Colors.white, size: 18),
+          child:  Icon(Icons.auto_fix_high, color: Colors.white, size: 18.sp),
         ),
-        SizedBox(width: 10),
+
+        SizedBox(width: 10.w),
+
+        /// 🔹 Title & subtitle
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -114,59 +124,18 @@ Widget _Progress() {
         children: List.generate(4, (index) {
           return Expanded(
             child: Container(
-              margin: EdgeInsets.only(right: index == 3 ? 0 : 6),
-              height: 6.sp,
+              margin: EdgeInsets.only(right: index == 3 ? 0 : 6.w),
+              height: 6.h,
               decoration: BoxDecoration(
                 color: controller.currentStep.value >= index
-                    ? Color(0xff9945FF)
-                    : Color(0xffE5E7EB),
+                    ? const Color(0xff9945FF)
+                    : const Color(0xffE5E7EB),
                 borderRadius: BorderRadius.circular(4.r),
               ),
             ),
           );
         }),
       ),
-    ),
-  );
-}
-
-Widget _stepItem(String number, String text) {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-    decoration: BoxDecoration(
-      color: Color(0xffF7F7FB),
-      borderRadius: BorderRadius.circular(12.r),
-    ),
-    child: Row(
-      children: [
-        Container(
-          height: 32.w,
-          width: 32.w,
-          decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.10),
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text(
-              number,
-              style: GoogleFonts.arimo(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-        ),
-
-        SizedBox(width: 10.w),
-
-        Expanded(
-          child: Text(
-            text,
-            style: GoogleFonts.arimo(fontSize: 14.sp, color: Color(0xff364153)),
-          ),
-        ),
-      ],
     ),
   );
 }

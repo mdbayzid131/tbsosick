@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/core/constants/app_color.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/select_package.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
@@ -30,7 +31,11 @@ class WelcomePage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Welcome to\nSMRTSCRUB',
-                  style: AppColors.titleTextStyle,
+                  style: GoogleFonts.arimo(
+                    fontSize: 30.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xff101828),
+                  ),
                 ),
               ),
               SizedBox(height: 6.h),
@@ -38,7 +43,11 @@ class WelcomePage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Let\'s start with your name',
-                  style: AppColors.subTitleTextStyle,
+                  style: GoogleFonts.arimo(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff4A5565),
+                  ),
                 ),
               ),
 

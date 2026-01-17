@@ -13,6 +13,7 @@ import 'notification_bottom.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -23,19 +24,20 @@ class _HomeScreenState extends State<HomeScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // fixed header
-          heder_section(),
+          // Fixed header
+          _headerSection(),
 
-          // scrollable body
+          // Scrollable body
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Column(
               children: [
+                // Quick Actions title
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Quick Actions',
-                    style: GoogleFonts.roboto(
+                    style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: const Color(0xff1C1B1F),
@@ -45,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 SizedBox(height: 12.h),
 
+                // Quick action cards row
                 Row(
                   children: [
                     Expanded(
@@ -58,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(width: 12.w),
                     Expanded(
                       child: _quickActionCard(
-                        title: 'Create Private Card',
+                        title: 'Create Private Card          ',
                         onTap: () {
                           Get.toNamed(RoutePages.newPrivateCard);
                         },
@@ -69,11 +72,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 SizedBox(height: 20.h),
 
+                // Preference card favorites header
                 Row(
                   children: [
                     Text(
                       'Preference card favorites',
-                      style: GoogleFonts.roboto(
+                      style: GoogleFonts.arimo(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xff1C1B1F),
@@ -82,13 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     const Spacer(),
                     TextButton(
                       onPressed: () {
-                        Get.to(PreferenceCardFavorites());
+                        Get.to(() => const PreferenceCardFavorites());
                       },
                       child: Row(
                         children: [
                           Text(
                             'View All',
-                            style: GoogleFonts.roboto(
+                            style: GoogleFonts.arimo(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w400,
                               color: const Color(0xff6750A4),
@@ -105,35 +109,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
+
                 SizedBox(height: 12.h),
 
-                // list items - Expanded remove করে ListView.builder এর height দিয়ে দিলাম
+                // List items
                 ListView.builder(
-
                   shrinkWrap: true,
-                  // এটা important
                   physics: const NeverScrollableScrollPhysics(),
-                  // এটা important - parent scroll করবে
                   padding: EdgeInsets.zero,
                   itemCount: 3,
                   itemBuilder: (context, index) {
                     return Padding(
-                    padding: EdgeInsets.only(bottom: 10.h),
-                    child: InkWell(
-                      onTap: () {
-                        Get.to(PreferenceCardDetails());
-                      },
-
-                      child: favoriteCard(
-                        title: 'Total Knee Replacement',
-                        status: 'Completed',
-                        statusColor: const Color(0xffE6F6EA),
-                        statusTextColor: const Color(0xff2E9B4E),
-                        date: '2026-01-02',
-                        doctor: 'Dr. Sarah Johnson',
+                      padding: EdgeInsets.only(bottom: 10.h),
+                      child: InkWell(
+                        onTap: () {
+                          Get.to(() => const PreferenceCardDetails());
+                        },
+                        child: favoriteCard(
+                          title: 'Total Knee Replacement',
+                          status: 'Completed',
+                          statusColor: const Color(0xffE6F6EA),
+                          statusTextColor: const Color(0xff2E9B4E),
+                          date: '2026-01-02',
+                          doctor: 'Dr. Sarah Johnson',
+                        ),
                       ),
-                    ),
-                  );
+                    );
                   },
                 ),
 
@@ -146,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
+  // Quick action card widget
   Widget _quickActionCard({
     required String title,
     required VoidCallback onTap,
@@ -154,8 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 130.h,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18.r),
           gradient: const LinearGradient(
@@ -166,12 +166,13 @@ class _HomeScreenState extends State<HomeScreen> {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
+              blurRadius: 12.r,
+              offset: Offset(0, 6.h),
             ),
           ],
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,           // ← এটা খুব জরুরি
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -190,11 +191,14 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 14.h),
             Text(
               title,
-              style: GoogleFonts.roboto(
-                fontSize: 14.sp,
+              style: GoogleFonts.arimo(
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w400,
                 color: Colors.white,
               ),
+              // যদি title অনেক লম্বা হয় তাহলে এগুলো যোগ করতে পারো:
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -202,7 +206,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Column heder_section() {
+  // Header section with gradient
+  Widget _headerSection() {
     return Column(
       children: [
         Stack(
@@ -221,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   bottomLeft: Radius.circular(24.r),
                   bottomRight: Radius.circular(24.r),
                 ),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [Color(0xff9945FF), Color(0xff271E3E)],
@@ -238,15 +243,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text(
                               'Good morning,',
-                              style: GoogleFonts.roboto(
+                              style: GoogleFonts.arimo(
                                 fontSize: 14.sp,
-                                color: Color(0xffE8DEF8),
+                                color: const Color(0xffE8DEF8),
                               ),
                             ),
                             SizedBox(height: 4.h),
                             Text(
                               'Dr. Anderson',
-                              style: GoogleFonts.roboto(
+                              style: GoogleFonts.arimo(
                                 fontSize: 24.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white,
@@ -264,22 +269,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Container(
                               height: 40.w,
                               width: 40.w,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Color(0xff7965AF),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.notifications_none_rounded,
                                 color: Colors.white,
+                                size: 20.sp,
                               ),
                             ),
                           ),
                           Positioned(
-                            right: 6,
-                            top: 6,
+                            right: 6.w,
+                            top: 6.h,
                             child: Container(
-                              height: 8,
-                              width: 8,
+                              height: 8.w,
+                              width: 8.w,
                               decoration: const BoxDecoration(
                                 color: Colors.red,
                                 shape: BoxShape.circle,
@@ -293,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 20.h),
                   Container(
                     height: 46.h,
-                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 1.h),
                     decoration: BoxDecoration(
                       color: const Color(0xffF2F2F7),
                       borderRadius: BorderRadius.circular(24.r),
@@ -303,18 +309,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         Icon(
                           Icons.search_outlined,
                           size: 22.sp,
-                          color: Color(0xff9AA1AF),
+                          color: const Color(0xff9AA1AF),
                         ),
                         SizedBox(width: 10.w),
                         Expanded(
                           child: TextField(
-                            style: GoogleFonts.roboto(
+                            style: GoogleFonts.arimo(
                               fontSize: 14.sp,
                               color: Colors.black,
                             ),
                             decoration: InputDecoration(
                               hintText: 'Search procedures, cards...',
-                              hintStyle: GoogleFonts.roboto(
+                              hintStyle: GoogleFonts.arimo(
                                 fontSize: 16.sp,
                                 color: const Color(0xff79747E),
                               ),
@@ -328,12 +334,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(height: 80.h),
-
                 ],
               ),
             ),
             Positioned(
-              bottom: -90,
+              bottom: -90.w,
               left: 0,
               right: 0,
               child: Padding(
@@ -361,64 +366,69 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        SizedBox(height: 100.h),
+        SizedBox(height: 100.w),
       ],
     );
   }
+
+  // Stat card widget
+  Widget _statCard({
+    required IconData icon,
+    required String count,
+    required String label,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xffE7E0EC), width: 1.w),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.08),
+            blurRadius: 12.r,
+            offset: Offset(0, 6.h),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 40.w,
+            width: 40.w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14.r),
+              color: const Color(0xffE8DEF8),
+            ),
+            child: Icon(icon, size: 20.sp, color: const Color(0xff6750A4)),
+          ),
+          SizedBox(height: 14.h),
+          Text(
+            count,
+            style: GoogleFonts.arimo(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xff1C1B1F),
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            label,
+            style: GoogleFonts.arimo(
+              fontSize: 14.sp,
+              color: const Color(0xff79747E),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Favorite card widget
+
 }
 
-Widget _statCard({
-  required IconData icon,
-  required String count,
-  required String label,
-}) {
-  return Container(
-    padding: EdgeInsets.all(16.w),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16.r),
-      border: Border.all(color: const Color(0xffE7E0EC), width: 1.w),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(.08),
-          blurRadius: 12,
-          offset: const Offset(0, 6),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 40.w,
-          width: 40.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.r),
-            color: const Color(0xffE8DEF8),
-          ),
-          child: Icon(icon, size: 20.sp, color: const Color(0xff6750A4)),
-        ),
-        SizedBox(height: 14.h),
-        Text(
-          count,
-          style: GoogleFonts.roboto(
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xff1C1B1F),
-          ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          label,
-          style: GoogleFonts.roboto(
-            fontSize: 14.sp,
-            color: const Color(0xff79747E),
-          ),
-        ),
-      ],
-    ),
-  );
-}
 Widget favoriteCard({
   required String title,
   required String status,
@@ -436,8 +446,8 @@ Widget favoriteCard({
       boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.06),
-          blurRadius: 12,
-          offset: const Offset(0, 6),
+          blurRadius: 12.r,
+          offset: Offset(0, 6.h),
         ),
       ],
     ),
@@ -449,7 +459,7 @@ Widget favoriteCard({
             Expanded(
               child: Text(
                 title,
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w400,
                   color: const Color(0xff1C1B1F),
@@ -464,7 +474,7 @@ Widget favoriteCard({
               ),
               child: Text(
                 status,
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.arimo(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: statusTextColor,
@@ -473,7 +483,7 @@ Widget favoriteCard({
             ),
           ],
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height:15.h),
         Row(
           children: [
             Icon(
@@ -484,7 +494,7 @@ Widget favoriteCard({
             SizedBox(width: 4.w),
             Text(
               date,
-              style: GoogleFonts.roboto(
+              style: GoogleFonts.arimo(
                 fontSize: 14.sp,
                 color: const Color(0xff79747E),
               ),
@@ -499,7 +509,7 @@ Widget favoriteCard({
             Expanded(
               child: Text(
                 doctor,
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.arimo(
                   fontSize: 14.sp,
                   color: const Color(0xff79747E),
                 ),

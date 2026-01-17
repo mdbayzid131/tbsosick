@@ -17,6 +17,7 @@ class ImagePaths {
   static String homeIcon="assets/icons/home icon.svg";
   static String calenderIcon="assets/icons/calender.svg";
   static String libraryIcon="assets/icons/library.svg";
+  static String profileIcon="assets/dummy_image/profilePic.png";
 
 
 

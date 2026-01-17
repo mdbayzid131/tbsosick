@@ -15,27 +15,30 @@ Widget StepCreateCard1() {
   final controller = Get.find<TutorialController>();
 
   return Padding(
+    // 🔹 Horizontal padding responsive
     padding: EdgeInsets.symmetric(horizontal: 20.w),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        /// 🔹 Top spacing
         SizedBox(height: 20.h),
 
+        /// 🔹 Title
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
             "Let's Create Your First Card",
             style: GoogleFonts.arimo(
-              fontSize: 24.sp,
+              fontSize: 24.sp, // responsive font
               fontWeight: FontWeight.w700,
               color: Colors.black,
             ),
-            textAlign: TextAlign.center,
           ),
         ),
 
         SizedBox(height: 6.h),
 
+        /// 🔹 Subtitle
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
@@ -45,12 +48,12 @@ Widget StepCreateCard1() {
               fontWeight: FontWeight.w400,
               color: const Color(0xff4A5565),
             ),
-            textAlign: TextAlign.center,
           ),
         ),
 
         SizedBox(height: 20.h),
 
+        /// 🔹 Main card section (takes remaining space safely)
         Expanded(
           child: Center(
             child: Container(
@@ -67,55 +70,63 @@ Widget StepCreateCard1() {
                   ),
                 ],
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 80.w,
-                    width: 80.w,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
+              child: SingleChildScrollView(
+                // 🔹 Prevents overflow on small screens
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    /// 🔹 Play icon
+                    Container(
+                      height: 80.w,
+                      width: 80.w,
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.play_arrow_rounded,
+                        color: Colors.white,
+                        size: 48.sp,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.play_arrow_rounded,
-                      color: Colors.white,
-                      size: 48.sp,
+
+                    SizedBox(height: 14.h),
+
+                    /// 🔹 Card title
+                    Text(
+                      'Quick Start Guide',
+                      style: GoogleFonts.arimo(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 14.h),
+                    SizedBox(height: 10.h),
 
-                  Text(
-                    'Quick Start Guide',
-                    style: GoogleFonts.arimo(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
+                    /// 🔹 Description
+                    Text(
+                      'Learn the basics in under 30 seconds',
+                      style: GoogleFonts.arimo(
+                        fontSize: 14.sp,
+                        color: const Color(0xff4A5565),
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
 
-                  SizedBox(height: 10.h),
+                    SizedBox(height: 18.h),
 
-                  Text(
-                    'Learn the basics in under 30 seconds',
-                    style: GoogleFonts.arimo(
-                      fontSize: 14.sp,
-                      color: const Color(0xff4A5565),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  SizedBox(height: 18.h),
-
-                  _stepItem('1', 'Start a new procedure'),
-                  SizedBox(height: 10.h),
-                  _stepItem('2', 'Log key moments'),
-                  SizedBox(height: 10.h),
-                  _stepItem('3', 'Add voice notes'),
-                  SizedBox(height: 10.h),
-                  _stepItem('4', 'Finalize your card'),
-                ],
+                    /// 🔹 Step list
+                    _stepItem('1', 'Start a new procedure'),
+                    SizedBox(height: 10.h),
+                    _stepItem('2', 'Log key moments'),
+                    SizedBox(height: 10.h),
+                    _stepItem('3', 'Add voice notes'),
+                    SizedBox(height: 10.h),
+                    _stepItem('4', 'Finalize your card'),
+                  ],
+                ),
               ),
             ),
           ),
@@ -123,6 +134,7 @@ Widget StepCreateCard1() {
 
         SizedBox(height: 16.h),
 
+        /// 🔹 Instruction text
         Text(
           'Tap "Start Procedure" to begin',
           style: GoogleFonts.arimo(
@@ -135,6 +147,7 @@ Widget StepCreateCard1() {
 
         SizedBox(height: 20.h),
 
+        /// 🔹 CTA button
         CustomElevatedButton(
           onPressed: controller.next,
           style: ElevatedButton.styleFrom(
@@ -151,6 +164,7 @@ Widget StepCreateCard1() {
   );
 }
 
+
 Widget _stepItem(String number, String text) {
   return Container(
     width: double.infinity,
@@ -161,6 +175,7 @@ Widget _stepItem(String number, String text) {
     ),
     child: Row(
       children: [
+        /// 🔹 Step number circle
         Container(
           height: 32.w,
           width: 32.w,
@@ -182,6 +197,7 @@ Widget _stepItem(String number, String text) {
 
         SizedBox(width: 10.w),
 
+        /// 🔹 Step text
         Expanded(
           child: Text(
             text,
@@ -195,3 +211,4 @@ Widget _stepItem(String number, String text) {
     ),
   );
 }
+

@@ -11,7 +11,7 @@ class LibraryPreferenceCardDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 100,
+        leadingWidth: 100.w,
         leading: Center(
           child: InkWell(
             onTap: () {
@@ -82,56 +82,60 @@ class LibraryPreferenceCardDetails extends StatelessWidget {
         ],
       ),
       backgroundColor: const Color(0xFFF5F5F5),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header Card - Doctor name and procedure title
-            _buildHeaderCard(),
+      body: SafeArea(
+        top: false,
 
-            SizedBox(height: 16.h),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header Card - Doctor name and procedure title
+              _buildHeaderCard(),
 
-            // Surgeon Information Card
-            _buildSurgeonInformationCard(),
+              SizedBox(height: 16.h),
 
-            SizedBox(height: 16.h),
+              // Surgeon Information Card
+              _buildSurgeonInformationCard(),
 
-            // Medication Card
-            _buildMedicationCard(),
+              SizedBox(height: 16.h),
 
-            SizedBox(height: 16.h),
+              // Medication Card
+              _buildMedicationCard(),
 
-            // All Supplies Card
-            _buildAllSuppliesCard(),
+              SizedBox(height: 16.h),
 
-            SizedBox(height: 16.h),
+              // All Supplies Card
+              _buildAllSuppliesCard(),
 
-            // Sutures Card
-            _buildSuturesCard(),
+              SizedBox(height: 16.h),
 
-            SizedBox(height: 16.h),
+              // Sutures Card
+              _buildSuturesCard(),
 
-            // Instruments Card
-            _buildInstrumentsCard(),
+              SizedBox(height: 16.h),
 
-            SizedBox(height: 16.h),
+              // Instruments Card
+              _buildInstrumentsCard(),
 
-            // Positioning Card
-            _buildPositioningCard(),
+              SizedBox(height: 16.h),
 
-            SizedBox(height: 16.h),
+              // Positioning Card
+              _buildPositioningCard(),
 
-            // Prepping / Shaving Card
-            _buildPreppingCard(),
+              SizedBox(height: 16.h),
 
-            SizedBox(height: 16.h),
+              // Prepping / Shaving Card
+              _buildPreppingCard(),
 
-            // Key Notes Card
-            _buildKeyNotesCard(),
+              SizedBox(height: 16.h),
 
-            SizedBox(height: 30.h),
-          ],
+              // Key Notes Card
+              _buildKeyNotesCard(),
+
+              SizedBox(height: 30.h),
+            ],
+          ),
         ),
       ),
     );

@@ -36,99 +36,101 @@ void showEditProfileBottomSheet(BuildContext context) {
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.all(20.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-            ),
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Edit Profile',
-                        style: GoogleFonts.arimo(
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () => Get.back(),
-                        child: Container(
-                          height: 32.h,
-                          width: 32.w,
-                          decoration: BoxDecoration(
-                            color: Color(0xffF2F2F7),
-                            shape: BoxShape.circle,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(20.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+              ),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Edit Profile',
+                          style: GoogleFonts.arimo(
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w700,
                           ),
-                          child: const Icon(Icons.close),
                         ),
-                      ),
-                    ],
-                  ),
-          
-                  SizedBox(height: 12.h),
-          
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomTextField(
-          
-                          hintText: 'John',
-                          label: 'First Name',
+                        InkWell(
+                          onTap: () => Get.back(),
+                          child: Container(
+                            height: 32.h,
+                            width: 32.w,
+                            decoration: BoxDecoration(
+                              color: Color(0xffF2F2F7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.close),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: CustomTextField(
-          
-                          hintText: 'Deo',
-                          label: 'Last Name',
+                      ],
+                    ),
+
+                    SizedBox(height: 12.h),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomTextField(
+
+                            hintText: 'John',
+                            label: 'First Name',
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-          
-                  CustomTextField(
-                    controller: linkController,
-                    hintText: 'General Surgery',
-                    label: 'Specialty',
-                  ),
-                  SizedBox(height: 12.h),
-                  CustomTextField(
-                    controller: locationController,
-                    hintText: 'City Hospital',
-                    label: 'Hospital ',
-                  ),
-                  SizedBox(height: 12.h),
-                  CustomTextField(
-                    controller: notesController,
-                    hintText: 'john.doe@example.com',
-                    label: 'Email',
-                  ),
-                  SizedBox(height: 12.h),
-                  CustomTextField(
-                    controller: notesController,
-                    hintText: '(555) 987-6543',
-                    label: 'Phone',
-                  ),
-                  SizedBox(height: 25.h),
-          
-                  SizedBox(
-                    height: 50.h,
-          
-                      child: CustomElevatedButton(label: 'Save Changes', onPressed: () {})),
-          
-                  SizedBox(height: 10.h),
-                ],
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: CustomTextField(
+
+                            hintText: 'Deo',
+                            label: 'Last Name',
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+
+                    CustomTextField(
+                      controller: linkController,
+                      hintText: 'General Surgery',
+                      label: 'Specialty',
+                    ),
+                    SizedBox(height: 12.h),
+                    CustomTextField(
+                      controller: locationController,
+                      hintText: 'City Hospital',
+                      label: 'Hospital ',
+                    ),
+                    SizedBox(height: 12.h),
+                    CustomTextField(
+                      controller: notesController,
+                      hintText: 'john.doe@example.com',
+                      label: 'Email',
+                    ),
+                    SizedBox(height: 12.h),
+                    CustomTextField(
+                      controller: notesController,
+                      hintText: '(555) 987-6543',
+                      label: 'Phone',
+                    ),
+                    SizedBox(height: 25.h),
+
+                    SizedBox(
+                      height: 50.h,
+
+                        child: CustomElevatedButton(label: 'Save Changes', onPressed: () {})),
+
+                    SizedBox(height: 10.h),
+                  ],
+                ),
               ),
             ),
           ),

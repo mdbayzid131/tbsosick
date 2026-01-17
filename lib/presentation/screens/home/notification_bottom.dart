@@ -12,84 +12,117 @@ void showNotificationBottomSheet(BuildContext context) {
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) {
+    builder: (context) {
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: Container(
-          padding: EdgeInsets.all(20.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                children: [
-                  Text(
-                    'Notifications',
-                    style: GoogleFonts.arimo(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xff1C1B1F),
-                    ),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Mark all read',
+        child: SafeArea(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.9,
+            padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Notifications',
                       style: GoogleFonts.arimo(
-                        fontSize: 15.sp,
+                        fontSize: 20.sp,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
+                        color: const Color(0xff1C1B1F),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Container(
-                      height: 32.w,
-                      width: 32.w,
-                      decoration: BoxDecoration(
-                        color: Color(0xffF2F2F7),
-                        shape: BoxShape.circle,
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Mark all read',
+                        style: GoogleFonts.arimo(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primary,
+                        ),
                       ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Container(
+                        height: 32.w,
+                        width: 32.w,
+                        decoration: BoxDecoration(
+                          color: Color(0xffF2F2F7),
+                          shape: BoxShape.circle,
+                        ),
 
-                      child: const Icon(Icons.close),
+                        child: const Icon(Icons.close),
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header
+
+
+                        SizedBox(height: 16.h),
+
+                        // Notification card 1
+                        _notificationCard(
+                          icon: Icons.assignment_outlined,
+                          title: 'New Card Added',
+                          subtitle: 'Dr. Sarah Johnson — Total\nKnee Replacement',
+                          actionText: 'View Card',
+                          time: '16m ago',
+                        ),
+
+                        SizedBox(height: 12.h),
+
+                        // Notification card 2
+                        _notificationCard(
+                          icon: Icons.calendar_today_outlined,
+                          title: 'Event Scheduled',
+                          subtitle: 'Total Knee Replacement on\n2026-01-08 at 08:00',
+                          actionText: 'View Event',
+                          time: '16m ago',
+                        ),
+                        SizedBox(height: 12.h),
+
+                        // Notification card 2
+                        _notificationCard(
+                          icon: Icons.calendar_today_outlined,
+                          title: 'Event Scheduled',
+                          subtitle: 'Total Knee Replacement on\n2026-01-08 at 08:00',
+                          actionText: 'View Event',
+                          time: '16m ago',
+                        ),
+                        SizedBox(height: 12.h),
+
+                        // Notification card 2
+                        _notificationCard(
+                          icon: Icons.calendar_today_outlined,
+                          title: 'Event Scheduled',
+                          subtitle: 'Total Knee Replacement on\n2026-01-08 at 08:00',
+                          actionText: 'View Event',
+                          time: '16m ago',
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-
-              SizedBox(height: 16.h),
-
-              // Notification card 1
-              _notificationCard(
-                icon: Icons.assignment_outlined,
-                title: 'New Card Added',
-                subtitle: 'Dr. Sarah Johnson — Total\nKnee Replacement',
-                actionText: 'View Card',
-                time: '16m ago',
-              ),
-
-              SizedBox(height: 12.h),
-
-              // Notification card 2
-              _notificationCard(
-                icon: Icons.calendar_today_outlined,
-                title: 'Event Scheduled',
-                subtitle: 'Total Knee Replacement on\n2026-01-08 at 08:00',
-                actionText: 'View Event',
-                time: '16m ago',
-              ),
-            ],
+                ),
+                SizedBox(height: 16.h),
+              ],
+            ),
           ),
         ),
       );

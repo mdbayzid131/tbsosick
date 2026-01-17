@@ -206,19 +206,7 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
         ),
-        // Days of week styling
-        daysOfWeekStyle: DaysOfWeekStyle(
-          weekdayStyle: GoogleFonts.arimo(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xff79747E),
-          ),
-          weekendStyle: GoogleFonts.arimo(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xff79747E),
-          ),
-        ),
+        // Days of week styling,
       ),
     );
   }
@@ -273,7 +261,7 @@ class _CalendarPageState extends State<CalendarPage> {
           SizedBox(height: 16.h),
           Container(
             width: 60.w,
-            height: 60.h,
+            height: 60.w,
             decoration: BoxDecoration(
               color: const Color(0xFFF3F4F6),
               borderRadius: BorderRadius.circular(12.r),

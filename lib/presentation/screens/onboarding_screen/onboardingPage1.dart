@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/image_paths.dart';
@@ -14,6 +15,7 @@ class OnboardingPage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: .center,
       children: [
         ///<================= SKIP BUTTON =========================>///
         Align(
@@ -22,21 +24,19 @@ class OnboardingPage1 extends StatelessWidget {
             onPressed: () {
               Get.toNamed(RoutePages.loginScreen);
             },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Skip",
-                  style: TextStyle(color: AppColors.primary, fontSize: 16.sp),
-                ),
-              ],
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Text(
+                "Skip",
+                style: TextStyle(color: AppColors.primary, fontSize: 16.sp),
+              ),
             ),
           ),
         ),
-        const Spacer(flex: 1),
+        Spacer(),
 
         ///<================= MAIN ILLUSTRATION =========================>///
-        Image.asset(ImagePaths.onboardingImage1, height: 320),
+        Image.asset(ImagePaths.onboardingImage1, height: 450.h),
 
         SizedBox(height: 10.h),
 
@@ -46,7 +46,11 @@ class OnboardingPage1 extends StatelessWidget {
           child: Text(
             'Stop Relying on Loose Paper',
             textAlign: TextAlign.center,
-            style: AppColors.titleTextStyle,
+            style: GoogleFonts.arimo(
+              fontSize: 28.sp,
+              fontWeight: FontWeight.w700,
+              color: Color(0xff101828),
+            ),
           ),
         ),
         SizedBox(height: 10.h),
@@ -55,11 +59,14 @@ class OnboardingPage1 extends StatelessWidget {
           child: Text(
             'SMRTSCRUB keeps your surgical notes organized and accessible',
             textAlign: TextAlign.center,
-            style: AppColors.subTitleTextStyle,
+            style: GoogleFonts.arimo(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff4A5565),
+            ),
           ),
         ),
-
-        const Spacer(flex: 2),
+        Spacer(),
       ],
     );
   }

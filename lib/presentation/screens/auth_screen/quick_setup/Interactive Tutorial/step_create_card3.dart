@@ -64,56 +64,58 @@ Widget StepCreateCard3() {
                   ),
                 ],
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Mic icon
-                  Container(
-                    width: 120.w,
-                    height: 120.w,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xff8A3AEA),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.mic_none_rounded,
-                        color: Colors.white,
-                        size: 60.sp,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Mic icon
+                    Container(
+                      width: 100.w,
+                      height: 100.w,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xff8A3AEA),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.mic_none_rounded,
+                          color: Colors.white,
+                          size: 55.sp,
+                        ),
                       ),
                     ),
-                  ),
-
-                  SizedBox(height: 14.h),
-
-                  Text(
-                    'Voice Note',
-                    style: GoogleFonts.arimo(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
+                
+                    SizedBox(height: 14.h),
+                
+                    Text(
+                      'Voice Note',
+                      style: GoogleFonts.arimo(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-
-                  SizedBox(height: 8.h),
-
-                  Text(
-                    'Hold button to record hands-free',
-                    style: GoogleFonts.arimo(
-                      fontSize: 14.sp,
-                      color: const Color(0xff4A5565),
+                
+                    SizedBox(height: 8.h),
+                
+                    Text(
+                      'Hold button to record hands-free',
+                      style: GoogleFonts.arimo(
+                        fontSize: 14.sp,
+                        color: const Color(0xff4A5565),
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  SizedBox(height: 24.h),
-
-                  _bulletText('Works with surgical gloves'),
-                  SizedBox(height: 8.h),
-                  _bulletText('Auto-saves to your preference card'),
-                  SizedBox(height: 8.h),
-                  _bulletText('HIPAA compliant. no patient data'),
-                ],
+                
+                    SizedBox(height: 24.h),
+                
+                    _bulletText('Works with surgical gloves'),
+                    SizedBox(height: 8.h),
+                    _bulletText('Auto-saves to your preference card'),
+                    SizedBox(height: 8.h),
+                    _bulletText('HIPAA compliant. no patient data'),
+                  ],
+                ),
               ),
             ),
           ),
@@ -167,11 +169,11 @@ Widget _bulletText(String text) {
   return Align(
     alignment: Alignment.centerLeft,
     child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Icon(
+         Icon(
           Icons.circle,
-          size: 6,
+          size: 6.sp,
           color: Colors.grey,
         ),
         SizedBox(width: 8.w),

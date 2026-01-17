@@ -49,7 +49,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
     return Scaffold(
       backgroundColor: const Color(0xffF2F2F7),
       appBar: AppBar(
-        leadingWidth: 100,
+        leadingWidth: 100.w,
         leading: Center(
           child: InkWell(
             onTap: () {
@@ -87,6 +87,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
               ),
             ),
           ),
+          SizedBox(width: 16.w),
         ],
       ),
       body: ListView(

@@ -50,6 +50,7 @@ dependencies:
   firebase_storage: ^13.0.5
   firebase_messaging: ^16.1.0
   table_calendar: ^3.0.9
+  flutter_calendar_carousel: ^2.0.6
 
 dev_dependencies:
   flutter_test:

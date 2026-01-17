@@ -16,7 +16,6 @@ import '../../../../routes/routes.dart';
 import '../../../controllers/form_validation.dart';
 
 void showSelectPackageBottomSheet(BuildContext context) {
-
   final selectedPlan = 1.obs;
 
   showModalBottomSheet(
@@ -29,193 +28,214 @@ void showSelectPackageBottomSheet(BuildContext context) {
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(0, 40.w, 0, 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-          ),
-          child: SingleChildScrollView(
+        child: SafeArea(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.9,
+            padding: EdgeInsets.fromLTRB(0, 16.w, 0, 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.only(top: 24, bottom: 28),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Color(0xFf9945FF), Color(0xFF7B2FD4)],
-                    ),
-                  ),
-                  child: Column(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 16),
-                          child: Container(
-                            height: 32.w,
-                            width: 32.w,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(.20),
-                              shape: BoxShape.circle,
-                            ),
-                            child: GestureDetector(
-                              onTap: () => Get.back(),
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: 20.sp,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 12),
-
-                      Container(
-                        height: 56,
-                        width: 56,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(.20),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Text(
-                            '⭐️',
-                            style: GoogleFonts.arimo(
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 16),
-
                       Text(
-                        'Unlock SMRTSCRUB',
+                        'Choose a Plan',
                         style: GoogleFonts.arimo(
-                          fontSize: 24,
+                          fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                          color: const Color(0xFF000000),
                         ),
                       ),
-
-                      SizedBox(height: 6),
-
-                      Text(
-                        'Choose the plan that works for you',
-                        style: GoogleFonts.arimo(
-                          fontSize: 14.sp,
-                          color: Colors.white.withOpacity(.9),
+                      GestureDetector(
+                        onTap: () => Get.back(),
+                        child: Container(
+                          height: 36.w,
+                          width: 36.w,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFF2F2F7),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            size: 20.sp,
+                            color: const Color(0xFF1C1B1F),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
+                SizedBox(height: 5.h),
 
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 16),
-
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Choose a Plan',
-                          style: GoogleFonts.arimo(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.only(top: 24, bottom: 28),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Color(0xFf9945FF), Color(0xFF7B2FD4)],
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 16),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 12),
 
-                      // Free
-                      GestureDetector(
-                        onTap: () => selectedPlan.value = 0,
-                        child: Obx(
-                          () => _planCard(
-                            title: 'Free',
-                            price: '\$0 ',
-                            features: [
-                              '2 basic preference cards',
-                              'No library access',
-                              'No calendar',
-                              'Email support',
+                              Container(
+                                height: 56.w,
+                                width: 56.w,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(.20),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '⭐️',
+                                    style: GoogleFonts.arimo(
+                                      fontSize: 24.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 16),
+
+                              Text(
+                                'Unlock SMRTSCRUB',
+                                style: GoogleFonts.arimo(
+                                  fontSize: 22.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+
+                              SizedBox(height: 6),
+
+                              Text(
+                                'Choose the plan that works for you',
+                                style: GoogleFonts.arimo(
+                                  fontSize: 14.sp,
+                                  color: Colors.white.withOpacity(.9),
+                                ),
+                              ),
                             ],
-                            isSelected: selectedPlan.value == 0,
                           ),
                         ),
-                      ),
 
-                      SizedBox(height: 16.h),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 16),
 
-                      // Premium
-                      GestureDetector(
-                        onTap: () => selectedPlan.value = 1,
-                        child: Obx(
-                          () => _planCard(
-                            title: 'Premium',
-                            price: '\$5.99',
-                            badge: 'Popular',
-                            features: [
-                              '20 preference cards',
-                              'Basic calendar',
-                              'Access to public library (upload & download)',
-                              'No team collaboration',
-                              'No verified card',
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Choose a Plan',
+                                  style: GoogleFonts.arimo(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 16),
+
+                              // Free
+                              GestureDetector(
+                                onTap: () => selectedPlan.value = 0,
+                                child: Obx(
+                                  () => _planCard(
+                                    title: 'Free',
+                                    price: '\$0 ',
+                                    features: [
+                                      '2 basic preference cards',
+                                      'No library access',
+                                      'No calendar',
+                                      'Email support',
+                                    ],
+                                    isSelected: selectedPlan.value == 0,
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 16.h),
+
+                              // Premium
+                              GestureDetector(
+                                onTap: () => selectedPlan.value = 1,
+                                child: Obx(
+                                  () => _planCard(
+                                    title: 'Premium',
+                                    price: '\$5.99',
+                                    badge: 'Popular',
+                                    features: [
+                                      '20 preference cards',
+                                      'Basic calendar',
+                                      'Access to public library (upload & download)',
+                                      'No team collaboration',
+                                      'No verified card',
+                                    ],
+                                    isSelected: selectedPlan.value == 1,
+                                    showCheck: true,
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 16),
+
+                              // Enterprise
+                              GestureDetector(
+                                onTap: () => selectedPlan.value = 2,
+                                child: Obx(
+                                  () => _planCard(
+                                    title: 'Enterprise',
+                                    price: '\$9.99',
+                                    badge: 'Popular',
+                                    features: [
+                                      'Unlimited cards',
+                                      'Advanced calendar',
+                                      'Access to public library (upload & download)',
+                                      'Team collaboration',
+                                      'Verified preference cards',
+                                    ],
+                                    isSelected: selectedPlan.value == 2,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 16),
+
+                              Obx(
+                                () => CustomElevatedButton(
+                                  label: selectedPlan.value == 0
+                                      ? 'Continue with free'
+                                      : selectedPlan.value == 1
+                                      ? 'Continue with premium'
+                                      : 'Continue with enterprise',
+                                  onPressed: () {
+                                    Get.toNamed(RoutePages.whatYourSpeciality);
+                                  },
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
                             ],
-                            isSelected: selectedPlan.value == 1,
-                            showCheck: true,
                           ),
                         ),
-                      ),
-
-                      SizedBox(height: 16),
-
-                      // Enterprise
-                      GestureDetector(
-                        onTap: () => selectedPlan.value = 2,
-                        child: Obx(
-                          () => _planCard(
-                            title: 'Enterprise',
-                            price: '\$9.99',
-                            badge: 'Popular',
-                            features: [
-                              'Unlimited cards',
-                              'Advanced calendar',
-                              'Access to public library (upload & download)',
-                              'Team collaboration',
-                              'Verified preference cards',
-                            ],
-                            isSelected: selectedPlan.value == 2,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-
-                      Obx(
-                        () => CustomElevatedButton(
-                          label: selectedPlan.value == 0
-                              ? 'Continue with free'
-                              : selectedPlan.value == 1
-                              ? 'Continue with premium'
-                              : 'Continue with enterprise',
-                          onPressed: () {
-                            Get.toNamed(RoutePages.whatYourSpeciality);
-                          },
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
