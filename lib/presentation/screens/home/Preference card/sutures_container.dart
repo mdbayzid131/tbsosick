@@ -333,6 +333,8 @@ class _SuturesContainerState extends State<SuturesContainer> {
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14.sp,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(width: 8.w),
                               InkWell(

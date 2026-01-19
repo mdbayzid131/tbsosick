@@ -56,18 +56,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 24.h),
         
                 ///================= Welcome Text =========================///
-                Text("SMRTSCRUB", style: GoogleFonts.arimo(
-                  fontSize: 30.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xff101828),
-                )),
-                Text(
-                  "Surgical Preference Cards",
-                  style: GoogleFonts.arimo(
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xff8E8E93),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("SMRTSCRUB", style: GoogleFonts.arimo(
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xff101828),
+                    )),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        "SURGICAL CASE LOG & PREFERENCE CARDS",
+                        style: GoogleFonts.arimo(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xff8E8E93),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
         
                 SizedBox(height: 32.h),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../dummy_data.dart';
+
 class PriverMedicalSuppliesContainer extends StatefulWidget {
   const PriverMedicalSuppliesContainer({super.key});
 
@@ -18,29 +20,7 @@ class _PriverMedicalSuppliesContainerState extends State<PriverMedicalSuppliesCo
     'Drainage Tubes',
   ];
 
-  // Sample data - হাজার হাজার আইটেম থাকতে পারে
-  final List<String> allSupplies = [
-    'Raytex Sponges',
-    'Bone Cement',
-    'Specimen Bag',
-    'Surgical Markers',
-    'Drainage Tubes',
-    'Laparoscopic Instruments',
-    'Orthopaedic Screws',
-    'Cardiovascular Stents',
-    'Surgical Gloves',
-    'Suture Materials',
-    'Bandages',
-    'Syringes',
-    'IV Catheters',
-    'Endoscope',
-    'Surgical Scissors',
-    'Scalpel Blades',
-    'Forceps',
-    'Retractors',
-    'Needle Holders',
-    'Hemostats',
-  ];
+
 
   List<String> get filteredSupplies {
     if (_searchController.text.isEmpty) return [];
@@ -333,6 +313,8 @@ class _PriverMedicalSuppliesContainerState extends State<PriverMedicalSuppliesCo
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14.sp,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(width: 8.w),
                               InkWell(
