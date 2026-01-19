@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/home/Preference%20card/sutures_container.dart';
 import 'package:tbsosick/presentation/widgets/CustomContainer.dart';
@@ -317,7 +316,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
 
                 SizedBox(height: 20.h),
 
-                MedicalSuppliesContainer(),
+                MedicalSuppliesScreen(),
 
                 SizedBox(height: 20.h),
                 SuturesContainer(),
