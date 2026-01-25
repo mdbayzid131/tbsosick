@@ -1,56 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom2.dart';
-import 'package:tbsosick/presentation/widgets/custom_date_picker.dart';
 
-import '../../controllers/form_validation.dart';
+import '../../../core/constants/image_paths.dart';
+import '../../widgets/custom_date_picker.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/custom_time_picker.dart';
 
 void showAddEventBottomSheet(BuildContext context) {
-  final emailController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-  final TextEditingController timeController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
-  final TextEditingController notesController = TextEditingController();
-  final TextEditingController linkController = TextEditingController();
-  final TextEditingController titleController = TextEditingController();
-  final validator = Get.find<FormValidationController>();
+  final titleController = TextEditingController();
+  final dateController = TextEditingController();
+  final timeController = TextEditingController();
+  final notesController = TextEditingController();
+
+  final leadSurgeonController = TextEditingController();
+  final teamMemberController = TextEditingController();
+
+  List<String> teamMembers = ['Dr. Mike Chen', 'Nurse Amy Park'];
 
   final formKey = GlobalKey<FormState>();
 
   showModalBottomSheet(
-    isDismissible: false,
     context: context,
     isScrollControlled: true,
+    isDismissible: false,
     backgroundColor: Colors.transparent,
     builder: (context) {
-      return Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.9,
-          padding: EdgeInsets.all(20.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-          ),
-          child: SafeArea(
-            child: SingleChildScrollView(
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.9,
+              padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+              ),
               child: Form(
                 key: formKey,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    /// Header
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -63,69 +60,289 @@ void showAddEventBottomSheet(BuildContext context) {
                         ),
                         InkWell(
                           onTap: () => Get.back(),
-                          child: Container(
-                            height: 32.h,
-                            width: 32.w,
-                            decoration: BoxDecoration(
-                              color: Color(0xffF2F2F7),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.close),
-                          ),
+                          child: const Icon(Icons.close),
                         ),
                       ],
                     ),
-                        
-                    SizedBox(height: 12.h),
-                        
-                    CustomTextField(
-                      controller: titleController,
-                      hintText: 'Enter event title',
-                      label: 'Event Title *',
+
+                    SizedBox(height: 16.h),
+                    
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                                   
+                                      
+                            CustomTextField(
+                              controller: titleController,
+                              label: 'Event Title *',
+                              hintText: 'Enter event title',
+                            ),
+                                      
+                            SizedBox(height: 12.h),
+                                      
+                            CustomDatePickerField(
+                              controller: dateController,
+                              label: 'Date *',
+                              hintText: 'Select date',
+                            ),
+                                      
+                            SizedBox(height: 12.h),
+                                      
+                            CustomTimePickerField(
+                              controller: timeController,
+                              label: 'Time *',
+                              hintText: 'Select time',
+                            ),
+                                      
+                            SizedBox(height: 16.h),
+                                      
+                            /// PERSONNEL CARD
+                            _buildPersonnelCard(
+                              leadSurgeonController: leadSurgeonController,
+                              teamMemberController: teamMemberController,
+                              teamMembers: teamMembers,
+                              onAdd: () {
+                                if (teamMemberController.text.isNotEmpty) {
+                                  setState(() {
+                                    teamMembers.add(teamMemberController.text);
+                                    teamMemberController.clear();
+                                  });
+                                }
+                              },
+                              onRemove: (member) {
+                                setState(() {
+                                  teamMembers.remove(member);
+                                });
+                              },
+                            ),
+                                      
+                            SizedBox(height: 16.h),
+                                      
+                            CustomTextField(
+                              controller: notesController,
+                              label: 'Notes',
+                              hintText: 'Additional notes...',
+                              maxLines: 4,
+                            ),
+                                      
+                            SizedBox(height: 24.h),
+                                      
+                            CustomElevatedButton(
+                              label: 'Create Event',
+                              onPressed: () {
+                                // submit logic
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 12.h),
-                    CustomDatePickerField(
-                      hintText: 'Date',
-                      label: 'Date *',
-                      controller: dateController,
-                    ),
-                    SizedBox(height: 12.h),
-                    CustomTimePickerField(
-                      hintText: 'Time',
-                      label: 'Time *',
-                      controller: timeController,
-                    ),
-                    SizedBox(height: 12.h),
-                    CustomTextField(
-                      controller: linkController,
-                      hintText: '',
-                      label: 'Link Preference Card',
-                    ),
-                    SizedBox(height: 12.h),
-                    CustomTextField(
-                      controller: locationController,
-                      hintText: 'e.g., OR 3',
-                      label: 'Location ',
-                    ),
-                    SizedBox(height: 12.h),
-                    CustomTextField(
-                      maxLines: 4,
-                      controller: notesController,
-                      hintText: 'Additional notes...',
-                      label: 'Notes',
-                    ),
-                    SizedBox(height: 25.h),
-                        
-                    CustomElevatedButton(label: 'Create Event', onPressed: () {}),
-                        
-                    SizedBox(height: 10.h),
                   ],
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       );
     },
+  );
+}
+
+Widget _buildPersonnelCard({
+  required TextEditingController leadSurgeonController,
+  required TextEditingController teamMemberController,
+  required List<String> teamMembers,
+  required VoidCallback onAdd,
+  required Function(String) onRemove,
+}) {
+  return _buildCard(
+    title: 'Personnel',
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTextField(
+          label: 'Lead Surgeon',
+          controller: leadSurgeonController,
+          icon: Icons.person_outline,
+        ),
+
+        SizedBox(height: 16.h),
+
+        Text(
+          'Surgical Team',
+          style: GoogleFonts.arimo(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+
+        SizedBox(height: 8.h),
+
+        Row(
+          children: [
+            Expanded(
+              child: _buildTextField(
+                controller: teamMemberController,
+                hint: 'Add team member',
+                showLabel: false,
+              ),
+            ),
+            SizedBox(width: 8.w),
+            GestureDetector(
+              onTap: onAdd,
+              child: Container(
+                width: 48.w,
+                height: 48.w,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6750A4),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  Icons.person_add_alt_outlined,
+                  color: Colors.white,
+                  size: 22.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 12.h),
+
+        ...teamMembers.map(
+          (member) => ListTile(
+            title: Text(member),
+            trailing: IconButton(
+              icon: SvgPicture.asset(
+                ImagePaths.deleteIcon,
+                height: 16.w,
+                width: 16.w,
+              ),
+              onPressed: () => onRemove(member),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildCard({
+  required String title,
+  required Widget child,
+  IconData? titleIcon,
+}) {
+  return Container(
+    padding: EdgeInsets.all(16.w),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16.r),
+      border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.04),
+          blurRadius: 8.r,
+          offset: Offset(0, 2.h),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            if (titleIcon != null) ...[
+              Icon(titleIcon, size: 20.sp, color: const Color(0xFF1C1B1F)),
+              SizedBox(width: 8.w),
+            ],
+            Text(
+              title,
+              style: GoogleFonts.arimo(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1C1B1F),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        child,
+      ],
+    ),
+  );
+}
+
+// Reusable TextField Widget
+Widget _buildTextField({
+  String? label,
+  required TextEditingController controller,
+  String? hint,
+  IconData? icon,
+  int maxLines = 1,
+  bool readOnly = false,
+  VoidCallback? onTap,
+  bool showLabel = true,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (showLabel && (label != null || icon != null)) ...[
+        Row(
+          children: [
+            if (icon != null) ...[
+              Icon(icon, size: 16.sp, color: const Color(0xFF6B7280)),
+              SizedBox(width: 6.w),
+            ],
+            if (label != null)
+              Text(
+                label,
+                style: GoogleFonts.arimo(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF1C1B1F),
+                ),
+              ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+      ],
+      TextField(
+        controller: controller,
+        maxLines: maxLines,
+        readOnly: readOnly,
+        onTap: onTap,
+        style: GoogleFonts.arimo(
+          fontSize: 15.sp,
+          color: const Color(0xFF1C1B1F),
+        ),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: GoogleFonts.arimo(
+            fontSize: 15.sp,
+            color: const Color(0xFF9CA3AF),
+          ),
+          filled: true,
+          fillColor: const Color(0xFFF9FAFB),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 14.h,
+          ),
+        ),
+      ),
+    ],
   );
 }

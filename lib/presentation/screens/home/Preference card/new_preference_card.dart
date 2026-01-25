@@ -637,30 +637,6 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
               ),
               child: Row(
                 children: [
-                  // Save Draft Button
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: _saveDraft,
-                      child: Container(
-                        height: 52.h,
-                        decoration: BoxDecoration(
-                          color: Color(0xffF2F2F7),
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Save Draft',
-                            style: GoogleFonts.arimo(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF9945FF),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                   SizedBox(width: 12.w),
                   // Publish Button
                   Expanded(
