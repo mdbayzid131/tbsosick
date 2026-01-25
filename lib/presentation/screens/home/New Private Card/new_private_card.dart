@@ -239,8 +239,29 @@ class _NewPrivateCardState extends State<NewPrivateCard> {
 
                       SizedBox(height: 10.h),
 
+                      // Full Name TextFormField
+                      _buildTextField('Full Name', 'Enter full name'),
+                      SizedBox(height: 10.h),
+                      Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
+                      SizedBox(height: 10.h),
+
+                      // Hand Preference TextFormField
+                      _buildTextField(
+                        'Hand Preference (Surgeon)',
+                        'Enter hand preference',
+                      ),
+                      SizedBox(height: 10.h),
+                      Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
+                      SizedBox(height: 10.h),
+
                       // Specialty TextFormField
                       _buildTextField('Specialty', 'e.g., Orthopedic Surgery'),
+                      SizedBox(height: 10.h),
+                      Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
+                      SizedBox(height: 10.h),
+
+                      // Contact Number TextFormField
+                      _buildTextField('Contact Number', '(555) 123-4567'),
                       SizedBox(height: 10.h),
                       Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
                       SizedBox(height: 10.h),

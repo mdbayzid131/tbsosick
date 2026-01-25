@@ -15,9 +15,6 @@ class _PriverMedicalSuppliesContainerState extends State<PriverMedicalSuppliesCo
   final FocusNode _searchFocusNode = FocusNode();
 
   List<String> selectedItems = [
-    'Raytex Sponges',
-    'Bone Cement',
-    'Drainage Tubes',
   ];
 
 
@@ -306,15 +303,17 @@ class _PriverMedicalSuppliesContainerState extends State<PriverMedicalSuppliesCo
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                item,
-                                style: TextStyle(
-                                  color: const Color(0xff9945FF),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14.sp,
+                              Expanded(
+                                child: Text(
+                                  item,
+                                  style: TextStyle(
+                                    color: const Color(0xff9945FF),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.sp,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(width: 8.w),
                               InkWell(

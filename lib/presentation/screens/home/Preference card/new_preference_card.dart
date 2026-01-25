@@ -200,9 +200,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   decoration: BoxDecoration(
                     color: Colors.white, // Background color of the container
-                    borderRadius: BorderRadius.circular(
-                      20.r,
-                    ),
+                    borderRadius: BorderRadius.circular(20.r),
                     border: Border.all(
                       color: const Color(0xFFE5E7EB),
                       width: 1.w,

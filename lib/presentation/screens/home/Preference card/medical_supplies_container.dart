@@ -303,15 +303,17 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                item,
-                                style: TextStyle(
-                                  color: const Color(0xff9945FF),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14.sp,
+                              Expanded(
+                                child: Text(
+                                  item,
+                                  style: TextStyle(
+                                    color: const Color(0xff9945FF),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.sp,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(width: 8.w),
                               InkWell(

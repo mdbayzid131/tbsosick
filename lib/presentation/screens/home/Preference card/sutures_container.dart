@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../dummy_data.dart';
+
 class SuturesContainer extends StatefulWidget {
   const SuturesContainer({super.key});
 
@@ -12,35 +14,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
 
-  List<String> selectedItems = [
-    'Raytex Sponges',
-    'Bone Cement',
-    'Drainage Tubes',
-  ];
-
-  // Sample data - হাজার হাজার আইটেম থাকতে পারে
-  final List<String> allSupplies = [
-    'Raytex Sponges',
-    'Bone Cement',
-    'Specimen Bag',
-    'Surgical Markers',
-    'Drainage Tubes',
-    'Laparoscopic Instruments',
-    'Orthopaedic Screws',
-    'Cardiovascular Stents',
-    'Surgical Gloves',
-    'Suture Materials',
-    'Bandages',
-    'Syringes',
-    'IV Catheters',
-    'Endoscope',
-    'Surgical Scissors',
-    'Scalpel Blades',
-    'Forceps',
-    'Retractors',
-    'Needle Holders',
-    'Hemostats',
-  ];
+  List<String> selectedItems = [];
 
   List<String> get filteredSupplies {
     if (_searchController.text.isEmpty) return [];
@@ -326,15 +300,18 @@ class _SuturesContainerState extends State<SuturesContainer> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                item,
-                                style: TextStyle(
-                                  color: const Color(0xff9945FF),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14.sp,
+                              Expanded(
+
+                                child: Text(
+                                  item,
+                                  style: TextStyle(
+                                    color: const Color(0xff9945FF),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.sp,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
                               SizedBox(width: 8.w),
                               InkWell(
