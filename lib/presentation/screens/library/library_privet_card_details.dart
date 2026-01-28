@@ -49,25 +49,6 @@ class LibraryPrivetCardDetails extends StatelessWidget {
               width: 40.w,
               height: 40.w,
               decoration: BoxDecoration(
-                color: Color(0xffF2F2F7),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.share_outlined,
-                size: 22.sp,
-                color: Color(0xff9945FF),
-              ),
-            ),
-          ),
-          SizedBox(width: 16.w),
-          InkWell(
-            onTap: () {
-              // Get.back();
-            },
-            child: Container(
-              width: 40.w,
-              height: 40.w,
-              decoration: BoxDecoration(
                 color: Color(0xff9945FF),
                 shape: BoxShape.circle,
               ),
@@ -172,7 +153,7 @@ class LibraryPrivetCardDetails extends StatelessWidget {
           SizedBox(height: 12.h),
           // Downloads and updated date
           Text(
-            '237 downloads  •  Updated 05/01/2026',
+            'Updated 05/01/2026',
             style: GoogleFonts.arimo(
               fontSize: 15.sp,
               color: const Color(0xFF8E8E93),

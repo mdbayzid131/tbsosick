@@ -8,6 +8,7 @@ import 'package:tbsosick/core/constants/image_paths.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 
 import 'library_preference_card_details.dart';
+import 'library_privet_card_details.dart';
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -401,7 +402,6 @@ class _LibraryScreenState extends State<LibraryScreen>
                   title: 'Total Knee Replacement',
                   specialty: 'Orthopedic',
                   isVerified: true,
-                  duration: '2-3 hours',
                   doctor: 'By Sarah Johnson',
                   downloads: 236,
                   updatedTime: 'Updated Just now',
@@ -412,7 +412,6 @@ class _LibraryScreenState extends State<LibraryScreen>
                   title: 'Coronary Artery Bypass',
                   specialty: 'Cardiothoracic',
                   isVerified: true,
-                  duration: '4-6 hours',
                   doctor: 'By Michael Chen',
                   downloads: 236,
                   updatedTime: 'Updated Just now',
@@ -423,7 +422,6 @@ class _LibraryScreenState extends State<LibraryScreen>
                   title: 'Laparoscopic Cholecystectomy',
                   specialty: 'General Surgery',
                   isVerified: false,
-                  duration: '1-2 hours',
                   doctor: 'By Emily Rodriguez',
                   downloads: 236,
                   updatedTime: 'Updated Just now',
@@ -464,33 +462,33 @@ class _LibraryScreenState extends State<LibraryScreen>
                   title: 'Total Knee Replacement',
                   specialty: 'Orthopedic',
                   isVerified: true,
-                  duration: '2-3 hours',
                   doctor: 'By Sarah Johnson',
                   downloads: 236,
                   updatedTime: 'Updated Just now',
                   isFavorite: true,
+                  isPrivetCard: true,
                 ),
                 SizedBox(height: 12.h),
                 _buildProcedureCard(
                   title: 'Coronary Artery Bypass',
                   specialty: 'Cardiothoracic',
                   isVerified: true,
-                  duration: '4-6 hours',
                   doctor: 'By Michael Chen',
                   downloads: 236,
                   updatedTime: 'Updated Just now',
                   isFavorite: false,
+                  isPrivetCard: true,
                 ),
                 SizedBox(height: 12.h),
                 _buildProcedureCard(
                   title: 'Laparoscopic Cholecystectomy',
                   specialty: 'General Surgery',
                   isVerified: false,
-                  duration: '1-2 hours',
                   doctor: 'By Emily Rodriguez',
                   downloads: 236,
                   updatedTime: 'Updated Just now',
                   isFavorite: false,
+                  isPrivetCard: true,
                 ),
                 SizedBox(height: 12.h),
               ],
@@ -503,10 +501,10 @@ class _LibraryScreenState extends State<LibraryScreen>
 
   // Individual procedure card
   Widget _buildProcedureCard({
+    bool isPrivetCard = false,
     required String title,
     required String specialty,
     required bool isVerified,
-    required String duration,
     required String doctor,
     required int downloads,
     required String updatedTime,
@@ -514,8 +512,11 @@ class _LibraryScreenState extends State<LibraryScreen>
   }) {
     return GestureDetector(
       onTap: () {
-        // 👉 এখানে নতুন পেজে যাওয়ার কোড দাও
-        Get.to(LibraryPreferenceCardDetails());
+        if (isPrivetCard) {
+          Get.to(LibraryPrivetCardDetails());
+        } else {
+          Get.to(LibraryPreferenceCardDetails());
+        }
       },
       child: Container(
         padding: EdgeInsets.all(16.w),
@@ -625,23 +626,6 @@ class _LibraryScreenState extends State<LibraryScreen>
                   ),
                   SizedBox(width: 8.w),
                 ],
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time,
-                      color: const Color(0xFF6B7280),
-                      size: 14.sp,
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      duration,
-                      style: GoogleFonts.arimo(
-                        fontSize: 13.sp,
-                        color: const Color(0xFF79747E),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
             SizedBox(height: 8.h),
