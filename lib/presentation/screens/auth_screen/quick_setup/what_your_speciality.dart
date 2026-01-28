@@ -33,15 +33,6 @@ class WhatYourSpeciality extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 6.h),
-
-            Text(
-              "This helps us pre load relevant terminology",
-              style: GoogleFonts.arimo(
-                fontSize: 16.sp,
-                color: const Color(0xff4A5565),
-              ),
-            ),
 
             SizedBox(height: 20.h),
 
