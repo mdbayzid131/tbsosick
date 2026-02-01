@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/core/constants/image_paths.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 
 import 'library_preference_card_details.dart';

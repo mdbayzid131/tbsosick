@@ -106,7 +106,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Procedure Details',
+                'Event Details',
                 style: GoogleFonts.arimo(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w400,

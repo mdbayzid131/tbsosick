@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_color.dart';
-import '../../../../../core/constants/image_paths.dart';
 import '../../../../controllers/tutorial_controller.dart';
 import '../../../../widgets/custom_elevated_button.dart';
 

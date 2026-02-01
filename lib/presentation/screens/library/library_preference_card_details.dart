@@ -235,7 +235,7 @@ class LibraryPreferenceCardDetails extends StatelessWidget {
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               fontWeight: FontWeight.w400,
-              color: const Color(0xFF000000F),
+              color: const Color(0xff000000f),
             ),
           ),
           SizedBox(height: 16.h),

@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom2.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/image_paths.dart';
-import '../../../../routes/routes.dart';
 import 'Payment Method bottom.dart';
 
 void showUpdatePackageBottomSheet(BuildContext context) {

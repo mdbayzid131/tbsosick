@@ -4,7 +4,6 @@ import 'package:get/get_instance/src/extension_instance.dart';
 
 import '../presentation/controllers/bottom_nab_bar_controller.dart';
 import '../presentation/controllers/form_validation.dart';
-import '../presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
 
 class HomeBinding extends Bindings {
   @override

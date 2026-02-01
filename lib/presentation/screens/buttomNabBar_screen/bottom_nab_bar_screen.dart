@@ -89,7 +89,7 @@ class CustomBottomBar extends StatelessWidget {
   Widget _icon(String svgPath, int index) {
     return InkWell(
       onTap: () => nav.changePage(index),
-      child: Container(
+      child: SizedBox(
         height: 26.w,
         width: 26.w,
         child: SvgPicture.asset(

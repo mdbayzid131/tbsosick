@@ -95,67 +95,10 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Column(
               children: [
-                SizedBox(height: 20.h),
+
 
                 // Surgeon Profile Section
-                CustomContainer(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'SURGEON PROFILE',
-                        style: GoogleFonts.arimo(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff8E8E93),
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 30.w,
-                            backgroundColor: Color(0xffF2F2F7),
-                            child: Icon(
-                              Icons.camera_alt_outlined,
-                              color: Colors.grey,
-                              size: 30.sp,
-                            ),
-                          ),
-                          SizedBox(width: 12.w),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Add Photo',
-                                style: GoogleFonts.arimo(
-                                  fontSize: 17.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: const Color(0xff000000),
-                                ),
-                              ),
-                              SizedBox(height: 6.h),
-                              Text(
-                                'Upload from library or camera',
-                                style: GoogleFonts.arimo(
-                                  fontSize: 13.sp,
-                                  color: Color(0xff8E8E93),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Spacer(),
-                          Icon(
-                            Icons.add_circle_outlined,
-                            size: 30.sp,
-                            color: Color(0xff14F195),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
+      
                 SizedBox(height: 20.h),
 
                 CustomContainer(

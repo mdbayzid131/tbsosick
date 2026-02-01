@@ -10,7 +10,7 @@ import 'event_details_bottom.dart';
 import 'procedure_details.dart';
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key}) : super(key: key);
+  const CalendarPage({super.key});
 
   @override
   State<CalendarPage> createState() => _CalendarPageState();

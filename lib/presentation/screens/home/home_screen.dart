@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -8,7 +7,6 @@ import 'package:tbsosick/presentation/screens/home/preference_card_details.dart'
 import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dart';
 
 import '../../../routes/routes.dart';
-import 'Preference card/new_preference_card.dart';
 import 'notification_bottom.dart';
 
 class HomeScreen extends StatefulWidget {

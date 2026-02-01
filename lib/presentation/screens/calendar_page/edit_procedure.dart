@@ -111,7 +111,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Edit Procedure',
+            'Edit Event',
             style: GoogleFonts.arimo(
               fontSize: 20.sp,
               fontWeight: FontWeight.w600,

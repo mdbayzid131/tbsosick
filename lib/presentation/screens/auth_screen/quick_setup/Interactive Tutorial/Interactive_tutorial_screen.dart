@@ -6,7 +6,6 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/step_create_card3.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/step_create_card4.dart';
-import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 
 import '../../../../../core/constants/app_color.dart';
 import '../../../../controllers/tutorial_controller.dart';
