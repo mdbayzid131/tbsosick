@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../core/constants/image_paths.dart';
+import '../../../config/constants/image_paths.dart';
 import 'edit_procedure.dart';
 
 class ProcedureDetailsScreen extends StatelessWidget {

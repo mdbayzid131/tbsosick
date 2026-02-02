@@ -5,10 +5,10 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 
-import '../../../../../core/constants/app_color.dart';
-import '../../../../../core/constants/image_paths.dart';
-import '../../../../../routes/routes.dart';
+import '../../../../../config/constants/image_paths.dart';
 import '../../../../controllers/tutorial_controller.dart';
 import '../../../../widgets/custom_elevated_button.dart';
 
@@ -176,7 +176,7 @@ Widget StepCreateCard4() {
             Get.toNamed(RoutePages.bottomNabBarScreen);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
+            backgroundColor: AppTheme.primaryColor,
             minimumSize: Size(double.infinity, 55.h),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.r),

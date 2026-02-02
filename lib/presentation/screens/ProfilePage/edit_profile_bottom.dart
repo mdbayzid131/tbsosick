@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../controllers/form_validation.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -17,7 +15,6 @@ void showEditProfileBottomSheet(BuildContext context) {
   final TextEditingController notesController = TextEditingController();
   final TextEditingController linkController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
-  final validator = Get.find<FormValidationController>();
 
   final formKey = GlobalKey<FormState>();
 

@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/terms_of_service.dart';
 
-import '../../../core/constants/image_paths.dart';
+import '../../../config/constants/image_paths.dart';
 import '../home/notification_bottom.dart';
 import 'Privacy & Security bottom.dart';
 import 'UpdatePaymentMethodBottom.dart';

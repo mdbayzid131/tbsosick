@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 
-import '../../../../core/constants/app_color.dart';
-import '../../../../routes/routes.dart';
 
 class WhatYourSpeciality extends StatelessWidget {
   WhatYourSpeciality({super.key});
@@ -58,7 +58,7 @@ class WhatYourSpeciality extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(
                           color: selectedIndex.value == index
-                              ? AppColors.primary
+                              ? AppTheme.primaryColor
                               : const Color(0xffE5E5EA),
                           width: selectedIndex.value == index ? 2 : 1,
                         ),

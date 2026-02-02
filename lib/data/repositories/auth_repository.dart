@@ -1,11 +1,8 @@
-/*
 import 'dart:io';
-
-
 import 'package:dio/dio.dart';
-import 'package:gifting_app/core/constants/api_endpoints.dart';
+import 'package:tbsosick/config/constants/api_constants.dart';
+import 'package:tbsosick/core/services/api_client.dart';
 
-import '../services/api_client.dart';
 
 class AuthRepo {
   final ApiClient apiClient;
@@ -38,7 +35,7 @@ class AuthRepo {
     required String country,
     String role = "PARENT",
   }) async {
-    return await apiClient.postData(ApiEndpoints.createParentAccount, {
+    return await apiClient.postData(ApiConstants.signup, {
       "name": name,
       "email": email,
       "password": password,
@@ -53,7 +50,7 @@ class AuthRepo {
     required String email,
     required String password,
   }) async {
-    return await apiClient.postData(ApiEndpoints.login, {
+    return await apiClient.postData(ApiConstants.login, {
       "email": email,
       "password": password,
     });
@@ -61,14 +58,14 @@ class AuthRepo {
 
   /// ===================== FORGOT PASSWORD =====================
   Future<Response> forgotPassword({required String email}) async {
-    return await apiClient.postData(ApiEndpoints.forgotPassword, {
+    return await apiClient.postData(ApiConstants.forgotPassword, {
       "email": email,
     });
   }
 
   /// ===================== RESEND OTP =====================
   Future<Response> resentOtp({required String email}) async {
-    return await apiClient.postData(ApiEndpoints.resendVerifyEmail, {
+    return await apiClient.postData(ApiConstants.resendVerifyEmail, {   
       "email": email,
     });
   }
@@ -78,7 +75,7 @@ class AuthRepo {
     required String email,
     required int oneTimeCode,
   }) async {
-    return await apiClient.postData(ApiEndpoints.verifyEmail, {
+    return await apiClient.postData(ApiConstants.verifyEmail, {
       "email": email,
       "oneTimeCode": oneTimeCode,
     });
@@ -89,7 +86,7 @@ class AuthRepo {
     required String newPassword,
     required String confirmPassword,
   }) async {
-    return await apiClient.postData(ApiEndpoints.resetPassword, {
+    return await apiClient.postData(ApiConstants.resetPassword, {
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
     });
@@ -99,14 +96,14 @@ class AuthRepo {
   Future<Response> logout() async {
 
 
-    return await apiClient.postData(ApiEndpoints.logout, {
+    return await apiClient.postData(ApiConstants.logout, {
     });
   }
 
   /// ===================== REFRESH TOKEN =====================
   Future<Response> refreshToken(String refreshToken) async {
-    return await apiClient.postData(ApiEndpoints.refreshToken, {
-      "refreshToken": "{$refreshToken}",
+    return await apiClient.postData(ApiConstants.refreshToken, {
+      "refreshToken": refreshToken,
     });
   }
 
@@ -116,7 +113,7 @@ class AuthRepo {
     required String newPassword,
     required String confirmPassword,
   }) async {
-    return await apiClient.postData(ApiEndpoints.changePassword, {
+    return await apiClient.postData(ApiConstants.resetPassword, {      
       "currentPassword": currentPassword,
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
@@ -125,4 +122,3 @@ class AuthRepo {
 
 
 }
-*/

@@ -3,18 +3,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/core/utils/validators.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/select_package.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/presentation/widgets/custom_text_field.dart';
 
-import '../../../controllers/form_validation.dart';
 
 class WelcomePage extends StatelessWidget {
   WelcomePage({super.key});
   final _formKey = GlobalKey<FormState>();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
-  final validator = Get.find<FormValidationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +58,7 @@ class WelcomePage extends StatelessWidget {
                       label: "First Name",
                       fillColior: Colors.white,
                       controller: firstNameController,
-                      validator: validator.validName,
+                      validator: Validators.name,
                     ),
                     SizedBox(height: 20.h),
                     CustomTextField(
@@ -67,7 +66,7 @@ class WelcomePage extends StatelessWidget {
                       label: "Last Name",
                       fillColior: Colors.white,
                       controller: lastNameController,
-                      validator: validator.validName,
+                      validator: Validators.name,
                     ),
                   ],
                 ),

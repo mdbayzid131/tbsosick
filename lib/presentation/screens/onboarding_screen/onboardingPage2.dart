@@ -3,10 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 
-import '../../../core/constants/app_color.dart';
-import '../../../core/constants/image_paths.dart';
+import '../../../config/constants/image_paths.dart';
 import '../../../routes/routes.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 
 class OnboardingPage2 extends StatelessWidget {
   const OnboardingPage2({super.key});
@@ -14,7 +15,7 @@ class OnboardingPage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: .center,
+      mainAxisAlignment: MainAxisAlignment.center,    
       children: [
         ///<================= SKIP BUTTON =========================>///
         Align(
@@ -28,7 +29,7 @@ class OnboardingPage2 extends StatelessWidget {
               children: [
                 Text(
                   "Skip",
-                  style: TextStyle(color: AppColors.primary, fontSize: 16.sp),
+                  style: TextStyle(color: AppTheme.primaryColor, fontSize: 16.sp),  
                 ),
               ],
             ),

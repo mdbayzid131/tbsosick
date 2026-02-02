@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 
-import '../../core/constants/app_color.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final String label;
@@ -29,7 +29,7 @@ class CustomElevatedButton extends StatelessWidget {
                 double.infinity,
                 48.h,
               ),
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppTheme.primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
               ),

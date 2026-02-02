@@ -65,8 +65,7 @@ class AppDialog {
             );
 
           case DialogAnimation.slideUp:
-          default:
-            return SlideTransition(
+          return SlideTransition(
               position: Tween<Offset>(
                 begin: const Offset(0, 1),
                 end: Offset.zero,

@@ -4,10 +4,9 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/step_create_card3.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/step_create_card4.dart';
-
-import '../../../../../core/constants/app_color.dart';
 import '../../../../controllers/tutorial_controller.dart';
 import 'StepCreateCard1.dart';
 import 'StepCreateCard2.dart';
@@ -79,7 +78,7 @@ Widget _Header() {
           height: 48.w,
           width: 48.w,
           decoration: const BoxDecoration(
-            color: AppColors.primary,
+            color: AppTheme.primaryColor,
             shape: BoxShape.circle,
           ),
           child:  Icon(Icons.auto_fix_high, color: Colors.white, size: 18.sp),
@@ -94,7 +93,7 @@ Widget _Header() {
             Text(
               'Interactive Tutorial',
               style: GoogleFonts.arimo(
-                color: AppColors.primary,
+                color:AppTheme.primaryColor,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w700,
               ),

@@ -6,10 +6,9 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
-
-import '../../../../core/constants/app_color.dart';
-import '../../../../core/constants/image_paths.dart';
+import '../../../config/constants/image_paths.dart';
 import 'Payment Method bottom.dart';
 
 void showUpdatePackageBottomSheet(BuildContext context) {
@@ -246,7 +245,7 @@ Widget _planCard({
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
-        color: isSelected ? AppColors.primary : Color(0xffC6C6C8),
+        color: isSelected ? AppTheme.primaryColor : Color(0xffC6C6C8),
         width: isSelected ? 2 : 1,
       ),
     ),

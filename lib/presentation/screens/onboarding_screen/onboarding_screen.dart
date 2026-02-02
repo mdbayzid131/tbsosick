@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 
-import '../../../core/constants/app_color.dart';
-import '../../../routes/routes.dart';
 import '../../widgets/custom_elevated_button.dart';
 import 'onboardingPage1.dart';
 import 'onboardingPage2.dart';
@@ -73,7 +73,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: _currentPage == index
-                              ? AppColors.primary
+                              ? AppTheme.primaryColor
                               : Colors.grey.shade300,
                         ),
                       ),

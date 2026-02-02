@@ -1,15 +1,12 @@
-/*
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
-import 'package:gifting_app/core/constants/api_endpoints.dart';
-import '../../core/utils/app_constants.dart';
-import '../../core/utils/custom_snackbar.dart';
-import '../../presentation/controllers/auth_controller.dart';
-import '../../routes/routes.dart';
-import '../helper/prefs_helper.dart';
-import '../repo/auth_repo.dart';
+import 'package:tbsosick/config/constants/api_constants.dart';
+import 'package:tbsosick/config/constants/storage_constants.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/core/services/storage_service.dart';
+import 'package:tbsosick/core/utils/custom_snackbar.dart';
 
 class ApiClient extends GetxService {
   static late Dio dio;
@@ -23,9 +20,9 @@ class ApiClient extends GetxService {
 
   Future<void> fakeLogout() async {
     try {
-      // Clear tokens from PrefsHelper
-      await PrefsHelper.setString(AppConstants.bearerToken, "");
-      await PrefsHelper.setString(AppConstants.refreshToken, "");
+      // Clear tokens from StorageService
+      await StorageService.setString(StorageConstants.bearerToken, "");
+      await StorageService.setString(StorageConstants.refreshToken, "");
 
       // Optional: Clear other user-related data if needed
       // await PrefsHelper.clearAll();
@@ -43,13 +40,15 @@ class ApiClient extends GetxService {
 
     showCustomSnackBar("Session expired. Please login again.", isError: true);
 
-    Get.offAllNamed(RoutePages.loginScreen);
+    Get.offAllNamed(AppRoutes.LOGIN);
   }
 
-  void init() {
+  @override
+  void onInit() {
+    super.onInit();
     dio = Dio(
       BaseOptions(
-        baseUrl: ApiEndpoints.baseUrl,
+        baseUrl: ApiConstants.baseUrl,
         connectTimeout: const Duration(seconds: timeoutInSeconds),
         receiveTimeout: const Duration(seconds: timeoutInSeconds),
         headers: {'Content-Type': 'application/json'},
@@ -59,7 +58,7 @@ class ApiClient extends GetxService {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          bearerToken = await PrefsHelper.getString(AppConstants.bearerToken);
+          bearerToken = await StorageService.getString(StorageConstants.bearerToken);
           if (bearerToken.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $bearerToken';
           }
@@ -260,4 +259,3 @@ class MultipartBody {
 
   MultipartBody(this.key, this.file);
 }
-*/

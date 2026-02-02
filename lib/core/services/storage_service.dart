@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PrefsHelper extends GetxService {
+class StorageService extends GetxService {
   //===========================> Get Data <========================
   static Future<String> getString(String key) async {
     final preferences = await SharedPreferences.getInstance();
@@ -62,3 +62,5 @@ class PrefsHelper extends GetxService {
     return preferences.containsKey(key);
   }
 }
+
+

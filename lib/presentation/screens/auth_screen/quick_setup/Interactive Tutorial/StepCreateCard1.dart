@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 
-import '../../../../../core/constants/app_color.dart';
 import '../../../../controllers/tutorial_controller.dart';
 import '../../../../widgets/custom_elevated_button.dart';
 
@@ -79,7 +79,7 @@ Widget StepCreateCard1() {
                       height: 80.w,
                       width: 80.w,
                       decoration: const BoxDecoration(
-                        color: AppColors.primary,
+                        color: AppTheme.primaryColor,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -149,7 +149,7 @@ Widget StepCreateCard1() {
         CustomElevatedButton(
           onPressed: controller.next,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
+            backgroundColor: AppTheme.primaryColor,
             minimumSize: Size(double.infinity, 55.h),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.r),
@@ -178,7 +178,8 @@ Widget _stepItem(String number, String text) {
           height: 32.w,
           width: 32.w,
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.10),
+            // ignore: deprecated_member_use
+            color: AppTheme.primaryColor.withOpacity(0.10),
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -187,7 +188,7 @@ Widget _stepItem(String number, String text) {
               style: GoogleFonts.arimo(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w700,
-                color: AppColors.primary,
+                color: AppTheme.primaryColor,
               ),
             ),
           ),

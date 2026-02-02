@@ -6,10 +6,9 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 
-import '../../../core/constants/app_color.dart';
-import '../../../core/constants/image_paths.dart';
-import '../../../routes/routes.dart';
+import '../../../config/constants/image_paths.dart';
 import '../../controllers/bottom_nab_bar_controller.dart';
 import '../ProfilePage/profile_page.dart';
 import '../calendar_page/calendar_page.dart';
@@ -97,7 +96,7 @@ class CustomBottomBar extends StatelessWidget {
           width: 26.w,
           height: 26.w,
           color: nav.currentIndex.value == index
-              ? AppColors.primary
+              ? AppTheme.primaryColor
               : const Color(0xff99A1AF),
         ),
       ),
@@ -114,7 +113,7 @@ class CustomBottomBar extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(
             color: nav.currentIndex.value == index
-                ? AppColors.primary
+                ? AppTheme.primaryColor
                 : Colors.white,
             width: 2.w,
           ),

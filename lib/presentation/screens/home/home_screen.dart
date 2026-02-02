@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dart';
 
-import '../../../routes/routes.dart';
 import 'notification_bottom.dart';
 
 class HomeScreen extends StatefulWidget {

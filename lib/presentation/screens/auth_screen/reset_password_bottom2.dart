@@ -6,8 +6,8 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/core/utils/validators.dart';
 
-import '../../controllers/form_validation.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -18,7 +18,6 @@ void showResetPasswordBottomSheet2(BuildContext context) {
   final obscureText = true.obs;
   final confirmObscureText = true.obs;
   final isSuccess = false.obs;
-  final validator = Get.find<FormValidationController>();
   final formKey = GlobalKey<FormState>();
 
   showModalBottomSheet(
@@ -164,7 +163,7 @@ void showResetPasswordBottomSheet2(BuildContext context) {
                                   size: 20.sp,
                                 ),
                               ),
-                              validator: validator.validPassword,
+                              validator: Validators.password,
                               label: '',
                             ),
                             SizedBox(height: 12.h),
@@ -174,8 +173,8 @@ void showResetPasswordBottomSheet2(BuildContext context) {
                               isLabelVisible: false,
                               controller: confirmPasswordController,
                               hintText: 'Confirm New Password',
-                              validator: (value) => validator.validConfirmPassword(
-                                value,
+                              validator: (value) => Validators.confirmPassword(  
+                                value,  
                                 newPasswordController.text,
                               ),
                               obscureText: confirmObscureText.value,

@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:tbsosick/core/constants/image_paths.dart';
+import 'package:tbsosick/config/constants/image_paths.dart';
 
 class EditProcedureScreen extends StatefulWidget {
   const EditProcedureScreen({super.key});

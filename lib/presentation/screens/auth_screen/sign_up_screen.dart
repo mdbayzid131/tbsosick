@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/core/constants/app_color.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/core/utils/validators.dart';
 
-import '../../../core/constants/image_paths.dart';
-import '../../../routes/routes.dart';
-import '../../controllers/form_validation.dart';
+import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -31,7 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   RxBool confirmObscureText = true.obs;
 
   // final _authController = Get.find<AuthController>();
-  final _formValidationController = Get.find<FormValidationController>();
+
 
 
   @override
@@ -104,7 +104,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           size: 20.sp,
                         ),
                         isLabelVisible: false,
-                        validator: _formValidationController.validName,
+                        validator: Validators.name,
+
+
 
                         hintText: 'Full Name',
                         label: 'Email',
@@ -115,7 +117,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       ///================= Email Field =========================///
                       CustomTextField(
-                        validator: _formValidationController.validEmail,
+                        validator: Validators.email,
+
+
 
                         prefixIcon: Icon(
                           Icons.email_outlined,
@@ -135,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Obx(
                         () => CustomTextField(
                           isLabelVisible: false,
-                          validator: _formValidationController.validPassword,
+                          validator: Validators.password, 
                           obscureText: obscureText.value,
                           prefixIcon: GestureDetector(
                             onTap: () {
@@ -160,11 +164,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Obx(
                         () => CustomTextField(
                           isLabelVisible: false,
-                          validator: (value) =>
-                              _formValidationController.validConfirmPassword(
-                                value,
-                                passwordController.text,
-                              ),
+                          validator: (value) => Validators.confirmPassword(
+                            value,
+                            passwordController.text,
+                          ),
                           obscureText: confirmObscureText.value,
                           prefixIcon: GestureDetector(
                             onTap: () {
@@ -269,7 +272,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16.r),
                             side: BorderSide(
-                              color: AppColors.primary,
+                              color: AppTheme.primaryColor, 
                               width: 1.1,
                             ),
                           ),
@@ -316,7 +319,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: GoogleFonts.arimo(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w700,
-                                  color: AppColors.primary,
+                                  color: AppTheme.primaryColor,   
                                 ),
                               ),
                             ),

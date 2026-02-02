@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 
-import '../../../core/constants/app_color.dart';
-import '../../../core/constants/image_paths.dart';
+import '../../../config/constants/image_paths.dart';
 
 void showNotificationBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -45,7 +45,7 @@ void showNotificationBottomSheet(BuildContext context) {
                         style: GoogleFonts.arimo(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.primary,
+                          color: AppTheme.primaryColor,
                         ),
                       ),
                     ),
@@ -205,7 +205,7 @@ Widget _notificationCard({
                 actionText,
                 style: GoogleFonts.arimo(
                   fontSize: 15.sp,
-                  color: AppColors.primary,
+                  color: AppTheme.primaryColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),

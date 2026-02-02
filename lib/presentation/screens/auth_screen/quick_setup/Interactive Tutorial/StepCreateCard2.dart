@@ -3,8 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 
-import '../../../../../core/constants/app_color.dart';
+  
 import '../../../../controllers/tutorial_controller.dart';
 import '../../../../widgets/custom_elevated_button.dart';
 
@@ -211,7 +212,7 @@ Widget StepCreateCard2() {
         CustomElevatedButton(
           onPressed: controller.next,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
+            backgroundColor: AppTheme.primaryColor,
             minimumSize: Size(double.infinity, 55.h),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.r),

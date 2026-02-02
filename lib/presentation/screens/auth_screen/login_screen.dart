@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/core/constants/app_color.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
+import 'package:tbsosick/core/utils/validators.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom1.dart';
 
-import '../../../../routes/routes.dart';
-import '../../../core/constants/image_paths.dart';
-import '../../controllers/form_validation.dart';
+import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -28,7 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
   RxBool obscureText = true.obs;
 
   // final _authController = Get.find<AuthController>();
-  final _formValidationController = Get.find<FormValidationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           size: 20.sp,
                         ),
                         isLabelVisible: false,
-                   validator: _formValidationController.validEmail,
+                        validator: Validators.email,
                         hintText: 'Email',
                         label: 'Email',
                         controller: emailController,
@@ -110,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Obx(
                         () => CustomTextField(
                           isLabelVisible: false,
-                  validator: _formValidationController.validPassword,
+                          validator: Validators.password,
         
                           obscureText: obscureText.value,
                           prefixIcon: GestureDetector(
@@ -167,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: GoogleFonts.arimo(
                               fontSize: 15.sp,
                               fontWeight: FontWeight.w400,
-                              color: AppColors.primary,
+                              color: AppTheme.primaryColor,
                             ),
                           ),
                         ),
@@ -238,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16.r),
                             side: BorderSide(
-                              color: AppColors.primary,
+                              color: AppTheme.primaryColor,
                               width: 1.1,
                             ),
                           ),
@@ -285,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: GoogleFonts.arimo(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w700,
-                                  color: AppColors.primary,
+                                  color: AppTheme.primaryColor,
                                 ),
                               ),
                             ),
