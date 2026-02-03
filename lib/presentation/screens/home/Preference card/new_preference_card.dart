@@ -29,12 +29,6 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
     print('Pick images from library or camera');
   }
 
-  // Handle save draft
-  void _saveDraft() {
-    // TODO: Implement save draft functionality
-    Get.back();
-    print('Save draft');
-  }
 
   // Handle publish
   void _publish() {
@@ -95,10 +89,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Column(
               children: [
-
-
                 // Surgeon Profile Section
-      
                 SizedBox(height: 20.h),
 
                 CustomContainer(
