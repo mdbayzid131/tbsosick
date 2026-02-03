@@ -1,13 +1,17 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tbsosick/presentation/screens/home/Preference%20card/sutures_container.dart';
 import 'package:tbsosick/presentation/widgets/CustomContainer.dart';
 import 'medical_supplies_container.dart';
 
 class NewPreferenceCard extends StatefulWidget {
-  const NewPreferenceCard({super.key});
+  final bool isPrivate;
+  const NewPreferenceCard({super.key, required this.isPrivate});
 
   @override
   State<NewPreferenceCard> createState() => _NewPreferenceCardState();
@@ -17,6 +21,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
   // Text controller for key notes
   final TextEditingController _keyNotesController = TextEditingController();
 
+  final ImagePicker _picker = ImagePicker();
+  final List<XFile> _selectedImages = [];
+
   @override
   void dispose() {
     _keyNotesController.dispose();
@@ -24,17 +31,26 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
   }
 
   // Handle image picker
-  void _pickImages() {
-    // TODO: Implement image picker functionality
-    print('Pick images from library or camera');
+  Future<void> _pickImages() async {
+    try {
+      final List<XFile> images = await _picker.pickMultiImage();
+      if (images.isNotEmpty) {
+        setState(() {
+          _selectedImages.addAll(images);
+        });
+      }
+    } catch (e) {
+      print('Error picking images: $e');
+    }
   }
-
 
   // Handle publish
   void _publish() {
     Get.back();
     // TODO: Implement publish functionality
-    print('Publish');
+    if (kDebugMode) {
+      print('Publish');
+    }
   }
 
   @override
@@ -60,7 +76,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
         ),
         centerTitle: true,
         title: Text(
-          'New Preference Card',
+          widget.isPrivate ? 'New Private Card' : 'New Preference Card',
           style: GoogleFonts.arimo(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
@@ -72,7 +88,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
           TextButton(
             onPressed: () {},
             child: Text(
-              'Publish',
+              widget.isPrivate ? 'Save' : 'Publish',
               style: GoogleFonts.arimo(
                 fontSize: 17.sp,
                 fontWeight: FontWeight.w700,
@@ -545,6 +561,67 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           ),
                         ),
                       ),
+                      if (_selectedImages.isNotEmpty) ...[
+                        SizedBox(height: 16.h),
+                        Text(
+                          '${_selectedImages.length} images selected',
+                          style: GoogleFonts.arimo(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        SizedBox(
+                          height: 100.h,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _selectedImages.length,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(right: 8.w),
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      image: DecorationImage(
+                                        image: FileImage(
+                                          File(_selectedImages[index].path),
+                                        ),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 4.h,
+                                    right: 12.w,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedImages.removeAt(index);
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(2.w),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.black54,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 16.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -593,7 +670,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              'Publish',
+                              widget.isPrivate ? 'Save' : 'Publish',
                               style: GoogleFonts.arimo(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w700,

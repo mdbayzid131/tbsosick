@@ -5,7 +5,8 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PreferenceCardDetails extends StatelessWidget {
-  const PreferenceCardDetails({super.key});
+  final bool isPrivate;
+  const PreferenceCardDetails({super.key, required this.isPrivate});
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +133,11 @@ class PreferenceCardDetails extends StatelessWidget {
 
               // Key Notes Card
               _buildKeyNotesCard(),
+
+              SizedBox(height: 20.h),
+
+              // Photo Library
+              _buildPhotoLibrary(),
 
               SizedBox(height: 30.h),
             ],
@@ -655,6 +661,77 @@ class PreferenceCardDetails extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // Photo Library Section
+  Widget _buildPhotoLibrary() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Photo library',
+          style: GoogleFonts.arimo(
+            fontSize: 17.sp,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF000000),
+          ),
+        ),
+        SizedBox(height: 16.h),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20.r),
+          child: Image.network(
+            'https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1932&auto=format&fit=crop',
+            width: double.infinity,
+            height: 250.h,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                width: double.infinity,
+                height: 250.h,
+                color: Colors.grey[200],
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: double.infinity,
+                height: 250.h,
+                color: Colors.grey[200],
+                child: const Icon(Icons.error_outline, color: Colors.grey),
+              );
+            },
+          ),
+        ),
+        SizedBox(height: 16.h),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20.r),
+          child: Image.network(
+            'https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1932&auto=format&fit=crop',
+            width: double.infinity,
+            height: 250.h,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                width: double.infinity,
+                height: 250.h,
+                color: Colors.grey[200],
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: double.infinity,
+                height: 250.h,
+                color: Colors.grey[200],
+                child: const Icon(Icons.error_outline, color: Colors.grey),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

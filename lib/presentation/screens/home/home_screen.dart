@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/presentation/screens/home/Preference%20card/new_preference_card.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dart';
 
@@ -52,16 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: _quickActionCard(
                         title: 'Create Preference card',
                         onTap: () {
-                          Get.toNamed(RoutePages.newPreferenceCard);
+                          Get.to(NewPreferenceCard(isPrivate: false,));
                         },
                       ),
                     ),
                     SizedBox(width: 12.w),
                     Expanded(
                       child: _quickActionCard(
-                        title: 'Create Private Card          ',
+                        title: 'Create Private Card',
                         onTap: () {
-                          Get.toNamed(RoutePages.newPrivateCard);
+                          Get.to(NewPreferenceCard(isPrivate: true,));
                         },
                       ),
                     ),
@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: EdgeInsets.only(bottom: 10.h),
                       child: InkWell(
                         onTap: () {
-                          Get.to(() => const PreferenceCardDetails());
+                          Get.to(() => const PreferenceCardDetails(isPrivate: false));
                         },
                         child: favoriteCard(
                           title: 'Total Knee Replacement',

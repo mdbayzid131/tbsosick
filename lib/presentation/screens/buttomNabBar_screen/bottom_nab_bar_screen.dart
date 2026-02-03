@@ -75,7 +75,7 @@ class CustomBottomBar extends StatelessWidget {
           Positioned(
             child: GestureDetector(
               onTap: () {
-                Get.to(NewPreferenceCard(), transition: Transition.downToUp);
+                Get.to(NewPreferenceCard(isPrivate: false,), transition: Transition.downToUp);
               },
               child: _centerButton(),
             ),

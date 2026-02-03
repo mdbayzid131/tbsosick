@@ -7,8 +7,6 @@ import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/welcome_pa
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/sign_up_screen.dart';
 import 'package:tbsosick/presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
-import 'package:tbsosick/presentation/screens/home/New%20Private%20Card/new_private_card.dart';
-import 'package:tbsosick/presentation/screens/home/Preference%20card/new_preference_card.dart';
 import 'package:tbsosick/presentation/screens/onboarding_screen/onboarding_screen.dart';
 class AppRoutes {
   static const String SPLASH = '/splash';
@@ -35,8 +33,8 @@ class RoutePages {
   static const String whatYourSpeciality = '/WhatYourSpeciality';
   static const String preferredNoteMethod = '/PreferredNoteMethod';
   static const String interactiveTutorialScreen = '/InteractiveTutorialScreen';
-  static const String newPreferenceCard = '/NewPreferenceCard';
-  static const String newPrivateCard = '/NewPrivateCard';
+  // static const String newPreferenceCard = '/NewPreferenceCard';
+  // static const String newPrivateCard = '/NewPrivateCard';
 }
 
 final Transition transition = Transition.rightToLeft;
@@ -54,6 +52,6 @@ final pages = [
   GetPage(name: RoutePages.preferredNoteMethod, page: () =>  PreferredNoteMethod()),
   GetPage(name: RoutePages.interactiveTutorialScreen, page: () =>  InteractiveTutorialScreen()),
   GetPage(name: RoutePages.bottomNabBarScreen, page: () =>  BottomNabBarScreen()),
-  GetPage(name: RoutePages.newPreferenceCard, page: () =>  NewPreferenceCard()),
-  GetPage(name: RoutePages.newPrivateCard, page: () =>  NewPrivateCard()),
+  // GetPage(name: RoutePages.newPreferenceCard, page: () =>  NewPreferenceCard()),
+  // GetPage(name: RoutePages.newPrivateCard, page: () =>  NewPrivateCard()),
 ];

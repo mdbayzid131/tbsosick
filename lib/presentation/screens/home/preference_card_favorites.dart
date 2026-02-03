@@ -82,7 +82,7 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                         padding: EdgeInsets.only(bottom: 10.h),
                         child: InkWell(
                           onTap: () {
-                            Get.to(PreferenceCardDetails());
+                            Get.to(PreferenceCardDetails(isPrivate: false));
                           },
 
                           child: favoriteCard(

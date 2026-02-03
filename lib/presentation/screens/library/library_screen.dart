@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 
-import 'library_preference_card_details.dart';
-import 'library_privet_card_details.dart';
+
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -511,9 +511,9 @@ class _LibraryScreenState extends State<LibraryScreen>
     return GestureDetector(
       onTap: () {
         if (isPrivetCard) {
-          Get.to(LibraryPrivetCardDetails());
+          Get.to(PreferenceCardDetails(isPrivate: true));
         } else {
-          Get.to(LibraryPreferenceCardDetails());
+          Get.to(PreferenceCardDetails(isPrivate: false));
         }
       },
       child: Container(
