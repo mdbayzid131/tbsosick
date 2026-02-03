@@ -1,7 +1,3 @@
-import 'package:get/get.dart';
-import 'package:dio/dio.dart';
-import '../../core/services/api_client.dart';
-import '../../config/constants/api_constants.dart';
 
 class UserRepository {
   // final ApiClient _apiClient = Get.find();
