@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 
 import '../../../config/constants/image_paths.dart';
-import '../../../routes/routes.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 
 class OnboardingPage3 extends StatelessWidget {

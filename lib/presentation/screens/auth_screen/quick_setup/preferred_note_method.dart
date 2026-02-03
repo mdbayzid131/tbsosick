@@ -5,8 +5,6 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 
-import '../../../../routes/routes.dart';
-
 class PreferredNoteMethod extends StatelessWidget {
   const PreferredNoteMethod({super.key});
 
