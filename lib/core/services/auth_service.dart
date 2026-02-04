@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
@@ -18,7 +17,6 @@ class AuthService extends GetxService {
     // Explicitly find ApiClient to ensure it's initialized before AuthRepo
     _authRepo = AuthRepo(apiClient: Get.put(ApiClient()));
 
-
     // Check initial login state
     _checkLoginStatus();
   }
@@ -33,7 +31,7 @@ class AuthService extends GetxService {
   }
 
   /// ===================== SIGNUP =====================
-  Future<void> signup({
+  Future<Response> signup({
     required String name,
     required String email,
     required String password,
@@ -41,23 +39,24 @@ class AuthService extends GetxService {
     required String country,
   }) async {
     try {
-      await _authRepo.signup(
+      final response = await _authRepo.signup(
         name: name,
         email: email,
         password: password,
         phone: phone,
         country: country,
       );
-
-      // Optional: Auto login after signup or wait for verification
-      // handleAuthResponse(response);
+      return response;
     } catch (e) {
       rethrow;
     }
   }
 
   /// ===================== LOGIN =====================
-  Future<Response> login({required String email, required String password}) async {
+  Future<Response> login({
+    required String email,
+    required String password,
+  }) async {
     try {
       final response = await _authRepo.login(email: email, password: password);
       await _handleAuthResponse(response);

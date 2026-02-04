@@ -1,41 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomDropdownField<T> extends StatelessWidget {
   final String hintText;
   final String label;
-  final TextEditingController? controller;
-  final bool obscureText;
-  final String? Function(String?)? validator;
+  final T? value;
+  final List<T> items;
+  final String Function(T) itemLabelBuilder;
+  final void Function(T?)? onChanged;
+  final String? Function(T?)? validator;
   final Widget? prefixIcon;
-  final Widget? suffixIcon;
   final bool isLabelVisible;
-  final int maxLines;
-  final bool readOnly;
-  final TextInputType keyboardType;
-  final VoidCallback? onTap;
-  final List<TextInputFormatter>? inputFormatters;
-  final Color? fillColior;
+  final Color? fillColor;
   final String? errorText;
 
-  const CustomTextField({
+  const CustomDropdownField({
     super.key,
     required this.hintText,
     required this.label,
-    this.controller,
-    this.obscureText = false,
+    required this.items,
+    required this.itemLabelBuilder,
+    this.value,
+    this.onChanged,
     this.validator,
     this.prefixIcon,
-    this.suffixIcon,
-    this.isLabelVisible = true,
-    this.maxLines = 1,
-    this.readOnly = false,
-    this.keyboardType = TextInputType.text,
-    this.onTap,
-    this.inputFormatters,
-    this.fillColior,
+    this.isLabelVisible = false,
+    this.fillColor,
     this.errorText,
   });
 
@@ -58,18 +49,23 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
 
-        /// ================= TEXT FIELD =================
-        TextFormField(
-          controller: controller,
+        /// ================= DROPDOWN FIELD =================
+        DropdownButtonFormField<T>(
+          value: value,
+          onChanged: onChanged,
           validator: validator,
-          obscureText: obscureText,
-          maxLines: maxLines,
-          readOnly: readOnly,
-          keyboardType: keyboardType,
-          onTap: onTap,
-
+          isExpanded: true,
+          icon: Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: const Color(0xff8E8E93),
+            size: 24.sp,
+          ),
+          dropdownColor: Colors.white,
+          elevation: 8,
+          borderRadius: BorderRadius.circular(16.r),
           style: GoogleFonts.arimo(
             fontSize: 17.sp,
+
             fontWeight: FontWeight.w400,
             color: Color(0xff8E8E93),
           ),
@@ -80,44 +76,69 @@ class CustomTextField extends StatelessWidget {
             hintStyle: GoogleFonts.arimo(
               fontSize: 17.sp,
               fontWeight: FontWeight.w400,
-              color: Color(0xff8E8E93),
+              color: const Color(0xff8E8E93),
             ),
-
             contentPadding: EdgeInsets.symmetric(
               vertical: 14.h,
               horizontal: 16.w,
             ),
-
             prefixIcon: prefixIcon,
-            suffixIcon: suffixIcon,
-
             filled: true,
-            fillColor: fillColior ?? Color(0xffF2F2F7),
+            fillColor: fillColor ?? const Color(0xffF2F2F7),
 
-            /// ====== BORDER STATES ======
+            /// ====== BORDER STATES (Matching CustomTextField) ======
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide.none,
             ),
-
             focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16.r),
+              borderSide: BorderSide.none, // Optional: highlight focus
+            ),
+            enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide.none,
             ),
-
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide.none,
             ),
-
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide.none,
             ),
-
             errorStyle: GoogleFonts.arimo(fontSize: 11.sp, color: Colors.red),
           ),
-          inputFormatters: inputFormatters,
+          items: items.map((T item) {
+            return DropdownMenuItem<T>(
+              value: item,
+              child: Text(
+                itemLabelBuilder(item),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.arimo(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xff8E8E93),
+                ),
+              ),
+            );
+          }).toList(),
+          // Custom menu styling
+          selectedItemBuilder: (BuildContext context) {
+            return items.map((T item) {
+              return Text(
+                itemLabelBuilder(item),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.arimo(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xff8E8E93),
+                ),
+              );
+            }).toList();
+          },
         ),
       ],
     );

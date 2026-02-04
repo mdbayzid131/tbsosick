@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:tbsosick/presentation/controllers/auth_controller.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
@@ -15,6 +16,7 @@ class InitialBinding extends Bindings {
     Get.put(StorageService(), permanent: true);
     Get.put(ApiClient(), permanent: true);
     Get.put(AuthService(), permanent: true);
+    Get.put(AuthController(), permanent: true);
     Get.put(BottomNabBarController());
     Get.put(LoginController());
     Get.put(ForgatePasswordController());

@@ -22,8 +22,6 @@ void showAddEventBottomSheet(BuildContext context) {
 
   List<String> teamMembers = ['Dr. Mike Chen', 'Nurse Amy Park'];
 
-  final formKey = GlobalKey<FormState>();
-
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -43,104 +41,99 @@ void showAddEventBottomSheet(BuildContext context) {
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
               ),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    /// Header
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Add Event',
-                          style: GoogleFonts.arimo(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () => Get.back(),
-                          child: const Icon(Icons.close),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: 16.h),
-                    
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                                   
-                                      
-                            CustomTextField(
-                              controller: titleController,
-                              label: 'Event Title *',
-                              hintText: 'Enter event title',
-                            ),
-                                      
-                            SizedBox(height: 12.h),
-                                      
-                            CustomDatePickerField(
-                              controller: dateController,
-                              label: 'Date *',
-                              hintText: 'Select date',
-                            ),
-                                      
-                            SizedBox(height: 12.h),
-                                      
-                            CustomTimePickerField(
-                              controller: timeController,
-                              label: 'Time *',
-                              hintText: 'Select time',
-                            ),
-                                      
-                            SizedBox(height: 16.h),
-                                      
-                            /// PERSONNEL CARD
-                            _buildPersonnelCard(
-                              leadSurgeonController: leadSurgeonController,
-                              teamMemberController: teamMemberController,
-                              teamMembers: teamMembers,
-                              onAdd: () {
-                                if (teamMemberController.text.isNotEmpty) {
-                                  setState(() {
-                                    teamMembers.add(teamMemberController.text);
-                                    teamMemberController.clear();
-                                  });
-                                }
-                              },
-                              onRemove: (member) {
-                                setState(() {
-                                  teamMembers.remove(member);
-                                });
-                              },
-                            ),
-                                      
-                            SizedBox(height: 16.h),
-                                      
-                            CustomTextField(
-                              controller: notesController,
-                              label: 'Notes',
-                              hintText: 'Additional notes...',
-                              maxLines: 4,
-                            ),
-                                      
-                            SizedBox(height: 24.h),
-                                      
-                            CustomElevatedButton(
-                              label: 'Create Event',
-                              onPressed: () {
-                                // submit logic
-                              },
-                            ),
-                          ],
+              child: Column(
+                children: [
+                  /// Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Add Event',
+                        style: GoogleFonts.arimo(
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
+                      InkWell(
+                        onTap: () => Get.back(),
+                        child: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 16.h),
+
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextField(
+                            controller: titleController,
+                            label: 'Event Title *',
+                            hintText: 'Enter event title',
+                          ),
+
+                          SizedBox(height: 12.h),
+
+                          CustomDatePickerField(
+                            controller: dateController,
+                            label: 'Date *',
+                            hintText: 'Select date',
+                          ),
+
+                          SizedBox(height: 12.h),
+
+                          CustomTimePickerField(
+                            controller: timeController,
+                            label: 'Time *',
+                            hintText: 'Select time',
+                          ),
+
+                          SizedBox(height: 16.h),
+
+                          /// PERSONNEL CARD
+                          _buildPersonnelCard(
+                            leadSurgeonController: leadSurgeonController,
+                            teamMemberController: teamMemberController,
+                            teamMembers: teamMembers,
+                            onAdd: () {
+                              if (teamMemberController.text.isNotEmpty) {
+                                setState(() {
+                                  teamMembers.add(teamMemberController.text);
+                                  teamMemberController.clear();
+                                });
+                              }
+                            },
+                            onRemove: (member) {
+                              setState(() {
+                                teamMembers.remove(member);
+                              });
+                            },
+                          ),
+
+                          SizedBox(height: 16.h),
+
+                          CustomTextField(
+                            controller: notesController,
+                            label: 'Notes',
+                            hintText: 'Additional notes...',
+                            maxLines: 4,
+                          ),
+
+                          SizedBox(height: 24.h),
+
+                          CustomElevatedButton(
+                            label: 'Create Event',
+                            onPressed: () {
+                              // submit logic
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );

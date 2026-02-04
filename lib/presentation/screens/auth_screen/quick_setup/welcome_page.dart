@@ -6,10 +6,8 @@ import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/select_pac
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/presentation/widgets/custom_text_field.dart';
 
-
 class WelcomePage extends StatelessWidget {
   WelcomePage({super.key});
-  final _formKey = GlobalKey<FormState>();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
 
@@ -47,28 +45,27 @@ class WelcomePage extends StatelessWidget {
                 ),
               ),
 
-              Form(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.h),
-                    CustomTextField(
-                      hintText: 'Jon',
-                      label: "First Name",
-                      fillColior: Colors.white,
-                      controller: firstNameController,
-                      validator: Validators.name,
-                    ),
-                    SizedBox(height: 20.h),
-                    CustomTextField(
-                      hintText: 'Due',
-                      label: "Last Name",
-                      fillColior: Colors.white,
-                      controller: lastNameController,
-                      validator: Validators.name,
-                    ),
-                  ],
-                ),
+              Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  CustomTextField(
+                    hintText: 'Jon',
+                    label: "First Name",
+                    fillColior: Colors.white,
+                    controller: firstNameController,
+                    validator: Validators.name,
+                  ),
+                  SizedBox(height: 20.h),
+                  CustomTextField(
+                    hintText: 'Due',
+                    label: "Last Name",
+                    fillColior: Colors.white,
+                    controller: lastNameController,
+                    validator: Validators.name,
+                  ),
+                ],
               ),
+
               SizedBox(height: 40.h),
               CustomElevatedButton(
                 label: 'Continue',

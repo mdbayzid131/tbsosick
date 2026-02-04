@@ -32,7 +32,6 @@ class AuthRepo {
     required String password,
     required String phone,
     required String country,
-    String role = "PARENT",
   }) async {
     return await apiClient.postData(ApiConstants.signup, {
       "name": name,
@@ -40,7 +39,6 @@ class AuthRepo {
       "password": password,
       "phone": phone,
       "country": country,
-      "role": role,
     });
   }
 

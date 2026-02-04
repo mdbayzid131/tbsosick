@@ -5,6 +5,7 @@ import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/preferred_
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/welcome_page.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/sign_up_screen.dart';
+
 import 'package:tbsosick/presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
 import 'package:tbsosick/presentation/screens/onboarding_screen/onboarding_screen.dart';
 
@@ -23,6 +24,8 @@ class AppRoutes {
   static const String WHAT_YOUR_SPECIALITY = '/what-your-speciality';
   static const String PREFERRED_NOTE_METHOD = '/preferred-note-method';
   static const String INTERACTIVE_TUTORIAL = '/interactive-tutorial';
+  static const String VERIFY_EMAIL = '/verify-email';
+  static const String OTP_VERIFICATION = '/otp-verification';
 }
 
 final Transition transition = Transition.rightToLeft;
