@@ -223,7 +223,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
                                       ? 'Continue with premium'
                                       : 'Continue with enterprise',
                                   onPressed: () {
-                                    Get.toNamed(RoutePages.whatYourSpeciality);
+                                    Get.toNamed(AppRoutes.WHAT_YOUR_SPECIALITY);
                                   },
                                 ),
                               ),

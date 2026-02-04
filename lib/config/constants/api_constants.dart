@@ -1,14 +1,14 @@
 class ApiConstants {
   // Base URLs
-  static const String baseUrl = 'https://api.example.com';
-  static const String apiVersion = '/api/v1';
-  
+  static const String baseUrl = 'http://10.10.7.33:5001/api/v1';
+  // static const String apiVersion = '';
+  // 
   // Auth Endpoints
   static const String login = '/auth/login';
   static const String signup = '/auth/signup';
   static const String logout = '/auth/logout';
   static const String refreshToken = '/auth/refresh';
-  static const String forgotPassword = '/auth/forgot-password';
+  static const String forgotPassword = '/auth/forget-password';
   
   // User Endpoints
   static const String profile = '/user/profile';

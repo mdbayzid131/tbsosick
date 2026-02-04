@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             // ),
             scaffoldBackgroundColor: Color(0xffF9FAFB),
           ),
-          initialRoute: RoutePages.onboardingScreen,
+          initialRoute: AppRoutes.ONBOARDING,
           getPages: pages,
           initialBinding: InitialBinding(),
         );

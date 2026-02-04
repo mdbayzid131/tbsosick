@@ -49,7 +49,7 @@ class WhatYourSpeciality extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     selectedIndex.value = index;
-                    Get.toNamed(RoutePages.preferredNoteMethod);
+                    Get.toNamed(AppRoutes.PREFERRED_NOTE_METHOD);
                   },
                   child: Obx(
                     () => Container(

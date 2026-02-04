@@ -173,7 +173,7 @@ Widget StepCreateCard4() {
         CustomElevatedButton(
           onPressed: (){
             // Get.offAllNamed(RoutePages.bottomNabBarScreen);
-            Get.toNamed(RoutePages.bottomNabBarScreen);
+            Get.toNamed(AppRoutes.BOTTOM_NAV_BAR);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppTheme.primaryColor,

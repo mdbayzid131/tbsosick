@@ -48,7 +48,7 @@ class PreferredNoteMethod extends StatelessWidget {
                   title: 'Voice to Text',
                   subtitle: 'Dictate notes hands free',
                   onTap: () {
-                    Get.toNamed(RoutePages.interactiveTutorialScreen);
+                    Get.toNamed(AppRoutes.INTERACTIVE_TUTORIAL);
                   },
                 ),
 
@@ -60,7 +60,7 @@ class PreferredNoteMethod extends StatelessWidget {
                   title: 'Rapid Checklist',
                   subtitle: 'Quick tap through templates',
                   onTap: () {
-                    Get.toNamed(RoutePages.interactiveTutorialScreen);
+                    Get.toNamed(AppRoutes.INTERACTIVE_TUTORIAL);
                   },
                 ),
 
@@ -72,7 +72,7 @@ class PreferredNoteMethod extends StatelessWidget {
                   title: 'Freehand Entry',
                   subtitle: 'Type custom notes',
                   onTap: () {
-                    Get.toNamed(RoutePages.interactiveTutorialScreen);
+                    Get.toNamed(AppRoutes.INTERACTIVE_TUTORIAL);
                   },
                 ),
               ],

@@ -92,7 +92,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           curve: Curves.ease,
                         );
                       } else {
-                        Get.toNamed(RoutePages.loginScreen);
+                        Get.toNamed(AppRoutes.LOGIN);
                       }
                     },
                   ),

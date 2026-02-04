@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/login_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/Interactive_tutorial_screen.dart';
@@ -8,8 +7,10 @@ import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_
 import 'package:tbsosick/presentation/screens/auth_screen/sign_up_screen.dart';
 import 'package:tbsosick/presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
 import 'package:tbsosick/presentation/screens/onboarding_screen/onboarding_screen.dart';
+
 class AppRoutes {
   static const String SPLASH = '/splash';
+  static const String ONBOARDING = '/onboarding';
   static const String LOGIN = '/login';
   static const String REGISTER = '/register';
   static const String FORGOT_PASSWORD = '/forgot-password';
@@ -18,40 +19,30 @@ class AppRoutes {
   static const String BOTTOM_NAV_BAR = '/bottom-nav-bar';
   static const String SEARCH = '/search';
   static const String SETTINGS = '/settings';
-}
-
-
-class RoutePages {
-
-  static const String splashScreen = '/splashScreen';
-  static const String onboardingScreen = '/onboardingScreen';
-  static const String bottomNabBarScreen = '/bottomNabBarScreen';
-  static const String loginScreen = '/loginScreen';
-  static const String signUpScreen = '/SignUpScreen';
-  static const String registerScreen = '/registerScreen';
-  static const String welcomePage = '/WelcomePage';
-  static const String whatYourSpeciality = '/WhatYourSpeciality';
-  static const String preferredNoteMethod = '/PreferredNoteMethod';
-  static const String interactiveTutorialScreen = '/InteractiveTutorialScreen';
-  // static const String newPreferenceCard = '/NewPreferenceCard';
-  // static const String newPrivateCard = '/NewPrivateCard';
+  static const String WELCOME_PAGE = '/welcome-page';
+  static const String WHAT_YOUR_SPECIALITY = '/what-your-speciality';
+  static const String PREFERRED_NOTE_METHOD = '/preferred-note-method';
+  static const String INTERACTIVE_TUTORIAL = '/interactive-tutorial';
 }
 
 final Transition transition = Transition.rightToLeft;
 
-
 final pages = [
+  GetPage(name: AppRoutes.ONBOARDING, page: () => const OnboardingScreen()),
+  GetPage(name: AppRoutes.LOGIN, page: () => LoginScreen()),
+  GetPage(name: AppRoutes.REGISTER, page: () => SignUpScreen()),
+  GetPage(name: AppRoutes.WELCOME_PAGE, page: () => WelcomePage()),
   GetPage(
-    name: RoutePages.onboardingScreen,
-    page: () => const OnboardingScreen(),
+    name: AppRoutes.WHAT_YOUR_SPECIALITY,
+    page: () => WhatYourSpeciality(),
   ),
-  GetPage(name: RoutePages.loginScreen, page: () => const LoginScreen()),
-  GetPage(name: RoutePages.signUpScreen, page: () => const SignUpScreen()),
-  GetPage(name: RoutePages.welcomePage, page: () =>  WelcomePage()),
-  GetPage(name: RoutePages.whatYourSpeciality, page: () =>  WhatYourSpeciality()),
-  GetPage(name: RoutePages.preferredNoteMethod, page: () =>  PreferredNoteMethod()),
-  GetPage(name: RoutePages.interactiveTutorialScreen, page: () =>  InteractiveTutorialScreen()),
-  GetPage(name: RoutePages.bottomNabBarScreen, page: () =>  BottomNabBarScreen()),
-  // GetPage(name: RoutePages.newPreferenceCard, page: () =>  NewPreferenceCard()),
-  // GetPage(name: RoutePages.newPrivateCard, page: () =>  NewPrivateCard()),
+  GetPage(
+    name: AppRoutes.PREFERRED_NOTE_METHOD,
+    page: () => PreferredNoteMethod(),
+  ),
+  GetPage(
+    name: AppRoutes.INTERACTIVE_TUTORIAL,
+    page: () => InteractiveTutorialScreen(),
+  ),
+  GetPage(name: AppRoutes.BOTTOM_NAV_BAR, page: () => BottomNabBarScreen()),
 ];

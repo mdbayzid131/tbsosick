@@ -6,46 +6,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/utils/validators.dart';
+import 'package:tbsosick/presentation/controllers/sign_up_controller.dart';
 
 import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class SignUpScreen extends GetView<SignUpController> {
+  SignUpScreen({super.key});
 
-  @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-
-  RxBool obscureText = true.obs;
-  RxBool confirmObscureText = true.obs;
-
-  // final _authController = Get.find<AuthController>();
-
-
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    nameController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.dispose();
-  }
+  final RxBool obscureText = true.obs;
+  final RxBool confirmObscureText = true.obs;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
       body: SafeArea(
         top: false,
@@ -67,11 +41,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 24.h),
 
                 ///================= Welcome Text =========================///
-                Text("SMRTSCRUB", style: GoogleFonts.arimo(
-                  fontSize: 30.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xff101828),
-                )),
+                Text(
+                  "SMRTSCRUB",
+                  style: GoogleFonts.arimo(
+                    fontSize: 30.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xff101828),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -93,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 ///================= Login Form =========================///
                 Form(
-                  key: _formKey,
+                  key: controller.formKey,
                   child: Column(
                     children: [
                       ///================= Name Field =========================///
@@ -106,11 +83,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         isLabelVisible: false,
                         validator: Validators.name,
 
-
-
                         hintText: 'Full Name',
                         label: 'Email',
-                        controller: nameController,
+                        controller: controller.nameController,
                       ),
 
                       SizedBox(height: 16.h),
@@ -118,8 +93,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ///================= Email Field =========================///
                       CustomTextField(
                         validator: Validators.email,
-
-
 
                         prefixIcon: Icon(
                           Icons.email_outlined,
@@ -130,7 +103,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         // validator: _authController.validEmail,
                         hintText: 'Email',
                         label: 'Email',
-                        controller: emailController,
+                        controller: controller.emailController,
+                      ),
+
+                      SizedBox(height: 16.h),
+
+                      ///================= Phone Field =========================///
+                      CustomTextField(
+                        validator: Validators.phone,
+                        prefixIcon: Icon(
+                          Icons.phone_outlined,
+                          color: const Color(0xff8E8E93),
+                          size: 20.sp,
+                        ),
+                        isLabelVisible: false,
+                        hintText: 'Phone Number',
+                        label: 'Phone',
+                        controller: controller.phoneController,
+                      ),
+
+                      SizedBox(height: 16.h),
+
+                      ///================= Country Field =========================///
+                      CustomTextField(
+                        validator: (v) => Validators.required(
+                          v,
+                          message: 'Country is required',
+                        ),
+                        prefixIcon: Icon(
+                          Icons.public_outlined,
+                          color: const Color(0xff8E8E93),
+                          size: 20.sp,
+                        ),
+                        isLabelVisible: false,
+                        hintText: 'Country',
+                        label: 'Country',
+                        controller: controller.countryController,
                       ),
 
                       SizedBox(height: 16.h),
@@ -139,7 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Obx(
                         () => CustomTextField(
                           isLabelVisible: false,
-                          validator: Validators.password, 
+                          validator: Validators.password,
                           obscureText: obscureText.value,
                           prefixIcon: GestureDetector(
                             onTap: () {
@@ -156,7 +164,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                           hintText: 'Password',
                           label: 'Password',
-                          controller: passwordController,
+                          controller: controller.passwordController,
                         ),
                       ),
 
@@ -166,7 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           isLabelVisible: false,
                           validator: (value) => Validators.confirmPassword(
                             value,
-                            passwordController.text,
+                            controller.passwordController.text,
                           ),
                           obscureText: confirmObscureText.value,
                           prefixIcon: GestureDetector(
@@ -185,26 +193,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                           hintText: 'Confirm Password',
                           label: 'Password',
-                          controller: confirmPasswordController,
+                          controller: controller.confirmPasswordController,
                         ),
                       ),
 
                       SizedBox(height: 20.h),
 
                       ///================= Login Button =========================///
-                      CustomElevatedButton(
-                        // isLoading: _authController.isLoading.value,
-                        label: 'Create Account',
-                        onPressed: () {
-                          // if (_formKey.currentState!.validate()) {
-                          //   _authController.login(
-                          //     email: emailController.text.trim(),
-                          //     password: passwordController.text, context: context,
-                          //   );
-                          // }
-
-                          Get.toNamed(RoutePages.welcomePage);
-                        },
+                      Obx(
+                        () => CustomElevatedButton(
+                          label: 'Create Account',
+                          isLoading: controller.isLoading.value,
+                          onPressed: controller.signUp,
+                        ),
                       ),
 
                       SizedBox(height: 15.h),
@@ -249,7 +250,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(ImagePaths.appleIcon, height: 20.h),
+                            SvgPicture.asset(
+                              ImagePaths.appleIcon,
+                              height: 20.h,
+                            ),
                             SizedBox(width: 10.w),
                             Text(
                               'Continue with Apple',
@@ -272,7 +276,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16.r),
                             side: BorderSide(
-                              color: AppTheme.primaryColor, 
+                              color: AppTheme.primaryColor,
                               width: 1.1,
                             ),
                           ),
@@ -281,7 +285,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(ImagePaths.googleIcon, height: 20.h),
+                            SvgPicture.asset(
+                              ImagePaths.googleIcon,
+                              height: 20.h,
+                            ),
                             SizedBox(width: 10.w),
                             Text(
                               'Continue with Google',
@@ -310,7 +317,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           InkWell(
                             onTap: () {
-                        Get.back();
+                              Get.back();
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 4.w),
@@ -319,7 +326,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: GoogleFonts.arimo(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w700,
-                                  color: AppTheme.primaryColor,   
+                                  color: AppTheme.primaryColor,
                                 ),
                               ),
                             ),

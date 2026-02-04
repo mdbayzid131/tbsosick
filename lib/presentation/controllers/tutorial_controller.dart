@@ -22,6 +22,6 @@ class TutorialController extends GetxController {
   }
 
   void skip() {
-    Get.offAllNamed(RoutePages.bottomNabBarScreen);
+    Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
   }
 }

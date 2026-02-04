@@ -6,29 +6,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/core/utils/validators.dart';
+import 'package:tbsosick/presentation/controllers/login_controller.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom1.dart';
 
 import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+// ignore: must_be_immutable
+class LoginScreen extends GetView<LoginController> {
+  LoginScreen({super.key});
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  RxBool obscureText = true.obs;
 
   // final _authController = Get.find<AuthController>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
         
                 ///================= Login Form =========================///
                 Form(
-                  key: _formKey,
+                  key: controller.formKey,
                   child: Column(
                     children: [
                       ///================= Email Field =========================///
@@ -100,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: Validators.email,
                         hintText: 'Email',
                         label: 'Email',
-                        controller: emailController,
+                        controller: controller.emailController,
                       ),
         
                       SizedBox(height: 16.h),
@@ -111,13 +101,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           isLabelVisible: false,
                           validator: Validators.password,
         
-                          obscureText: obscureText.value,
+                          obscureText: controller.isPasswordVisible.value,
                           prefixIcon: GestureDetector(
                             onTap: () {
-                              obscureText.value = !obscureText.value;
+                              controller.isPasswordVisible.value = !controller.isPasswordVisible.value;
                             },
                             child: Icon(
-                              obscureText.value
+                              controller.isPasswordVisible.value
                                   ? Icons.visibility_off_outlined
                                   : Icons.visibility_outlined,
                               color: const Color(0xff8E8E93),
@@ -127,25 +117,20 @@ class _LoginScreenState extends State<LoginScreen> {
         
                           hintText: 'Password',
                           label: 'Password',
-                          controller: passwordController,
+                          controller: controller.passwordController,
                         ),
                       ),
         
                       SizedBox(height: 20.h),
         
                       ///================= Login Button =========================///
-                      CustomElevatedButton(
-                        // isLoading: _authController.isLoading.value,
-                        label: 'Login',
-                        onPressed: () {
-                          Get.toNamed(RoutePages.bottomNabBarScreen);
-                          // if (_formKey.currentState!.validate()) {
-                          //   _authController.login(
-                          //     email: emailController.text.trim(),
-                          //     password: passwordController.text, context: context,
-                          //   );
-                          // }
-                        },
+                      Obx(
+                        () => CustomElevatedButton(
+                          // isLoading: _authController.isLoading.value,
+                          label: 'Login',
+                          onPressed:controller.login,
+                          isLoading: controller.isLoading.value,
+                        ),
                       ),
         
                       SizedBox(height: 15.h),
@@ -275,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           InkWell(
                             onTap: () {
-                              Get.toNamed(RoutePages.signUpScreen);
+                              Get.toNamed(AppRoutes.REGISTER);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 4.w),

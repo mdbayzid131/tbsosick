@@ -57,10 +57,11 @@ class AuthService extends GetxService {
   }
 
   /// ===================== LOGIN =====================
-  Future<void> login({required String email, required String password}) async {
+  Future<Response> login({required String email, required String password}) async {
     try {
       final response = await _authRepo.login(email: email, password: password);
       await _handleAuthResponse(response);
+      return response;
     } catch (e) {
       rethrow;
     }
@@ -78,9 +79,10 @@ class AuthService extends GetxService {
   }
 
   /// ===================== FORGOT PASSWORD =====================
-  Future<void> forgotPassword(String email) async {
+  Future<Response> forgotPassword(String email) async {
     try {
-      await _authRepo.forgotPassword(email: email);
+      final response = await _authRepo.forgotPassword(email: email);
+      return response;
     } catch (e) {
       rethrow;
     }
@@ -107,15 +109,18 @@ class AuthService extends GetxService {
   }
 
   /// ===================== RESET PASSWORD =====================
-  Future<void> resetPassword({
+  Future<Response> resetPassword({
+    required String token,
     required String newPassword,
     required String confirmPassword,
   }) async {
     try {
-      await _authRepo.resetPassword(
+      final response = await _authRepo.resetPassword(
+        token: token,
         newPassword: newPassword,
         confirmPassword: confirmPassword,
       );
+      return response;
     } catch (e) {
       rethrow;
     }
