@@ -32,7 +32,7 @@ void showResetPasswordBottomSheet2(BuildContext context) {
         return;
       }
 
-      if (isSuccess.value) {
+      if (isSuccess.value)  {
         if (Get.isBottomSheetOpen ?? false) {
           Get.back(); // close current bottom sheet
         }
