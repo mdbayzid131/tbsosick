@@ -6,6 +6,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/core/utils/validators.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/otp_verify_bottom.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom2.dart';
 
 
@@ -139,7 +140,7 @@ void showResetPasswordBottomSheet(BuildContext context) {
 
                           // Step 2. Next action after success
                           Get.back();
-                          showResetPasswordBottomSheet2(context);
+                          showOtpVerifyBottomSheet(context);
                         },
                       ),
                       SizedBox(height: 20.h),
