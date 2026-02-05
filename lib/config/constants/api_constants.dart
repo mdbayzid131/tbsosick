@@ -11,12 +11,22 @@ class ApiConstants {
   static const String forgotPassword = '/auth/forget-password';
   
   // User Endpoints
-  static const String profile = '/user/profile';
-  static const String updateProfile = '/user/update';
   
   // Add your API endpoints here
   static const String resendVerifyEmail = '/auth/resend-verify-email';
   static const String verifyEmail = '/auth/verify-email';
   static const String resetPassword = '/auth/reset-password';
 
+
+  //  Endpoints
+  static const String getSuppliesList = '/supplies';
+  static const String getSuturesList = '/sutures';
+
+
+
+  static const String profile = '/user/profile';
+  static const String getCardCount = '/preference-card/count';
+  static const String getAllCard = '/preference-card';
+  static const String getPublicCard = '/preference-card/public';
+  static const String getPrivateCard = '/preference-card/private';
 }

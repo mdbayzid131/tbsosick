@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
+import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
+import 'package:tbsosick/core/services/storage_service.dart';
 
 class AuthRepo {
   final ApiClient apiClient;
@@ -86,8 +88,10 @@ class AuthRepo {
   }
 
   /// ===================== LOGOUT =====================
-  Future<Response> logout() async {
-    return await apiClient.postData(ApiConstants.logout, {});
+  Future<Response> logout(String deviceToken) async {
+    return await apiClient.postData(ApiConstants.logout, {
+      "deviceToken": "${deviceToken}"
+    }); 
   }
 
   /// ===================== REFRESH TOKEN =====================

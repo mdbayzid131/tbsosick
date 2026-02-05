@@ -17,7 +17,6 @@ class InitialBinding extends Bindings {
     Get.put(ApiClient(), permanent: true);
     Get.put(AuthService(), permanent: true);
     Get.put(AuthController(), permanent: true);
-    Get.put(BottomNabBarController());
     Get.put(LoginController());
     Get.put(ForgatePasswordController());
     Get.put(ResetPasswordController());

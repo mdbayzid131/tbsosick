@@ -1,6 +1,8 @@
+// ignore: implementation_imports
 import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
+import 'package:tbsosick/config/constants/app_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
@@ -63,5 +65,30 @@ class LoginController extends GetxController {
 
   void goToForgotPassword() {
     Get.toNamed(AppRoutes.FORGOT_PASSWORD);
+  }
+
+
+
+
+    Future<void> logout() async {
+    try {
+      isLoading.value = true;
+      await _authService.logout();
+      // ApiChecker.checkApi(response);
+      // print('==================================================');
+      // print(response.data);
+      // print(response.statusCode);
+      // print('==================================================');
+      // if (response.statusCode == 200) {
+        Helpers.showSuccessSnackbar('Logout successful');
+        Get.offAllNamed(AppRoutes.LOGIN);
+      // }
+    } catch (e) {
+      Helpers.showErrorSnackbar(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+   
+    
   }
 }

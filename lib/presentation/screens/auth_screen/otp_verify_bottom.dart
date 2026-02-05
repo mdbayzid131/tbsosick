@@ -45,7 +45,8 @@ Future<void> verifyOtp() async {
       final String token = response.data['data'];
 
       Helpers.showSuccessSnackbar('Otp Verify Success');
-      Get.back();
+     // ignore: use_build_context_synchronously
+     Navigator.pop(context);
 
       if (Get.context != null) {
         showResetPasswordBottomSheet2(Get.context!, token);

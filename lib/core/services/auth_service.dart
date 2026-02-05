@@ -1,6 +1,7 @@
 import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/data/repositories/auth_repository.dart';
@@ -69,11 +70,12 @@ class AuthService extends GetxService {
   /// ===================== LOGOUT =====================
   Future<void> logout() async {
     try {
-      await _authRepo.logout();
-    } catch (e) {
-      // Continue to clear local storage even if API call fails
-    } finally {
+      // final response = await _authRepo.logout(deviceToken);
       await _clearLocalAuth();
+      // return response;
+    } catch (e) {
+      await _clearLocalAuth();
+      rethrow;
     }
   }
 
@@ -175,6 +177,7 @@ class AuthService extends GetxService {
     await StorageService.remove(StorageConstants.bearerToken);
     await StorageService.remove(StorageConstants.refreshToken);
     await StorageService.remove(StorageConstants.userData);
+
     isLoggedIn.value = false;
   }
 

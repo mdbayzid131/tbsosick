@@ -8,4 +8,5 @@ class StorageConstants {
   static const String language = 'language';
   static const String theme = 'theme';
   static const String onboardingSeen = 'onboarding_seen';
+  static const String deviceToken = 'device_token';
 }

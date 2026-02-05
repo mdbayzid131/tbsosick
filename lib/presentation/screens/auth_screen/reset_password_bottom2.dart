@@ -10,10 +10,10 @@ import 'package:tbsosick/core/utils/validators.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
-void showResetPasswordBottomSheet2(BuildContext context,String token) {
+void showResetPasswordBottomSheet2(BuildContext context, String token) {
   final obscureText = true.obs;
   final confirmObscureText = true.obs;
-  final AuthService _authService = Get.find();
+  final AuthService authService = Get.find();
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final passwordError = RxnString();
@@ -36,8 +36,7 @@ void showResetPasswordBottomSheet2(BuildContext context,String token) {
       );
 
       final isValid =
-          passwordError.value == null &&
-          confirmPasswordError.value == null;
+          passwordError.value == null && confirmPasswordError.value == null;
 
       if (!isValid) {
         isLoading.value = false;
@@ -45,15 +44,12 @@ void showResetPasswordBottomSheet2(BuildContext context,String token) {
       }
 
       if (isSuccess.value) {
-        if (Get.isBottomSheetOpen ?? false) {
-          Get.back(); // close current bottom sheet
-        }
-        return;
+        Get.back(); // close current bottom sheet
       }
 
       isLoading.value = true;
 
-      final Response response = await _authService.resetPassword(
+      final Response response = await authService.resetPassword(
         token: token,
         newPassword: newPasswordController.text.trim(),
         confirmPassword: confirmPasswordController.text.trim(),
@@ -203,7 +199,6 @@ void showResetPasswordBottomSheet2(BuildContext context,String token) {
                         //     label: '',
                         //   ),
                         // ),
-
                         SizedBox(height: 12.h),
 
                         // New Password Field (with reactive obscureText)

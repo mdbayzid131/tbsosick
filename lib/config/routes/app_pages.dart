@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/login_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/Interactive_tutorial_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/preferred_note_method.dart';
@@ -47,5 +48,5 @@ final pages = [
     name: AppRoutes.INTERACTIVE_TUTORIAL,
     page: () => InteractiveTutorialScreen(),
   ),
-  GetPage(name: AppRoutes.BOTTOM_NAV_BAR, page: () => BottomNabBarScreen()),
+  GetPage(name: AppRoutes.BOTTOM_NAV_BAR, page: () => BottomNabBarScreen(),bindings: [BottomNabBarBinding()]),
 ];
