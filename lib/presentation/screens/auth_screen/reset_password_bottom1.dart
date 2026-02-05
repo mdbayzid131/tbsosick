@@ -7,6 +7,7 @@ import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/otp_verify_bottom.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom2.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -176,17 +177,29 @@ void showResetPasswordBottomSheet(BuildContext context) {
 
                   SizedBox(height: 20.h),
 
-                  // Submit Button (Reactive)
-                  Obx(
-                    () => CustomElevatedButton(
-                      label: isSuccess.value ? 'Next' : 'Send Reset Link',
-                      onPressed: forgotPassword,
-                      isLoading: isLoading.value,
-                    ),
-                  ),
+                      CustomElevatedButton(
+                        label: isSuccess.value ? 'Next' : 'Send Reset Link',
+                        onPressed: () {
+                          // Step 1. First action. Validate form
+                          if (!isSuccess.value) {
+                            final isValid =
+                                formKey.currentState?.validate() ?? false;
 
-                  SizedBox(height: 20.h),
-                ],
+                            if (isValid) {
+                              isSuccess.value = true;
+                            }
+                            return;
+                          }
+
+                          // Step 2. Next action after success
+                          Get.back();
+                          showResetPasswordBottomSheet2(context);
+                        },
+                      ),
+                      SizedBox(height: 20.h),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
