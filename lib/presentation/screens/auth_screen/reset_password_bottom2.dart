@@ -10,14 +10,12 @@ import 'package:tbsosick/core/utils/validators.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
-void showResetPasswordBottomSheet2(BuildContext context) {
+void showResetPasswordBottomSheet2(BuildContext context,String token) {
   final obscureText = true.obs;
   final confirmObscureText = true.obs;
   final AuthService _authService = Get.find();
-  final tokenController = TextEditingController();
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  final tokenError = RxnString();
   final passwordError = RxnString();
   final confirmPasswordError = RxnString();
   final isSuccess = false.obs;
@@ -28,9 +26,7 @@ void showResetPasswordBottomSheet2(BuildContext context) {
       if (isLoading.value) return;
 
       // 1. Validate form
-      tokenError.value = tokenController.text.trim().isEmpty
-          ? 'Please enter a reset token'
-          : null;
+
       passwordError.value = Validators.password(
         newPasswordController.text.trim(),
       );
@@ -40,7 +36,6 @@ void showResetPasswordBottomSheet2(BuildContext context) {
       );
 
       final isValid =
-          tokenError.value == null &&
           passwordError.value == null &&
           confirmPasswordError.value == null;
 
@@ -59,13 +54,13 @@ void showResetPasswordBottomSheet2(BuildContext context) {
       isLoading.value = true;
 
       final Response response = await _authService.resetPassword(
-        token: tokenController.text.trim(),
+        token: token,
         newPassword: newPasswordController.text.trim(),
         confirmPassword: confirmPasswordController.text.trim(),
       );
 
       print('=======================================');
-      print(tokenController.text.trim());
+      print(token);
       print(newPasswordController.text.trim());
       print(confirmPasswordController.text.trim());
 
@@ -193,21 +188,21 @@ void showResetPasswordBottomSheet2(BuildContext context) {
 
                         SizedBox(height: 12.h),
 
-                        Obx(
-                          () => CustomTextField(
-                            readOnly: false,
-                            isLabelVisible: false,
-                            controller: tokenController,
-                            hintText: 'Reset Token',
-                            errorText: tokenError.value,
-                            prefixIcon: Icon(
-                              Icons.key_outlined,
-                              color: const Color(0xff8E8E93),
-                              size: 20.sp,
-                            ),
-                            label: '',
-                          ),
-                        ),
+                        // Obx(
+                        //   () => CustomTextField(
+                        //     readOnly: false,
+                        //     isLabelVisible: false,
+                        //     controller: tokenController,
+                        //     hintText: 'Reset Token',
+                        //     errorText: tokenError.value,
+                        //     prefixIcon: Icon(
+                        //       Icons.key_outlined,
+                        //       color: const Color(0xff8E8E93),
+                        //       size: 20.sp,
+                        //     ),
+                        //     label: '',
+                        //   ),
+                        // ),
 
                         SizedBox(height: 12.h),
 

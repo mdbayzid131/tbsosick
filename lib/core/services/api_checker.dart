@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
@@ -8,7 +7,6 @@ import 'package:tbsosick/core/utils/custom_snackbar.dart';
 class ApiChecker {
   /// Check Dio response and show snackbar if error occurs
   static void checkApi(Response response, {bool getXSnackBar = true}) {
-    
     // Success codes → 200 (OK), 201 (Created)
     if (response.statusCode != 200 && response.statusCode != 201) {
       if (response.statusCode == 401) {
@@ -45,4 +43,3 @@ class ApiChecker {
     showCustomSnackBar(message, getXSnackBar: getXSnackBar);
   }
 }
-

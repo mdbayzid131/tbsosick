@@ -7,6 +7,5 @@ class StorageConstants {
   static const String isLoggedIn = 'is_logged_in';
   static const String language = 'language';
   static const String theme = 'theme';
-  
-  // Add your storage keys here
+  static const String onboardingSeen = 'onboarding_seen';
 }

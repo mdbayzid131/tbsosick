@@ -21,7 +21,7 @@ class OnboardingPage1 extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: () {
-              Get.toNamed(AppRoutes.LOGIN);
+              Get.offAllNamed(AppRoutes.LOGIN);
             },
             child: Align(
               alignment: Alignment.topRight,

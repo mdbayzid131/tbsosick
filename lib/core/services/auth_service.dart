@@ -88,11 +88,12 @@ class AuthService extends GetxService {
   }
 
   /// ===================== OTP VERIFY =====================
-  Future<void> verifyOtp({required String email, required int otp}) async {
+  Future<Response> verifyOtp({required String email, required int otp}) async {
     try {
-      await _authRepo.otpVerify(email: email, oneTimeCode: otp);
+      final response = await _authRepo.otpVerify(email: email, oneTimeCode: otp);
       // If OTP verification logs the user in directly:
       // await _handleAuthResponse(response);
+      return response;
     } catch (e) {
       rethrow;
     }

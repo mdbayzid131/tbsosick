@@ -16,8 +16,6 @@ class ApiClient extends GetxService {
       "Sorry! Something went wrong, please try again";
   static const int timeoutInSeconds = 30;
 
-
-
   Future<void> fakeLogout() async {
     try {
       // Clear tokens from StorageService
@@ -30,11 +28,11 @@ class ApiClient extends GetxService {
       // Show success message
 
       // Navigate to login screen
-
     } catch (e) {
       showCustomSnackBar(" failed: $e", isError: true);
     }
   }
+
   void handleTokenExpired() {
     fakeLogout();
 
@@ -58,7 +56,9 @@ class ApiClient extends GetxService {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          bearerToken = await StorageService.getString(StorageConstants.bearerToken);
+          bearerToken = await StorageService.getString(
+            StorageConstants.bearerToken,
+          );
           if (bearerToken.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $bearerToken';
           }
@@ -105,9 +105,20 @@ class ApiClient extends GetxService {
     String uri,
     dynamic body, {
     CancelToken? cancelToken,
+    String? resetToken,
   }) async {
     try {
-      return await dio.post(uri, data: body, cancelToken: cancelToken);
+      return await dio.post(
+        uri,
+        data: body,
+        cancelToken: cancelToken,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': resetToken,
+          },
+        ),
+      );
     } on DioException catch (e) {
       return _handleError(e);
     }

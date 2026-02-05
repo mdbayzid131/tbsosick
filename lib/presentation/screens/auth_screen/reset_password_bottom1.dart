@@ -33,10 +33,10 @@ void showResetPasswordBottomSheet(BuildContext context) {
 
       if (isSuccess.value) {
         // Prevent opening multiple bottom sheets
-        if (Get.isBottomSheetOpen ?? false) {
           Get.back();
-        }
-        showResetPasswordBottomSheet2(Get.context!);
+          showOtpVerifyBottomSheet(Get.context!, emailController.text.trim());
+        
+
         return;
       }
 
@@ -177,29 +177,17 @@ void showResetPasswordBottomSheet(BuildContext context) {
 
                   SizedBox(height: 20.h),
 
-                      CustomElevatedButton(
-                        label: isSuccess.value ? 'Next' : 'Send Reset Link',
-                        onPressed: () {
-                          // Step 1. First action. Validate form
-                          if (!isSuccess.value) {
-                            final isValid =
-                                formKey.currentState?.validate() ?? false;
-
-                            if (isValid) {
-                              isSuccess.value = true;
-                            }
-                            return;
-                          }
-
-                          // Step 2. Next action after success
-                          Get.back();
-                          showResetPasswordBottomSheet2(context);
-                        },
-                      ),
-                      SizedBox(height: 20.h),
-                    ],
+                  // Submit Button (Reactive)
+                  Obx(
+                    () => CustomElevatedButton(
+                      label: isSuccess.value ? 'Next' : 'Send Reset Link',
+                      onPressed: forgotPassword,
+                      isLoading: isLoading.value,
+                    ),
                   ),
-                ),
+
+                  SizedBox(height: 20.h),
+                ],
               ),
             ),
           ),

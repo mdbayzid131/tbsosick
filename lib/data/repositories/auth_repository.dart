@@ -2,12 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 
-
 class AuthRepo {
   final ApiClient apiClient;
   AuthRepo({required this.apiClient});
-
-
 
   // Future<String> getDeviceId() async {
   //   final deviceInfo = DeviceInfoPlugin();
@@ -22,8 +19,6 @@ class AuthRepo {
   //     return "unsupported";
   //   }
   // }
-
-
 
   /// ===================== SIGNUP =====================
   Future<Response> signup({
@@ -62,7 +57,7 @@ class AuthRepo {
 
   /// ===================== RESEND OTP =====================
   Future<Response> resentOtp({required String email}) async {
-    return await apiClient.postData(ApiConstants.resendVerifyEmail, {   
+    return await apiClient.postData(ApiConstants.resendVerifyEmail, {
       "email": email,
     });
   }
@@ -85,18 +80,14 @@ class AuthRepo {
     required String confirmPassword,
   }) async {
     return await apiClient.postData(ApiConstants.resetPassword, {
-      "token": token,
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
-    });
+    }, resetToken: token);
   }
 
   /// ===================== LOGOUT =====================
   Future<Response> logout() async {
-
-
-    return await apiClient.postData(ApiConstants.logout, {
-    });
+    return await apiClient.postData(ApiConstants.logout, {});
   }
 
   /// ===================== REFRESH TOKEN =====================
@@ -112,12 +103,10 @@ class AuthRepo {
     required String newPassword,
     required String confirmPassword,
   }) async {
-    return await apiClient.postData(ApiConstants.resetPassword, {      
+    return await apiClient.postData(ApiConstants.resetPassword, {
       "currentPassword": currentPassword,
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
     });
   }
-
-
 }

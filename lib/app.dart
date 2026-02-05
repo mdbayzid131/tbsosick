@@ -6,6 +6,7 @@ import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/bindings/initial_binding.dart';
 
 class MyApp extends StatelessWidget {
+
   const MyApp({super.key});
 
   @override
