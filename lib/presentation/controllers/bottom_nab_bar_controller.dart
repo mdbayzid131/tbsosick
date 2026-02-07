@@ -18,7 +18,7 @@ class BottomNabBarController extends GetxController {
   }
 
   // data list
-  final RxList<PublicCard> cards = <PublicCard>[].obs;
+  final RxList<PublicCard> publicCards = <PublicCard>[].obs;
   // card list
   final RxList<PrivateCard> privateCards = <PrivateCard>[].obs;
   // all cards list
@@ -50,10 +50,10 @@ class BottomNabBarController extends GetxController {
       isLoading.value = true;
 
       await Future.wait([
-        getProfile(),
-        getAllCardCount(),
-        getAllCard(),
-        getPrivateCard(),
+        getProfile(),//
+        getAllCardCount(),//
+        getAllCard(),//
+        getPrivateCard(),//
         getPublicCard(),
       ]);
     } catch (e) {
@@ -76,7 +76,7 @@ class BottomNabBarController extends GetxController {
 
       final result = PublicCardsResponse.fromJson(response.data);
 
-      cards.assignAll(result.data);
+      publicCards.assignAll(result.data);
 
       _hasMore = _page < result.pagination.totalPage;
     } catch (e) {
@@ -100,7 +100,7 @@ class BottomNabBarController extends GetxController {
 
       final result = PublicCardsResponse.fromJson(response.data);
 
-      cards.addAll(result.data);
+      publicCards.addAll(result.data);
 
       _hasMore = _page < result.pagination.totalPage;
     } catch (e) {
@@ -113,7 +113,7 @@ class BottomNabBarController extends GetxController {
   void refreshList() {
     _page = 1;
     _hasMore = true;
-    cards.clear();
+    publicCards.clear();
     getPublicCard();
   }
 

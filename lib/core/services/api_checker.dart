@@ -1,26 +1,19 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart' hide Response;
-import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/utils/custom_snackbar.dart';
 
 class ApiChecker {
-  /// Check Dio response and show snackbar if error occurs
   static void checkApi(Response response, {bool getXSnackBar = true}) {
-    // Success codes → 200 (OK), 201 (Created)
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      if (response.statusCode == 401) {
-        Get.offAllNamed(AppRoutes.LOGIN);
-        showCustomSnackBar(
-          "Unauthorized! Please login again.",
-          getXSnackBar: getXSnackBar,
-        );
-      } else {
-        showCustomSnackBar(
-          response.data["message"] ?? "Unknown error occurred",
-          getXSnackBar: getXSnackBar,
-        );
-      }
+    final statusCode = response.statusCode ?? 0;
+
+    // ❌ 401 ignore (handled in interceptor)
+    if (statusCode == 401) return;
+
+    if (statusCode < 200 || statusCode >= 300) {
+      final message = response.data is Map && response.data['message'] != null
+          ? response.data['message']
+          : 'Something went wrong';
+
+      showCustomSnackBar(message, getXSnackBar: getXSnackBar);
     }
   }
 

@@ -1,8 +1,11 @@
 // ignore: implementation_imports
 import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart' hide Response;
-import 'package:tbsosick/config/constants/app_constants.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';

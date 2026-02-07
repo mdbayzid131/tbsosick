@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart' hide Response, FormData, MultipartFile;
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
-import 'package:tbsosick/core/utils/custom_snackbar.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 
 class ApiClient extends GetxService {
   static late Dio dio;
@@ -16,30 +18,30 @@ class ApiClient extends GetxService {
       "Sorry! Something went wrong, please try again";
   static const int timeoutInSeconds = 30;
 
-  Future<void> fakeLogout() async {
-    try {
-      // Clear tokens from StorageService
-      await StorageService.setString(StorageConstants.bearerToken, "");
-      await StorageService.setString(StorageConstants.refreshToken, "");
+  // Future<void> fakeLogout() async {
+  //   try {
+  //     // Clear tokens from StorageService
+  //     await StorageService.setString(StorageConstants.bearerToken, "");
+  //     await StorageService.setString(StorageConstants.refreshToken, "");
 
-      // Optional: Clear other user-related data if needed
-      // await PrefsHelper.clearAll();
+  //     // Optional: Clear other user-related data if needed
+  //     // await PrefsHelper.clearAll();
 
-      // Show success message
+  //     // Show success message
 
-      // Navigate to login screen
-    } catch (e) {
-      showCustomSnackBar(" failed: $e", isError: true);
-    }
-  }
+  //     // Navigate to login screen
+  //   } catch (e) {
+  //     showCustomSnackBar(" failed: $e", isError: true);
+  //   }
+  // }
 
-  void handleTokenExpired() {
-    fakeLogout();
+  // void handleTokenExpired() {
+  //   fakeLogout();
 
-    showCustomSnackBar("Session expired. Please login again.", isError: true);
+  //   showCustomSnackBar("Session expired. Please login again.", isError: true);
 
-    Get.offAllNamed(AppRoutes.LOGIN);
-  }
+  //   Get.offAllNamed(AppRoutes.LOGIN);
+  // }
 
   @override
   void onInit() {
@@ -71,11 +73,50 @@ class ApiClient extends GetxService {
           );
           return handler.next(response);
         },
-        onError: (DioException e, handler) {
-          if (e.response?.statusCode == 401) {
-            // Token expired
-            handleTokenExpired();
+        
+        onError: (DioException e, handler) async {
+          // 1️⃣ No internet
+          if (e.type == DioExceptionType.connectionError) {
+            Helpers.showErrorSnackbar('No internet connection');
+            return handler.next(e);
           }
+
+          // 2️⃣ Token expired → try refresh FIRST
+          if (e.response?.statusCode == 401 &&
+              !e.requestOptions.path.contains(StorageConstants.refreshToken)) {
+            final refreshed = await refreshToken();
+
+            if (refreshed) {
+              final newToken = await StorageService.getString(
+                StorageConstants.bearerToken,
+              );
+
+              e.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+
+              final response = await dio.fetch(e.requestOptions);
+              return handler.resolve(response);
+            } else {
+              logoutUser();
+              return handler.reject(e);
+            }
+          }
+
+          // 3️⃣ Timeout
+          if (e.type == DioExceptionType.connectionTimeout ||
+              e.type == DioExceptionType.receiveTimeout) {
+            Helpers.showErrorSnackbar('Request timeout. Please try again.');
+          }
+          // 4️⃣ Server error
+          else if (e.type == DioExceptionType.badResponse) {
+            Helpers.showErrorSnackbar(
+              'Server error (${e.response?.statusCode})',
+            );
+          }
+          // 5️⃣ Unknown error
+          else {
+            Helpers.showErrorSnackbar('Something went wrong');
+          }
+
           debugPrint("====> API Error: ${e.message}");
           return handler.next(e);
         },
@@ -262,8 +303,37 @@ class ApiClient extends GetxService {
       data: e.response?.data,
     );
   }
+
+  /// token Expired
+
+  Future<bool> refreshToken() async {
+    try {
+      final refreshToken = await StorageService.getString(
+        StorageConstants.refreshToken,
+      );
+
+      final response = await postData(ApiConstants.refreshToken, {
+        'refreshToken': refreshToken,
+      });
+
+      if (response.statusCode == 200) {
+        await StorageService.setString(
+          StorageConstants.bearerToken,
+          response.data['accessToken'],
+        );
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  void logoutUser() {
+    StorageService.clearAll();
+    Get.offAllNamed(AppRoutes.LOGIN);
+  }
 }
 
+/// Multipart Body
 class MultipartBody {
   String key;
   File file;
