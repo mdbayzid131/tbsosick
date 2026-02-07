@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:tbsosick/core/widgets/screens/no_internet_screen.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/login_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/Interactive_tutorial_screen.dart';
@@ -27,6 +28,7 @@ class AppRoutes {
   static const String INTERACTIVE_TUTORIAL = '/interactive-tutorial';
   static const String VERIFY_EMAIL = '/verify-email';
   static const String OTP_VERIFICATION = '/otp-verification';
+  static const String NO_INTERNET = '/no-internet';
 }
 
 final Transition transition = Transition.rightToLeft;
@@ -49,4 +51,5 @@ final pages = [
     page: () => InteractiveTutorialScreen(),
   ),
   GetPage(name: AppRoutes.BOTTOM_NAV_BAR, page: () => BottomNabBarScreen(),bindings: [BottomNabBarBinding()]),
+  GetPage(name: AppRoutes.NO_INTERNET, page: () => NoInternetScreen()),
 ];

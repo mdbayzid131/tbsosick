@@ -7,6 +7,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
+import 'package:tbsosick/core/widgets/safe_network_image.dart';
 
 import '../../../config/constants/image_paths.dart';
 import '../../controllers/bottom_nab_bar_controller.dart';
@@ -119,15 +120,9 @@ class CustomBottomBar extends StatelessWidget {
           ),
         ),
         padding: EdgeInsets.all(3.w),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: Image.network('https://picsum.photos/250?image=9').image,
-
-              fit: BoxFit.cover,
-            ),
-          ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100.r),
+          child: SafeNetworkImage(imageUrl: 'https://picsum.photos/250?image=9'),
         ),
       ),
     );

@@ -50,11 +50,11 @@ class BottomNabBarController extends GetxController {
       isLoading.value = true;
 
       await Future.wait([
-        getProfile(),//
-        getAllCardCount(),//
-        getAllCard(),//
-        getPrivateCard(),//
-        getPublicCard(),
+        getProfile(showLoading: false),
+        getAllCardCount(showLoading: false),
+        getAllCard(showLoading: false),
+        getPrivateCard(showLoading: false),
+        getPublicCard(showLoading: false),
       ]);
     } catch (e) {
       Helpers.showErrorSnackbar(e.toString());
@@ -63,15 +63,11 @@ class BottomNabBarController extends GetxController {
     }
   }
 
-  Future<void> getPublicCard() async {
-    if (isLoading.value) return;
-
+  Future<void> getPublicCard({bool showLoading = true}) async {
     try {
-      isLoading.value = true;
+      if (showLoading) isLoading.value = true;
 
-      final response = await _userDataRepository.getPublicCard(
-        page: _page,
-      );
+      final response = await _userDataRepository.getPublicCard(page: _page);
       ApiChecker.checkApi(response);
 
       final result = PublicCardsResponse.fromJson(response.data);
@@ -82,7 +78,7 @@ class BottomNabBarController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', e.toString());
     } finally {
-      isLoading.value = false;
+      if (showLoading) isLoading.value = false;
     }
   }
 
@@ -93,9 +89,7 @@ class BottomNabBarController extends GetxController {
       isMoreLoading.value = true;
       _page++;
 
-      final response = await _userDataRepository.getPublicCard(
-        page: _page,
-      );
+      final response = await _userDataRepository.getPublicCard(page: _page);
       ApiChecker.checkApi(response);
 
       final result = PublicCardsResponse.fromJson(response.data);
@@ -119,9 +113,9 @@ class BottomNabBarController extends GetxController {
 
   ///================================================
 
-  Future<void> getProfile() async {
+  Future<void> getProfile({bool showLoading = true}) async {
     try {
-      isLoading.value = true;
+      if (showLoading) isLoading.value = true;
       errorMessage.value = '';
       final response = await _userDataRepository.getProfile();
       ApiChecker.checkApi(response);
@@ -135,14 +129,14 @@ class BottomNabBarController extends GetxController {
       errorMessage.value = e.toString();
       Helpers.showErrorSnackbar(e.toString());
     } finally {
-      isLoading.value = false;
+      if (showLoading) isLoading.value = false;
     }
   }
 
   ///================================================
-  Future<void> getAllCardCount() async {
+  Future<void> getAllCardCount({bool showLoading = true}) async {
     try {
-      isLoading.value = true;
+      if (showLoading) isLoading.value = true;
       errorMessage.value = '';
       final response = await _userDataRepository.getCardCount();
       ApiChecker.checkApi(response);
@@ -152,15 +146,15 @@ class BottomNabBarController extends GetxController {
       errorMessage.value = e.toString();
       Helpers.showErrorSnackbar(e.toString());
     } finally {
-      isLoading.value = false;
+      if (showLoading) isLoading.value = false;
     }
   }
 
   ///================================================
 
-  Future<void> getAllCard() async {
+  Future<void> getAllCard({bool showLoading = true}) async {
     try {
-      isLoading.value = true;
+      if (showLoading) isLoading.value = true;
       errorMessage.value = '';
 
       final response = await _userDataRepository.getAllCard();
@@ -176,14 +170,14 @@ class BottomNabBarController extends GetxController {
       errorMessage.value = e.toString();
       Helpers.showErrorSnackbar(e.toString());
     } finally {
-      isLoading.value = false;
+      if (showLoading) isLoading.value = false;
     }
   }
 
   /// 🔥 GET PRIVATE CARDS
-  Future<void> getPrivateCard() async {
+  Future<void> getPrivateCard({bool showLoading = true}) async {
     try {
-      isLoading.value = true;
+      if (showLoading) isLoading.value = true;
       errorMessage.value = '';
 
       final response = await _userDataRepository.getPrivateCard();
@@ -199,17 +193,13 @@ class BottomNabBarController extends GetxController {
       errorMessage.value = e.toString();
       Helpers.showErrorSnackbar(e.toString());
     } finally {
-      isLoading.value = false;
+      if (showLoading) isLoading.value = false;
     }
   }
 
   /// 🔄 Pull-to-refresh / manual reload
   Future<void> refreshCards() async {
-    await getPrivateCard();
-    await getPublicCard();
-    await getAllCard();
-    await getAllCardCount();
-    await getProfile();
+    await _loadHomeData();
   }
 }
 

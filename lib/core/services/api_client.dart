@@ -2,13 +2,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/core/controllers/internet_controller.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
+import 'package:tbsosick/core/widgets/screens/no_internet_screen.dart';
 
 class ApiClient extends GetxService {
   static late Dio dio;
@@ -64,20 +67,35 @@ class ApiClient extends GetxService {
           if (bearerToken.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $bearerToken';
           }
-          debugPrint("====> API Request: ${options.method} ${options.uri}");
+          debugPrint("➡️ ====> API REQUEST==========================");
+          debugPrint("➡️ ====> API Request: ${options.method} ${options.uri}");
+          debugPrint("➡️ ====> API Headers: ${options.headers}");
+          debugPrint(
+            "➡️ ====> API Query Parameters: ${options.queryParameters}",
+          );
+          debugPrint("➡️ ====> API Data: ${options.data}");
           return handler.next(options);
         },
         onResponse: (response, handler) {
+          debugPrint("✅ ====> API RESPONSE==========================");
           debugPrint(
-            "====> API Response: [${response.statusCode}] ${response.data}",
+            "✅ ====> API Response: [${response.statusCode}] ${response.data}",
           );
+          debugPrint("✅ ====> API URI: ${response.requestOptions.uri}");
+          debugPrint("✅ ====> API Data: ${response.data}");
+
           return handler.next(response);
         },
-        
+
         onError: (DioException e, handler) async {
+          final internet = Get.find<InternetController>();
+
           // 1️⃣ No internet
           if (e.type == DioExceptionType.connectionError) {
-            Helpers.showErrorSnackbar('No internet connection');
+            if (!internet.isShowingNoInternet.value) {
+              internet.setOffline();
+              Get.offAllNamed(AppRoutes.NO_INTERNET);
+            }
             return handler.next(e);
           }
 
@@ -116,8 +134,15 @@ class ApiClient extends GetxService {
           else {
             Helpers.showErrorSnackbar('Something went wrong');
           }
+          debugPrint("❌ ====> API ERROR:==========================");
+          debugPrint("❌ ====> API MESSAGE: ${e.message}");
+          debugPrint('❌ ====> API URL: ${e.requestOptions.uri}');
+          debugPrint("❌ ====> API DATA: ${e.response?.data}");
+          debugPrint("❌ ====> API STATUS CODE: ${e.response?.statusCode}");
+          debugPrint(
+            "❌ ====> API STATUS MESSAGE: ${e.response?.statusMessage}",
+          );
 
-          debugPrint("====> API Error: ${e.message}");
           return handler.next(e);
         },
       ),
