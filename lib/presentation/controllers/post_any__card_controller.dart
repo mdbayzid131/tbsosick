@@ -89,10 +89,14 @@ class PostAnyCardController extends GetxController {
         published: !isprivate,
         photos: selectedImages, // List<File>
       );
+      if (response.statusCode == 200) {
+        Helpers.showSuccessSnackbar('Preference card created');
+        Get.back();
+      }
 
       ApiChecker.checkApi(response);
 
-      Helpers.showSuccessSnackbar('Preference card created');
+
     } catch (e) {
       Helpers.showErrorSnackbar(e.toString());
     } finally {
