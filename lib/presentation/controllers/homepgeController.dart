@@ -1,7 +1,129 @@
+import 'package:dio/dio.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:tbsosick/core/services/api_checker.dart';
+import 'package:tbsosick/core/utils/custom_snackbar.dart';
+import 'package:tbsosick/data/models/private_card_model.dart';
+import 'package:tbsosick/data/models/supplies_model.dart';
+import 'package:tbsosick/data/repositories/user_repository.dart';
 
+class HomePageController extends GetxController {
+  final UserDataRepository _userDataRepository = UserDataRepository();
 
+  RxBool isFavorite = false.obs;
+  RxBool isLoading = false.obs;
+  RxList<PrivateCard> privateCard = <PrivateCard>[].obs;
 
+  RxList<SuppliesModel> supplies = <SuppliesModel>[].obs;
+  RxList<SuppliesModel> sutures = <SuppliesModel>[].obs;
 
+  Future<void> getSupplies() async {
+    try {
+      Response<dynamic> response = await _userDataRepository.getSupplies();
+      ApiChecker.checkApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final suppliesResponse = SuppliesResponse.fromJson(response.data);
+
+        supplies.assignAll(suppliesResponse.supplies);
+      } else {
+        showCustomSnackBar("Server is not responding", isError: true);
+      }
+    } catch (e) {
+      if (e is DioException) {
+        ApiChecker.handleError(e);
+      } else {
+        showCustomSnackBar(e.toString(), isError: true);
+      }
+    } finally {}
+  }
+
+  Future<void> getSutures() async {
+    try {
+      Response<dynamic> response = await _userDataRepository.getSutures();
+      ApiChecker.checkApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final suppliesResponse = SuppliesResponse.fromJson(response.data);
+
+        sutures.assignAll(suppliesResponse.supplies);
+      } else {
+        showCustomSnackBar("Server is not responding", isError: true);
+      }
+    } catch (e) {
+      if (e is DioException) {
+        ApiChecker.handleError(e);
+      } else {
+        showCustomSnackBar(e.toString(), isError: true);
+      }
+    } finally {}
+  }
+
+  void toggleFavorite() {
+    isFavorite.value = !isFavorite.value;
+  }
+
+  // Future<void> postPrivateCard({
+  //   required String cardTitle,
+  //   required String surgeonName,
+  //   required String handPreference,
+  //   required String specialty,
+  //   required String contactNumber,
+  //   required String musicPreference,
+  //   required String medication,
+  //   required List<String> supplies,
+  //   required List<String> sutures,
+  //   required String instruments,
+  //   required String positioningEquipment,
+  //   required String prepping,
+  //   required String workflow,
+  //   required String keyNotes,
+  //   required List<String> photoLibrary,
+  //   required bool published,
+  // }) async {
+  //   try {
+  //     isLoading(true);
+
+  //     Response<dynamic> response = await _userDataRepository.postAnyCard(
+  //       cardTitle: cardTitle,
+  //       surgeonName: surgeonName,
+  //       handPreference: handPreference,
+  //       specialty: specialty,
+  //       contactNumber: contactNumber,
+  //       musicPreference: musicPreference,
+  //       medication: medication,
+  //       supplies: supplies,
+  //       sutures: sutures,
+  //       instruments: instruments,
+  //       positioningEquipment: positioningEquipment,
+  //       prepping: prepping,
+  //       workflow: workflow,
+  //       keyNotes: keyNotes,
+  //       photoLibrary: photoLibrary,
+  //       published: published,
+  //     );
+  //     ApiChecker.checkApi(response);
+
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       final privateCardResponse = PrivateCardsResponse.fromJson(
+  //         response.data,
+  //       );
+
+  //       privateCard.assignAll(privateCardResponse.data);
+  //     } else {
+  //       showCustomSnackBar("Server is not responding", isError: true);
+  //     }
+  //   } catch (e) {
+  //     if (e is DioException) {
+  //       ApiChecker.handleError(e);
+  //     } else {
+  //       showCustomSnackBar("Failed to connect to server ", isError: true);
+  //     }
+  //   } finally {
+  //     isLoading(false);
+  //   }
+  // }
+}
 
 // /*
 // import 'dart:typed_data';

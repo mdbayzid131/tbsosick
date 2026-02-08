@@ -42,10 +42,10 @@ class BottomNabBarController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadHomeData();
+    loadHomeData();
   }
 
-  Future<void> _loadHomeData() async {
+  Future<void> loadHomeData() async {
     try {
       isLoading.value = true;
 
@@ -157,7 +157,7 @@ class BottomNabBarController extends GetxController {
       if (showLoading) isLoading.value = true;
       errorMessage.value = '';
 
-      final response = await _userDataRepository.getAllCard();
+      final response = await _userDataRepository.getAllCard(page: _page);
       ApiChecker.checkApi(response);
       if (response.statusCode == 200 && response.data != null) {
         final result = AllCardsResponse.fromJson(response.data);
@@ -180,7 +180,7 @@ class BottomNabBarController extends GetxController {
       if (showLoading) isLoading.value = true;
       errorMessage.value = '';
 
-      final response = await _userDataRepository.getPrivateCard();
+      final response = await _userDataRepository.getPrivateCard(page: _page);
       ApiChecker.checkApi(response);
       if (response.statusCode == 200 && response.data != null) {
         final result = PrivateCardsResponse.fromJson(response.data);
@@ -199,7 +199,7 @@ class BottomNabBarController extends GetxController {
 
   /// 🔄 Pull-to-refresh / manual reload
   Future<void> refreshCards() async {
-    await _loadHomeData();
+    await loadHomeData();
   }
 }
 

@@ -1,8 +1,14 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
+import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
+import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/screens/home/Preference%20card/new_preference_card.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dart';
@@ -17,130 +23,171 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final BottomNabBarController _bottomNabBarController = Get.put(
+    BottomNabBarController(),
+  );
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Fixed header
-          _headerSection(),
+    return RefreshIndicator(
+      onRefresh: () async {
+        final result = await Connectivity().checkConnectivity();
 
-          // Scrollable body
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-              children: [
-                // Quick Actions title
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Quick Actions',
-                    style: GoogleFonts.arimo(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xff1C1B1F),
-                    ),
-                  ),
-                ),
+        // ignore: unrelated_type_equality_checks
+        if (result == ConnectivityResult.none) {
+          Helpers.showErrorSnackbar('No internet connection');
+          return;
+        }
 
-                SizedBox(height: 12.h),
+        await _bottomNabBarController.loadHomeData();
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Fixed header
+            _headerSection(),
 
-                // Quick action cards row
-                Row(
-                  children: [
-                    Expanded(
-                      child: _quickActionCard(
-                        title: 'Create Preference card',
-                        onTap: () {
-                          Get.to(NewPreferenceCard(isPrivate: false,));
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: _quickActionCard(
-                        title: 'Create Private Card',
-                        onTap: () {
-                          Get.to(NewPreferenceCard(isPrivate: true,));
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 20.h),
-
-                // Preference card favorites header
-                Row(
-                  children: [
-                    Text(
-                      'Preference card favorites',
+            // Scrollable body
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Column(
+                children: [
+                  // Quick Actions title
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Quick Actions',
                       style: GoogleFonts.arimo(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xff1C1B1F),
                       ),
                     ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        Get.to(() => const PreferenceCardFavorites());
-                      },
-                      child: Row(
-                        children: [
-                          Text(
-                            'View All',
-                            style: GoogleFonts.arimo(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xff6750A4),
-                            ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 14.sp,
-                            color: const Color(0xff6750A4),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
 
-                SizedBox(height: 12.h),
+                  SizedBox(height: 12.h),
 
-                // List items
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 10.h),
-                      child: InkWell(
-                        onTap: () {
-                          Get.to(() => const PreferenceCardDetails(isPrivate: false));
-                        },
-                        child: favoriteCard(
-                          title: 'Total Knee Replacement',
-                          status: 'Completed',
-                          statusColor: const Color(0xffE6F6EA),
-                          statusTextColor: const Color(0xff2E9B4E),
-                          date: '2026-01-02',
-                          doctor: 'Dr. Sarah Johnson',
+                  // Quick action cards row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _quickActionCard(
+                          title: 'Create Preference card',
+                          onTap: () {
+                            Get.to(NewPreferenceCard(isPrivate: false),
+                            binding: PostAnyCardBinding(),
+             
+                            );
+                          },
                         ),
                       ),
-                    );
-                  },
-                ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: _quickActionCard(
+                          title: 'Create Private Card',
+                          onTap: () {
+                            Get.to(NewPreferenceCard(isPrivate: true),
+                             binding: PostAnyCardBinding(),);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
 
-                SizedBox(height: 90.h),
-              ],
+                  SizedBox(height: 20.h),
+
+                  // Preference card favorites header
+                  Row(
+                    children: [
+                      Text(
+                        'Preference card favorites',
+                        style: GoogleFonts.arimo(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xff1C1B1F),
+                        ),
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          Get.to(() => const PreferenceCardFavorites());
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              'View All',
+                              style: GoogleFonts.arimo(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xff6750A4),
+                              ),
+                            ),
+                            SizedBox(width: 4.w),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 14.sp,
+                              color: const Color(0xff6750A4),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 12.h),
+
+                  // List items
+                  Obx(() {
+                    if (_bottomNabBarController.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (_bottomNabBarController.allCards.isEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
+                        child: const Center(child: Text("No cards found")),
+                      );
+                    }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      itemCount: _bottomNabBarController.allCards.length,
+                      itemBuilder: (context, index) {
+                        final card = _bottomNabBarController.allCards[index];
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 10.h),
+                          child: InkWell(
+                            onTap: () {
+                              Get.to(
+                                () => const PreferenceCardDetails(
+                                  isPrivate: false,
+                                ),
+                              );
+                            },
+                            child: favoriteCard(
+                              title: card.cardTitle,
+                              status: card.verificationStatus,
+                              statusColor: card.verificationStatus == 'Approved'
+                                  ? const Color(0xffE6F6EA)
+                                  : const Color(0xffFFF7E6),
+                              statusTextColor:
+                                  card.verificationStatus == 'Approved'
+                                  ? const Color(0xff2E9B4E)
+                                  : const Color(0xffFFA940),
+                              date: card.createdAt.toString().split(' ').first,
+                              doctor: card.surgeon.fullName,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }),
+
+                  SizedBox(height: 90.h),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -170,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,           // ← এটা খুব জরুরি
+          mainAxisSize: MainAxisSize.min, // ← এটা খুব জরুরি
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -247,12 +294,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             SizedBox(height: 4.h),
-                            Text(
-                              'Dr. Anderson',
-                              style: GoogleFonts.arimo(
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white,
+                            Obx(
+                              () => Text(
+                                _bottomNabBarController.user.value?.name ??
+                                    'Loading...',
+                                style: GoogleFonts.arimo(
+                                  fontSize: 24.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ],
@@ -297,7 +347,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 20.h),
                   Container(
                     height: 46.h,
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 1.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 1.h,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xffF2F2F7),
                       borderRadius: BorderRadius.circular(24.r),
@@ -341,24 +394,28 @@ class _HomeScreenState extends State<HomeScreen> {
               right: 0,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _statCard(
-                        icon: Icons.description_outlined,
-                        count: '6',
-                        label: 'All Card',
+                child: Obx(
+                  () => Row(
+                    children: [
+                      Expanded(
+                        child: _statCard(
+                          icon: Icons.description_outlined,
+                          count:
+                              "${_bottomNabBarController.cardCount.value?.allCardsCount}",
+                          label: 'All Card',
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: _statCard(
-                        icon: Icons.person_outline,
-                        count: '0',
-                        label: 'My Cards',
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: _statCard(
+                          icon: Icons.person_outline,
+                          count:
+                              "${_bottomNabBarController.cardCount.value?.myCardsCount}",
+                          label: 'My Cards',
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -424,7 +481,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Favorite card widget
-
 }
 
 Widget favoriteCard({
@@ -481,7 +537,7 @@ Widget favoriteCard({
             ),
           ],
         ),
-        SizedBox(height:15.h),
+        SizedBox(height: 15.h),
         Row(
           children: [
             Icon(

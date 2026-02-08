@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../dummy_data.dart';
+import 'package:get/get.dart';
+import 'package:tbsosick/data/models/supplies_model.dart';
+import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 
 class SuturesContainer extends StatefulWidget {
-  const SuturesContainer({super.key});
+  final List<String> selectedIds;
+  final Function(List<String>) onSelectionChanged;
+  const SuturesContainer({
+    super.key,
+    required this.selectedIds,
+    required this.onSelectionChanged,
+  });
 
   @override
   State<SuturesContainer> createState() => _SuturesContainerState();
@@ -14,29 +21,27 @@ class _SuturesContainerState extends State<SuturesContainer> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
 
-  List<String> selectedItems = [];
+  final HomePageController homePageController = Get.find();
 
-  List<String> get filteredSupplies {
-    if (_searchController.text.isEmpty) return [];
-    return allSupplies
-        .where(
-          (item) =>
-              item.toLowerCase().contains(_searchController.text.toLowerCase()),
-        )
+  List<SuppliesModel> get filteredSutures {
+    final query = _searchController.text.trim().toLowerCase();
+    if (query.isEmpty) return [];
+    return homePageController.sutures
+        .where((item) => item.name.toLowerCase().contains(query))
         .toList();
   }
 
-  void removeItem(String item) {
-    setState(() {
-      selectedItems.remove(item);
-    });
+  void removeItem(String id) {
+    List<String> newList = List.from(widget.selectedIds);
+    newList.remove(id);
+    widget.onSelectionChanged(newList);
   }
 
-  void addItem(String item) {
-    if (!selectedItems.contains(item)) {
-      setState(() {
-        selectedItems.add(item);
-      });
+  void addItem(String id) {
+    if (!widget.selectedIds.contains(id)) {
+      List<String> newList = List.from(widget.selectedIds);
+      newList.add(id);
+      widget.onSelectionChanged(newList);
     }
   }
 
@@ -125,112 +130,128 @@ class _SuturesContainerState extends State<SuturesContainer> {
             ),
 
             // Search Results Dropdown
-            if (_searchController.text.isNotEmpty &&
-                filteredSupplies.isNotEmpty) ...[
-              SizedBox(height: 8.h),
-              Container(
-                constraints: BoxConstraints(maxHeight: 250.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: const Color(0xff9945FF).withOpacity(0.3),
-                    width: 2.w,
-                  ),
-                  borderRadius: BorderRadius.circular(20.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10.r,
-                      offset: Offset(0, 4.h),
-                    ),
-                  ],
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: filteredSupplies.length,
-                  itemBuilder: (context, index) {
-                    final item = filteredSupplies[index];
-                    final isSelected = selectedItems.contains(item);
-                    return InkWell(
-                      onTap: () {
-                        if (isSelected) {
-                          removeItem(item);
-                        } else {
-                          addItem(item);
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 12.h,
+            Obx(() {
+              homePageController
+                  .sutures
+                  .length; // Ensure Obx tracks this observable
+              final results = filteredSutures;
+              if (_searchController.text.isNotEmpty && results.isNotEmpty) {
+                return Column(
+                  children: [
+                    SizedBox(height: 8.h),
+                    Container(
+                      constraints: BoxConstraints(maxHeight: 250.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: const Color(0xff9945FF).withOpacity(0.3),
+                          width: 2.w,
                         ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? const Color(0xff9945FF).withOpacity(0.05)
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(20.r),
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey.shade100,
-                              width: 1.w,
-                            ),
+                        borderRadius: BorderRadius.circular(20.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10.r,
+                            offset: Offset(0, 4.h),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                item,
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? const Color(0xff9945FF)
-                                      : Colors.grey.shade700,
-                                  fontSize: 15.sp,
-                                  fontWeight: isSelected
-                                      ? FontWeight.w500
-                                      : FontWeight.normal,
+                        ],
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: results.length,
+                        itemBuilder: (context, index) {
+                          final item = results[index];
+                          final isSelected = widget.selectedIds.contains(
+                            item.id,
+                          );
+                          return InkWell(
+                            onTap: () {
+                              if (isSelected) {
+                                removeItem(item.id);
+                              } else {
+                                addItem(item.id);
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 12.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? const Color(0xff9945FF).withOpacity(0.05)
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(20.r),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Colors.grey.shade100,
+                                    width: 1.w,
+                                  ),
                                 ),
                               ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      item.name,
+                                      style: TextStyle(
+                                        color: isSelected
+                                            ? const Color(0xff9945FF)
+                                            : Colors.grey.shade700,
+                                        fontSize: 15.sp,
+                                        fontWeight: isSelected
+                                            ? FontWeight.w500
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(
+                                    isSelected ? Icons.check_circle : Icons.add,
+                                    color: isSelected
+                                        ? const Color(0xff9945FF)
+                                        : Colors.grey.shade400,
+                                    size: 20.sp,
+                                  ),
+                                ],
+                              ),
                             ),
-                            Icon(
-                              isSelected ? Icons.check_circle : Icons.add,
-                              color: isSelected
-                                  ? const Color(0xff9945FF)
-                                  : Colors.grey.shade400,
-                              size: 20.sp,
-                            ),
-                          ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              } else if (_searchController.text.isNotEmpty && results.isEmpty) {
+                return Column(
+                  children: [
+                    SizedBox(height: 8.h),
+                    Container(
+                      padding: EdgeInsets.all(16.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.grey.shade300,
+                          width: 2.w,
+                        ),
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'No sutures found',
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 15.sp,
+                          ),
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
-            ],
-
-            // No Results
-            if (_searchController.text.isNotEmpty &&
-                filteredSupplies.isEmpty) ...[
-              SizedBox(height: 8.h),
-              Container(
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey.shade300, width: 2.w),
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Center(
-                  child: Text(
-                    'No supplies found',
-                    style: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontSize: 15.sp,
                     ),
-                  ),
-                ),
-              ),
-            ],
+                  ],
+                );
+              }
+              return const SizedBox.shrink();
+            }),
 
             SizedBox(height: 24.h),
 
@@ -248,7 +269,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Selected Items (${selectedItems.length})',
+                        'Selected Items (${widget.selectedIds.length})',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -258,7 +279,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                     ],
                   ),
                   SizedBox(height: 12.h),
-                  if (selectedItems.isEmpty)
+                  if (widget.selectedIds.isEmpty)
                     Center(
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -276,7 +297,11 @@ class _SuturesContainerState extends State<SuturesContainer> {
                     Wrap(
                       spacing: 8.w,
                       runSpacing: 8.h,
-                      children: selectedItems.map((item) {
+                      children: widget.selectedIds.map((id) {
+                        final item = homePageController.sutures.firstWhere(
+                          (element) => element.id == id,
+                          orElse: () => SuppliesModel(id: id, name: 'Unknown'),
+                        );
                         return Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 16.w,
@@ -301,9 +326,8 @@ class _SuturesContainerState extends State<SuturesContainer> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Expanded(
-
                                 child: Text(
-                                  item,
+                                  item.name,
                                   style: TextStyle(
                                     color: const Color(0xff9945FF),
                                     fontWeight: FontWeight.w500,
@@ -315,7 +339,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                               ),
                               SizedBox(width: 8.w),
                               InkWell(
-                                onTap: () => removeItem(item),
+                                onTap: () => removeItem(id),
                                 child: Container(
                                   padding: EdgeInsets.all(2.w),
                                   decoration: BoxDecoration(

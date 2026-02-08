@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
-
-
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -55,6 +57,7 @@ class _LibraryScreenState extends State<LibraryScreen>
     );
   }
 
+  final controller = Get.find<BottomNabBarController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -335,12 +338,14 @@ class _LibraryScreenState extends State<LibraryScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Card count
-          Text(
-            '3 Preference cards',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF6B7280),
+          Obx(
+            () => Text(
+              '${controller.publicCards.length} Preference cards',
+              style: GoogleFonts.arimo(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF6B7280),
+              ),
             ),
           ),
           SizedBox(height: 12.h),
@@ -395,37 +400,39 @@ class _LibraryScreenState extends State<LibraryScreen>
                     ],
                   ),
                 ),*/
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Total Knee Replacement',
-                  specialty: 'Orthopedic',
-                  isVerified: true,
-                  doctor: 'By Sarah Johnson',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: true,
-                ),
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Coronary Artery Bypass',
-                  specialty: 'Cardiothoracic',
-                  isVerified: true,
-                  doctor: 'By Michael Chen',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: false,
-                ),
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Laparoscopic Cholecystectomy',
-                  specialty: 'General Surgery',
-                  isVerified: false,
-                  doctor: 'By Emily Rodriguez',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: false,
-                ),
-                SizedBox(height: 12.h),
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.errorMessage.isNotEmpty) {
+                    return Center(child: Text(controller.errorMessage.value));
+                  }
+                  if (controller.publicCards.isEmpty) {
+                    return const Center(child: Text('No cards found'));
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.publicCards.length,
+                    itemBuilder: (context, index) {
+                      final card = controller.publicCards[index];
+                      return Column(
+                        children: [
+                          _buildProcedureCard(
+                            title: card.cardTitle,
+                            specialty: card.surgeonSpecialty,
+                            isVerified: card.isVerified,
+                            doctor: "By ${card.surgeonName}",
+                            downloads: card.totalDownloads,
+                            updatedTime: "Updated recently",
+                            isFavorite: false,
+                          ),
+                          SizedBox(height: 12.h),
+                        ],
+                      );
+                    },
+                  );
+                }),
               ],
             ),
           ),
@@ -441,54 +448,59 @@ class _LibraryScreenState extends State<LibraryScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '0 Private cards',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF6B7280),
+          // Card count
+          Obx(
+            () => Text(
+              '${controller.privateCards.length} Private cards',
+              style: GoogleFonts.arimo(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF6B7280),
+              ),
             ),
           ),
-          SizedBox(height: 12.h),
           SizedBox(height: 12.h),
           // Cards list
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _buildProcedureCard(
-                  title: 'Total Knee Replacement',
-                  specialty: 'Orthopedic',
-                  isVerified: true,
-                  doctor: 'By Sarah Johnson',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: true,
-                  isPrivetCard: true,
-                ),
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Coronary Artery Bypass',
-                  specialty: 'Cardiothoracic',
-                  isVerified: true,
-                  doctor: 'By Michael Chen',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: false,
-                  isPrivetCard: true,
-                ),
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Laparoscopic Cholecystectomy',
-                  specialty: 'General Surgery',
-                  isVerified: false,
-                  doctor: 'By Emily Rodriguez',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: false,
-                  isPrivetCard: true,
-                ),
-                SizedBox(height: 12.h),
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.privateCards.isEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 20.h),
+                      child: const Center(
+                        child: Text('No private cards found'),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.privateCards.length,
+                    itemBuilder: (context, index) {
+                      final card = controller.privateCards[index];
+                      return Column(
+                        children: [
+                          _buildProcedureCard(
+                            isPrivetCard: true,
+                            title: card.cardTitle,
+                            specialty: card.surgeon.specialty,
+                            isVerified: card.verificationStatus == 'Approved',
+                            doctor: card.surgeon.fullName,
+                            downloads: card.downloadCount,
+                            updatedTime: card.updatedAt.toString(),
+                            isFavorite: false,
+                          ),
+                          SizedBox(height: 12.h),
+                        ],
+                      );
+                    },
+                  );
+                }),
               ],
             ),
           ),

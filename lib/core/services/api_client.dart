@@ -79,10 +79,10 @@ class ApiClient extends GetxService {
         onResponse: (response, handler) {
           debugPrint("✅ ====> API RESPONSE==========================");
           debugPrint(
-            "✅ ====> API Response: [${response.statusCode}] ${response.data}",
+            "✅ ====> API Response: [${response.statusCode}]",
           );
           debugPrint("✅ ====> API URI: ${response.requestOptions.uri}");
-          debugPrint("✅ ====> API Data: ${response.data}");
+          debugPrint("✅ ====> API Data: ${response.data}"); 
 
           return handler.next(response);
         },
