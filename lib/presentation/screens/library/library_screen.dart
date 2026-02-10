@@ -78,11 +78,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             dividerColor: Colors.transparent,
             controller: _tabController,
             indicatorColor: Colors.transparent,
-            tabs: [
-              Tab1('Preference card', 0),
-              Tab2('Private Card', 1),
-              // _buildTabButtons('Private Card'),
-            ],
+            tabs: [_tab1('Preference card', 0), _tab2('Private Card', 1)],
           ),
           SizedBox(height: 16.h),
 
@@ -147,6 +143,9 @@ class _LibraryScreenState extends State<LibraryScreen>
             ),
             child: TextField(
               controller: _searchController,
+              onChanged: (value) {
+                controller.searchController.value = value;
+              },
               style: GoogleFonts.arimo(
                 fontSize: 15.sp,
                 color: const Color(0xFF79747E),
@@ -216,7 +215,7 @@ class _LibraryScreenState extends State<LibraryScreen>
   //   );
   // }
 
-  Container Tab2(String text, int index) {
+  Widget _tab2(String text, int index) {
     final bool isSelected = _tabController.index == index;
     return Container(
       height: 90.h,
@@ -273,7 +272,7 @@ class _LibraryScreenState extends State<LibraryScreen>
     );
   }
 
-  Container Tab1(String text, int index) {
+  Widget _tab1(String text, int index) {
     final bool isSelected = _tabController.index == index;
     return Container(
       height: 90.h,
@@ -413,8 +412,15 @@ class _LibraryScreenState extends State<LibraryScreen>
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.publicCards.length,
+                    itemCount: controller.publicCards.length + 1,
                     itemBuilder: (context, index) {
+                      if (index == controller.publicCards.length) {
+                        return _buildLoadMoreButton(
+                          isLoading: controller.isPublicMoreLoading.value,
+                          hasMore: controller.hasMorePublic.value,
+                          onPressed: () => controller.loadMorePublic(),
+                        );
+                      }
                       final card = controller.publicCards[index];
                       return Column(
                         children: [
@@ -469,6 +475,9 @@ class _LibraryScreenState extends State<LibraryScreen>
                   if (controller.isLoading.value) {
                     return const Center(child: CircularProgressIndicator());
                   }
+                  if (controller.errorMessage.isNotEmpty) {
+                    return Center(child: Text(controller.errorMessage.value));
+                  }
                   if (controller.privateCards.isEmpty) {
                     return Padding(
                       padding: EdgeInsets.only(top: 20.h),
@@ -480,18 +489,25 @@ class _LibraryScreenState extends State<LibraryScreen>
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.privateCards.length,
+                    itemCount: controller.privateCards.length + 1,
                     itemBuilder: (context, index) {
+                      if (index == controller.privateCards.length) {
+                        return _buildLoadMoreButton(
+                          isLoading: controller.isPrivateMoreLoading.value,
+                          hasMore: controller.hasMorePrivate.value,
+                          onPressed: () => controller.loadMorePrivate(),
+                        );
+                      }
                       final card = controller.privateCards[index];
                       return Column(
                         children: [
                           _buildProcedureCard(
                             isPrivetCard: true,
                             title: card.cardTitle,
-                            specialty: card.surgeon.specialty,
-                            isVerified: card.verificationStatus == 'Approved',
-                            doctor: card.surgeon.fullName,
-                            downloads: card.downloadCount,
+                            specialty: card.surgeonSpecialty,
+                            isVerified: card.isVerified,
+                            doctor: card.surgeonName,
+                            downloads: card.totalDownloads,
                             updatedTime: card.updatedAt.toString(),
                             isFavorite: false,
                           ),
@@ -536,7 +552,7 @@ class _LibraryScreenState extends State<LibraryScreen>
           border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 8.r,
               offset: Offset(0, 2.h),
             ),
@@ -561,7 +577,6 @@ class _LibraryScreenState extends State<LibraryScreen>
                 GestureDetector(
                   onTap: () {
                     // 👉 এখানে favorite action দাও
-                    print("Favorite tapped for $title");
                   },
                   child: Container(
                     height: 36.w,
@@ -680,7 +695,6 @@ class _LibraryScreenState extends State<LibraryScreen>
                 GestureDetector(
                   onTap: () {
                     // 👉 এখানে download action দাও
-                    print("Download tapped for $title");
                   },
                   child: Container(
                     width: 36.w,
@@ -700,6 +714,47 @@ class _LibraryScreenState extends State<LibraryScreen>
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Load more button widget
+  Widget _buildLoadMoreButton({
+    required bool isLoading,
+    required bool hasMore,
+    required VoidCallback onPressed,
+  }) {
+    if (!hasMore) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 20.h),
+        child: Center(
+          child: Text(
+            'No more data',
+            style: GoogleFonts.arimo(
+              fontSize: 14.sp,
+              color: const Color(0xFF9CA3AF),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 20.h),
+      child: Center(
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : TextButton(
+                onPressed: onPressed,
+                child: Text(
+                  'Load More',
+                  style: GoogleFonts.arimo(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF8B5CF6),
+                  ),
+                ),
+              ),
       ),
     );
   }

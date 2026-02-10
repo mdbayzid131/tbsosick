@@ -29,18 +29,24 @@ class UserDataRepository {
   }
 
   // Get all public preference card
-  Future<Response<dynamic>> getPublicCard({int page = 1}) async {
+  Future<Response<dynamic>> getPublicCard({
+    int page = 1,
+    String search = '',
+  }) async {
     return await _apiClient.getData(
       ApiConstants.getPublicCard,
-      query: {'page': page, 'limit': 10},
+      query: {'page': page, 'limit': 10, 'searchTerm': search},
     );
   }
 
   // Get all private preference card
-  Future<Response<dynamic>> getPrivateCard({int page = 1}) async {
+  Future<Response<dynamic>> getPrivateCard({
+    int page = 1,
+    String search = '',
+  }) async {
     return await _apiClient.getData(
       ApiConstants.getPrivateCard,
-      query: {'page': page, 'limit': 10},
+      query: {'page': page, 'limit': 10, 'searchTerm': search},
     );
   }
 
@@ -51,8 +57,6 @@ class UserDataRepository {
   Future<Response<dynamic>> getSutures() async {
     return await _apiClient.getData(ApiConstants.getSuturesList);
   }
-
-
 
   Future<Response> createPreferenceCard({
     required String cardTitle,

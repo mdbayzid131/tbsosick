@@ -15,10 +15,12 @@ class PublicCardsResponse {
     return PublicCardsResponse(
       success: json['success'] ?? false,
       message: json['message'] ?? '',
-      pagination: Pagination.fromJson(json['pagination']),
-      data: List<PublicCard>.from(
-        json['data'].map((x) => PublicCard.fromJson(x)),
-      ),
+      pagination: Pagination.fromJson(json['pagination'] ?? {}),
+      data: json['data'] != null
+          ? List<PublicCard>.from(
+              json['data'].map((x) => PublicCard.fromJson(x)),
+            )
+          : [],
     );
   }
 }

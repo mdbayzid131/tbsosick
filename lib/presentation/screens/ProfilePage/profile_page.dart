@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/terms_of_service.dart';
 
 import '../../../config/constants/image_paths.dart';
@@ -19,7 +22,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+final BottomNabBarController bottomNabBarController = Get.find<BottomNabBarController>();
   @override
+  void initState() {
+    super.initState();
+    bottomNabBarController.getProfile();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
@@ -70,7 +78,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+                  border: Border.all(
+                    color: const Color(0xFFE5E7EB),
+                    width: 1.w,
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.04),
@@ -140,7 +151,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+                  border: Border.all(
+                    color: const Color(0xFFE5E7EB),
+                    width: 1.w,
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.04),
@@ -192,7 +206,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+                    border: Border.all(
+                      color: const Color(0xFFE5E7EB),
+                      width: 1.w,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.04),

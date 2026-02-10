@@ -1,11 +1,13 @@
 class PrivateCardsResponse {
   final bool success;
   final String message;
+  final Pagination pagination;
   final List<PrivateCard> data;
 
   PrivateCardsResponse({
     required this.success,
     required this.message,
+    required this.pagination,
     required this.data,
   });
 
@@ -13,6 +15,7 @@ class PrivateCardsResponse {
     return PrivateCardsResponse(
       success: json['success'] ?? false,
       message: json['message'] ?? '',
+      pagination: Pagination.fromJson(json['pagination'] ?? {}),
       data: json['data'] != null
           ? List<PrivateCard>.from(
               json['data'].map((x) => PrivateCard.fromJson(x)),
@@ -22,43 +25,46 @@ class PrivateCardsResponse {
   }
 }
 
+class Pagination {
+  final int total;
+  final int limit;
+  final int page;
+  final int totalPage;
+
+  Pagination({
+    required this.total,
+    required this.limit,
+    required this.page,
+    required this.totalPage,
+  });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) {
+    return Pagination(
+      total: json['total'] ?? 0,
+      limit: json['limit'] ?? 0,
+      page: json['page'] ?? 1,
+      totalPage: json['totalPage'] ?? 1,
+    );
+  }
+}
+
 class PrivateCard {
   final String id;
-  final String createdBy;
   final String cardTitle;
-  final Surgeon surgeon;
-  final String medication;
-  final List<dynamic> supplies;
-  final List<dynamic> sutures;
-  final String instruments;
-  final String positioningEquipment;
-  final String prepping;
-  final String workflow;
-  final String keyNotes;
-  final List<dynamic> photoLibrary;
-  final int downloadCount;
-  final bool published;
-  final String verificationStatus;
+  final String surgeonName;
+  final String surgeonSpecialty;
+  final bool isVerified;
+  final int totalDownloads;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   PrivateCard({
     required this.id,
-    required this.createdBy,
     required this.cardTitle,
-    required this.surgeon,
-    required this.medication,
-    required this.supplies,
-    required this.sutures,
-    required this.instruments,
-    required this.positioningEquipment,
-    required this.prepping,
-    required this.workflow,
-    required this.keyNotes,
-    required this.photoLibrary,
-    required this.downloadCount,
-    required this.published,
-    required this.verificationStatus,
+    required this.surgeonName,
+    required this.surgeonSpecialty,
+    required this.isVerified,
+    required this.totalDownloads,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -66,48 +72,17 @@ class PrivateCard {
   factory PrivateCard.fromJson(Map<String, dynamic> json) {
     return PrivateCard(
       id: json['_id'] ?? '',
-      createdBy: json['createdBy'] ?? '',
       cardTitle: json['cardTitle'] ?? '',
-      surgeon: Surgeon.fromJson(json['surgeon'] ?? {}),
-      medication: json['medication'] ?? '',
-      supplies: json['supplies'] ?? [],
-      sutures: json['sutures'] ?? [],
-      instruments: json['instruments'] ?? '',
-      positioningEquipment: json['positioningEquipment'] ?? '',
-      prepping: json['prepping'] ?? '',
-      workflow: json['workflow'] ?? '',
-      keyNotes: json['keyNotes'] ?? '',
-      photoLibrary: json['photoLibrary'] ?? [],
-      downloadCount: json['downloadCount'] ?? 0,
-      published: json['published'] ?? false,
-      verificationStatus: json['verificationStatus'] ?? '',
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-    );
-  }
-}
-class Surgeon {
-  final String fullName;
-  final String handPreference;
-  final String specialty;
-  final String contactNumber;
-  final String musicPreference;
-
-  Surgeon({
-    required this.fullName,
-    required this.handPreference,
-    required this.specialty,
-    required this.contactNumber,
-    required this.musicPreference,
-  });
-
-  factory Surgeon.fromJson(Map<String, dynamic> json) {
-    return Surgeon(
-      fullName: json['fullName'] ?? '',
-      handPreference: json['handPreference'] ?? '',
-      specialty: json['specialty'] ?? '',
-      contactNumber: json['contactNumber'] ?? '',
-      musicPreference: json['musicPreference'] ?? '',
+      surgeonName: json['surgeonName'] ?? '',
+      surgeonSpecialty: json['surgeonSpecialty'] ?? '',
+      isVerified: json['isVerified'] ?? false,
+      totalDownloads: json['totalDownloads'] ?? 0,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),
     );
   }
 }
