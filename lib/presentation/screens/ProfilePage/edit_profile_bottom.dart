@@ -3,18 +3,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
+import 'controller/profile_controller.dart';
 
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
 void showEditProfileBottomSheet(BuildContext context) {
+  final profileController = Get.put(ProfileController());
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final specialtyController = TextEditingController();
+  final hospitalController = TextEditingController();
   final emailController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-  final TextEditingController timeController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
-  final TextEditingController notesController = TextEditingController();
-  final TextEditingController linkController = TextEditingController();
-  final TextEditingController titleController = TextEditingController();
+  final phoneController = TextEditingController();
 
   showModalBottomSheet(
     isDismissible: false,
@@ -69,6 +71,7 @@ void showEditProfileBottomSheet(BuildContext context) {
                     children: [
                       Expanded(
                         child: CustomTextField(
+                          controller: firstNameController,
                           hintText: 'John',
                           label: 'First Name',
                         ),
@@ -76,7 +79,8 @@ void showEditProfileBottomSheet(BuildContext context) {
                       SizedBox(width: 12.w),
                       Expanded(
                         child: CustomTextField(
-                          hintText: 'Deo',
+                          controller: lastNameController,
+                          hintText: 'Doe',
                           label: 'Last Name',
                         ),
                       ),
@@ -85,25 +89,25 @@ void showEditProfileBottomSheet(BuildContext context) {
                   SizedBox(height: 12.h),
 
                   CustomTextField(
-                    controller: linkController,
+                    controller: specialtyController,
                     hintText: 'General Surgery',
                     label: 'Specialty',
                   ),
                   SizedBox(height: 12.h),
                   CustomTextField(
-                    controller: locationController,
+                    controller: hospitalController,
                     hintText: 'City Hospital',
                     label: 'Hospital ',
                   ),
                   SizedBox(height: 12.h),
                   CustomTextField(
-                    controller: notesController,
+                    controller: emailController,
                     hintText: 'john.doe@example.com',
                     label: 'Email',
                   ),
                   SizedBox(height: 12.h),
                   CustomTextField(
-                    controller: notesController,
+                    controller: phoneController,
                     hintText: '(555) 987-6543',
                     label: 'Phone',
                   ),
@@ -114,7 +118,19 @@ void showEditProfileBottomSheet(BuildContext context) {
 
                     child: CustomElevatedButton(
                       label: 'Save Changes',
-                      onPressed: () {},
+                      onPressed: () async {
+                        final name =
+                            '${firstNameController.text.trim()} ${lastNameController.text.trim()}'
+                                .trim();
+                        await profileController.updateProfile(
+                          name: name,
+                          phone: phoneController.text.trim(),
+                          specialty: specialtyController.text.trim(),
+                          hospital: hospitalController.text.trim(),
+                          email: emailController.text.trim(),
+                        );
+                        Get.back();
+                      },
                     ),
                   ),
 

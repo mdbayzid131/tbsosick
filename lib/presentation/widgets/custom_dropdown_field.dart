@@ -51,7 +51,7 @@ class CustomDropdownField<T> extends StatelessWidget {
 
         /// ================= DROPDOWN FIELD =================
         DropdownButtonFormField<T>(
-          value: value,
+          initialValue: value,
           onChanged: onChanged,
           validator: validator,
           isExpanded: true,

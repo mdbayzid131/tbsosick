@@ -13,7 +13,7 @@ import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
 void showResetPasswordBottomSheet(BuildContext context) {
-  final AuthService _authService = Get.find();
+  final AuthService authService = Get.find();
   final emailController = TextEditingController();
   final emailError = RxnString();
   final isSuccess = false.obs;
@@ -42,7 +42,7 @@ void showResetPasswordBottomSheet(BuildContext context) {
 
       isLoading.value = true;
 
-      final Response response = await _authService.forgotPassword(
+      final Response response = await authService.forgotPassword(
         emailController.text.trim(),
       );
 

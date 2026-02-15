@@ -19,7 +19,7 @@ import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
 void showOtpVerifyBottomSheet(BuildContext context, String email) {
-  final AuthService _authService = Get.find();
+  final AuthService authService = Get.find();
   final otpController = TextEditingController();
   final otpError = RxnString();
 
@@ -34,7 +34,7 @@ Future<void> verifyOtp() async {
 
     isLoading.value = true;
 
-    final Response response = await _authService.verifyOtp(
+    final Response response = await authService.verifyOtp(
       email: email,
       otp: int.parse(otpController.text.trim()),
     );

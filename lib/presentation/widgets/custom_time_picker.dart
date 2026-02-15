@@ -39,7 +39,7 @@ class _CustomTimePickerFieldState extends State<CustomTimePickerField> {
         pickedTime.minute,
       );
 
-      String formattedTime = DateFormat('hh:mm a').format(selectedDateTime);
+      String formattedTime = DateFormat('HH:mm').format(selectedDateTime);
       widget.controller.text = formattedTime;
     }
   }

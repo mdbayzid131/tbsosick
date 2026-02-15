@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'add_event_bottom.dart';
 import 'event_details_bottom.dart';
 import 'procedure_details.dart';
+import 'controller/clender_controller.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -21,46 +22,51 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateTime(2026, 1, 12);
   DateTime? _selectedDay = DateTime(2026, 1, 12);
   CalendarFormat _calendarFormat = CalendarFormat.month;
+  final CalendarController _controller = Get.put(CalendarController());
 
+  @override
+  void initState() {
+    super.initState();
+    _controller.getEvents();
+  }
+final CalendarController calenderController = Get.find<CalendarController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header section with gradient
-            _buildHeader(),
-
-            // Scrollable content
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Calendar widget
-                  SizedBox(height: 20.h),
-                  _buildCalendar(),
-
-                  SizedBox(height: 20.h),
-                  // No events card (shown when no events)
-                  _buildNoEventsCard(),
-
-                  SizedBox(height: 20.h),
-
-                  // Upcoming Events section
-                  _buildUpcomingEventsSection(),
-
-                  SizedBox(height: 20.h),
-
-                  // Event Types legend
-                  _buildEventTypesLegend(),
-
-                  SizedBox(height: 20.h),
-                ],
-              ),
+      body: RefreshIndicator(
+        color: const Color(0xFF9945FF),
+        onRefresh: _controller.refreshEvents,
+        child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                _buildHeader(),
+                Obx(() => _controller.isLoading.value
+                    ? const LinearProgressIndicator(
+                        color: Color(0xFF9945FF),
+                        minHeight: 2,
+                      )
+                    : const SizedBox.shrink()),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20.h),
+                      _buildCalendar(),
+                      SizedBox(height: 20.h),
+                      _buildNoEventsCard(),
+                      SizedBox(height: 20.h),
+                      _buildUpcomingEventsSection(),
+                      SizedBox(height: 20.h),
+                      _buildEventTypesLegend(),
+                      SizedBox(height: 20.h),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
         ),
       ),
     );
@@ -235,7 +241,7 @@ class _CalendarPageState extends State<CalendarPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Monday, January 12',
+                DateFormat('EEEE, MMMM d').format(_selectedDay ?? _focusedDay),
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -251,7 +257,8 @@ class _CalendarPageState extends State<CalendarPage> {
                 ),
                 child: InkWell(
                   onTap: () {
-                    showAddEventBottomSheet(context);
+                    final dateToUse = _selectedDay ?? _focusedDay;
+                    showAddEventBottomSheet(context, initialDate: dateToUse);
                   },
                   child: Icon(Icons.add, color: Colors.white, size: 24.sp),
                 ),
@@ -270,7 +277,7 @@ class _CalendarPageState extends State<CalendarPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'JAN',
+                  DateFormat('MMM').format(_selectedDay ?? _focusedDay).toUpperCase(),
                   style: GoogleFonts.arimo(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w600,
@@ -279,7 +286,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  '17',
+                  DateFormat('d').format(_selectedDay ?? _focusedDay),
                   style: GoogleFonts.arimo(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w700,
@@ -321,44 +328,47 @@ class _CalendarPageState extends State<CalendarPage> {
 
   // Upcoming Events section
   Widget _buildUpcomingEventsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section title
-        Text(
-          'Upcoming Events',
-          style: GoogleFonts.arimo(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF1C1B1F),
+    return Obx(() {
+      final items = _controller.events;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Upcoming Events',
+            style: GoogleFonts.arimo(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF1C1B1F),
+            ),
           ),
-        ),
-        SizedBox(height: 12.h),
-        // Event cards
-        _buildEventCard(
-          title: 'Total Knee Replacement',
-          type: 'Surgery',
-          typeColor: const Color(0xFF9945FF),
-          time: '08:00 AM - 2-3 hours',
-          location: 'OR 3',
-          patient: 'Patient #17147',
-        ),
-        SizedBox(height: 12.h),
-        _buildEventCard(
-          title: 'Team Meeting',
-          type: 'Meeting',
-          typeColor: const Color(0xFFF59E0B),
-          time: '02:00 PM - 1 hour',
-          location: 'Conference Room A',
-          patient: null,
-        ),
-      ],
-    );
+          SizedBox(height: 12.h),
+          ...List.generate(items.length, (index) {
+            final e = items[index];
+            final color = _eventTypeColor(e.eventType);
+            final timeText =
+                '${e.time} - ${e.durationHours} ${e.durationHours == 1 ? 'hour' : 'hours'}';
+            return Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: _buildEventCard(
+                id: e.id,
+                title: e.title,
+                type: e.eventType,
+                typeColor: color,
+                time: timeText,
+                location: e.location,
+                patient: null,
+              ),
+            );
+          }),
+        ],
+      );
+    });
   }
 
   // Individual event card
   Widget _buildEventCard({
     required String title,
+    required String id,
     required String type,
     required Color typeColor,
     required String time,
@@ -476,7 +486,9 @@ class _CalendarPageState extends State<CalendarPage> {
                 child: OutlinedButton(
                   onPressed: () {
                     // TODO: View details functionality
-                    Get.to(const ProcedureDetailsScreen());
+       
+                            showEventDetailsBottomSheet( context: context, id: id);
+                          calenderController.getEventDetailById(id:id);
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(
@@ -503,7 +515,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     // TODO: View card functionality
-                    showEventDetailsBottomSheet(context);
+                    Get.to( ProcedureDetailsScreen(id: id,));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF9945FF),
@@ -589,5 +601,12 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
       ],
     );
+  }
+
+  Color _eventTypeColor(String type) {
+    final t = type.toLowerCase();
+    if (t.contains('surgery')) return const Color(0xFF9945FF);
+    if (t.contains('meeting')) return const Color(0xFFF59E0B);
+    return const Color(0xFF6B7280);
   }
 }

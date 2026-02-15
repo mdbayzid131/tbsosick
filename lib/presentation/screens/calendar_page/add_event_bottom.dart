@@ -4,23 +4,37 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 
 import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_date_picker.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/custom_time_picker.dart';
+import 'controller/clender_controller.dart';
+import 'package:tbsosick/data/models/create_event_request_model.dart';
 
-void showAddEventBottomSheet(BuildContext context) {
+void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
+  final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final dateController = TextEditingController();
   final timeController = TextEditingController();
   final notesController = TextEditingController();
+  final locationController = TextEditingController();
+  final durationController = TextEditingController(text: '1');
 
   final leadSurgeonController = TextEditingController();
   final teamMemberController = TextEditingController();
 
-  List<String> teamMembers = ['Dr. Mike Chen', 'Nurse Amy Park'];
+  List<String> teamMembers = [];
+  String eventType = 'SURGERY';
+  bool submitting = false;
+  final CalendarController controller = Get.find<CalendarController>();
+
+  if (initialDate != null) {
+    dateController.text = DateFormat('yyyy-MM-dd').format(initialDate);
+  }
 
   showModalBottomSheet(
     context: context,
@@ -65,71 +79,203 @@ void showAddEventBottomSheet(BuildContext context) {
 
                   Expanded(
                     child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomTextField(
-                            controller: titleController,
-                            label: 'Event Title *',
-                            hintText: 'Enter event title',
-                          ),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomTextField(
+                              controller: titleController,
+                              label: 'Event Title *',
+                              hintText: 'Enter event title',
+                              validator: (v) =>
+                                  (v == null || v.trim().isEmpty) ? 'Title is required' : null,
+                            ),
 
-                          SizedBox(height: 12.h),
+                            SizedBox(height: 12.h),
 
-                          CustomDatePickerField(
-                            controller: dateController,
-                            label: 'Date *',
-                            hintText: 'Select date',
-                          ),
+                            CustomDatePickerField(
+                              controller: dateController,
+                              label: 'Date *',
+                              hintText: 'Select date',
+                              validator: (v) =>
+                                  (v == null || v.trim().isEmpty) ? 'Date is required' : null,
+                            ),
 
-                          SizedBox(height: 12.h),
+                            SizedBox(height: 12.h),
 
-                          CustomTimePickerField(
-                            controller: timeController,
-                            label: 'Time *',
-                            hintText: 'Select time',
-                          ),
+                            CustomTimePickerField(
+                              controller: timeController,
+                              label: 'Time *',
+                              hintText: 'Select time',
+                              validator: (v) =>
+                                  (v == null || v.trim().isEmpty) ? 'Time is required' : null,
+                            ),
 
-                          SizedBox(height: 16.h),
+                            SizedBox(height: 12.h),
+                            CustomTextField(
+                              controller: locationController,
+                              label: 'Location *',
+                              hintText: 'Enter location (e.g., OR 3)',
+                              validator: (v) => (v == null || v.trim().isEmpty)
+                                  ? 'Location is required'
+                                  : null,
+                            ),
 
-                          /// PERSONNEL CARD
-                          _buildPersonnelCard(
-                            leadSurgeonController: leadSurgeonController,
-                            teamMemberController: teamMemberController,
-                            teamMembers: teamMembers,
-                            onAdd: () {
-                              if (teamMemberController.text.isNotEmpty) {
+                            SizedBox(height: 12.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    controller: durationController,
+                                    label: 'Duration (hours) *',
+                                    hintText: 'e.g., 2',
+                                    keyboardType: TextInputType.number,
+                                    validator: (v) {
+                                      if (v == null || v.trim().isEmpty) {
+                                        return 'Duration is required';
+                                      }
+                                      final d = int.tryParse(v.trim());
+                                      if (d == null || d <= 0) {
+                                        return 'Enter a valid positive number';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Event Type *',
+                                        style: GoogleFonts.arimo(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: const Color(0xff333333),
+                                        ),
+                                      ),
+                                      SizedBox(height: 6.h),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xffF2F2F7),
+                                          borderRadius: BorderRadius.circular(16.r),
+                                        ),
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton<String>(
+                                          value: eventType,
+                                          items: const [
+                                            DropdownMenuItem(
+                                              value: 'SURGERY',
+                                              child: Text('Surgery'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'MEETING',
+                                              child: Text('Meeting'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'CONSULTATION',
+                                              child: Text('Consultation'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'OTHER',
+                                              child: Text('Other'),
+                                            ),
+                                          ],
+                                          onChanged: (val) {
+                                            setState(() {
+                                              eventType = val ?? 'SURGERY';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height: 16.h),
+
+                            /// PERSONNEL CARD
+                            _buildPersonnelCard(
+                              leadSurgeonController: leadSurgeonController,
+                              teamMemberController: teamMemberController,
+                              teamMembers: teamMembers,
+                              onAdd: () {
+                                if (teamMemberController.text.isNotEmpty) {
+                                  setState(() {
+                                    teamMembers.add(teamMemberController.text);
+                                    teamMemberController.clear();
+                                  });
+                                }
+                              },
+                              onRemove: (member) {
                                 setState(() {
-                                  teamMembers.add(teamMemberController.text);
-                                  teamMemberController.clear();
+                                  teamMembers.remove(member);
                                 });
-                              }
-                            },
-                            onRemove: (member) {
-                              setState(() {
-                                teamMembers.remove(member);
-                              });
-                            },
-                          ),
+                              },
+                            ),
 
-                          SizedBox(height: 16.h),
+                            SizedBox(height: 16.h),
 
-                          CustomTextField(
-                            controller: notesController,
-                            label: 'Notes',
-                            hintText: 'Additional notes...',
-                            maxLines: 4,
-                          ),
+                            CustomTextField(
+                              controller: notesController,
+                              label: 'Notes',
+                              hintText: 'Additional notes...',
+                              maxLines: 4,
+                            ),
 
-                          SizedBox(height: 24.h),
+                            SizedBox(height: 24.h),
 
-                          CustomElevatedButton(
-                            label: 'Create Event',
-                            onPressed: () {
-                              // submit logic
-                            },
-                          ),
-                        ],
+                            CustomElevatedButton(
+                              label: submitting ? 'Creating...' : 'Create Event',
+                              onPressed: submitting
+                                  ? null
+                                  : () async {
+                                      if (!(formKey.currentState?.validate() ?? false)) {
+                                        return;
+                                      }
+                                      final title = titleController.text.trim();
+                                      final date = dateController.text.trim();
+                                      final time = timeController.text.trim();
+                                      final loc = locationController.text.trim();
+                                      final notes = notesController.text.trim();
+                                      final dur = int.tryParse(
+                                            durationController.text.trim(),
+                                          ) ??
+                                          1;
+
+                                      setState(() {
+                                        submitting = true;
+                                      });
+
+                                      final personnel = PersonnelRequestModel(
+                                        leadSurgeon: leadSurgeonController.text.trim(),
+                                        surgicalTeam: List<String>.from(teamMembers),
+                                      );
+
+                                      await controller.postEvent(
+                                        title: title,
+                                        date: date,
+                                        time: time,
+                                        durationHours: dur,
+                                        eventType: eventType,
+                                        location: loc,
+                                        notes: notes,
+                                        personnel: personnel,
+                                      );
+                                      setState(() {
+                                        submitting = false;
+                                      });
+                                      Get.back();
+                                    },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -159,6 +305,7 @@ Widget _buildPersonnelCard({
           label: 'Lead Surgeon',
           controller: leadSurgeonController,
           icon: Icons.person_outline,
+          validator: (value) => value?.isEmpty ?? true ? 'Please enter a lead surgeon' : null,
         ),
 
         SizedBox(height: 16.h),
@@ -277,6 +424,7 @@ Widget _buildTextField({
   bool readOnly = false,
   VoidCallback? onTap,
   bool showLabel = true,
+  String? Function(String?)? validator,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,8 +449,10 @@ Widget _buildTextField({
         ),
         SizedBox(height: 8.h),
       ],
-      TextField(
+      TextFormField(
+      
         controller: controller,
+        validator: validator,
         maxLines: maxLines,
         readOnly: readOnly,
         onTap: onTap,

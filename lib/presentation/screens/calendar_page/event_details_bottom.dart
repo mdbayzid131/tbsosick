@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:tbsosick/presentation/screens/calendar_page/controller/clender_controller.dart';
+import 'package:tbsosick/presentation/screens/calendar_page/edit_procedure.dart';
 
-void showEventDetailsBottomSheet(BuildContext context) {
+void showEventDetailsBottomSheet({
+  required BuildContext context,
+  required String id,
+}) {
+  final CalendarController calenderController = Get.find<CalendarController>();
+  calenderController.getEventDetailById(id: id);
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -52,21 +60,25 @@ void showEventDetailsBottomSheet(BuildContext context) {
                     ),
                   ],
                 ),
-          
+
                 SizedBox(height: 24.h),
-          
+
                 // Event title
-                Text(
-                  'Total Knee Replacement',
-                  style: GoogleFonts.arimo(
-                    fontSize: 28.sp,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF000000),
-                  ),
-                ),
-          
+                Obx(() {
+                  final e = calenderController.eventDetails.value;
+                  final title = e?.title ?? '';
+                  return Text(
+                    title,
+                    style: GoogleFonts.arimo(
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF000000),
+                    ),
+                  );
+                }),
+
                 SizedBox(height: 16.h),
-          
+
                 // Date and time
                 Row(
                   children: [
@@ -76,18 +88,26 @@ void showEventDetailsBottomSheet(BuildContext context) {
                       color: const Color(0xff8E8E93),
                     ),
                     SizedBox(width: 8.w),
-                    Text(
-                      'January 8, 2026 at 08:00',
-                      style: GoogleFonts.arimo(
-                        fontSize: 15.sp,
-                        color: const Color(0xff8E8E93),
-                      ),
-                    ),
+                    Obx(() {
+                      final e = calenderController.eventDetails.value;
+                      final d = e?.date;
+                      final time = e?.time ?? '';
+                      final text = d != null
+                          ? '${DateFormat('EEEE, MMM d, y').format(d)} at $time'
+                          : '';
+                      return Text(
+                        text,
+                        style: GoogleFonts.arimo(
+                          fontSize: 15.sp,
+                          color: const Color(0xff8E8E93),
+                        ),
+                      );
+                    }),
                   ],
                 ),
-          
+
                 SizedBox(height: 16.h),
-          
+
                 // Location section
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,21 +129,25 @@ void showEventDetailsBottomSheet(BuildContext context) {
                           ),
                         ),
                         SizedBox(height: 4.h),
-                        Text(
-                          'OR 3',
-                          style: GoogleFonts.arimo(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF000000),
-                          ),
-                        ),
+                        Obx(() {
+                          final e = calenderController.eventDetails.value;
+                          final loc = e?.location ?? '';
+                          return Text(
+                            loc,
+                            style: GoogleFonts.arimo(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF000000),
+                            ),
+                          );
+                        }),
                       ],
                     ),
                   ],
                 ),
-          
+
                 SizedBox(height: 16.h),
-          
+
                 // Preference Card section
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,22 +170,26 @@ void showEventDetailsBottomSheet(BuildContext context) {
                             ),
                           ),
                           SizedBox(height: 4.h),
-                          Text(
-                            'Dr. Sarah Johnson — Total Knee Replacement',
-                            style: GoogleFonts.arimo(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFf9945FF),
-                            ),
-                          ),
+                          Obx(() {
+                            final e = calenderController.eventDetails.value;
+                            final name = e?.personnel?.leadSurgeon ?? '';
+                            return Text(
+                              name,
+                              style: GoogleFonts.arimo(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFf9945FF),
+                              ),
+                            );
+                          }),
                         ],
                       ),
                     ),
                   ],
                 ),
-          
+
                 SizedBox(height: 20.h),
-          
+
                 // Notes section
                 Text(
                   'Notes',
@@ -171,26 +199,30 @@ void showEventDetailsBottomSheet(BuildContext context) {
                   ),
                 ),
                 SizedBox(height: 4.h),
-                Text(
-                  'Patient: John Smith, 65y/o',
-                  style: GoogleFonts.arimo(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1C1B1F),
-                  ),
-                ),
-          
+                Obx(() {
+                  final e = calenderController.eventDetails.value;
+                  final notes = e?.notes ?? '';
+                  return Text(
+                    notes,
+                    style: GoogleFonts.arimo(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF1C1B1F),
+                    ),
+                  );
+                }),
+
                 SizedBox(height: 24.h),
-          
+
                 // Action buttons - Delete and Edit
                 Row(
                   children: [
                     // Delete button
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           // TODO: Delete event functionality
-                          Get.back();
+                          await calenderController.deleteEvent(id, context); 
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFF3B30),
@@ -225,9 +257,8 @@ void showEventDetailsBottomSheet(BuildContext context) {
                     // Edit button
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          // TODO: Edit event functionality
-                          Get.back();
+                        onPressed: () async {
+                          Get.to(() => EditProcedureScreen(id: id,));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF9945FF),
@@ -260,7 +291,7 @@ void showEventDetailsBottomSheet(BuildContext context) {
                     ),
                   ],
                 ),
-          
+
                 SizedBox(height: 10.h),
               ],
             ),

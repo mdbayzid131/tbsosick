@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:tbsosick/core/controllers/internet_controller.dart';
 import 'package:tbsosick/core/services/connectivity_service.dart';
+import 'package:tbsosick/data/repositories/user_repository.dart';
 import 'package:tbsosick/presentation/controllers/auth_controller.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
@@ -18,6 +19,7 @@ class InitialBinding extends Bindings {
     Get.put(ApiClient(), permanent: true);
     Get.put(AuthService(), permanent: true);
     Get.put(AuthController(), permanent: true);
+    Get.put(UserDataRepository(), permanent: true);
     // Global controllers
     Get.put(InternetController(), permanent: true);
 

@@ -90,7 +90,7 @@ class AuthRepo {
   /// ===================== LOGOUT =====================
   Future<Response> logout(String deviceToken) async {
     return await apiClient.postData(ApiConstants.logout, {
-      "deviceToken": "${deviceToken}"
+      "deviceToken": deviceToken
     }); 
   }
 

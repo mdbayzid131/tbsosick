@@ -6,7 +6,6 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/terms_of_service.dart';
-
 import '../../../config/constants/image_paths.dart';
 import '../home/notification_bottom.dart';
 import 'Privacy & Security bottom.dart';
@@ -28,6 +27,7 @@ final BottomNabBarController bottomNabBarController = Get.find<BottomNabBarContr
     super.initState();
     bottomNabBarController.getProfile();
   }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),

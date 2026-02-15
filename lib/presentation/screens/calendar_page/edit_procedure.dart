@@ -5,33 +5,66 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tbsosick/config/constants/image_paths.dart';
+import 'package:tbsosick/presentation/screens/calendar_page/controller/clender_controller.dart';
+import 'package:tbsosick/data/models/create_event_request_model.dart';
 
 class EditProcedureScreen extends StatefulWidget {
-  const EditProcedureScreen({super.key});
+  const EditProcedureScreen({super.key, required this.id});
+  final String id;
 
   @override
   State<EditProcedureScreen> createState() => _EditProcedureScreenState();
 }
 
 class _EditProcedureScreenState extends State<EditProcedureScreen> {
-  // Controllers
-  final TextEditingController _procedureNameController = TextEditingController(
-    text: 'Total Knee Replacement',
+  final CalendarController calendarController = Get.find();
+  late final TextEditingController _procedureNameController = TextEditingController(
+    text: calendarController.eventDetails.value?.title ?? '',
   );
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
-  final TextEditingController _durationController = TextEditingController(
-    text: '2-3 hours',
-  );
-  final TextEditingController _leadSurgeonController = TextEditingController();
-  final TextEditingController _teamMemberController = TextEditingController();
-  final TextEditingController _operatingRoomController =
-      TextEditingController();
-  final TextEditingController _anesthesiaController = TextEditingController();
-  final TextEditingController _notesController = TextEditingController();
 
-  // Team members list
-  final List<String> _teamMembers = ['Dr. Mike Chen', 'Nurse Amy Park'];
+  late final TextEditingController _dateController = TextEditingController(
+    text: calendarController.eventDetails.value?.date != null
+        ? DateFormat('yyyy-MM-dd').format(calendarController.eventDetails.value!.date)
+        : '',
+  );
+  late final TextEditingController _timeController = TextEditingController(
+    text: calendarController.eventDetails.value?.time ?? '',
+  );  
+  late final TextEditingController _durationController = TextEditingController(
+    text: calendarController.eventDetails.value?.durationHours.toString() ?? '1',
+  );
+  late final TextEditingController _leadSurgeonController = TextEditingController();
+  late final TextEditingController _teamMemberController = TextEditingController();
+  late final TextEditingController _operatingRoomController =
+      TextEditingController();
+  late final TextEditingController _anesthesiaController = TextEditingController();
+  late final TextEditingController _notesController = TextEditingController();  
+
+  List<String> _teamMembers = [];
+  String _eventType = 'SURGERY';
+  bool _submitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await calendarController.getEventDetailById(id: widget.id);
+      final d = calendarController.eventDetails.value;
+      if (d != null) {
+        setState(() {
+          _procedureNameController.text = d.title;
+          _dateController.text = DateFormat('yyyy-MM-dd').format(d.date);
+          _timeController.text = d.time;
+          _durationController.text = d.durationHours.toString();
+          _operatingRoomController.text = d.location;
+          _notesController.text = d.notes ?? '';
+          _leadSurgeonController.text = d.personnel?.leadSurgeon ?? '';
+          _teamMembers = List<String>.from(d.personnel?.surgicalTeam ?? []);
+          _eventType = d.eventType.toUpperCase();
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -148,9 +181,6 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
             hint: 'Total Knee Replacement',
           ),
           SizedBox(height: 16.h),
-          // আগে import করুন
-
-          // তারপর এই code replace করুন
           Row(
             children: [
               Expanded(
@@ -213,8 +243,16 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                       },
                     );
                     if (pickedTime != null) {
+                      final now = DateTime.now();
+                      final dt = DateTime(
+                        now.year,
+                        now.month,
+                        now.day,
+                        pickedTime.hour,
+                        pickedTime.minute,
+                      );
                       setState(() {
-                        _timeController.text = pickedTime.format(context);
+                        _timeController.text = DateFormat('HH:mm').format(dt);
                       });
                     }
                   },
@@ -223,10 +261,56 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
             ],
           ),
           SizedBox(height: 16.h),
-          _buildTextField(
-            label: 'Estimated Duration',
-            controller: _durationController,
-            hint: '2-3 hours',
+          Row(
+            children: [
+              Expanded(
+                child: _buildTextField(
+                  label: 'Duration (hours)',
+                  controller: _durationController,
+                  hint: '2',
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Event Type',
+                      style: GoogleFonts.arimo(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF1C1B1F),
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF2F2F7),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: _eventType,
+                          items: const [
+                            DropdownMenuItem(value: 'SURGERY', child: Text('Surgery')),
+                            DropdownMenuItem(value: 'MEETING', child: Text('Meeting')),
+                            DropdownMenuItem(value: 'CONSULTATION', child: Text('Consultation')),
+                            DropdownMenuItem(value: 'OTHER', child: Text('Other')),
+                          ],
+                          onChanged: (v) {
+                            setState(() {
+                              _eventType = v ?? 'SURGERY';
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -423,7 +507,37 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
           SizedBox(width: 12.w),
           Expanded(
             child: GestureDetector(
-              onTap: () => Get.back(),
+              onTap: () async {
+                final title = _procedureNameController.text.trim();
+                final date = _dateController.text.trim();
+                final time = _timeController.text.trim();
+                final loc = _operatingRoomController.text.trim();
+                final dur = int.tryParse(_durationController.text.trim()) ?? 1;
+                final notes = _notesController.text.trim();
+                setState(() {
+                  _submitting = true;
+                });
+                final personnel = PersonnelRequestModel(
+                  leadSurgeon: _leadSurgeonController.text.trim(),
+                  surgicalTeam: List<String>.from(_teamMembers),
+                );
+                await calendarController.updateEvent(
+                  id: widget.id,
+                  title: title,
+                  date: date,
+                  time: time,
+                  durationHours: dur,
+                  eventType: _eventType,
+                  location: loc,
+                  notes: notes,
+                  personnel: personnel,
+                );
+                setState(() {
+                  _submitting = false;
+                });
+                // ignore: use_build_context_synchronously
+                Navigator.pop(context);
+              },
               child: Container(
                 height: 52.h,
                 decoration: BoxDecoration(
@@ -432,7 +546,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    'Save Changes',
+                    _submitting ? 'Saving...' : 'Save Changes',
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,

@@ -13,7 +13,7 @@ import '../../widgets/custom_text_field.dart';
 
 // ignore: must_be_immutable
 class LoginScreen extends GetView<LoginController> {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   // final _authController = Get.find<AuthController>();
   @override

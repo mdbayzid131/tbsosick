@@ -3,12 +3,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../../../config/constants/image_paths.dart';
 import 'edit_procedure.dart';
+import 'controller/clender_controller.dart';
 
-class ProcedureDetailsScreen extends StatelessWidget {
-  const ProcedureDetailsScreen({super.key});
+class ProcedureDetailsScreen extends StatefulWidget {
+  final String id;
+  const ProcedureDetailsScreen({super.key, required this.id});
+
+  @override
+  State<ProcedureDetailsScreen> createState() => _ProcedureDetailsScreenState();
+}
+
+class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
+  final CalendarController _controller = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.getEventDetailById(id: widget.id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,15 +162,19 @@ class ProcedureDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Text(
-                        'Total Knee\nReplacement',
-                        style: GoogleFonts.arimo(
-                          fontSize: 24.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          height: 1.2,
-                        ),
-                      ),
+                      child: Obx(() {
+                        final e = _controller.eventDetails.value;
+                        final t = e?.title ?? '';
+                        return Text(
+                          t,
+                          style: GoogleFonts.arimo(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            height: 1.2,
+                          ),
+                        );
+                      }),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -186,13 +208,21 @@ class ProcedureDetailsScreen extends StatelessWidget {
                       color: Colors.white,
                     ),
                     SizedBox(width: 8.w),
-                    Text(
-                      'Tuesday, January 6, 2026 at 09:00 AM',
-                      style: GoogleFonts.arimo(
-                        fontSize: 14.sp,
-                        color: Color(0xffE8DEF8),
-                      ),
-                    ),
+                    Obx(() {
+                      final e = _controller.eventDetails.value;
+                      String txt = '';
+                      if (e != null) {
+                        txt =
+                            '${DateFormat('EEEE, MMMM d, y').format(e.date)} at ${e.time}';
+                      }
+                      return Text(
+                        txt,
+                        style: GoogleFonts.arimo(
+                          fontSize: 14.sp,
+                          color: Color(0xffE8DEF8),
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ],
@@ -240,14 +270,18 @@ class ProcedureDetailsScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.h),
-          Text(
-            '2-3 hours',
-            style: GoogleFonts.arimo(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xff1C1B1F),
-            ),
-          ),
+          Obx(() {
+            final d = _controller.eventDetails.value;
+            final t = d != null ? '${d.durationHours} hours' : '';
+            return Text(
+              t,
+              style: GoogleFonts.arimo(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xff1C1B1F),
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -290,14 +324,18 @@ class ProcedureDetailsScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.h),
-          Text(
-            'OR-3',
-            style: GoogleFonts.arimo(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xff1C1B1F),
-            ),
-          ),
+          Obx(() {
+            final d = _controller.eventDetails.value;
+            final t = d?.location ?? '';
+            return Text(
+              t,
+              style: GoogleFonts.arimo(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xff1C1B1F),
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -360,14 +398,18 @@ class ProcedureDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 2.h),
-                  Text(
-                    'Dr. Sarah Johnson',
-                    style: GoogleFonts.arimo(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xff1C1B1F),
-                    ),
-                  ),
+                  Obx(() {
+                    final d = _controller.eventDetails.value;
+                    final t = d?.personnel?.leadSurgeon ?? '';
+                    return Text(
+                      t,
+                      style: GoogleFonts.arimo(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xff1C1B1F),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ],
@@ -457,29 +499,28 @@ class ProcedureDetailsScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
-          // Team member 1 - Lead Surgeon
-          _buildTeamMember(
-            initials: 'DSJ',
-            name: 'Dr. Sarah Johnson',
-            role: 'Lead Surgeon',
-            isVerified: true,
-          ),
-          SizedBox(height: 12.h),
-          // Team member 2 - Assistant Surgeon
-          _buildTeamMember(
-            initials: 'DMC',
-            name: 'Dr. Mike Chen',
-            role: 'Assistant Surgeon',
-            isVerified: false,
-          ),
-          SizedBox(height: 12.h),
-          // Team member 3 - Surgical Nurse
-          _buildTeamMember(
-            initials: 'NAP',
-            name: 'Nurse Amy Park',
-            role: 'Surgical Nurse',
-            isVerified: false,
-          ),
+          Obx(() {
+            final p = _controller.eventDetails.value?.personnel;
+            final widgets = <Widget>[];
+            if (p != null) {
+              widgets.add(_buildTeamMember(
+                initials: _initials(p.leadSurgeon),
+                name: p.leadSurgeon,
+                role: 'Lead Surgeon',
+                isVerified: true,
+              ));
+              for (final m in p.surgicalTeam) {
+                widgets.add(SizedBox(height: 12.h));
+                widgets.add(_buildTeamMember(
+                  initials: _initials(m),
+                  name: m,
+                  role: 'Team',
+                  isVerified: false,
+                ));
+              }
+            }
+            return Column(children: widgets);
+          }),
         ],
       ),
     );
@@ -681,14 +722,18 @@ class ProcedureDetailsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
-          Text(
-            'Patient has history of hypertension. Pre-op antibiotics administered.',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              height: 1.5,
-              color: const Color(0xFF6B7280),
-            ),
-          ),
+          Obx(() {
+            final d = _controller.eventDetails.value;
+            final t = d?.notes ?? '';
+            return Text(
+              t,
+              style: GoogleFonts.arimo(
+                fontSize: 14.sp,
+                height: 1.5,
+                color: const Color(0xFF6B7280),
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -844,7 +889,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
             flex: 1,
             child: GestureDetector(
               onTap: () {
-                Get.to(EditProcedureScreen());
+                Get.to(EditProcedureScreen(id: widget.id));
               },
               child: Container(
                 height: 52.h,
@@ -869,4 +914,19 @@ class ProcedureDetailsScreen extends StatelessWidget {
       ),
     );
   }
+}
+// Helper
+String _initials(String name) {
+  final trimmed = name.trim();
+  if (trimmed.isEmpty) return '';
+  final parts = trimmed.split(RegExp(r'\\s+')).where((p) => p.isNotEmpty).toList();
+  final take = parts.length >= 3 ? 3 : parts.length;
+  final buf = StringBuffer();
+  for (var i = 0; i < take; i++) {
+    final s = parts[i];
+    if (s.isNotEmpty) {
+      buf.write(s[0].toUpperCase());
+    }
+  }
+  return buf.toString();
 }

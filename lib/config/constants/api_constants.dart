@@ -29,4 +29,13 @@ class ApiConstants {
   static const String getAllCard = '/preference-card';
   static const String getPublicCard = '/preference-card/public';
   static const String getPrivateCard = '/preference-card/private';
+
+
+
+  // Event Endpoints
+  static const String getEventsList = '/events';
+  static const String getEventDetailById = '/events/{id}';
+  static const String postEvent = '/events';
+  static const String patchEvent = '/events/{id}';
+  static const String deleteEvent = '/events/{id}';
 }

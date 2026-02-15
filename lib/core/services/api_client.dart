@@ -11,7 +11,6 @@ import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/controllers/internet_controller.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
-import 'package:tbsosick/core/widgets/screens/no_internet_screen.dart';
 
 class ApiClient extends GetxService {
   static late Dio dio;

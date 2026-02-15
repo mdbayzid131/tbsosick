@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
+import 'package:tbsosick/data/models/create_event_request_model.dart';
 
 class UserDataRepository {
   final ApiClient _apiClient = Get.find();
@@ -104,6 +105,81 @@ class UserDataRepository {
       ApiConstants.getAllCard,
       body,
       multipartBody: multipartConfig,
+    );
+  }
+
+
+
+
+
+  // Event Endpoints
+  Future<Response<dynamic>> getEventsList() async {
+    return await _apiClient.getData(
+      ApiConstants.getEventsList,
+    );
+  }
+
+  // Get event detail by id
+  Future<Response<dynamic>> getEventDetailById({required String id}) async {
+    return await _apiClient.getData(
+      ApiConstants.getEventDetailById.replaceAll('{id}', id),
+    );
+  }
+
+  // Create event
+  Future<Response> createEvent(CreateEventRequestModel model) async {
+    return await _apiClient.postData(
+      ApiConstants.postEvent,
+      model.toJson(),
+    );
+  }
+
+
+  // Update event
+  Future<Response<dynamic>> patchEvent({
+    required String id,
+    required CreateEventRequestModel model,
+
+  }) async {
+    return await _apiClient.patchData(
+      ApiConstants.patchEvent.replaceAll('{id}', id),
+      model.toJson(),
+    );
+  }
+
+  // Delete event
+  Future<Response<dynamic>> deleteEvent({required String id}) async {
+    return await _apiClient.deleteData(
+      ApiConstants.deleteEvent.replaceAll('{id}', id),
+    );
+  }
+
+  // Update profile
+  Future<Response> updateProfile({
+    required String name,
+    required String phone,
+    required String specialty,
+    required String hospital,
+     required String email,
+  }) async {
+    return await _apiClient.patchData(
+      ApiConstants.profile,
+  {
+    "name": name,
+    "phone": phone,
+    "specialty": specialty,
+    "hospital": hospital,
+    "email": email,
+}
+    );
+  }
+
+  // Update profile image (multipart)
+  Future<Response> updateProfileImage({required File imageFile}) async {
+    return await _apiClient.putMultipartData(
+      ApiConstants.profile,
+      {},
+      multipartBody: [MultipartBody('profilePicture', imageFile)],
     );
   }
 }
