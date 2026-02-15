@@ -22,7 +22,9 @@ class CalendarController extends GetxController {
 
       if (response.statusCode == 200) {
         final result = EventsResponse.fromJson(response.data);
-        events.assignAll(result.data);
+        // Clear first to ensure reactive update is triggered
+        events.clear();
+        events.addAll(result.data);
       }
     } catch (e) {
       print(e);
@@ -30,10 +32,6 @@ class CalendarController extends GetxController {
       isLoading.value = false;
     }
   }
-
-
-
-
 
   Future<void> refreshEvents() async {
     await getEvents();
@@ -46,9 +44,7 @@ class CalendarController extends GetxController {
       final response = await _userDataRepository.deleteEvent(id: id);
       ApiChecker.checkApi(response);
       if (response.statusCode == 200) {
-        Helpers.showErrorSnackbar(
-        'Event deleted successfully',
-        );
+        Helpers.showErrorSnackbar('Event deleted successfully');
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
         events.removeWhere((element) => element.id == id);
@@ -87,8 +83,11 @@ class CalendarController extends GetxController {
       final response = await _userDataRepository.createEvent(event);
       ApiChecker.checkApi(response);
       if (response.statusCode == 200) {
+        // Show success message
+        Helpers.showErrorSnackbar('Event created successfully');
+
+        // Refresh the events list immediately to update UI
         await getEvents();
-        
       }
     } catch (e) {
       print(e);
@@ -108,7 +107,6 @@ class CalendarController extends GetxController {
     required String location,
     required String notes,
     required PersonnelRequestModel personnel,
-
   }) async {
     final event = CreateEventRequestModel(
       title: title,

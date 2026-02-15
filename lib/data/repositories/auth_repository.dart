@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
-import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
-import 'package:tbsosick/core/services/storage_service.dart';
 
 class AuthRepo {
   final ApiClient apiClient;

@@ -23,50 +23,55 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime? _selectedDay = DateTime(2026, 1, 12);
   CalendarFormat _calendarFormat = CalendarFormat.month;
   final CalendarController _controller = Get.put(CalendarController());
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
     _controller.getEvents();
   }
-final CalendarController calenderController = Get.find<CalendarController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: RefreshIndicator(
+        key: _refreshIndicatorKey,
         color: const Color(0xFF9945FF),
         onRefresh: _controller.refreshEvents,
         child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              children: [
-                _buildHeader(),
-                Obx(() => _controller.isLoading.value
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              _buildHeader(),
+              Obx(
+                () => _controller.isLoading.value
                     ? const LinearProgressIndicator(
                         color: Color(0xFF9945FF),
                         minHeight: 2,
                       )
-                    : const SizedBox.shrink()),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      _buildCalendar(),
-                      SizedBox(height: 20.h),
-                      _buildNoEventsCard(),
-                      SizedBox(height: 20.h),
-                      _buildUpcomingEventsSection(),
-                      SizedBox(height: 20.h),
-                      _buildEventTypesLegend(),
-                      SizedBox(height: 20.h),
-                    ],
-                  ),
+                    : const SizedBox.shrink(),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20.h),
+                    _buildCalendar(),
+                    SizedBox(height: 20.h),
+                    _buildNoEventsCard(),
+                    SizedBox(height: 20.h),
+                    _buildUpcomingEventsSection(),
+                    SizedBox(height: 20.h),
+                    _buildEventTypesLegend(),
+                    SizedBox(height: 20.h),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -258,7 +263,14 @@ final CalendarController calenderController = Get.find<CalendarController>();
                 child: InkWell(
                   onTap: () {
                     final dateToUse = _selectedDay ?? _focusedDay;
-                    showAddEventBottomSheet(context, initialDate: dateToUse);
+                    showAddEventBottomSheet(
+                      context,
+                      initialDate: dateToUse,
+                      onEventCreated: () {
+                        // Trigger refresh indicator animation
+                        _refreshIndicatorKey.currentState?.show();
+                      },
+                    );
                   },
                   child: Icon(Icons.add, color: Colors.white, size: 24.sp),
                 ),
@@ -277,7 +289,9 @@ final CalendarController calenderController = Get.find<CalendarController>();
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  DateFormat('MMM').format(_selectedDay ?? _focusedDay).toUpperCase(),
+                  DateFormat(
+                    'MMM',
+                  ).format(_selectedDay ?? _focusedDay).toUpperCase(),
                   style: GoogleFonts.arimo(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w600,
@@ -297,20 +311,20 @@ final CalendarController calenderController = Get.find<CalendarController>();
             ),
           ),
           SizedBox(height: 16.h),
+
           // No events text
-          Text(
-            'No events scheduled',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              color: const Color(0xFF9CA3AF),
-            ),
-          ),
           SizedBox(height: 8.h),
           // Add Event button
           TextButton(
             onPressed: () {
               // TODO: Add event functionality
-              showAddEventBottomSheet(context);
+              showAddEventBottomSheet(
+                context,
+                onEventCreated: () {
+                  // Trigger refresh indicator animation
+                  _refreshIndicatorKey.currentState?.show();
+                },
+              );
             },
             child: Text(
               'Add Event',
@@ -330,6 +344,36 @@ final CalendarController calenderController = Get.find<CalendarController>();
   Widget _buildUpcomingEventsSection() {
     return Obx(() {
       final items = _controller.events;
+      if (items.isEmpty) {
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 8.r,
+                offset: Offset(0, 2.h),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Text(
+                'No events scheduled',
+                style: GoogleFonts.arimo(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF9CA3AF),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -486,9 +530,9 @@ final CalendarController calenderController = Get.find<CalendarController>();
                 child: OutlinedButton(
                   onPressed: () {
                     // TODO: View details functionality
-       
-                            showEventDetailsBottomSheet( context: context, id: id);
-                          calenderController.getEventDetailById(id:id);
+
+                    showEventDetailsBottomSheet(context: context, id: id);
+                    _controller.getEventDetailById(id: id);
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(
@@ -515,7 +559,7 @@ final CalendarController calenderController = Get.find<CalendarController>();
                 child: ElevatedButton(
                   onPressed: () {
                     // TODO: View card functionality
-                    Get.to( ProcedureDetailsScreen(id: id,));
+                    Get.to(ProcedureDetailsScreen(id: id));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF9945FF),

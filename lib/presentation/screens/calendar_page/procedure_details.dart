@@ -31,67 +31,77 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Header section with gradient
-              _buildHeader(),
-        
-              // Scrollable content
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 16.h),
-        
-                    // Duration and Location cards
-                    Row(
-                      children: [
-                        Expanded(child: _buildDurationCard()),
-                        SizedBox(width: 12.w),
-                        Expanded(child: _buildLocationCard()),
-                      ],
-                    ),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Primary Information card
-                    _buildPrimaryInformationCard(),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Surgical Team card
-                    _buildSurgicalTeamCard(),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Linked Preference Card
-                    _buildLinkedPreferenceCard(),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Procedure Notes card
-                    _buildProcedureNotesCard(),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Reminders card
-                    _buildRemindersCard(),
-        
-                    SizedBox(height: 20.h),
-                  ],
+      body: Obx(() {
+        // Show loading indicator while data is being fetched
+        if (_controller.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFF9945FF)),
+          );
+        }
+
+        // Show content when loading is complete
+        return SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Header section with gradient
+                _buildHeader(),
+
+                // Scrollable content
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 16.h),
+
+                      // Duration and Location cards
+                      Row(
+                        children: [
+                          Expanded(child: _buildDurationCard()),
+                          SizedBox(width: 12.w),
+                          Expanded(child: _buildLocationCard()),
+                        ],
+                      ),
+
+                      SizedBox(height: 16.h),
+
+                      // Primary Information card
+                      _buildPrimaryInformationCard(),
+
+                      SizedBox(height: 16.h),
+
+                      // Surgical Team card
+                      _buildSurgicalTeamCard(),
+
+                      SizedBox(height: 16.h),
+
+                      // Linked Preference Card
+                      _buildLinkedPreferenceCard(),
+
+                      SizedBox(height: 16.h),
+
+                      // Procedure Notes card
+                      _buildProcedureNotesCard(),
+
+                      SizedBox(height: 16.h),
+
+                      // Reminders card
+                      _buildRemindersCard(),
+
+                      SizedBox(height: 20.h),
+                    ],
+                  ),
                 ),
-              ),
-        
-              // Bottom action buttons
-              _buildBottomActions(),
-            ],
+
+                // Bottom action buttons
+                _buildBottomActions(),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -503,20 +513,24 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
             final p = _controller.eventDetails.value?.personnel;
             final widgets = <Widget>[];
             if (p != null) {
-              widgets.add(_buildTeamMember(
-                initials: _initials(p.leadSurgeon),
-                name: p.leadSurgeon,
-                role: 'Lead Surgeon',
-                isVerified: true,
-              ));
+              widgets.add(
+                _buildTeamMember(
+                  initials: _initials(p.leadSurgeon),
+                  name: p.leadSurgeon,
+                  role: 'Lead Surgeon',
+                  isVerified: true,
+                ),
+              );
               for (final m in p.surgicalTeam) {
                 widgets.add(SizedBox(height: 12.h));
-                widgets.add(_buildTeamMember(
-                  initials: _initials(m),
-                  name: m,
-                  role: 'Team',
-                  isVerified: false,
-                ));
+                widgets.add(
+                  _buildTeamMember(
+                    initials: _initials(m),
+                    name: m,
+                    role: 'Team',
+                    isVerified: false,
+                  ),
+                );
               }
             }
             return Column(children: widgets);
@@ -872,7 +886,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    'Cancel',
+                    'Back',
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,
@@ -888,8 +902,11 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
           Expanded(
             flex: 1,
             child: GestureDetector(
-              onTap: () {
-                Get.to(EditProcedureScreen(id: widget.id));
+              onTap: () async {
+                // Navigate to edit screen and wait for return
+                await Get.to(() => EditProcedureScreen(id: widget.id));
+                // Refresh event details after returning from edit
+                await _controller.getEventDetailById(id: widget.id);
               },
               child: Container(
                 height: 52.h,
@@ -915,11 +932,15 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
     );
   }
 }
+
 // Helper
 String _initials(String name) {
   final trimmed = name.trim();
   if (trimmed.isEmpty) return '';
-  final parts = trimmed.split(RegExp(r'\\s+')).where((p) => p.isNotEmpty).toList();
+  final parts = trimmed
+      .split(RegExp(r'\\s+'))
+      .where((p) => p.isNotEmpty)
+      .toList();
   final take = parts.length >= 3 ? 3 : parts.length;
   final buf = StringBuffer();
   for (var i = 0; i < take; i++) {

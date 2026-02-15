@@ -8,7 +8,6 @@ import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/otp_verify_bottom.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom2.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 

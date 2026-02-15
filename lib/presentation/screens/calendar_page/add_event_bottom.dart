@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
@@ -15,7 +13,11 @@ import '../../widgets/custom_time_picker.dart';
 import 'controller/clender_controller.dart';
 import 'package:tbsosick/data/models/create_event_request_model.dart';
 
-void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
+void showAddEventBottomSheet(
+  BuildContext context, {
+  DateTime? initialDate,
+  VoidCallback? onEventCreated,
+}) {
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final dateController = TextEditingController();
@@ -88,8 +90,9 @@ void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
                               controller: titleController,
                               label: 'Event Title *',
                               hintText: 'Enter event title',
-                              validator: (v) =>
-                                  (v == null || v.trim().isEmpty) ? 'Title is required' : null,
+                              validator: (v) => (v == null || v.trim().isEmpty)
+                                  ? 'Title is required'
+                                  : null,
                             ),
 
                             SizedBox(height: 12.h),
@@ -98,8 +101,9 @@ void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
                               controller: dateController,
                               label: 'Date *',
                               hintText: 'Select date',
-                              validator: (v) =>
-                                  (v == null || v.trim().isEmpty) ? 'Date is required' : null,
+                              validator: (v) => (v == null || v.trim().isEmpty)
+                                  ? 'Date is required'
+                                  : null,
                             ),
 
                             SizedBox(height: 12.h),
@@ -108,8 +112,9 @@ void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
                               controller: timeController,
                               label: 'Time *',
                               hintText: 'Select time',
-                              validator: (v) =>
-                                  (v == null || v.trim().isEmpty) ? 'Time is required' : null,
+                              validator: (v) => (v == null || v.trim().isEmpty)
+                                  ? 'Time is required'
+                                  : null,
                             ),
 
                             SizedBox(height: 12.h),
@@ -146,7 +151,8 @@ void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
                                 SizedBox(width: 12.w),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Event Type *',
@@ -158,39 +164,43 @@ void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
                                       ),
                                       SizedBox(height: 6.h),
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 12.w,
+                                        ),
                                         decoration: BoxDecoration(
                                           color: const Color(0xffF2F2F7),
-                                          borderRadius: BorderRadius.circular(16.r),
+                                          borderRadius: BorderRadius.circular(
+                                            16.r,
+                                          ),
                                         ),
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton<String>(
-                                          value: eventType,
-                                          items: const [
-                                            DropdownMenuItem(
-                                              value: 'SURGERY',
-                                              child: Text('Surgery'),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'MEETING',
-                                              child: Text('Meeting'),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'CONSULTATION',
-                                              child: Text('Consultation'),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'OTHER',
-                                              child: Text('Other'),
-                                            ),
-                                          ],
-                                          onChanged: (val) {
-                                            setState(() {
-                                              eventType = val ?? 'SURGERY';
-                                            });
-                                          },
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton<String>(
+                                            value: eventType,
+                                            items: const [
+                                              DropdownMenuItem(
+                                                value: 'SURGERY',
+                                                child: Text('Surgery'),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: 'MEETING',
+                                                child: Text('Meeting'),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: 'CONSULTATION',
+                                                child: Text('Consultation'),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: 'OTHER',
+                                                child: Text('Other'),
+                                              ),
+                                            ],
+                                            onChanged: (val) {
+                                              setState(() {
+                                                eventType = val ?? 'SURGERY';
+                                              });
+                                            },
+                                          ),
                                         ),
-                                      ),
                                       ),
                                     ],
                                   ),
@@ -232,19 +242,24 @@ void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
                             SizedBox(height: 24.h),
 
                             CustomElevatedButton(
-                              label: submitting ? 'Creating...' : 'Create Event',
+                              label: submitting
+                                  ? 'Creating...'
+                                  : 'Create Event',
                               onPressed: submitting
                                   ? null
                                   : () async {
-                                      if (!(formKey.currentState?.validate() ?? false)) {
+                                      if (!(formKey.currentState?.validate() ??
+                                          false)) {
                                         return;
                                       }
                                       final title = titleController.text.trim();
                                       final date = dateController.text.trim();
                                       final time = timeController.text.trim();
-                                      final loc = locationController.text.trim();
+                                      final loc = locationController.text
+                                          .trim();
                                       final notes = notesController.text.trim();
-                                      final dur = int.tryParse(
+                                      final dur =
+                                          int.tryParse(
                                             durationController.text.trim(),
                                           ) ??
                                           1;
@@ -254,8 +269,11 @@ void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
                                       });
 
                                       final personnel = PersonnelRequestModel(
-                                        leadSurgeon: leadSurgeonController.text.trim(),
-                                        surgicalTeam: List<String>.from(teamMembers),
+                                        leadSurgeon: leadSurgeonController.text
+                                            .trim(),
+                                        surgicalTeam: List<String>.from(
+                                          teamMembers,
+                                        ),
                                       );
 
                                       await controller.postEvent(
@@ -268,9 +286,18 @@ void showAddEventBottomSheet(BuildContext context, {DateTime? initialDate}) {
                                         notes: notes,
                                         personnel: personnel,
                                       );
+
                                       setState(() {
                                         submitting = false;
                                       });
+
+                                      // Trigger the refresh indicator animation
+                                      onEventCreated?.call();
+
+                                      // Close the bottom sheet after a brief delay to allow UI to update
+                                      await Future.delayed(
+                                        const Duration(milliseconds: 300),
+                                      );
                                       Get.back();
                                     },
                             ),
@@ -305,7 +332,8 @@ Widget _buildPersonnelCard({
           label: 'Lead Surgeon',
           controller: leadSurgeonController,
           icon: Icons.person_outline,
-          validator: (value) => value?.isEmpty ?? true ? 'Please enter a lead surgeon' : null,
+          validator: (value) =>
+              value?.isEmpty ?? true ? 'Please enter a lead surgeon' : null,
         ),
 
         SizedBox(height: 16.h),
@@ -450,7 +478,6 @@ Widget _buildTextField({
         SizedBox(height: 8.h),
       ],
       TextFormField(
-      
         controller: controller,
         validator: validator,
         maxLines: maxLines,
