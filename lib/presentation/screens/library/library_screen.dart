@@ -8,7 +8,6 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
-import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 
 class LibraryScreen extends StatefulWidget {

@@ -12,6 +12,8 @@ import 'package:tbsosick/presentation/screens/buttomNabBar_screen/bottom_nab_bar
 import 'package:tbsosick/presentation/screens/home/binding/card_datails_binding.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/screens/onboarding_screen/onboarding_screen.dart';
+import 'package:tbsosick/presentation/screens/splash_screen/binding/splash_binding.dart';
+import 'package:tbsosick/presentation/screens/splash_screen/splash_screen.dart';
 
 class AppRoutes {
   static const String SPLASH = '/splash';
@@ -37,6 +39,7 @@ class AppRoutes {
 final Transition transition = Transition.rightToLeft;
 
 final pages = [
+  GetPage(name: AppRoutes.SPLASH, page: () => const SplashScreen(),bindings: [SplashBinding()]),
   GetPage(name: AppRoutes.ONBOARDING, page: () => const OnboardingScreen()),
   GetPage(name: AppRoutes.LOGIN, page: () => LoginScreen()),
   GetPage(name: AppRoutes.REGISTER, page: () => SignUpScreen()),

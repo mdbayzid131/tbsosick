@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
-import 'package:tbsosick/data/models/all_cards_model.dart';
 import 'package:tbsosick/data/models/card_count_model.dart';
 import 'package:tbsosick/data/models/private_card_model.dart';
 import 'package:tbsosick/data/models/public_card_model.dart';

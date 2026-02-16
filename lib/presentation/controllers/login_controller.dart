@@ -11,6 +11,7 @@ import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
+import 'package:tbsosick/presentation/screens/splash_screen/controller/splash_controller.dart';
 
 class LoginController extends GetxController {
   final AuthService _authService = Get.find();
@@ -53,7 +54,7 @@ class LoginController extends GetxController {
       ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
         Helpers.showCustomSnackBar('Login successful', isError: false);
-        Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+        await RouteDecider.goNext();
       }
     } catch (e) {
       Helpers.showDebugLog("login error => $e");

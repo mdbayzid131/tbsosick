@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 
 class PreferenceCardDetails extends StatefulWidget {
-  PreferenceCardDetails({super.key});
+  const PreferenceCardDetails({super.key});
 
   @override
   State<PreferenceCardDetails> createState() => _PreferenceCardDetailsState();

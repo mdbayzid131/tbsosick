@@ -148,27 +148,28 @@ class ApiClient extends GetxService {
               );
             }
           }
-          // 4️⃣ Server error
-          else if (e.type == DioExceptionType.badResponse) {
-            if (_lastErrorTime == null ||
-                DateTime.now().difference(_lastErrorTime!) >
-                    const Duration(seconds: 3)) {
-              _lastErrorTime = DateTime.now();
-              Helpers.showCustomSnackBar(
-                'Server error (${e.response?.statusCode})',
-                isError: true,
-              );
-            }
-          }
+          // // 4️⃣ Server error
+          
+          // else if (e.type == DioExceptionType.badResponse) {
+          //   if (_lastErrorTime == null ||
+          //       DateTime.now().difference(_lastErrorTime!) >
+          //           const Duration(seconds: 3)) {
+          //     _lastErrorTime = DateTime.now();
+          //     Helpers.showCustomSnackBar(
+          //       'Server error (${e.response?.statusCode})',
+          //       isError: true,
+          //     );
+          //   }
+          // }
           // 5️⃣ Unknown error
-          else {
-            if (_lastErrorTime == null ||
-                DateTime.now().difference(_lastErrorTime!) >
-                    const Duration(seconds: 3)) {
-              _lastErrorTime = DateTime.now();
-              Helpers.showCustomSnackBar('Something went wrong', isError: true);
-            }
-          }
+          // else {
+          //   if (_lastErrorTime == null ||
+          //       DateTime.now().difference(_lastErrorTime!) >
+          //           const Duration(seconds: 3)) {
+          //     _lastErrorTime = DateTime.now();
+          //     Helpers.showCustomSnackBar('Something went wrong', isError: true);
+          //   }
+          // }
           debugPrint("❌ ====> API ERROR:==========================");
           debugPrint("❌ ====> API MESSAGE: ${e.message}");
           debugPrint('❌ ====> API URL: ${e.requestOptions.uri}');

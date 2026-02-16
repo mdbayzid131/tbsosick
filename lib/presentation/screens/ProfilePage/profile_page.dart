@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/profile_controller.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/terms_of_service.dart';
 import '../../../config/constants/image_paths.dart';
@@ -416,57 +415,34 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             SizedBox(height: 20.h),
-            // Divider
-            Divider(height: 1.h, color: const Color(0xFFE5E7EB)),
+            // // Divider
+            // Divider(height: 1.h, color: const Color(0xFFE5E7EB)),
 
-            // Stats row
-            Row(
-              children: [
-                Expanded(child: _buildStatItem('47', 'Cards')),
-                Container(
-                  width: 1.w,
-                  height: 40.h,
-                  color: const Color(0xFFE5E7EB),
-                ),
-                Expanded(child: _buildStatItem('23', 'Shared')),
-                Container(
-                  width: 1.w,
-                  height: 40.h,
-                  color: const Color(0xFFE5E7EB),
-                ),
-                Expanded(child: _buildStatItem('156', 'Completed')),
-              ],
-            ),
+            // // Stats row
+            // Row(
+            //   children: [
+            //     Expanded(child: _buildStatItem('47', 'Cards')),
+            //     Container(
+            //       width: 1.w,
+            //       height: 40.h,
+            //       color: const Color(0xFFE5E7EB),
+            //     ),
+            //     Expanded(child: _buildStatItem('23', 'Shared')),
+            //     Container(
+            //       width: 1.w,
+            //       height: 40.h,
+            //       color: const Color(0xFFE5E7EB),
+            //     ),
+            //     Expanded(child: _buildStatItem('156', 'Completed')),
+            //   ],
+            // ),
           ],
         ),
       );
     });
   }
 
-  // Stat item widget
-  Widget _buildStatItem(String count, String label) {
-    return Column(
-      children: [
-        Text(
-          count,
-          style: GoogleFonts.arimo(
-            fontSize: 28.sp,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF1C1B1F),
-          ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          label,
-          style: GoogleFonts.arimo(
-            fontSize: 13.sp,
-            color: const Color(0xFF9CA3AF),
-          ),
-        ),
-      ],
-    );
-  }
-
+ 
   // Premium Plan card
   Widget _buildPremiumPlanCard() {
     return Container(

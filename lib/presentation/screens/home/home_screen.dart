@@ -25,6 +25,21 @@ class _HomeScreenState extends State<HomeScreen> {
   final BottomNabBarController _bottomNabBarController = Get.put(
     BottomNabBarController(),
   );
+
+  String _greetingForNow() {
+    final now = DateTime.now();
+    final hour = now.hour;
+    if (hour >= 5 && hour < 12) {
+      return 'Good morning,';
+    }
+    if (hour >= 12 && hour < 17) {
+      return 'Good afternoon,';
+    }
+    if (hour >= 17 && hour < 22) {
+      return 'Good evening,';
+    }
+    return 'Good night,';
+  }
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -300,9 +315,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Good morning,',
+                              _greetingForNow(),
                               style: GoogleFonts.arimo(
-                                fontSize: 14.sp,
+                                fontSize: 16.sp,
                                 color: const Color(0xffE8DEF8),
                               ),
                             ),

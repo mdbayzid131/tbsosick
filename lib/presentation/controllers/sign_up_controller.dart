@@ -9,7 +9,7 @@ import 'package:tbsosick/core/utils/validators.dart';
 class SignUpController extends GetxController {
   final AuthService _authService = Get.find();
 
-  final selectedCountry = "Bangladesh".obs;
+  final selectedCountry = " ".obs;
  
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -42,7 +42,7 @@ class SignUpController extends GetxController {
   
     nameError.value = Validators.name(nameController.text);
     emailError.value = Validators.email(emailController.text);
-    phoneError.value = Validators.phone(phoneController.text);
+    phoneError.value = Validators.phoneNumber(phoneController.text);
     passwordError.value = Validators.password(passwordController.text,requireDigit: true,requireSpecialChar: true,requireUppercase: true,minLength: 8);
     confirmPasswordError.value = Validators.confirmPassword(
       passwordController.text,
@@ -63,11 +63,6 @@ class SignUpController extends GetxController {
 
     try {
       isLoading.value = true;
-      print(nameController.text.trim());
-      print(emailController.text.trim());
-      print(passwordController.text.trim());
-      print(phoneController.text.trim());
-      print(selectedCountry.value);
 
       final response = await _authService.signup(
         name: nameController.text.trim(),
@@ -80,7 +75,7 @@ class SignUpController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Helpers.showCustomSnackBar(
-          'Registration successful. Please verify your email.', isError: false);
+          'Registration successful. Login now.', isError: false); 
         // Navigate to VerifyEmail screen and pass the email
         Get.toNamed(
           AppRoutes.LOGIN,

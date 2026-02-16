@@ -5,8 +5,10 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
+import 'package:tbsosick/core/services/storage_service.dart';
 
 import '../../../../../config/constants/image_paths.dart';
 import '../../../../controllers/tutorial_controller.dart';
@@ -172,8 +174,8 @@ Widget StepCreateCard4() {
         // Finalize button
         CustomElevatedButton(
           onPressed: (){
-            // Get.offAllNamed(RoutePages.bottomNabBarScreen);
-            Get.toNamed(AppRoutes.BOTTOM_NAV_BAR);
+            StorageService.setBool(StorageConstants.quickSetupCompleted, true);
+            Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppTheme.primaryColor,

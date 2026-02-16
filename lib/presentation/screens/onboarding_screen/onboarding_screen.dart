@@ -5,7 +5,6 @@ import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
-import 'package:tbsosick/presentation/controllers/splash_controller.dart';
 
 import '../../widgets/custom_elevated_button.dart';
 import 'onboardingPage1.dart';
@@ -20,10 +19,6 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
-  void initState() {
-    Get.put(OnboardingController());
-    super.initState();
-  }
 
   ///<================= PAGE CONTROLLER =========================>///
   final PageController _pageController = PageController();
