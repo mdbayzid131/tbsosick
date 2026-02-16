@@ -294,7 +294,7 @@ class ApiClient extends GetxService {
   }
 
   /// Multipart PUT with progress
-  Future<Response> putMultipartData(
+  Future<Response> patchMultipartData(
     String uri,
     Map<String, dynamic> body, {
     required List<MultipartBody> multipartBody,
@@ -311,7 +311,7 @@ class ApiClient extends GetxService {
           ),
         );
       }
-      return await dio.put(
+      return await dio.patch(
         uri,
         data: formData,
         onSendProgress: onSendProgress,

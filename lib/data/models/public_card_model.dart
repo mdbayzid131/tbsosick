@@ -55,6 +55,8 @@ class PublicCard {
   final String surgeonSpecialty;
   final bool isVerified;
   final int totalDownloads;
+  final DateTime updatedAt;
+  final DateTime createdAt;
 
   PublicCard({
     required this.id,
@@ -63,6 +65,8 @@ class PublicCard {
     required this.surgeonSpecialty,
     required this.isVerified,
     required this.totalDownloads,
+    required this.updatedAt,
+    required this.createdAt,
   });
 
   factory PublicCard.fromJson(Map<String, dynamic> json) {
@@ -73,6 +77,12 @@ class PublicCard {
       surgeonSpecialty: json['surgeonSpecialty'] ?? '',
       isVerified: json['isVerified'] ?? false,
       totalDownloads: json['totalDownloads'] ?? 0,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
     );
   }
 }

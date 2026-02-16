@@ -181,7 +181,7 @@ class UserDataRepository {
 
   // Update profile image (multipart)
   Future<Response> updateProfileImage({required File imageFile}) async {
-    return await _apiClient.putMultipartData(
+    return await _apiClient.patchMultipartData(
       ApiConstants.profile,
       {},
       multipartBody: [MultipartBody('profilePicture', imageFile)],

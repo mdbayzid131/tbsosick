@@ -426,13 +426,14 @@ class _LibraryScreenState extends State<LibraryScreen>
                       return Column(
                         children: [
                           _buildProcedureCard(
+                            isPrivetCard: false,
                             cardId: card.id,
                             title: card.cardTitle,
                             specialty: card.surgeonSpecialty,
                             isVerified: card.isVerified,
                             doctor: "By ${card.surgeonName}",
                             downloads: card.totalDownloads,
-                            updatedTime: "Updated recently",
+                            updatedTime: card.updatedAt,
                             isFavorite: false,
                           ),
                           SizedBox(height: 12.h),
@@ -511,7 +512,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                             isVerified: card.isVerified,
                             doctor: card.surgeonName,
                             downloads: card.totalDownloads,
-                            updatedTime: card.updatedAt.toString(),
+                            updatedTime: card.updatedAt,
                             isFavorite: false,
                           ),
                           SizedBox(height: 12.h),
@@ -530,14 +531,14 @@ class _LibraryScreenState extends State<LibraryScreen>
 
   // Individual procedure card
   Widget _buildProcedureCard({
-    bool isPrivetCard = false,
+    required bool isPrivetCard,
     required String title,
     required String cardId,
     required String specialty,
     required bool isVerified,
     required String doctor,
     required int downloads,
-    required String updatedTime,
+    required DateTime updatedTime,
     required bool isFavorite,
   }) {
     return GestureDetector(
@@ -670,22 +671,24 @@ class _LibraryScreenState extends State<LibraryScreen>
             // Bottom row
             Row(
               children: [
-                Icon(
-                  Icons.file_download_outlined,
-                  color: const Color(0xFF6B7280),
-                  size: 20.sp,
-                ),
-                SizedBox(width: 4.w),
-                Text(
-                  downloads.toString(),
-                  style: GoogleFonts.arimo(
-                    fontSize: 13.sp,
+                if (!isPrivetCard)
+                  Icon(
+                    Icons.file_download_outlined,
                     color: const Color(0xFF6B7280),
+                    size: 20.sp,
                   ),
-                ),
+                SizedBox(width: 4.w),
+                if (!isPrivetCard)
+                  Text(
+                    downloads.toString(),
+                    style: GoogleFonts.arimo(
+                      fontSize: 13.sp,
+                      color: const Color(0xFF6B7280),
+                    ),
+                  ),
                 SizedBox(width: 16.w),
                 Text(
-                  updatedTime,
+                  "updated: ${updatedTime.day}/${updatedTime.month}/${updatedTime.year}",
                   style: GoogleFonts.arimo(
                     fontSize: 13.sp,
                     color: const Color(0xFF6B7280),

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'controller/profile_controller.dart';
 
 import '../../widgets/custom_elevated_button.dart';
@@ -9,12 +12,30 @@ import '../../widgets/custom_text_field.dart';
 
 void showEditProfileBottomSheet(BuildContext context) {
   final profileController = Get.put(ProfileController());
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final specialtyController = TextEditingController();
-  final hospitalController = TextEditingController();
-  final emailController = TextEditingController();
-  final phoneController = TextEditingController();
+  final user = profileController.user.value;
+
+  final firstNameController = TextEditingController(
+    text: user.name != null ? user.name!.split(' ').first : '',
+  );
+  final lastNameController = TextEditingController(
+    text: user.name != null && user.name!.split(' ').length > 1
+        ? user.name!.split(' ').sublist(1).join(' ')
+        : '',
+  );
+  final specialtyController = TextEditingController(text: user.specialty ?? '');
+  final hospitalController = TextEditingController(text: user.hospital ?? '');
+  final emailController = TextEditingController(text: user.email ?? '');
+  final phoneController = TextEditingController(text: user.phone ?? '');
+
+  Rx<File?> pickedImage = Rx<File?>(null);
+
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      pickedImage.value = File(image.path);
+    }
+  }
 
   showModalBottomSheet(
     isDismissible: false,
@@ -62,8 +83,74 @@ void showEditProfileBottomSheet(BuildContext context) {
                       ),
                     ],
                   ),
+                  SizedBox(height: 20.h),
+                  // Image Picker
+                  Center(
+                    child: Stack(
+                      children: [
+                        Obx(() {
+                          return Container(
+                            width: 100.w,
+                            height: 100.w,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF2F2F7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.w),
+                              child: pickedImage.value != null
+                                  ? Image.file(
+                                      pickedImage.value!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : user.profilePicture != null
+                                  ? Image.network(
+                                      user.profilePicture!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) => Icon(
+                                            Icons.person,
+                                            size: 50.w,
+                                            color: Colors.grey,
+                                          ),
+                                    )
+                                  : Icon(
+                                      Icons.person,
+                                      size: 50.w,
+                                      color: Colors.grey,
+                                    ),
+                            ),
+                          );
+                        }),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: pickImage,
+                            child: Container(
+                              width: 32.w,
+                              height: 32.w,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF9945FF),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2.w,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                                size: 18.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 20.h),
 
                   Row(
                     children: [
@@ -113,23 +200,33 @@ void showEditProfileBottomSheet(BuildContext context) {
 
                   SizedBox(
                     height: 50.h,
+                    child: Obx(() {
+                      return profileController.isLoading.value
+                          ? const Center(child: CircularProgressIndicator())
+                          : CustomElevatedButton(
+                              label: 'Save Changes',
+                              onPressed: () async {
+                                final name =
+                                    '${firstNameController.text.trim()} ${lastNameController.text.trim()}'
+                                        .trim();
 
-                    child: CustomElevatedButton(
-                      label: 'Save Changes',
-                      onPressed: () async {
-                        final name =
-                            '${firstNameController.text.trim()} ${lastNameController.text.trim()}'
-                                .trim();
-                        await profileController.updateProfile(
-                          name: name,
-                          phone: phoneController.text.trim(),
-                          specialty: specialtyController.text.trim(),
-                          hospital: hospitalController.text.trim(),
-                          email: emailController.text.trim(),
-                        );
-                        Get.back();
-                      },
-                    ),
+                                if (pickedImage.value != null) {
+                                  await profileController.updateProfileImage(
+                                    pickedImage.value!,
+                                  );
+                                }
+
+                                await profileController.updateProfile(
+                                  name: name,
+                                  phone: phoneController.text.trim(),
+                                  specialty: specialtyController.text.trim(),
+                                  hospital: hospitalController.text.trim(),
+                                  email: emailController.text.trim(),
+                                );
+                                Get.back();
+                              },
+                            );
+                    }),
                   ),
 
                   SizedBox(height: 10.h),

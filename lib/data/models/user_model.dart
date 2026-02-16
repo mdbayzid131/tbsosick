@@ -11,6 +11,8 @@ class UserModel {
   final List<String>? deviceTokens;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final String? specialty;
+  final String? hospital;
 
   UserModel({
     this.id,
@@ -25,6 +27,8 @@ class UserModel {
     this.deviceTokens,
     this.createdAt,
     this.updatedAt,
+    this.specialty,
+    this.hospital,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -38,6 +42,8 @@ class UserModel {
       profilePicture: json['profilePicture'],
       status: json['status'],
       verified: json['verified'],
+      specialty: json['specialty'],
+      hospital: json['hospital'],
       deviceTokens: json['deviceTokens'] != null
           ? List<String>.from(json['deviceTokens'])
           : [],
@@ -62,6 +68,8 @@ class UserModel {
       'status': status,
       'verified': verified,
       'deviceTokens': deviceTokens,
+      'specialty': specialty,
+      'hospital': hospital,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
     };

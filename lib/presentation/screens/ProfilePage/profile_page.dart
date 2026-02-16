@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
+import 'package:tbsosick/presentation/screens/ProfilePage/controller/profile_controller.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/terms_of_service.dart';
 import '../../../config/constants/image_paths.dart';
 import '../home/notification_bottom.dart';
@@ -21,12 +21,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-final BottomNabBarController bottomNabBarController = Get.find<BottomNabBarController>();
-  @override
-  void initState() {
-    super.initState();
-    bottomNabBarController.getProfile();
-  }
+  final ProfileController profileController = Get.put(ProfileController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -295,125 +291,156 @@ final BottomNabBarController bottomNabBarController = Get.find<BottomNabBarContr
 
   // Profile card with avatar and stats
   Widget _buildProfileCard() {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              // Avatar with camera icon
-              Stack(
-                children: [
-                  Container(
-                    width: 80.w,
-                    height: 80.w,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF8E3DF6),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        'DA',
-                        style: GoogleFonts.arimo(
-                          fontSize: 28.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 28.w,
-                      height: 28.w,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF9945FF),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 1.w),
-                      ),
-                      child: Icon(
-                        Icons.camera_alt_outlined,
-                        color: Colors.white,
-                        size: 14.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(width: 16.w),
-              // Name and details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Obx(() {
+      final user = profileController.user.value;
+      return Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8.r,
+              offset: Offset(0, 2.h),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                // Avatar with camera icon
+                Stack(
                   children: [
-                    Text(
-                      'Dr. Anderson',
-                      style: GoogleFonts.arimo(
-                        fontSize: 22.sp,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xff000000),
+                    Container(
+                      width: 80.w,
+                      height: 80.w,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF8E3DF6),
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(40.w),
+                        child: user.profilePicture != null
+                            ? Image.network(
+                                user.profilePicture!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Center(
+                                      child: Text(
+                                        user.name
+                                                ?.substring(0, 2)
+                                                .toUpperCase() ??
+                                            'DA',
+                                        style: GoogleFonts.arimo(
+                                          fontSize: 28.sp,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                              )
+                            : Center(
+                                child: Text(
+                                  user.name?.substring(0, 2).toUpperCase() ??
+                                      'DA',
+                                  style: GoogleFonts.arimo(
+                                    fontSize: 28.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      'Orthopedic Surgery',
-                      style: GoogleFonts.arimo(
-                        fontSize: 15.sp,
-                        color: const Color(0xFF6B7280),
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      'St. Mary\'s Hospital',
-                      style: GoogleFonts.arimo(
-                        fontSize: 14.sp,
-                        color: const Color(0xFF9CA3AF),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: InkWell(
+                        onTap: () {
+                          showEditProfileBottomSheet(context);
+                        },
+                        child: Container(
+                          width: 28.w,
+                          height: 28.w,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF9945FF),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 1.w),
+                          ),
+                          child: Icon(
+                            Icons.camera_alt_outlined,
+                            color: Colors.white,
+                            size: 14.sp,
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          // Divider
-          Divider(height: 1.h, color: const Color(0xFFE5E7EB)),
+                SizedBox(width: 16.w),
+                // Name and details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.name ?? 'Guest User',
+                        style: GoogleFonts.arimo(
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xff000000),
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        user.specialty ?? 'Specialty not set',
+                        style: GoogleFonts.arimo(
+                          fontSize: 15.sp,
+                          color: const Color(0xFF6B7280),
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        user.hospital ?? 'Hospital not set',
+                        style: GoogleFonts.arimo(
+                          fontSize: 14.sp,
+                          color: const Color(0xFF9CA3AF),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            // Divider
+            Divider(height: 1.h, color: const Color(0xFFE5E7EB)),
 
-          // Stats row
-          Row(
-            children: [
-              Expanded(child: _buildStatItem('47', 'Cards')),
-              Container(
-                width: 1.w,
-                height: 40.h,
-                color: const Color(0xFFE5E7EB),
-              ),
-              Expanded(child: _buildStatItem('23', 'Shared')),
-              Container(
-                width: 1.w,
-                height: 40.h,
-                color: const Color(0xFFE5E7EB),
-              ),
-              Expanded(child: _buildStatItem('156', 'Completed')),
-            ],
-          ),
-        ],
-      ),
-    );
+            // Stats row
+            Row(
+              children: [
+                Expanded(child: _buildStatItem('47', 'Cards')),
+                Container(
+                  width: 1.w,
+                  height: 40.h,
+                  color: const Color(0xFFE5E7EB),
+                ),
+                Expanded(child: _buildStatItem('23', 'Shared')),
+                Container(
+                  width: 1.w,
+                  height: 40.h,
+                  color: const Color(0xFFE5E7EB),
+                ),
+                Expanded(child: _buildStatItem('156', 'Completed')),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   // Stat item widget

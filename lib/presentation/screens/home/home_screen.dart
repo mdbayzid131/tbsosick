@@ -10,7 +10,6 @@ import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/screens/home/Preference%20card/new_preference_card.dart';
-import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dart';
 
 import 'notification_bottom.dart';
@@ -152,8 +151,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
-                      itemCount: _bottomNabBarController.publicCards.length,
+                      itemCount: _bottomNabBarController.publicCards.length + 1,
                       itemBuilder: (context, index) {
+                        if (index ==
+                            _bottomNabBarController.publicCards.length) {
+                          return _buildLoadMoreButton(
+                            isLoading: _bottomNabBarController
+                                .isPublicMoreLoading
+                                .value,
+                            hasMore:
+                                _bottomNabBarController.hasMorePublic.value,
+                            onPressed: () =>
+                                _bottomNabBarController.loadMorePublic(),
+                          );
+                        }
                         final card = _bottomNabBarController.publicCards[index];
                         return Padding(
                           padding: EdgeInsets.only(bottom: 10.h),
@@ -367,6 +378,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(width: 10.w),
                         Expanded(
                           child: TextField(
+                            controller: TextEditingController(
+                              text: _bottomNabBarController
+                                  .searchController
+                                  .value,
+                            ),
+                            onChanged: (value) {
+                              _bottomNabBarController.searchController.value =
+                                  value;
+                            },
                             style: GoogleFonts.arimo(
                               fontSize: 14.sp,
                               color: Colors.black,
@@ -482,7 +502,46 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Favorite card widget
+  // Load more button widget
+  Widget _buildLoadMoreButton({
+    required bool isLoading,
+    required bool hasMore,
+    required VoidCallback onPressed,
+  }) {
+    if (!hasMore) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 20.h),
+        child: Center(
+          child: Text(
+            'No more data',
+            style: GoogleFonts.arimo(
+              fontSize: 14.sp,
+              color: const Color(0xFF9CA3AF),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 20.h),
+      child: Center(
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : TextButton(
+                onPressed: onPressed,
+                child: Text(
+                  'Load More',
+                  style: GoogleFonts.arimo(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF8B5CF6),
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
 }
 
 Widget favoriteCard({
