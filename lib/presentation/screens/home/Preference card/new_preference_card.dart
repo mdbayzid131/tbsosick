@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/core/utils/validators.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/controllers/post_any__card_controller.dart';
 import 'package:tbsosick/presentation/screens/home/Preference%20card/sutures_container.dart';
@@ -23,6 +24,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool _showSuppliesError = false;
+  bool _showSuturesError = false;
+
   @override
   void dispose() {
     // Clear controllers when leaving the page
@@ -36,13 +40,20 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
   @override
   void initState() {
     super.initState();
-    homePageController.getSupplies();
-    homePageController.getSutures();
+    // homePageController.getSupplies();
+    // homePageController.getSutures();
   }
 
   // Handle publish
   void _publish() {
-    if (!_formKey.currentState!.validate()) {
+    setState(() {
+      _showSuppliesError = postAnyCardController.selectedSupplies.isEmpty;
+      _showSuturesError = postAnyCardController.selectedSutures.isEmpty;
+    });
+
+    if (!_formKey.currentState!.validate() ||
+        _showSuppliesError ||
+        _showSuturesError) {
       return;
     }
     postAnyCardController.submitPreferenceCard(widget.isPrivate);
@@ -121,9 +132,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                         ),
                         TextFormField(
                           controller: postAnyCardController.cardTitleController,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Card Title is required'
-                              : null,
+                          validator: Validators.required,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 0),
                             labelStyle: GoogleFonts.arimo(
@@ -191,9 +200,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           label: 'Full Name',
                           hint: 'Enter full name',
                           controller: postAnyCardController.fullNameController,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Full Name is required'
-                              : null,
+                          validator: Validators.required,
                         ),
                         SizedBox(height: 10.h),
                         Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
@@ -205,9 +212,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           hint: 'Enter hand preference',
                           controller:
                               postAnyCardController.handpreferenceController,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Hand Preference is required'
-                              : null,
+                          validator: Validators.required,
                         ),
                         SizedBox(height: 10.h),
                         Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
@@ -219,9 +224,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           hint: 'e.g., Orthopedic Surgery',
                           controller:
                               postAnyCardController.specialitiesController,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Specialty is required'
-                              : null,
+                          validator: Validators.required,
                         ),
                         SizedBox(height: 10.h),
                         Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
@@ -232,9 +235,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           label: 'Contact Number',
                           hint: '(555) 123-4567',
                           controller: postAnyCardController.contactController,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Contact Number is required'
-                              : null,
+                          validator: Validators.phoneNumber,
                         ),
                         SizedBox(height: 10.h),
                         Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
@@ -246,9 +247,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           hint: 'Preferred music or silence',
                           controller:
                               postAnyCardController.musicPreferenceController,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Music Preference is required'
-                              : null,
+                          validator: Validators.required,
                         ),
                       ],
                     ),
@@ -274,9 +273,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           controller:
                               postAnyCardController.medicationController,
                           maxLines: 5,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Medication is required'
-                              : null,
+                          validator: Validators.required,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 0),
                             labelStyle: GoogleFonts.arimo(
@@ -308,9 +305,23 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                     onSelectionChanged: (items) {
                       setState(() {
                         postAnyCardController.selectedSupplies.assignAll(items);
+                        if (items.isNotEmpty) {
+                          _showSuppliesError = false;
+                        }
                       });
                     },
                   ),
+                  if (_showSuppliesError)
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.h, left: 16.w),
+                      child: Text(
+                        'Medical Supplies are required',
+                        style: GoogleFonts.arimo(
+                          color: Colors.red,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
 
                   SizedBox(height: 20.h),
                   SuturesContainer(
@@ -318,9 +329,23 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                     onSelectionChanged: (items) {
                       setState(() {
                         postAnyCardController.selectedSutures.assignAll(items);
+                        if (items.isNotEmpty) {
+                          _showSuturesError = false;
+                        }
                       });
                     },
                   ),
+                  if (_showSuturesError)
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.h, left: 16.w),
+                      child: Text(
+                        'Sutures are required',
+                        style: GoogleFonts.arimo(
+                          color: Colors.red,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
                   SizedBox(height: 20.h),
                   CustomContainer(
                     child: Column(
@@ -341,9 +366,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           controller:
                               postAnyCardController.instrumentController,
                           maxLines: 5,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Instruments are required'
-                              : null,
+                          validator: Validators.required,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 0),
                             labelStyle: GoogleFonts.arimo(
@@ -387,9 +410,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           controller:
                               postAnyCardController.postingEquipmentController,
                           maxLines: 2,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Positioning Equipment is required'
-                              : null,
+                          validator: Validators.required,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 0),
                             labelStyle: GoogleFonts.arimo(
@@ -432,9 +453,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                         TextFormField(
                           controller: postAnyCardController.positionController,
                           maxLines: 2,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Prepping is required'
-                              : null,
+                          validator: Validators.required,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 0),
                             labelStyle: GoogleFonts.arimo(
@@ -478,9 +497,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           controller:
                               postAnyCardController.operativeWorkFlowController,
                           maxLines: 5,
-                          validator: (value) => value == null || value.isEmpty
-                              ? 'Operative Workflow is required'
-                              : null,
+                          validator: Validators.required,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 0),
                             labelStyle: GoogleFonts.arimo(
@@ -552,10 +569,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                               controller:
                                   postAnyCardController.keyNotesController,
                               maxLines: 3,
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Key Notes are required'
-                                  : null,
+                              validator: Validators.required,
                               style: GoogleFonts.arimo(
                                 fontSize: 14.sp,
                                 color: const Color(0xFF9CA3AF),
@@ -596,125 +610,167 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           ),
                         ),
                         SizedBox(height: 16.h),
-                        // Add Photo Container
-                        GestureDetector(
-                          onTap: postAnyCardController.pickImages,
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 50.h),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF2F2F7),
-                              borderRadius: BorderRadius.circular(16.r),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Image Icon
-                                Icon(
-                                  Icons.image_outlined,
-                                  size: 48.sp,
-                                  color: const Color(0xFFBDBDBD),
-                                ),
-                                SizedBox(height: 16.h),
-                                // Add multiple picture text
-                                Text(
-                                  'Add multiple picture',
-                                  style: GoogleFonts.arimo(
-                                    fontSize: 17.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF9945FF),
+
+                        // Image Grid
+                        // Image Grid
+                        Obx(() {
+                          final images = postAnyCardController.selectedImages;
+
+                          // If no images are selected, show the full-width centered Add button
+                          if (images.isEmpty) {
+                            return GestureDetector(
+                              onTap: postAnyCardController.pickImages,
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(vertical: 40.h),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF2F2F7),
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  border: Border.all(
+                                    color: const Color(0xFFE5E7EB),
+                                    width: 1.w,
                                   ),
                                 ),
-                                SizedBox(height: 4.h),
-                                // From library or camera text
-                                Text(
-                                  'From library or camera',
-                                  style: GoogleFonts.arimo(
-                                    fontSize: 13.sp,
-                                    color: const Color(0xFF8E8E93),
-                                  ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.add_photo_alternate_outlined,
+                                      size: 48.sp,
+                                      color: const Color(0xFF9945FF),
+                                    ),
+                                    SizedBox(height: 12.h),
+                                    Text(
+                                      'Add Photos',
+                                      style: GoogleFonts.arimo(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color(0xFF9945FF),
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      'Tap to select from library',
+                                      style: GoogleFonts.arimo(
+                                        fontSize: 12.sp,
+                                        color: const Color(0xFF8E8E93),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Obx(
-                          () => Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (postAnyCardController
-                                  .selectedImages
-                                  .isNotEmpty) ...[
-                                SizedBox(height: 16.h),
-                                Text(
-                                  '${postAnyCardController.selectedImages.length} images selected',
-                                  style: GoogleFonts.arimo(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
+                              ),
+                            );
+                          }
+
+                          // If images are selected, show the GridView
+                          final bool showAddButton = images.length < 5;
+                          final int itemCount = showAddButton
+                              ? images.length + 1
+                              : images.length;
+
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 12.w,
+                                  mainAxisSpacing: 12.h,
+                                  childAspectRatio: 1.0,
                                 ),
-                                SizedBox(height: 8.h),
-                                SizedBox(
-                                  height: 100.h,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: postAnyCardController
-                                        .selectedImages
-                                        .length,
-                                    itemBuilder: (context, index) {
-                                      return Stack(
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.only(right: 8.w),
-                                            width: 100.w,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.r),
-                                              image: DecorationImage(
-                                                image: FileImage(
-                                                  File(
-                                                    postAnyCardController
-                                                        .selectedImages[index]
-                                                        .path,
-                                                  ),
-                                                ),
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
+                            itemCount: itemCount,
+                            itemBuilder: (context, index) {
+                              // If add button is shown, it's at index 0
+                              if (showAddButton && index == 0) {
+                                return GestureDetector(
+                                  onTap: postAnyCardController.pickImages,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF2F2F7),
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      border: Border.all(
+                                        color: const Color(0xFFE5E7EB),
+                                        width: 1.w,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.add_photo_alternate_outlined,
+                                          size: 32.sp,
+                                          color: const Color(0xFF9945FF),
+                                        ),
+                                        SizedBox(height: 8.h),
+                                        Text(
+                                          'Add',
+                                          style: GoogleFonts.arimo(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: const Color(0xFF9945FF),
                                           ),
-                                          Positioned(
-                                            top: 4.h,
-                                            right: 12.w,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                postAnyCardController
-                                                    .selectedImages
-                                                    .removeAt(index);
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(2.w),
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.black54,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Icon(
-                                                  Icons.close,
-                                                  color: Colors.white,
-                                                  size: 16.sp,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
+                                );
+                              }
+
+                              // Calculate image index
+                              final imageIndex = showAddButton
+                                  ? index - 1
+                                  : index;
+                              final imageFile = File(images[imageIndex].path);
+
+                              return Stack(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      image: DecorationImage(
+                                        image: FileImage(imageFile),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 4.r,
+                                          offset: Offset(0, 2.h),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 4.h,
+                                    right: 4.w,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        postAnyCardController.selectedImages
+                                            .removeAt(imageIndex);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(4.w),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.6),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 14.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -739,9 +795,12 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                     ),
                   ],
                 ),
-                child: CustomElevatedButton(
-                  label: widget.isPrivate ? 'Save' : 'Publish',
-                  onPressed: _publish,
+                child: Obx(
+                  () => CustomElevatedButton(
+                    label: widget.isPrivate ? 'Save' : 'Publish',
+                    isLoading: postAnyCardController.isLoading.value,
+                    onPressed: _publish,
+                  ),
                 ),
               ),
             ),

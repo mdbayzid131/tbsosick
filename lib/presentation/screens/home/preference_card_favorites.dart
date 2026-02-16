@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 
 import 'home_screen.dart';
@@ -82,7 +83,10 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                         padding: EdgeInsets.only(bottom: 10.h),
                         child: InkWell(
                           onTap: () {
-                            Get.to(PreferenceCardDetails(isPrivate: false));
+                            Get.toNamed(
+                              AppRoutes.CARD_DETAILS,
+                              arguments: {'cardId': '1'},
+                            );
                           },
 
                           child: favoriteCard(

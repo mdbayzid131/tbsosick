@@ -6,6 +6,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
@@ -425,6 +426,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                       return Column(
                         children: [
                           _buildProcedureCard(
+                            cardId: card.id,
                             title: card.cardTitle,
                             specialty: card.surgeonSpecialty,
                             isVerified: card.isVerified,
@@ -502,6 +504,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                       return Column(
                         children: [
                           _buildProcedureCard(
+                            cardId: card.id,
                             isPrivetCard: true,
                             title: card.cardTitle,
                             specialty: card.surgeonSpecialty,
@@ -529,6 +532,7 @@ class _LibraryScreenState extends State<LibraryScreen>
   Widget _buildProcedureCard({
     bool isPrivetCard = false,
     required String title,
+    required String cardId,
     required String specialty,
     required bool isVerified,
     required String doctor,
@@ -538,11 +542,7 @@ class _LibraryScreenState extends State<LibraryScreen>
   }) {
     return GestureDetector(
       onTap: () {
-        if (isPrivetCard) {
-          Get.to(PreferenceCardDetails(isPrivate: true));
-        } else {
-          Get.to(PreferenceCardDetails(isPrivate: false));
-        }
+        Get.toNamed(AppRoutes.CARD_DETAILS, arguments: {'cardId': cardId});
       },
       child: Container(
         padding: EdgeInsets.all(16.w),

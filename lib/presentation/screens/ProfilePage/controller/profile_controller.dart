@@ -26,12 +26,12 @@ class ProfileController extends GetxController {
         hospital: hospital, 
         email: email,
       );
-      ApiChecker.checkApi(response);
+      ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
-        Helpers.showSuccessSnackbar('Profile updated successfully');
+        Helpers.showCustomSnackBar('Profile updated successfully', isError: false);
       }
     } catch (e) {
-      Helpers.showErrorSnackbar(e.toString());
+      Helpers.showDebugLog("updateProfile error => $e");
     }
     finally {
       isLoading.value = false;

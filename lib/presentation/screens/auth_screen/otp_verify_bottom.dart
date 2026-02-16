@@ -39,12 +39,12 @@ Future<void> verifyOtp() async {
       otp: int.parse(otpController.text.trim()),
     );
 
-    ApiChecker.checkApi(response);
+    ApiChecker.checkWriteApi(response);
 
     if (response.statusCode == 200 && response.data != null) {
       final String token = response.data['data'];
 
-      Helpers.showSuccessSnackbar('Otp Verify Success');
+      Helpers.showCustomSnackBar('Otp Verify Success', isError: false);
      // ignore: use_build_context_synchronously
      Navigator.pop(context);
 
@@ -53,7 +53,7 @@ Future<void> verifyOtp() async {
       }
     }
   } catch (e) {
-    Helpers.showErrorSnackbar(e.toString());
+    Helpers.showCustomSnackBar(e.toString(), isError: true);
   } finally {
     isLoading.value = false;
   }

@@ -1,38 +1,37 @@
 import 'package:dio/dio.dart';
-import 'package:tbsosick/core/utils/custom_snackbar.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 
 class ApiChecker {
-  static void checkApi(Response response, {bool getXSnackBar = true}) {
+
+  /// ---------------- GET ----------------
+  static void checkGetApi(Response response) {
     final statusCode = response.statusCode ?? 0;
 
-    // ❌ 401 ignore (handled in interceptor)
     if (statusCode == 401) return;
 
     if (statusCode < 200 || statusCode >= 300) {
       final message = response.data is Map && response.data['message'] != null
           ? response.data['message']
-          : 'Something went wrong';
+          : 'Request failed';
 
-      showCustomSnackBar(message, getXSnackBar: getXSnackBar);
+      /// 👇 only debug
+      Helpers.showDebugLog("GET API ERROR => $message");
     }
   }
 
-  /// Handle DioError (network, timeout, server error)
-  static void handleError(DioException error, {bool getXSnackBar = false}) {
-    String message = "Something went wrong";
+  /// ---------------- WRITE API ----------------
+  static void checkWriteApi(Response response) {
+    final statusCode = response.statusCode ?? 0;
 
-    if (error.type == DioExceptionType.connectionTimeout) {
-      message = "Connection timed out";
-    } else if (error.type == DioExceptionType.receiveTimeout) {
-      message = "Server took too long to respond";
-    } else if (error.type == DioExceptionType.badResponse) {
-      message = "Bad response: ${error.response?.statusMessage ?? 'Unknown'}";
-    } else if (error.type == DioExceptionType.cancel) {
-      message = "Request cancelled";
-    } else if (error.type == DioExceptionType.unknown) {
-      message = "Unexpected error: ${error.message}";
+    if (statusCode == 401) return;
+
+    if (statusCode < 200 || statusCode >= 300) {
+      final message = response.data is Map && response.data['message'] != null
+          ? response.data['message']
+          : 'Operation failed';
+
+      /// 👇 show to user
+      Helpers.showCustomSnackBar(message, isError: true);
     }
-
-    showCustomSnackBar(message, getXSnackBar: getXSnackBar);
   }
 }

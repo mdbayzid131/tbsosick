@@ -196,11 +196,11 @@ class Validators {
   // ===========================================================================
 
   /// Validates if value is a number.
-  static String? number(String? value, {String? message}) {
+  static String? phoneNumber(String? value, {String? message}) {
     if (value == null || value.trim().isEmpty) {
       return null;
     }
-    if (!GetUtils.isNum(value.trim())) {
+    if (!GetUtils.isPhoneNumber(value.trim())) {
       return message ?? 'Enter a valid number';
     }
     return null;

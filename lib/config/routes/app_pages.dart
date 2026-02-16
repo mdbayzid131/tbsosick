@@ -9,6 +9,8 @@ import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_
 import 'package:tbsosick/presentation/screens/auth_screen/sign_up_screen.dart';
 
 import 'package:tbsosick/presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
+import 'package:tbsosick/presentation/screens/home/binding/card_datails_binding.dart';
+import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/screens/onboarding_screen/onboarding_screen.dart';
 
 class AppRoutes {
@@ -29,6 +31,7 @@ class AppRoutes {
   static const String VERIFY_EMAIL = '/verify-email';
   static const String OTP_VERIFICATION = '/otp-verification';
   static const String NO_INTERNET = '/no-internet';
+  static const String CARD_DETAILS = '/card-details';
 }
 
 final Transition transition = Transition.rightToLeft;
@@ -52,4 +55,5 @@ final pages = [
   ),
   GetPage(name: AppRoutes.BOTTOM_NAV_BAR, page: () => BottomNabBarScreen(),bindings: [BottomNabBarBinding()]),
   GetPage(name: AppRoutes.NO_INTERNET, page: () => NoInternetScreen()),
+  GetPage(name: AppRoutes.CARD_DETAILS, page: () => PreferenceCardDetails(),bindings: [CardDetailsBinding()]),
 ];

@@ -18,7 +18,7 @@ class CalendarController extends GetxController {
     try {
       isLoading.value = true;
       final response = await _userDataRepository.getEventsList();
-      ApiChecker.checkApi(response);
+      ApiChecker.checkGetApi(response);
 
       if (response.statusCode == 200) {
         final result = EventsResponse.fromJson(response.data);
@@ -42,15 +42,15 @@ class CalendarController extends GetxController {
     try {
       isLoading.value = true;
       final response = await _userDataRepository.deleteEvent(id: id);
-      ApiChecker.checkApi(response);
+      ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
-        Helpers.showErrorSnackbar('Event deleted successfully');
+        Helpers.showCustomSnackBar('Event deleted successfully', isError: false);
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
         events.removeWhere((element) => element.id == id);
       }
     } catch (e) {
-      print(e);
+      Helpers.showDebugLog("deleteEvent error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -81,16 +81,16 @@ class CalendarController extends GetxController {
     try {
       isLoading.value = true;
       final response = await _userDataRepository.createEvent(event);
-      ApiChecker.checkApi(response);
+      ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
         // Show success message
-        Helpers.showErrorSnackbar('Event created successfully');
+        Helpers.showCustomSnackBar('Event created successfully', isError: false);
 
         // Refresh the events list immediately to update UI
         await getEvents();
       }
     } catch (e) {
-      print(e);
+      Helpers.showDebugLog("postEvent error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -124,12 +124,14 @@ class CalendarController extends GetxController {
         id: id,
         model: event,
       );
-      ApiChecker.checkApi(response);
+      ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
+        // Show success message
+        Helpers.showCustomSnackBar('Event updated successfully', isError: false);
         await getEvents();
       }
     } catch (e) {
-      print(e);
+      Helpers.showDebugLog("updateEvent error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -140,13 +142,13 @@ class CalendarController extends GetxController {
     try {
       isLoading.value = true;
       final response = await _userDataRepository.getEventDetailById(id: id);
-      ApiChecker.checkApi(response);
+      ApiChecker.checkGetApi(response);
       if (response.statusCode == 200) {
         final event = EventDetailsResponse.fromJson(response.data);
         eventDetails.value = event.data;
       }
     } catch (e) {
-      print(e);
+      Helpers.showDebugLog("getEventDetailById error => $e");
     } finally {
       isLoading.value = false;
     }

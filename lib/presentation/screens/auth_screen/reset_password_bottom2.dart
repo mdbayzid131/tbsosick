@@ -55,20 +55,14 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
         confirmPassword: confirmPasswordController.text.trim(),
       );
 
-      print('=======================================');
-      print(token);
-      print(newPasswordController.text.trim());
-      print(confirmPasswordController.text.trim());
-
-      ApiChecker.checkApi(response);
-      print(response.data);
+      ApiChecker.checkWriteApi(response);
 
       if (response.statusCode == 200) {
         isSuccess.value = true;
-        Helpers.showSuccessSnackbar('Password reset successfully');
+        Helpers.showCustomSnackBar('Password reset successfully', isError: false);
       }
     } catch (e) {
-      Helpers.showErrorSnackbar(e.toString());
+      Helpers.showDebugLog("resetPassword error => $e");
     } finally {
       isLoading.value = false;
     }

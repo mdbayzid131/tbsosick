@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/data/models/supplies_model.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 
@@ -20,6 +22,23 @@ class MedicalSuppliesScreen extends StatefulWidget {
 class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (_searchController.text.isNotEmpty) {
+        homePageController.getSupplies(search: _searchController.text);
+      }
+    });
+    setState(() {});
+  }
 
   List<SuppliesModel> get filteredSupplies {
     final query = _searchController.text.trim().toLowerCase();
@@ -87,50 +106,50 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
             // Search Bar
             Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: _searchFocusNode.hasFocus
-                      ? const Color(0xff9945FF)
-                      : Colors.grey.shade300,
-                  width: 2.w,
-                ),
-                borderRadius: BorderRadius.circular(20.r),
-                boxShadow: _searchFocusNode.hasFocus
-                    ? [
-                        BoxShadow(
-                          color: const Color(0xff9945FF).withOpacity(0.1),
-                          blurRadius: 8.r,
-                          offset: Offset(0, 2.h),
-                        ),
-                      ]
-                    : [],
+                color: const Color(0xffF2F2F7),
+                borderRadius: BorderRadius.circular(12.r),
               ),
               child: TextField(
                 controller: _searchController,
                 focusNode: _searchFocusNode,
-                onChanged: (value) => setState(() {}),
                 decoration: InputDecoration(
                   hintText: 'Search thousands of supplies...',
-                  hintStyle: TextStyle(
+                  hintStyle: GoogleFonts.arimo(
                     fontSize: 16.sp,
-                    color: Colors.grey.shade400,
+                    color: const Color(0xff8E8E93),
                   ),
                   prefixIcon: Icon(
                     Icons.search,
-                    color: Colors.grey.shade400,
+                    color: const Color(0xff8E8E93),
                     size: 20.sp,
                   ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 20.h,
+                    horizontal: 16.w,
+                    vertical: 14.h,
                   ),
                 ),
-                style: TextStyle(fontSize: 16.sp),
+                style: GoogleFonts.arimo(fontSize: 16.sp, color: Colors.black),
               ),
             ),
 
             // Search Results or No Results
             Obx(() {
+              // Show loading indicator if supplies are being fetched
+              if (homePageController.isSuppliesLoading.value) {
+                return Column(
+                  children: [
+                    SizedBox(height: 24.h),
+                    const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xff9945FF),
+                      ),
+                    ),
+                    SizedBox(height: 24.h),
+                  ],
+                );
+              }
+
               homePageController.supplies.length; // Register dependency
               final results = filteredSupplies;
 
@@ -398,8 +417,10 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
 
   @override
   void dispose() {
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     _searchFocusNode.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 }

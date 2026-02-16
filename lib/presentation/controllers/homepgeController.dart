@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
-import 'package:tbsosick/core/utils/custom_snackbar.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/models/private_card_model.dart';
 import 'package:tbsosick/data/models/supplies_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
@@ -12,51 +12,53 @@ class HomePageController extends GetxController {
 
   RxBool isFavorite = false.obs;
   RxBool isLoading = false.obs;
+  RxBool isSuppliesLoading = false.obs;
+  RxBool isSuturesLoading = false.obs;
   RxList<PrivateCard> privateCard = <PrivateCard>[].obs;
 
   RxList<SuppliesModel> supplies = <SuppliesModel>[].obs;
   RxList<SuppliesModel> sutures = <SuppliesModel>[].obs;
 
-  Future<void> getSupplies() async {
+  Future<void> getSupplies({String search = ''}) async {
     try {
-      Response<dynamic> response = await _userDataRepository.getSupplies();
-      ApiChecker.checkApi(response);
+      isSuppliesLoading.value = true;
+      Response<dynamic> response = await _userDataRepository.getSupplies(
+        search: search,
+      );
+
+      ApiChecker.checkGetApi(response);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final suppliesResponse = SuppliesResponse.fromJson(response.data);
-
         supplies.assignAll(suppliesResponse.supplies);
-      } else {
-        showCustomSnackBar("Server is not responding", isError: true);
       }
     } catch (e) {
-      if (e is DioException) {
-        ApiChecker.handleError(e);
-      } else {
-        showCustomSnackBar(e.toString(), isError: true);
-      }
-    } finally {}
+      /// ❗ NOTHING FOR USER
+      Helpers.showDebugLog("getSupplies error => $e");
+    } finally {
+      isSuppliesLoading.value = false;
+    }
   }
 
-  Future<void> getSutures() async {
+  Future<void> getSutures({String search = ''}) async {
     try {
-      Response<dynamic> response = await _userDataRepository.getSutures();
-      ApiChecker.checkApi(response);
+      isSuturesLoading.value = true;
+      Response<dynamic> response = await _userDataRepository.getSutures(
+        search: search,
+      );
+      ApiChecker.checkGetApi(response);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final suppliesResponse = SuppliesResponse.fromJson(response.data);
 
         sutures.assignAll(suppliesResponse.supplies);
-      } else {
-        showCustomSnackBar("Server is not responding", isError: true);
       }
     } catch (e) {
-      if (e is DioException) {
-        ApiChecker.handleError(e);
-      } else {
-        showCustomSnackBar(e.toString(), isError: true);
-      }
-    } finally {}
+      /// ❗ NOTHING FOR USER
+      Helpers.showDebugLog("getSutures error => $e");
+    } finally {
+      isSuturesLoading.value = false;
+    }
   }
 
   void toggleFavorite() {

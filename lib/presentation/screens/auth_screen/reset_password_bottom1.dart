@@ -45,17 +45,14 @@ void showResetPasswordBottomSheet(BuildContext context) {
         emailController.text.trim(),
       );
 
-      print('=======================================');
-      print(emailController.text.trim());
-      ApiChecker.checkApi(response);
-      print(response.data);
+      ApiChecker.checkWriteApi(response);
 
       if (response.statusCode == 200) {
         isSuccess.value = true;
-        Helpers.showSuccessSnackbar('Password reset email sent');
+        Helpers.showCustomSnackBar('Password reset email sent', isError: false);
       }
     } catch (e) {
-      Helpers.showErrorSnackbar(e.toString());
+      Helpers.showDebugLog("forgotPassword error => $e");
     } finally {
       isLoading.value = false;
     }

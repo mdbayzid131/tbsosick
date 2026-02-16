@@ -11,6 +11,7 @@ import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/controllers/internet_controller.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class ApiClient extends GetxService {
   static late Dio dio;
@@ -19,6 +20,7 @@ class ApiClient extends GetxService {
   static const String noInternetMessage =
       "Sorry! Something went wrong, please try again";
   static const int timeoutInSeconds = 30;
+  static DateTime? _lastErrorTime;
 
   // Future<void> fakeLogout() async {
   //   try {
@@ -77,11 +79,9 @@ class ApiClient extends GetxService {
         },
         onResponse: (response, handler) {
           debugPrint("✅ ====> API RESPONSE==========================");
-          debugPrint(
-            "✅ ====> API Response: [${response.statusCode}]",
-          );
+          debugPrint("✅ ====> API Response: [${response.statusCode}]");
           debugPrint("✅ ====> API URI: ${response.requestOptions.uri}");
-          debugPrint("✅ ====> API Data: ${response.data}"); 
+          debugPrint("✅ ====> API Data: ${response.data}");
 
           return handler.next(response);
         },
@@ -89,11 +89,28 @@ class ApiClient extends GetxService {
         onError: (DioException e, handler) async {
           final internet = Get.find<InternetController>();
 
-          // 1️⃣ No internet
+          // 1️⃣ Connection Error
           if (e.type == DioExceptionType.connectionError) {
-            if (!internet.isShowingNoInternet.value) {
-              internet.setOffline();
-              Get.offAllNamed(AppRoutes.NO_INTERNET);
+            // Check if we actually have internet access
+            bool hasInternet = await InternetConnection().hasInternetAccess;
+
+            if (hasInternet) {
+              // Internet is available, but connection failed -> Server likely down
+              if (_lastErrorTime == null ||
+                  DateTime.now().difference(_lastErrorTime!) >
+                      const Duration(seconds: 3)) {
+                _lastErrorTime = DateTime.now();
+                Helpers.showCustomSnackBar(
+                  'Unable to connect to server. Please try again later.',
+                  isError: true,
+                );
+              }
+            } else {
+              // Genuine No Internet
+              if (!internet.isShowingNoInternet.value) {
+                internet.setOffline();
+                Get.offAllNamed(AppRoutes.NO_INTERNET);
+              }
             }
             return handler.next(e);
           }
@@ -121,17 +138,36 @@ class ApiClient extends GetxService {
           // 3️⃣ Timeout
           if (e.type == DioExceptionType.connectionTimeout ||
               e.type == DioExceptionType.receiveTimeout) {
-            Helpers.showErrorSnackbar('Request timeout. Please try again.');
+            if (_lastErrorTime == null ||
+                DateTime.now().difference(_lastErrorTime!) >
+                    const Duration(seconds: 3)) {
+              _lastErrorTime = DateTime.now();
+              Helpers.showCustomSnackBar(
+                'Request timeout. Please try again.',
+                isError: true,
+              );
+            }
           }
           // 4️⃣ Server error
           else if (e.type == DioExceptionType.badResponse) {
-            Helpers.showErrorSnackbar(
-              'Server error (${e.response?.statusCode})',
-            );
+            if (_lastErrorTime == null ||
+                DateTime.now().difference(_lastErrorTime!) >
+                    const Duration(seconds: 3)) {
+              _lastErrorTime = DateTime.now();
+              Helpers.showCustomSnackBar(
+                'Server error (${e.response?.statusCode})',
+                isError: true,
+              );
+            }
           }
           // 5️⃣ Unknown error
           else {
-            Helpers.showErrorSnackbar('Something went wrong');
+            if (_lastErrorTime == null ||
+                DateTime.now().difference(_lastErrorTime!) >
+                    const Duration(seconds: 3)) {
+              _lastErrorTime = DateTime.now();
+              Helpers.showCustomSnackBar('Something went wrong', isError: true);
+            }
           }
           debugPrint("❌ ====> API ERROR:==========================");
           debugPrint("❌ ====> API MESSAGE: ${e.message}");

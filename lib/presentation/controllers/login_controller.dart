@@ -50,13 +50,13 @@ class LoginController extends GetxController {
       );
 
       // ApiChecker response validate
-      ApiChecker.checkApi(response);
+      ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
-        Helpers.showSuccessSnackbar('Login successful');
+        Helpers.showCustomSnackBar('Login successful', isError: false);
         Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
       }
     } catch (e) {
-      Helpers.showErrorSnackbar(e.toString());
+      Helpers.showDebugLog("login error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -83,11 +83,11 @@ class LoginController extends GetxController {
       // print(response.statusCode);
       // print('==================================================');
       // if (response.statusCode == 200) {
-        Helpers.showSuccessSnackbar('Logout successful');
+        Helpers.showCustomSnackBar('Logout successful', isError: false);
         Get.offAllNamed(AppRoutes.LOGIN);
       // }
     } catch (e) {
-      Helpers.showErrorSnackbar(e.toString());
+      Helpers.showCustomSnackBar(e.toString(), isError: true);
     } finally {
       isLoading.value = false;
     }

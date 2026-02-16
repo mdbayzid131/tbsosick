@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
+import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 
-class PreferenceCardDetails extends StatelessWidget {
-  final bool isPrivate;
-  const PreferenceCardDetails({super.key, required this.isPrivate});
+class PreferenceCardDetails extends StatefulWidget {
+  PreferenceCardDetails({super.key});
+
+  @override
+  State<PreferenceCardDetails> createState() => _PreferenceCardDetailsState();
+}
+
+class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
+  final PrefranceCardDetailsController controller =
+      Get.find<PrefranceCardDetailsController>();
+
+  late String cardId;
+
+  @override
+  void initState() {
+    cardId = Get.arguments?['cardId'] ?? '';
+    if (cardId.isNotEmpty) {
+      controller.getCardDetails(cardId: cardId);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,28 +60,32 @@ class PreferenceCardDetails extends StatelessWidget {
 
         backgroundColor: const Color(0xffffffff),
         actions: [
-          InkWell(
-            onTap: () {
-              // Get.back();
-            },
-            child: Container(
-              width: 40.w,
-              height: 40.w,
-              decoration: BoxDecoration(
-                color: Color(0xffF2F2F7),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.share_outlined,
-                size: 22.sp,
-                color: Color(0xff9945FF),
-              ),
-            ),
+          Obx(
+            () => controller.cardDetails.value?.published == true
+                ? InkWell(
+                    onTap: () {
+                      // Get.back();
+                    },
+                    child: Container(
+                      width: 40.w,
+                      height: 40.w,
+                      decoration: BoxDecoration(
+                        color: Color(0xffF2F2F7),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.share_outlined,
+                        size: 22.sp,
+                        color: Color(0xff9945FF),
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ),
           SizedBox(width: 16.w),
           InkWell(
             onTap: () {
-              // Get.back();
+              controller.downloadCard(cardId: cardId);
             },
             child: Container(
               width: 40.w,
@@ -86,63 +108,77 @@ class PreferenceCardDetails extends StatelessWidget {
       body: SafeArea(
         top: false,
 
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Card - Doctor name and procedure title
-              _buildHeaderCard(),
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return SizedBox(
+              height: ScreenUtil().screenHeight * 0.8,
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
+          if (controller.cardDetails.value == null) {
+            return SizedBox(
+              height: ScreenUtil().screenHeight * 0.8,
+              child: const Center(child: Text('No details found')),
+            );
+          }
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header Card - Doctor name and procedure title
+                _buildHeaderCard(),
 
-              SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
 
-              // Surgeon Information Card
-              _buildSurgeonInformationCard(),
+                // Surgeon Information Card
+                _buildSurgeonInformationCard(),
 
-              SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
 
-              // Medication Card
-              _buildMedicationCard(),
+                // Medication Card
+                _buildMedicationCard(),
 
-              SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
 
-              // All Supplies Card
-              _buildAllSuppliesCard(),
+                // All Supplies Card
+                _buildAllSuppliesCard(),
 
-              SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
 
-              // Sutures Card
-              _buildSuturesCard(),
+                // Sutures Card
+                _buildSuturesCard(),
 
-              SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
 
-              // Instruments Card
-              _buildInstrumentsCard(),
+                // Instruments Card
+                _buildInstrumentsCard(),
 
-              SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
 
-              // Positioning Card
-              _buildPositioningCard(),
+                // Positioning Card
+                _buildPositioningCard(),
 
-              SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
 
-              // Prepping / Shaving Card
-              _buildPreppingCard(),
+                // Prepping / Shaving Card
+                _buildPreppingCard(),
 
-              SizedBox(height: 16.h),
+                SizedBox(height: 16.h),
 
-              // Key Notes Card
-              _buildKeyNotesCard(),
+                // Key Notes Card
+                _buildKeyNotesCard(),
 
-              SizedBox(height: 20.h),
+                SizedBox(height: 20.h),
 
-              // Photo Library
-              _buildPhotoLibrary(),
+                // Photo Library
+                _buildPhotoLibrary(),
 
-              SizedBox(height: 30.h),
-            ],
-          ),
-        ),
+                SizedBox(height: 30.h),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }
@@ -169,7 +205,7 @@ class PreferenceCardDetails extends StatelessWidget {
         children: [
           // Title with star icon
           Text(
-            'Dr. Sarah Johnson — Total Knee Replacement',
+            controller.cardDetails.value?.cardTitle ?? '',
             style: GoogleFonts.arimo(
               fontSize: 20.sp,
               fontWeight: FontWeight.w700,
@@ -178,12 +214,25 @@ class PreferenceCardDetails extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           // Downloads and updated date
-          Text(
-            '237 downloads  •  Updated 05/01/2026',
-            style: GoogleFonts.arimo(
-              fontSize: 15.sp,
-              color: const Color(0xFF8E8E93),
-            ),
+          Row(
+            children: [
+              controller.cardDetails.value?.published == true
+                  ? Text(
+                      '${controller.cardDetails.value?.downloadCount ?? 0} downloads',
+                      style: GoogleFonts.arimo(
+                        fontSize: 15.sp,
+                        color: const Color(0xFF8E8E93),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              Text(
+                ' •  Updated ${controller.cardDetails.value?.updatedAt.day.toString()}/${controller.cardDetails.value?.updatedAt.month.toString()}/${controller.cardDetails.value?.updatedAt.year.toString() ?? ''}',
+                style: GoogleFonts.arimo(
+                  fontSize: 15.sp,
+                  color: const Color(0xFF8E8E93),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -225,7 +274,7 @@ class PreferenceCardDetails extends StatelessWidget {
           _buildInfoLabel('Name'),
           SizedBox(height: 4.h),
           Text(
-            'Sarah Johnson',
+            controller.cardDetails.value?.surgeon.fullName ?? '',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               fontWeight: FontWeight.w400,
@@ -237,11 +286,11 @@ class PreferenceCardDetails extends StatelessWidget {
           _buildInfoLabel('Specialty'),
           SizedBox(height: 4.h),
           Text(
-            'Orthopedic Surgery',
+            controller.cardDetails.value?.surgeon.specialty ?? '',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               fontWeight: FontWeight.w400,
-              color: const Color(0xff000000f),
+              color: const Color(0xff000000),
             ),
           ),
           SizedBox(height: 16.h),
@@ -257,7 +306,7 @@ class PreferenceCardDetails extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                '(555) 123-4567',
+                controller.cardDetails.value?.surgeon.contactNumber ?? '',
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w400,
@@ -279,7 +328,7 @@ class PreferenceCardDetails extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                'Classical music, low volume',
+                controller.cardDetails.value?.surgeon.musicPreference ?? '',
                 style: GoogleFonts.arimo(
                   fontSize: 17.sp,
                   fontWeight: FontWeight.w400,
@@ -297,7 +346,7 @@ class PreferenceCardDetails extends StatelessWidget {
               Text('👈', style: TextStyle(fontSize: 17.sp)),
               SizedBox(width: 6.w),
               Text(
-                'Left',
+                controller.cardDetails.value?.surgeon.handPreference ?? '',
                 style: GoogleFonts.arimo(
                   fontSize: 17.sp,
                   fontWeight: FontWeight.w400,
@@ -343,7 +392,7 @@ class PreferenceCardDetails extends StatelessWidget {
           SizedBox(height: 12.h),
           // Medication list
           Text(
-            'Cefazolin 2g IV\nTranexamic acid 1g IV\nHeparin 5000 units SC',
+            controller.cardDetails.value?.medication ?? '',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               height: 1.6,
@@ -387,9 +436,44 @@ class PreferenceCardDetails extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           // Supply items
-          _buildSupplyItem('Orthopedic Drapes', 2),
-          SizedBox(height: 8.h),
-          _buildSupplyItem('Leg Drape', 1),
+          Obx(() {
+            if (controller.cardDetails.value?.supplies.isEmpty ?? true) {
+              return Container(
+                padding: EdgeInsets.symmetric(vertical: 20.h),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 235, 235, 243),
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(
+                    color: const Color(0xFFE5E7EB),
+                    width: 1.w,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    'No supplies found',
+                    style: GoogleFonts.arimo(
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFF000000),
+                    ),
+                  ),
+                ),
+              );
+            }
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: controller.cardDetails.value?.supplies.length ?? 0,
+              itemBuilder: (context, index) {
+                final supply = controller.cardDetails.value?.supplies[index];
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 16.h),
+                  child: _buildSupplyItem(supply?.name ?? '', 1),
+                );
+              },
+            );
+          }),
         ],
       ),
     );
@@ -427,9 +511,44 @@ class PreferenceCardDetails extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           // Suture items
-          _buildSupplyItem('2-0 Vicryl', 4),
-          SizedBox(height: 8.h),
-          _buildSupplyItem('3-0 Monocryl', 2),
+          Obx(() {
+            if (controller.cardDetails.value?.sutures.isEmpty ?? true) {
+              return Container(
+                padding: EdgeInsets.symmetric(vertical: 20.h),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 235, 235, 243),
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(
+                    color: const Color(0xFFE5E7EB),
+                    width: 1.w,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    'No sutures found',
+                    style: GoogleFonts.arimo(
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFF000000),
+                    ),
+                  ),
+                ),
+              );
+            }
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: controller.cardDetails.value?.sutures.length ?? 0,
+              itemBuilder: (context, index) {
+                final suture = controller.cardDetails.value?.sutures[index];
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 16.h),
+                  child: _buildSupplyItem(suture?.name ?? '', 1),
+                );
+              },
+            );
+          }),
         ],
       ),
     );
@@ -467,7 +586,7 @@ class PreferenceCardDetails extends StatelessWidget {
           SizedBox(height: 12.h),
           // Instruments list
           Text(
-            'TKR instrument set\nPower drill with saw attachments\nRetractors set',
+            controller.cardDetails.value?.instruments ?? '',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               height: 1.6,
@@ -513,7 +632,7 @@ class PreferenceCardDetails extends StatelessWidget {
           _buildInfoLabel('Equipment / Placement'),
           SizedBox(height: 4.h),
           Text(
-            'Leg holder, tourniquet',
+            controller.cardDetails.value?.positioningEquipment ?? '',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               color: const Color(0xFF000000),
@@ -524,7 +643,7 @@ class PreferenceCardDetails extends StatelessWidget {
           _buildInfoLabel('Patient Position'),
           SizedBox(height: 4.h),
           Text(
-            'Supine with leg holder',
+            controller.cardDetails.value?.positioningEquipment ?? '',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               color: const Color(0xFF000000),
@@ -567,7 +686,7 @@ class PreferenceCardDetails extends StatelessWidget {
           SizedBox(height: 12.h),
           // Prepping details
           Text(
-            'Full leg prep from hip to toes\nClip hair if needed, no shaving',
+            controller.cardDetails.value?.prepping ?? '',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               height: 1.6,
@@ -608,7 +727,7 @@ class PreferenceCardDetails extends StatelessWidget {
           SizedBox(height: 12.h),
           // Key notes content
           Text(
-            'Patient allergic to latex - use latex-free gloves\nPrefer Zimmer implants',
+            controller.cardDetails.value?.keyNotes ?? '',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               height: 1.6,
@@ -650,6 +769,8 @@ class PreferenceCardDetails extends StatelessWidget {
               fontWeight: FontWeight.w400,
               color: const Color(0xFF000000),
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           Text(
             '× $quantity',
@@ -678,59 +799,69 @@ class PreferenceCardDetails extends StatelessWidget {
           ),
         ),
         SizedBox(height: 16.h),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20.r),
-          child: Image.network(
-            'https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1932&auto=format&fit=crop',
-            width: double.infinity,
-            height: 250.h,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                width: double.infinity,
-                height: 250.h,
-                color: Colors.grey[200],
-                child: const Center(child: CircularProgressIndicator()),
+        Obx(() {
+          if (controller.cardDetails.value?.photoLibrary.isEmpty ?? true) {
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 20.h),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 235, 235, 243),
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+              ),
+              child: Center(
+                child: Text(
+                  'No photos found',
+                  style: GoogleFonts.arimo(
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF000000),
+                  ),
+                ),
+              ),
+            );
+          }
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: controller.cardDetails.value?.photoLibrary.length ?? 0,
+            itemBuilder: (context, index) {
+              final photo = controller.cardDetails.value?.photoLibrary[index];
+              return Padding(
+                padding: EdgeInsets.only(bottom: 30.h),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.r),
+                  child: Image.network(
+                    photo ?? '',
+                    width: double.infinity,
+                    height: 250.h,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: double.infinity,
+                        height: 250.h,
+                        color: Colors.grey[200],
+                        child: const Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: double.infinity,
+                        height: 250.h,
+                        color: Colors.grey[200],
+                        child: const Icon(
+                          Icons.error_outline,
+                          color: Colors.grey,
+                        ),
+                      );
+                    },
+                  ),
+                ),
               );
             },
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: double.infinity,
-                height: 250.h,
-                color: Colors.grey[200],
-                child: const Icon(Icons.error_outline, color: Colors.grey),
-              );
-            },
-          ),
-        ),
-        SizedBox(height: 16.h),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20.r),
-          child: Image.network(
-            'https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1932&auto=format&fit=crop',
-            width: double.infinity,
-            height: 250.h,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                width: double.infinity,
-                height: 250.h,
-                color: Colors.grey[200],
-                child: const Center(child: CircularProgressIndicator()),
-              );
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: double.infinity,
-                height: 250.h,
-                color: Colors.grey[200],
-                child: const Icon(Icons.error_outline, color: Colors.grey),
-              );
-            },
-          ),
-        ),
+          );
+        }),
       ],
     );
   }

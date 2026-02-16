@@ -22,7 +22,10 @@ class PostAnyCardController extends GetxController {
         .pickMultiImage(); // pickMultiImage returns List<XFile>
     if (images.isNotEmpty) {
       if (images.length > 5) {
-        Helpers.showErrorSnackbar('You can only select up to 5 images');
+        Helpers.showCustomSnackBar(
+          'You can only select up to 5 images',
+          isError: true,
+        );
       }
       // Take at most 5 images
       final limitedImages = images.take(5).toList();
@@ -89,16 +92,23 @@ class PostAnyCardController extends GetxController {
         published: !isprivate,
         photos: selectedImages, // List<File>
       );
-      if (response.statusCode == 200) {
-        Helpers.showSuccessSnackbar('Preference card created');
+
+      ApiChecker.checkWriteApi(response);
+
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
         Get.back();
+
+        Helpers.showCustomSnackBar(
+          isprivate
+              ? 'Private card save Successfully'
+              : 'Preference card created Successfully',
+          isError: false,
+          getXSnackBar:
+              false, // Use ScaffoldMessenger so it stays on the next screen
+        );
       }
-
-      ApiChecker.checkApi(response);
-
-
     } catch (e) {
-      Helpers.showErrorSnackbar(e.toString());
+      Helpers.showDebugLog("submitPreferenceCard error => $e");
     } finally {
       isLoading.value = false;
     }

@@ -76,19 +76,18 @@ class SignUpController extends GetxController {
         phone: phoneController.text.trim(),
         country: selectedCountry.value,
       );
-     ApiChecker.checkApi(response);
+     ApiChecker.checkWriteApi(response);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Helpers.showSuccessSnackbar(
-          'Registration successful. Please verify your email.',
-        );
+        Helpers.showCustomSnackBar(
+          'Registration successful. Please verify your email.', isError: false);
         // Navigate to VerifyEmail screen and pass the email
         Get.toNamed(
           AppRoutes.LOGIN,
         );
       }
     } catch (e) {
-      Helpers.showErrorSnackbar(e.toString());
+      Helpers.showDebugLog("signUp error => $e");
     } finally {
       isLoading.value = false;
     }

@@ -5,6 +5,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // ignore: unrelated_type_equality_checks
         if (result == ConnectivityResult.none) {
-          Helpers.showErrorSnackbar('No internet connection');
+          Helpers.showCustomSnackBar('No internet connection', isError: true);
           return;
         }
 
@@ -72,9 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: _quickActionCard(
                           title: 'Create Preference card',
                           onTap: () {
-                            Get.to(NewPreferenceCard(isPrivate: false),
-                            binding: PostAnyCardBinding(),
-             
+                            Get.to(
+                              NewPreferenceCard(isPrivate: false),
+                              binding: PostAnyCardBinding(),
                             );
                           },
                         ),
@@ -84,8 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: _quickActionCard(
                           title: 'Create Private Card',
                           onTap: () {
-                            Get.to(NewPreferenceCard(isPrivate: true),
-                             binding: PostAnyCardBinding(),);
+                            Get.to(
+                              NewPreferenceCard(isPrivate: true),
+                              binding: PostAnyCardBinding(),
+                            );
                           },
                         ),
                       ),
@@ -139,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (_bottomNabBarController.isLoading.value) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    if (_bottomNabBarController.allCards.isEmpty) {
+                    if (_bottomNabBarController.publicCards.isEmpty) {
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: 20.h),
                         child: const Center(child: Text("No cards found")),
@@ -149,31 +152,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
-                      itemCount: _bottomNabBarController.allCards.length,
+                      itemCount: _bottomNabBarController.publicCards.length,
                       itemBuilder: (context, index) {
-                        final card = _bottomNabBarController.allCards[index];
+                        final card = _bottomNabBarController.publicCards[index];
                         return Padding(
                           padding: EdgeInsets.only(bottom: 10.h),
                           child: InkWell(
                             onTap: () {
-                              Get.to(
-                                () => const PreferenceCardDetails(
-                                  isPrivate: false,
-                                ),
+                              Get.toNamed(
+                                AppRoutes.CARD_DETAILS,
+                                arguments: {'cardId': card.id},
                               );
                             },
                             child: favoriteCard(
                               title: card.cardTitle,
-                              status: card.verificationStatus,
-                              statusColor: card.verificationStatus == 'Approved'
+                              status: card.isVerified
+                                  ? 'Verified'
+                                  : 'Not Verified',
+                              statusColor: card.isVerified == true
                                   ? const Color(0xffE6F6EA)
                                   : const Color(0xffFFF7E6),
-                              statusTextColor:
-                                  card.verificationStatus == 'Approved'
+                              statusTextColor: card.isVerified == true
                                   ? const Color(0xff2E9B4E)
                                   : const Color(0xffFFA940),
-                              date: card.createdAt.toString().split(' ').first,
-                              doctor: card.surgeon.fullName,
+                              date: "Updated 2 days ago",
+                              doctor: card.surgeonName,
                             ),
                           ),
                         );
@@ -400,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: _statCard(
                           icon: Icons.description_outlined,
                           count:
-                              "${_bottomNabBarController.cardCount.value?.allCardsCount}",
+                              "${_bottomNabBarController.cardCount.value?.allCardsCount ?? 00}",
                           label: 'All Card',
                         ),
                       ),
@@ -409,7 +412,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: _statCard(
                           icon: Icons.person_outline,
                           count:
-                              "${_bottomNabBarController.cardCount.value?.myCardsCount}",
+                              "${_bottomNabBarController.cardCount.value?.myCardsCount ?? 00}",
                           label: 'My Cards',
                         ),
                       ),

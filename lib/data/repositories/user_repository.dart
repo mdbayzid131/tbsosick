@@ -51,12 +51,31 @@ class UserDataRepository {
     );
   }
 
-  Future<Response<dynamic>> getSupplies() async {
-    return await _apiClient.getData(ApiConstants.getSuppliesList);
+  Future<Response<dynamic>> getCardDetails({required String cardId}) async {
+    return await _apiClient.getData(
+      ApiConstants.getCardDetails.replaceAll('{id}', cardId),
+    );
   }
 
-  Future<Response<dynamic>> getSutures() async {
-    return await _apiClient.getData(ApiConstants.getSuturesList);
+  Future<Response<dynamic>> downloadCard({required String cardId}) async {
+    return await _apiClient.postData(
+      ApiConstants.downloadCard.replaceAll('{id}', cardId),
+      {},
+    );
+  }
+
+  Future<Response<dynamic>> getSupplies({String search = ''}) async {
+    return await _apiClient.getData(
+      ApiConstants.getSuppliesList,
+      query: {'searchTerm': search},
+    );
+  }
+
+  Future<Response<dynamic>> getSutures({String search = ''}) async {
+    return await _apiClient.getData(
+      ApiConstants.getSuturesList,
+      query: {'searchTerm': search},
+    );
   }
 
   Future<Response> createPreferenceCard({
@@ -108,15 +127,9 @@ class UserDataRepository {
     );
   }
 
-
-
-
-
   // Event Endpoints
   Future<Response<dynamic>> getEventsList() async {
-    return await _apiClient.getData(
-      ApiConstants.getEventsList,
-    );
+    return await _apiClient.getData(ApiConstants.getEventsList);
   }
 
   // Get event detail by id
@@ -128,18 +141,13 @@ class UserDataRepository {
 
   // Create event
   Future<Response> createEvent(CreateEventRequestModel model) async {
-    return await _apiClient.postData(
-      ApiConstants.postEvent,
-      model.toJson(),
-    );
+    return await _apiClient.postData(ApiConstants.postEvent, model.toJson());
   }
-
 
   // Update event
   Future<Response<dynamic>> patchEvent({
     required String id,
     required CreateEventRequestModel model,
-
   }) async {
     return await _apiClient.patchData(
       ApiConstants.patchEvent.replaceAll('{id}', id),
@@ -160,18 +168,15 @@ class UserDataRepository {
     required String phone,
     required String specialty,
     required String hospital,
-     required String email,
+    required String email,
   }) async {
-    return await _apiClient.patchData(
-      ApiConstants.profile,
-  {
-    "name": name,
-    "phone": phone,
-    "specialty": specialty,
-    "hospital": hospital,
-    "email": email,
-}
-    );
+    return await _apiClient.patchData(ApiConstants.profile, {
+      "name": name,
+      "phone": phone,
+      "specialty": specialty,
+      "hospital": hospital,
+      "email": email,
+    });
   }
 
   // Update profile image (multipart)

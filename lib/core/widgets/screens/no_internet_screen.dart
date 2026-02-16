@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
@@ -18,26 +19,26 @@ class NoInternetScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.wifi_off, size: 80),
-              const SizedBox(height: 16),
-              const Text(
+              Icon(Icons.wifi_off, size: 80.sp),
+              SizedBox(height: 16.h),
+              Text(
                 'No Internet Connection',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: 8.h),
+              Text(
                 'Please check your internet and try again',
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
 
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(100, 40),
+                  minimumSize: Size(100.w, 40.h),
                   backgroundColor: AppTheme.primaryColor,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(30.r),
                   ),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -50,7 +51,7 @@ class NoInternetScreen extends StatelessWidget {
                     Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
                   }
                 },
-                child: const Text('Retry'),
+                child:Text('Retry', style: TextStyle(fontSize: 16.sp)),
               ),
             ],
           ),
