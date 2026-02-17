@@ -128,15 +128,34 @@ class CustomBottomBar extends StatelessWidget {
         padding: EdgeInsets.all(0.w),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(100.r),
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  nav.user.value?.profilePicture.toString() ?? "",
-                ),
-                fit: BoxFit.cover,
-              ),
-            ),
+          child: Builder(
+            builder: (context) {
+              final profileUrl = nav.user.value?.profilePicture;
+              if (profileUrl != null && profileUrl.isNotEmpty) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(profileUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF8E3DF6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.person,
+                      size: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              }
+            },
           ),
         ),
       ),

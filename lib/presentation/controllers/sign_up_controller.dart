@@ -9,7 +9,7 @@ import 'package:tbsosick/core/utils/validators.dart';
 class SignUpController extends GetxController {
   final AuthService _authService = Get.find();
 
-  final selectedCountry = " ".obs;
+  final selectedCountry = "".obs;
  
   final nameController = TextEditingController();
   final emailController = TextEditingController();
