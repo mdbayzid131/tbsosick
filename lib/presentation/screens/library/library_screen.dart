@@ -830,11 +830,11 @@ class _LibraryScreenState extends State<LibraryScreen>
                         },
                       ),
                       _buildFilterChip(
-                        'Cardiothoracic Surgery',
-                        _selectedSpecialty == 'Cardiothoracic Surgery',
+                        'Cardiac Surgery',
+                        _selectedSpecialty == 'Cardiac Surgery',
                         () {
                           setModalState(() {
-                            _selectedSpecialty = 'Cardiothoracic Surgery';
+                            _selectedSpecialty = 'Cardiac Surgery';
                           });
                         },
                       ),
@@ -844,6 +844,51 @@ class _LibraryScreenState extends State<LibraryScreen>
                         () {
                           setModalState(() {
                             _selectedSpecialty = 'General Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        'Neurosurgery',
+                        _selectedSpecialty == 'Neurosurgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Neurosurgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        'Plastic Surgery',
+                        _selectedSpecialty == 'Plastic Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Plastic Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        'Vascular Surgery',
+                        _selectedSpecialty == 'Vascular Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Vascular Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        'Thoracic Surgery',
+                        _selectedSpecialty == 'Thoracic Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Thoracic Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        'Pediatric Surgery',
+                        _selectedSpecialty == 'Pediatric Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Pediatric Surgery';
                           });
                         },
                       ),
@@ -880,6 +925,9 @@ class _LibraryScreenState extends State<LibraryScreen>
                     height: 52.h,
                     child: CustomElevatedButton(
                       onPressed: () {
+                        controller.specialtyFilter.value = _selectedSpecialty;
+                        controller.verifiedOnlyFilter.value = _verifiedOnly;
+                        controller.refreshCards();
                         Navigator.pop(context);
                       },
                       label: 'Apply Filters',

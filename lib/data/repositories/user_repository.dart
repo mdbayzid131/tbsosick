@@ -33,10 +33,23 @@ class UserDataRepository {
   Future<Response<dynamic>> getPublicCard({
     int page = 1,
     String search = '',
+    String specialty = '',
+    String verificationStatus = '',
   }) async {
+    final query = <String, dynamic>{
+      'page': page,
+      'limit': 10,
+      'searchTerm': search,
+    };
+    if (specialty.isNotEmpty) {
+      query['specialty'] = specialty;
+    }
+    if (verificationStatus.isNotEmpty) {
+      query['verificationStatus'] = verificationStatus;
+    }
     return await _apiClient.getData(
       ApiConstants.getPublicCard,
-      query: {'page': page, 'limit': 10, 'searchTerm': search},
+      query: query,
     );
   }
 
@@ -44,10 +57,23 @@ class UserDataRepository {
   Future<Response<dynamic>> getPrivateCard({
     int page = 1,
     String search = '',
+    String specialty = '',
+    String verificationStatus = '',
   }) async {
+    final query = <String, dynamic>{
+      'page': page,
+      'limit': 10,
+      'searchTerm': search,
+    };
+    if (specialty.isNotEmpty) {
+      query['specialty'] = specialty;
+    }
+    if (verificationStatus.isNotEmpty) {
+      query['verificationStatus'] = verificationStatus;
+    }
     return await _apiClient.getData(
       ApiConstants.getPrivateCard,
-      query: {'page': page, 'limit': 10, 'searchTerm': search},
+      query: query,
     );
   }
 

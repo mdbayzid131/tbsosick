@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/core/utils/validators.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/controllers/post_any__card_controller.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
 import 'package:tbsosick/presentation/screens/home/Preference%20card/sutures_container.dart';
 import 'package:tbsosick/presentation/widgets/CustomContainer.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
@@ -92,7 +93,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
         backgroundColor: const Color(0xffffffff),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () => _publish(),
             child: Text(
               widget.isPrivate ? 'Save' : 'Publish',
               style: GoogleFonts.arimo(
@@ -218,13 +219,83 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                         Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
                         SizedBox(height: 10.h),
 
-                        // Specialty TextFormField
-                        _buildTextField(
-                          label: 'Specialty',
-                          hint: 'e.g., Orthopedic Surgery',
-                          controller:
-                              postAnyCardController.specialitiesController,
-                          validator: Validators.required,
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Specialty',
+                                  style: GoogleFonts.arimo(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: const Color(0xff8E8E93),
+                                  ),
+                                ),
+                              ),
+                              DropdownButtonFormField<String>(
+                                value: postAnyCardController
+                                        .specialitiesController.text.isEmpty
+                                    ? null
+                                    : postAnyCardController
+                                        .specialitiesController.text,
+                                validator: (value) =>
+                                    Validators.required(value),
+                                isExpanded: true,
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: const Color(0xff8E8E93),
+                                  size: 24.sp,
+                                ),
+                                dropdownColor: Colors.white,
+                                elevation: 8,
+                                borderRadius: BorderRadius.circular(16.r),
+                                items: specialties
+                                    .map(
+                                      (item) => DropdownMenuItem<String>(
+                                        value: item.title,
+                                        child: Text(
+                                          item.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.arimo(
+                                            fontSize: 17.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: const Color(0xff8E8E93),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (value) {
+                                  postAnyCardController
+                                          .specialitiesController.text =
+                                      value ?? '';
+                                },
+                                decoration: InputDecoration(
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 0),
+                                  labelStyle: GoogleFonts.arimo(
+                                    fontSize: 14.sp,
+                                    color: const Color(0xff9E9E9E),
+                                  ),
+                                  hintText: 'Select specialty',
+                                  hintStyle: GoogleFonts.arimo(
+                                    fontSize: 17.sp,
+                                    color: const Color(0xffC6C6C8),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.r),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  filled: false,
+                                  fillColor: const Color(0xffF2F2F7),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 10.h),
                         Divider(height: 1.5.h, color: Color(0xffEEEEEF)),

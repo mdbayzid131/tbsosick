@@ -25,6 +25,7 @@ void showAddEventBottomSheet(
   final notesController = TextEditingController();
   final locationController = TextEditingController();
   final durationController = TextEditingController(text: '1');
+  final preferenceCardIdController = TextEditingController();
 
   final leadSurgeonController = TextEditingController();
   final teamMemberController = TextEditingController();
@@ -126,6 +127,15 @@ void showAddEventBottomSheet(
                                   ? 'Location is required'
                                   : null,
                             ),
+                            SizedBox(height: 12.h),
+                            CustomTextField(
+                              controller: preferenceCardIdController,
+                              label: 'Link Preference Card',
+                              hintText: 'Enter preference card ID',
+                              validator: (v) => (v == null || v.trim().isEmpty)
+                                  ? 'Preference card ID is required'
+                                  : null,
+                            ),
 
                             SizedBox(height: 12.h),
                             Row(
@@ -176,22 +186,50 @@ void showAddEventBottomSheet(
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton<String>(
                                             value: eventType,
-                                            items: const [
+                                            items: [
                                               DropdownMenuItem(
                                                 value: 'SURGERY',
-                                                child: Text('Surgery'),
+                                                child: Text(
+                                                  'Surgery',
+                                                  style: GoogleFonts.arimo(
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff8E8E93),
+                                                  ),
+                                                ),
                                               ),
                                               DropdownMenuItem(
                                                 value: 'MEETING',
-                                                child: Text('Meeting'),
+                                                child: Text(
+                                                  'Meeting',
+                                                  style: GoogleFonts.arimo(
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff8E8E93),
+                                                  ),
+                                                ),
                                               ),
                                               DropdownMenuItem(
                                                 value: 'CONSULTATION',
-                                                child: Text('Consultation'),
+                                                child: Text(
+                                                  'Consultation',
+                                                  style: GoogleFonts.arimo(
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff8E8E93),
+                                                  ),
+                                                ),
                                               ),
                                               DropdownMenuItem(
                                                 value: 'OTHER',
-                                                child: Text('Other'),
+                                                child: Text(
+                                                  'Other',
+                                                  style: GoogleFonts.arimo(
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff8E8E93),
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                             onChanged: (val) {

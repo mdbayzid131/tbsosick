@@ -42,6 +42,10 @@ class BottomNabBarController extends GetxController {
   // Search
   final RxString searchController = ''.obs;
 
+  // Filters
+  final RxString specialtyFilter = 'All'.obs;
+  final RxBool verifiedOnlyFilter = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -75,6 +79,10 @@ class BottomNabBarController extends GetxController {
       final response = await _userDataRepository.getPublicCard(
         page: _publicPage,
         search: searchController.value,
+        specialty:
+            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus:
+            verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
       if (response.statusCode == 200) {
@@ -107,6 +115,10 @@ class BottomNabBarController extends GetxController {
       final response = await _userDataRepository.getPublicCard(
         page: _publicPage,
         search: searchController.value,
+        specialty:
+            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus:
+            verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
       if (response.statusCode == 200) {
@@ -174,6 +186,10 @@ class BottomNabBarController extends GetxController {
       final response = await _userDataRepository.getPrivateCard(
         page: _privatePage,
         search: searchController.value,
+        specialty:
+            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus:
+            verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
       if (response.statusCode == 200 && response.data != null) {
@@ -205,6 +221,10 @@ class BottomNabBarController extends GetxController {
       final response = await _userDataRepository.getPrivateCard(
         page: _privatePage,
         search: searchController.value,
+        specialty:
+            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus:
+            verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
 

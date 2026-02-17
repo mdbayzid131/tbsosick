@@ -7,7 +7,6 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
-import 'package:tbsosick/core/widgets/safe_network_image.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 
 import '../../../config/constants/image_paths.dart';
@@ -57,36 +56,38 @@ class CustomBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 80.h,
-      decoration: const BoxDecoration(color: Color(0xffF2F2F7)),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _icon(ImagePaths.homeIcon, 0),
-              _icon(ImagePaths.libraryIcon, 1),
-              SizedBox(width: 70.w),
-              _icon(ImagePaths.calenderIcon, 2),
-              ppIcon(3),
-            ],
-          ),
-
-          Positioned(
-            child: GestureDetector(
-              onTap: () {
-                Get.to(
-                  NewPreferenceCard(isPrivate: false),
-                  binding: PostAnyCardBinding(),
-                  transition: Transition.downToUp,
-                );
-              },
-              child: _centerButton(),
+    return Obx(
+      () => Container(
+        height: 80.h,
+        decoration: const BoxDecoration(color: Color(0xffF2F2F7)),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _icon(ImagePaths.homeIcon, 0),
+                _icon(ImagePaths.libraryIcon, 1),
+                SizedBox(width: 70.w),
+                _icon(ImagePaths.calenderIcon, 2),
+                ppIcon(3),
+              ],
             ),
-          ),
-        ],
+
+            Positioned(
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(
+                    NewPreferenceCard(isPrivate: false),
+                    binding: PostAnyCardBinding(),
+                    transition: Transition.downToUp,
+                  );
+                },
+                child: _centerButton(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -120,15 +121,22 @@ class CustomBottomBar extends StatelessWidget {
           border: Border.all(
             color: nav.currentIndex.value == index
                 ? AppTheme.primaryColor
-                : Colors.white,
+                : Colors.grey,
             width: 2.w,
           ),
         ),
         padding: EdgeInsets.all(0.w),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(100.r),
-          child: SafeNetworkImage(
-            imageUrl: nav.user.value?.profilePicture.toString() ?? "",
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                  nav.user.value?.profilePicture.toString() ?? "",
+                ),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         ),
       ),

@@ -60,11 +60,30 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
 
         backgroundColor: const Color(0xffffffff),
         actions: [
+          InkWell(
+            onTap: () {
+              controller.copyCardId(cardId: cardId);
+            },
+            child: Container(
+              width: 40.w,
+              height: 40.w,
+              decoration: BoxDecoration(
+                color: Color(0xffF2F2F7),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.copy_outlined,
+                size: 22.sp,
+                color: Color(0xff9945FF),
+              ),
+            ),
+          ),
+          SizedBox(width: 16.w),
           Obx(
             () => controller.cardDetails.value?.published == true
                 ? InkWell(
                     onTap: () {
-                      // Get.back();
+                      controller.shareCard();
                     },
                     child: Container(
                       width: 40.w,

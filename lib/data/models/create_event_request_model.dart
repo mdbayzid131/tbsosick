@@ -32,6 +32,9 @@ class CreateEventRequestModel {
     };
   }
 }
+
+
+
 class PersonnelRequestModel {
   final String leadSurgeon;
   final List<String> surgicalTeam;
