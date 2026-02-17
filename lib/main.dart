@@ -4,7 +4,6 @@ import 'package:tbsosick/core/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // ApiClient().init();
   await NotificationService().init();
 
   runApp(MyApp());
