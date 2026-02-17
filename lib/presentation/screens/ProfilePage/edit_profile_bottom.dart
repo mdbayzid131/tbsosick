@@ -223,7 +223,7 @@ void showEditProfileBottomSheet(BuildContext context) {
                                   hospital: hospitalController.text.trim(),
                                   email: emailController.text.trim(),
                                 );
-                                Get.back();
+                                Navigator.pop(context);
                               },
                             );
                     }),

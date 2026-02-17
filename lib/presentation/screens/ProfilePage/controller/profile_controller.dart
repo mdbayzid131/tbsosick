@@ -48,7 +48,9 @@ class ProfileController extends GetxController {
         email: email,
       );
       ApiChecker.checkWriteApi(response);
-      if (response.statusCode == 200) {
+      if (response.statusCode != null &&
+          response.statusCode! >= 200 &&
+          response.statusCode! < 300) {
         Helpers.showCustomSnackBar(
           'Profile updated successfully',
           isError: false,
@@ -70,10 +72,6 @@ class ProfileController extends GetxController {
       );
       ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
-        Helpers.showCustomSnackBar(
-          'Profile image updated successfully',
-          isError: false,
-        );
         await getProfileData(); // Refresh data
       }
     } catch (e) {
