@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+import 'package:tbsosick/core/utils/validators.dart';
 
 import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_date_picker.dart';
@@ -25,7 +26,7 @@ void showAddEventBottomSheet(
   final notesController = TextEditingController();
   final locationController = TextEditingController();
   final durationController = TextEditingController(text: '1');
-  final preferenceCardIdController = TextEditingController();
+  final linkPreferenceCardIdController = TextEditingController();
 
   final leadSurgeonController = TextEditingController();
   final teamMemberController = TextEditingController();
@@ -129,12 +130,24 @@ void showAddEventBottomSheet(
                             ),
                             SizedBox(height: 12.h),
                             CustomTextField(
-                              controller: preferenceCardIdController,
+                              controller: linkPreferenceCardIdController,
                               label: 'Link Preference Card',
                               hintText: 'Enter preference card ID',
-                              validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? 'Preference card ID is required'
-                                  : null,
+                              validator: (v) {
+                                final minError = Validators.minLength(
+                                  v,
+                                  24,
+                                  message:
+                                      'Preference card ID must be 24 characters long',
+                                );
+                                if (minError != null) return minError;
+                                return Validators.maxLength(
+                                  v,
+                                  24,
+                                  message:
+                                      'Preference card ID must be 24 characters long',
+                                );
+                              },
                             ),
 
                             SizedBox(height: 12.h),
@@ -321,6 +334,7 @@ void showAddEventBottomSheet(
                                         durationHours: dur,
                                         eventType: eventType,
                                         location: loc,
+                                        linkPreferenceCardId: linkPreferenceCardIdController.text.trim(),
                                         notes: notes,
                                         personnel: personnel,
                                       );

@@ -17,6 +17,29 @@ class EventDetailsResponse {
     );
   }
 }
+class PreferenceCardModel {
+  final String id;
+  final String cardTitle;
+
+  PreferenceCardModel({
+    required this.id,
+    required this.cardTitle,
+  });
+
+  factory PreferenceCardModel.fromJson(Map<String, dynamic> json) {
+    return PreferenceCardModel(
+      id: json['_id'] ?? '',
+      cardTitle: json['cardTitle'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "_id": id,
+      "cardTitle": cardTitle,
+    };
+  }
+}
 class EventDetailsModel {
   final String id;
   final String userId;
@@ -26,6 +49,7 @@ class EventDetailsModel {
   final int durationHours;
   final String eventType;
   final String location;
+  final PreferenceCardModel? preferenceCard; // 🆕 added
   final String? notes;
   final PersonnelModel? personnel;
   final DateTime createdAt;
@@ -40,6 +64,7 @@ class EventDetailsModel {
     required this.durationHours,
     required this.eventType,
     required this.location,
+    this.preferenceCard,
     this.notes,
     this.personnel,
     required this.createdAt,
@@ -56,6 +81,9 @@ class EventDetailsModel {
       durationHours: json['durationHours'] ?? 0,
       eventType: json['eventType'] ?? '',
       location: json['location'] ?? '',
+      preferenceCard: json['preferenceCard'] != null
+          ? PreferenceCardModel.fromJson(json['preferenceCard'])
+          : null,
       notes: json['notes'],
       personnel: json['personnel'] != null
           ? PersonnelModel.fromJson(json['personnel'])
@@ -75,6 +103,7 @@ class EventDetailsModel {
       "durationHours": durationHours,
       "eventType": eventType,
       "location": location,
+      "preferenceCard": preferenceCard?.toJson(),
       "notes": notes,
       "personnel": personnel?.toJson(),
       "createdAt": createdAt.toIso8601String(),

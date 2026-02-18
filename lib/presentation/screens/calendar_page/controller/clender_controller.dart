@@ -65,6 +65,7 @@ class CalendarController extends GetxController {
     required String eventType,
     required String location,
     required String notes,
+    required String linkPreferenceCardId,
     required PersonnelRequestModel personnel,
   }) async {
     final event = CreateEventRequestModel(
@@ -76,6 +77,7 @@ class CalendarController extends GetxController {
       location: location,
       notes: notes,
       personnel: personnel,
+      linkPreferenceCardId: linkPreferenceCardId,
     );
 
     try {

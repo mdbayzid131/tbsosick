@@ -8,6 +8,8 @@ class CreateEventRequestModel {
   final String notes;
   final PersonnelRequestModel personnel;
 
+  final String? linkPreferenceCardId;
+
   CreateEventRequestModel({
     required this.title,
     required this.date,
@@ -17,6 +19,7 @@ class CreateEventRequestModel {
     required this.location,
     required this.notes,
     required this.personnel,
+     this.linkPreferenceCardId,
   });
 
   Map<String, dynamic> toJson() {
@@ -29,6 +32,7 @@ class CreateEventRequestModel {
       "location": location,
       "notes": notes,
       "personnel": personnel.toJson(),
+      "preferenceCard": linkPreferenceCardId,
     };
   }
 }

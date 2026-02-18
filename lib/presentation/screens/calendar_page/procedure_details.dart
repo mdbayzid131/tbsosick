@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
+import 'package:tbsosick/config/routes/app_pages.dart';
 import '../../../config/constants/image_paths.dart';
 import 'edit_procedure.dart';
 import 'controller/clender_controller.dart';
@@ -664,7 +664,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      'Total Knee Replacement',
+                      _controller.eventDetails.value?.preferenceCard?.cardTitle ?? '',
                       style: GoogleFonts.arimo(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
@@ -682,8 +682,12 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // TODO: View card details
+                final d = _controller.eventDetails.value;
+                final cardId = d!.preferenceCard?.id ?? '';
+               Get.toNamed(AppRoutes.CARD_DETAILS, arguments: {'cardId': cardId});
               },
+
+
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8B5CF6),
                 shape: RoundedRectangleBorder(
