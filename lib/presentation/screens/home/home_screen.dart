@@ -6,6 +6,8 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
@@ -24,6 +26,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final BottomNabBarController _bottomNabBarController = Get.put(
     BottomNabBarController(),
+  );
+  final HomePageController _homePageController = Get.put(
+    HomePageController(),
   );
 
   String _greetingForNow() {
@@ -156,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (_bottomNabBarController.isLoading.value) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    if (_bottomNabBarController.publicCards.isEmpty) {
+                    if (_bottomNabBarController.favoriteCards.isEmpty) {
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: 20.h),
                         child: const Center(child: Text("No cards found")),
@@ -166,44 +171,42 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
-                      itemCount: _bottomNabBarController.publicCards.length + 1,
+                      itemCount: _bottomNabBarController.favoriteCards.length + 1,
                       itemBuilder: (context, index) {
                         if (index ==
-                            _bottomNabBarController.publicCards.length) {
+                            _bottomNabBarController.favoriteCards.length) {
                           return _buildLoadMoreButton(
                             isLoading: _bottomNabBarController
-                                .isPublicMoreLoading
+                                .isFavoriteMoreLoading
                                 .value,
                             hasMore:
-                                _bottomNabBarController.hasMorePublic.value,
+                                _bottomNabBarController.hasMoreFavorite.value,
                             onPressed: () =>
-                                _bottomNabBarController.loadMorePublic(),
+                                _bottomNabBarController.loadMoreFavorite(),
                           );
                         }
-                        final card = _bottomNabBarController.publicCards[index];
+                        final card = _bottomNabBarController.favoriteCards[index];
                         return Padding(
                           padding: EdgeInsets.only(bottom: 10.h),
-                          child: InkWell(
-                            onTap: () {
-                              Get.toNamed(
-                                AppRoutes.CARD_DETAILS,
-                                arguments: {'cardId': card.id},
-                              );
+                          child: ProcedureCard(
+                            isPrivateCard: false,
+                            cardId: card.id,
+                            title: card.cardTitle,
+                            specialty: card.surgeonSpecialty,
+                            isVerified: card.isVerified,
+                            doctor: card.surgeonName,
+                            downloads: card.totalDownloads,
+                            updatedTime: card.updatedAt,
+                            isFavorite: card.isFavorite,
+                            onFavoriteToggle: () async {
+                              if (card.isFavorite) {
+                                await _homePageController
+                                    .removeFromFavoriteList(cardId: card.id);
+                              } else {
+                                await _homePageController
+                                    .addToFavoriteList(cardId: card.id);
+                              }
                             },
-                            child: favoriteCard(
-                              title: card.cardTitle,
-                              status: card.isVerified
-                                  ? 'Verified'
-                                  : 'Not Verified',
-                              statusColor: card.isVerified == true
-                                  ? const Color(0xffE6F6EA)
-                                  : const Color(0xffFFF7E6),
-                              statusTextColor: card.isVerified == true
-                                  ? const Color(0xff2E9B4E)
-                                  : const Color(0xffFFA940),
-                              date: "Updated 2 days ago",
-                              doctor: card.surgeonName,
-                            ),
                           ),
                         );
                       },
@@ -557,98 +560,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
-
-Widget favoriteCard({
-  required String title,
-  required String status,
-  required Color statusColor,
-  required Color statusTextColor,
-  required String date,
-  required String doctor,
-}) {
-  return Container(
-    padding: EdgeInsets.all(14.w),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16.r),
-      border: Border.all(color: const Color(0xffE7E0EC), width: 1.w),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.06),
-          blurRadius: 12.r,
-          offset: Offset(0, 6.h),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: GoogleFonts.arimo(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xff1C1B1F),
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: statusColor,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Text(
-                status,
-                style: GoogleFonts.arimo(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                  color: statusTextColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 15.h),
-        Row(
-          children: [
-            Icon(
-              Icons.access_time_outlined,
-              size: 14.sp,
-              color: const Color(0xff79747E),
-            ),
-            SizedBox(width: 4.w),
-            Text(
-              date,
-              style: GoogleFonts.arimo(
-                fontSize: 14.sp,
-                color: const Color(0xff79747E),
-              ),
-            ),
-            SizedBox(width: 14.w),
-            Icon(
-              Icons.person_outline_outlined,
-              size: 14.sp,
-              color: const Color(0xff79747E),
-            ),
-            SizedBox(width: 4.w),
-            Expanded(
-              child: Text(
-                doctor,
-                style: GoogleFonts.arimo(
-                  fontSize: 14.sp,
-                  color: const Color(0xff79747E),
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
-
-import 'home_screen.dart';
+import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
+import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 
 class PreferenceCardFavorites extends StatefulWidget {
   const PreferenceCardFavorites({super.key});
@@ -16,6 +19,10 @@ class PreferenceCardFavorites extends StatefulWidget {
 }
 
 class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
+  final BottomNabBarController _bottomNabBarController =
+      Get.find<BottomNabBarController>();
+      final HomePageController _homePageController = Get.find<HomePageController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,36 +77,59 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
 
                   SizedBox(height: 12.h),
 
-                  ListView.builder(
-                    shrinkWrap: true,
-                    // এটা important
-                    physics: const NeverScrollableScrollPhysics(),
-                    // এটা important - parent scroll করবে
-                    padding: EdgeInsets.zero,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 10.h),
-                        child: InkWell(
-                          onTap: () {
-                            Get.toNamed(
-                              AppRoutes.CARD_DETAILS,
-                              arguments: {'cardId': '1'},
-                            );
-                          },
+                  Obx(() {
+                    if (_bottomNabBarController.isLoading.value &&
+                        _bottomNabBarController.favoriteCards.isEmpty) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                          child: favoriteCard(
-                            title: 'Total Knee Replacement',
-                            status: 'Completed',
-                            statusColor: const Color(0xffE6F6EA),
-                            statusTextColor: const Color(0xff2E9B4E),
-                            date: '2026-01-02',
-                            doctor: 'Dr. Sarah Johnson',
-                          ),
-                        ),
+                    if (_bottomNabBarController.favoriteCards.isEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
+                        child: const Center(child: Text("No favorite cards")),
                       );
-                    },
-                  ),
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      itemCount:
+                          _bottomNabBarController.favoriteCards.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index ==
+                            _bottomNabBarController.favoriteCards.length) {
+                          return _buildLoadMoreButton();
+                        }
+
+                        final card =
+                            _bottomNabBarController.favoriteCards[index];
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 10.h),
+                          child: ProcedureCard(
+                            isPrivateCard: false,
+                            cardId: card.id,
+                            title: card.cardTitle,
+                            specialty: card.surgeonSpecialty,
+                            isVerified: card.isVerified,
+                            doctor: card.surgeonName,
+                            downloads: card.totalDownloads,
+                            updatedTime: card.updatedAt,
+                            isFavorite: card.isFavorite,
+                            onFavoriteToggle: () async {
+                              if (card.isFavorite) {
+                                await _homePageController
+                                    .removeFromFavoriteList(cardId: card.id);
+                              } else {
+                                await _homePageController
+                                    .addToFavoriteList(cardId: card.id);
+                              }
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }),
                 ],
               ),
             ),
@@ -107,6 +137,44 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
             // scrollable body
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadMoreButton() {
+    if (!_bottomNabBarController.hasMoreFavorite.value) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 20.h),
+        child: Center(
+          child: Text(
+            'No more data',
+            style: GoogleFonts.arimo(
+              fontSize: 14.sp,
+              color: const Color(0xFF9CA3AF),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 20.h),
+      child: Center(
+        child: _bottomNabBarController.isFavoriteMoreLoading.value
+            ? const CircularProgressIndicator()
+            : TextButton(
+                onPressed: () {
+                  _bottomNabBarController.loadMoreFavorite();
+                },
+                child: Text(
+                  'Load More',
+                  style: GoogleFonts.arimo(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF8B5CF6),
+                  ),
+                ),
+              ),
       ),
     );
   }

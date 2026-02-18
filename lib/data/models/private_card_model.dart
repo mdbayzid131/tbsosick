@@ -57,6 +57,7 @@ class PrivateCard {
   final int totalDownloads;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final bool isFavorite;
 
   PrivateCard({
     required this.id,
@@ -67,16 +68,18 @@ class PrivateCard {
     required this.totalDownloads,
     required this.createdAt,
     required this.updatedAt,
+    required this.isFavorite,   
   });
 
   factory PrivateCard.fromJson(Map<String, dynamic> json) {
-    return PrivateCard(
+    return PrivateCard( 
       id: json['_id'] ?? '',
       cardTitle: json['cardTitle'] ?? '',
       surgeonName: json['surgeonName'] ?? '',
       surgeonSpecialty: json['surgeonSpecialty'] ?? '',
       isVerified: json['isVerified'] ?? false,
       totalDownloads: json['totalDownloads'] ?? 0,
+      isFavorite: json['isFavorite'] ?? false,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
           : DateTime.now(),

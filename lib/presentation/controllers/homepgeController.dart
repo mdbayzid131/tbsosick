@@ -61,9 +61,45 @@ class HomePageController extends GetxController {
     }
   }
 
-  void toggleFavorite() {
-    isFavorite.value = !isFavorite.value;
+
+
+  Future<void> addToFavoriteList({required String cardId}) async {
+    try {
+      isLoading.value = true;
+      Response<dynamic> response = await _userDataRepository.addToFavoriteList(
+        cardId: cardId,
+      );
+      ApiChecker.checkWriteApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+
+      }
+    } catch (e) {
+      Helpers.showDebugLog("addToFavoriteList error => $e");
+      
+    } finally {
+      isLoading.value = false;
+    }
   }
+  Future<void> removeFromFavoriteList({required String cardId}) async {
+    try {
+      isLoading.value = true;
+      Response<dynamic> response = await _userDataRepository.removeFromFavoriteList(
+        cardId: cardId,
+      );
+      ApiChecker.checkWriteApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+      }
+    } catch (e) {
+      Helpers.showDebugLog("removeFromFavoriteList error => $e");
+      
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
 
   // Future<void> postPrivateCard({
   //   required String cardTitle,

@@ -28,6 +28,10 @@ class ApiConstants {
   static const String getPrivateCard = '/preference-card/private';
   static const String getCardDetails = '/preference-card/{id}';
   static const String downloadCard = '/preference-card/{id}/download';
+  static const String addToFavoriteList = '/preference-card/{id}/favorite';
+  static const String removeFromFavoriteList = '/preference-card/{id}/favorite';
+  static const String getFavoriteCard = '/preference-card/favorite';
+
 
   // Event Endpoints
   static const String getEventsList = '/events';

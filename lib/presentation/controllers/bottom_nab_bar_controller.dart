@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/models/card_count_model.dart';
+import 'package:tbsosick/data/models/favorite_Card_model.dart';
 import 'package:tbsosick/data/models/private_card_model.dart';
 import 'package:tbsosick/data/models/public_card_model.dart';
 import 'package:tbsosick/data/models/user_model.dart';
@@ -20,6 +21,8 @@ class BottomNabBarController extends GetxController {
   final RxList<PublicCard> publicCards = <PublicCard>[].obs;
   // card list
   final RxList<PrivateCard> privateCards = <PrivateCard>[].obs;
+  // favorite cards
+  final RxList<FavoriteCard> favoriteCards = <FavoriteCard>[].obs;
   // user data
   final Rx<UserModel?> user = Rx<UserModel?>(null);
   // card count
@@ -32,10 +35,15 @@ class BottomNabBarController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool isPublicMoreLoading = false.obs;
   final RxBool isPrivateMoreLoading = false.obs;
+  final RxBool isFavoriteMoreLoading = false.obs;
+
+
 
   // pagination
   int _publicPage = 1;
   int _privatePage = 1;
+  int _favoritePage = 1;
+  final RxBool hasMoreFavorite = true.obs;
   final RxBool hasMorePublic = true.obs;
   final RxBool hasMorePrivate = true.obs;
 
@@ -63,6 +71,7 @@ class BottomNabBarController extends GetxController {
         getAllCardCount(showLoading: false),
         getPrivateCard(showLoading: false),
         getPublicCard(showLoading: false),
+        getFavoriteCard(showLoading: false),
       ]);
     } catch (e) {
       Helpers.showCustomSnackBar(e.toString(), isError: true);
@@ -244,6 +253,80 @@ class BottomNabBarController extends GetxController {
       isPrivateMoreLoading.value = false;
     }
   }
+  
+
+
+  /// 🔥 GET FAVORITE CARDS
+  Future<void> getFavoriteCard({bool showLoading = true}) async {
+    try {
+      if (showLoading) isLoading.value = true;
+      _favoritePage = 1;
+      errorMessage.value = '';
+
+      final response = await _userDataRepository.getFavoriteCard(
+        page: _favoritePage,
+        search: searchController.value,
+        specialty:
+            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus:
+            verifiedOnlyFilter.value ? 'VERIFIED' : '',
+      );
+      ApiChecker.checkGetApi(response);
+      if (response.statusCode == 200 && response.data != null) {
+        // API response might be nested under 'data' or flat
+        final Map<String, dynamic> data =
+            (response.data['data'] is Map<String, dynamic>)
+            ? response.data['data']
+            : response.data;
+
+        final result = FavoriteCardsResponse.fromJson(data);
+
+        favoriteCards.assignAll(result.data);
+        hasMoreFavorite.value = _favoritePage < result.pagination.totalPage;
+      }
+    } catch (e) {
+      Helpers.showDebugLog("Error loading favorite cards: $e");
+    } finally {
+      if (showLoading) isLoading.value = false;
+    }
+  }
+
+  Future<void> loadMoreFavorite() async {
+    if (!hasMoreFavorite.value || isFavoriteMoreLoading.value) return;
+
+    try {
+      isFavoriteMoreLoading.value = true;
+      _favoritePage++;
+
+      final response = await _userDataRepository.getFavoriteCard(
+        page: _favoritePage,
+        search: searchController.value,
+        specialty:
+            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus:
+            verifiedOnlyFilter.value ? 'VERIFIED' : '',
+      );
+      ApiChecker.checkGetApi(response);
+
+      if (response.statusCode == 200 && response.data != null) {
+        final Map<String, dynamic> data =
+            (response.data['data'] is Map<String, dynamic>)
+            ? response.data['data']
+            : response.data;
+        final result = FavoriteCardsResponse.fromJson(data);
+        favoriteCards.addAll(result.data);
+        hasMoreFavorite.value = _favoritePage < result.pagination.totalPage;
+      }
+    } catch (e) {
+      _favoritePage--; // rollback
+      Helpers.showDebugLog("Error loading more favorite cards: $e");
+    } finally {
+      isFavoriteMoreLoading.value = false; 
+    }
+  }
+
+
+
 
   /// 🔄 Pull-to-refresh / manual reload
   Future<void> refreshCards() async {

@@ -7,7 +7,9 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
+import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 
 class LibraryScreen extends StatefulWidget {
@@ -58,6 +60,8 @@ class _LibraryScreenState extends State<LibraryScreen>
   }
 
   final controller = Get.find<BottomNabBarController>();
+  final homePageController = Get.find<HomePageController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -424,8 +428,8 @@ class _LibraryScreenState extends State<LibraryScreen>
                       final card = controller.publicCards[index];
                       return Column(
                         children: [
-                          _buildProcedureCard(
-                            isPrivetCard: false,
+                          ProcedureCard(
+                            // isPrivetCard: false,
                             cardId: card.id,
                             title: card.cardTitle,
                             specialty: card.surgeonSpecialty,
@@ -433,7 +437,15 @@ class _LibraryScreenState extends State<LibraryScreen>
                             doctor: "By ${card.surgeonName}",
                             downloads: card.totalDownloads,
                             updatedTime: card.updatedAt,
-                            isFavorite: false,
+                            isFavorite: card.isFavorite,
+                            isPrivateCard: false,
+                            onFavoriteToggle: () async {
+                              if (card.isFavorite) {
+                                await homePageController.removeFromFavoriteList(cardId: card.id);
+                              } else {
+                                await homePageController.addToFavoriteList(cardId: card.id);
+                              }
+                            },
                           ),
                           SizedBox(height: 12.h),
                         ],
@@ -503,16 +515,27 @@ class _LibraryScreenState extends State<LibraryScreen>
                       final card = controller.privateCards[index];
                       return Column(
                         children: [
-                          _buildProcedureCard(
+                          ProcedureCard(
+                            isPrivateCard: true,
                             cardId: card.id,
-                            isPrivetCard: true,
                             title: card.cardTitle,
                             specialty: card.surgeonSpecialty,
                             isVerified: card.isVerified,
                             doctor: card.surgeonName,
                             downloads: card.totalDownloads,
                             updatedTime: card.updatedAt,
-                            isFavorite: false,
+                            isFavorite: card.isFavorite,
+                            onFavoriteToggle: () async {
+                              if (card.isFavorite) {
+                                await homePageController.removeFromFavoriteList(
+                                  cardId: card.id,
+                                );
+                              } else {
+                                await homePageController.addToFavoriteList(
+                                  cardId: card.id,
+                                );
+                              }
+                            },
                           ),
                           SizedBox(height: 12.h),
                         ],
@@ -524,198 +547,6 @@ class _LibraryScreenState extends State<LibraryScreen>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // Individual procedure card
-  Widget _buildProcedureCard({
-    required bool isPrivetCard,
-    required String title,
-    required String cardId,
-    required String specialty,
-    required bool isVerified,
-    required String doctor,
-    required int downloads,
-    required DateTime updatedTime,
-    required bool isFavorite,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        Get.toNamed(AppRoutes.CARD_DETAILS, arguments: {'cardId': cardId});
-      },
-      child: Container(
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8.r,
-              offset: Offset(0, 2.h),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title and favorite icon
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: GoogleFonts.arimo(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF000000),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // 👉 এখানে favorite action দাও
-                  },
-                  child: Container(
-                    height: 36.w,
-                    width: 36.w,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE8DEF8),
-                      borderRadius: BorderRadius.circular(30.r),
-                    ),
-                    child: Icon(
-                      isFavorite ? Icons.star : Icons.star_outline,
-                      color: isFavorite
-                          ? const Color(0xFFFFB800)
-                          : const Color(0xFF9CA3AF),
-                      size: 22.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.h),
-
-            // Tags row
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 4.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEDE9FE),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Text(
-                    specialty,
-                    style: GoogleFonts.arimo(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF6750A4),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                if (isVerified) ...[
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.w,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD1FAE5),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.check_circle,
-                          color: const Color(0xFF10B981),
-                          size: 14.sp,
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          'Verified',
-                          style: GoogleFonts.arimo(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF10B981),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                ],
-              ],
-            ),
-            SizedBox(height: 8.h),
-
-            // Doctor name
-            Text(
-              doctor,
-              style: GoogleFonts.arimo(
-                fontSize: 13.sp,
-                color: const Color(0xFF79747E),
-              ),
-            ),
-            SizedBox(height: 12.h),
-            Divider(height: 1.5.h, color: const Color(0xFFE7E0EC)),
-            SizedBox(height: 12.h),
-
-            // Bottom row
-            Row(
-              children: [
-                if (!isPrivetCard)
-                  Icon(
-                    Icons.file_download_outlined,
-                    color: const Color(0xFF6B7280),
-                    size: 20.sp,
-                  ),
-                SizedBox(width: 4.w),
-                if (!isPrivetCard)
-                  Text(
-                    downloads.toString(),
-                    style: GoogleFonts.arimo(
-                      fontSize: 13.sp,
-                      color: const Color(0xFF6B7280),
-                    ),
-                  ),
-                SizedBox(width: 16.w),
-                Text(
-                  "updated: ${updatedTime.day}/${updatedTime.month}/${updatedTime.year}",
-                  style: GoogleFonts.arimo(
-                    fontSize: 13.sp,
-                    color: const Color(0xFF6B7280),
-                  ),
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    // 👉 এখানে download action দাও
-                  },
-                  child: Container(
-                    width: 36.w,
-                    height: 36.w,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF6750A4),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.file_download_outlined,
-                      color: Colors.white,
-                      size: 18.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

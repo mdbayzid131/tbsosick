@@ -1,24 +1,24 @@
-class PublicCardsResponse {
+class FavoriteCardsResponse {
   final bool success;
   final String message;
   final Pagination pagination;
-  final List<PublicCard> data;
+  final List<FavoriteCard> data;
 
-  PublicCardsResponse({
+  FavoriteCardsResponse({
     required this.success,
     required this.message,
     required this.pagination,
     required this.data,
   });
 
-  factory PublicCardsResponse.fromJson(Map<String, dynamic> json) {
-    return PublicCardsResponse(
+  factory FavoriteCardsResponse.fromJson(Map<String, dynamic> json) {
+    return FavoriteCardsResponse(
       success: json['success'] ?? false,
       message: json['message'] ?? '',
       pagination: Pagination.fromJson(json['pagination'] ?? {}),
       data: json['data'] != null
-          ? List<PublicCard>.from(
-              json['data'].map((x) => PublicCard.fromJson(x)),
+          ? List<FavoriteCard>.from(
+              json['data'].map((x) => FavoriteCard.fromJson(x)),
             )
           : [],
     );
@@ -48,31 +48,31 @@ class Pagination {
   }
 }
 
-class PublicCard {
+class FavoriteCard {
   final String id;
   final String cardTitle;
   final String surgeonName;
   final String surgeonSpecialty;
   final bool isVerified;
   final int totalDownloads;
-  final bool isFavorite;
-  final DateTime updatedAt;
   final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isFavorite;
 
-  PublicCard({
+  FavoriteCard({
     required this.id,
     required this.cardTitle,
     required this.surgeonName,
     required this.surgeonSpecialty,
     required this.isVerified,
     required this.totalDownloads,
-    required this.isFavorite,
-    required this.updatedAt,
     required this.createdAt,
+    required this.updatedAt,
+    required this.isFavorite,   
   });
 
-  factory PublicCard.fromJson(Map<String, dynamic> json) {
-    return PublicCard(
+  factory FavoriteCard.fromJson(Map<String, dynamic> json) {
+    return FavoriteCard( 
       id: json['_id'] ?? '',
       cardTitle: json['cardTitle'] ?? '',
       surgeonName: json['surgeonName'] ?? '',
@@ -80,11 +80,11 @@ class PublicCard {
       isVerified: json['isVerified'] ?? false,
       totalDownloads: json['totalDownloads'] ?? 0,
       isFavorite: json['isFavorite'] ?? false,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : DateTime.now(),
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
           : DateTime.now(),
     );
   }

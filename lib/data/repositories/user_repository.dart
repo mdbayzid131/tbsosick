@@ -77,6 +77,30 @@ class UserDataRepository {
     );
   }
 
+  // Get all favorite preference card
+  Future<Response<dynamic>> getFavoriteCard({
+    int page = 1,
+    String search = '',
+    String specialty = '',
+    String verificationStatus = '',
+  }) async {
+    final query = <String, dynamic>{
+      'page': page,
+      'limit': 10,
+      'searchTerm': search,
+    };
+    if (specialty.isNotEmpty) {
+      query['specialty'] = specialty;
+    }
+    if (verificationStatus.isNotEmpty) {
+      query['verificationStatus'] = verificationStatus;
+    }
+    return await _apiClient.getData(
+      ApiConstants.getFavoriteCard,
+      query: query,
+    );
+  }
+
   Future<Response<dynamic>> getCardDetails({required String cardId}) async {
     return await _apiClient.getData(
       ApiConstants.getCardDetails.replaceAll('{id}', cardId),
@@ -101,6 +125,20 @@ class UserDataRepository {
     return await _apiClient.getData(
       ApiConstants.getSuturesList,
       query: {'searchTerm': search},
+    );
+  }
+
+  Future<Response<dynamic>> addToFavoriteList({required String cardId}) async {
+    return await _apiClient.postData(
+      ApiConstants.addToFavoriteList.replaceAll('{id}', cardId),
+      {},
+    );
+  }
+
+  Future<Response<dynamic>> removeFromFavoriteList({required String cardId}) async {
+    return await _apiClient.deleteData(
+      ApiConstants.removeFromFavoriteList.replaceAll('{id}', cardId),
+      
     );
   }
 
