@@ -265,11 +265,11 @@ class BottomNabBarController extends GetxController {
 
       final response = await _userDataRepository.getFavoriteCard(
         page: _favoritePage,
-        search: searchController.value,
-        specialty:
-            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus:
-            verifiedOnlyFilter.value ? 'VERIFIED' : '',
+        // search: searchController.value,
+        // specialty:
+        //     specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        // verificationStatus:
+        //     verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
       if (response.statusCode == 200 && response.data != null) {
@@ -300,11 +300,11 @@ class BottomNabBarController extends GetxController {
 
       final response = await _userDataRepository.getFavoriteCard(
         page: _favoritePage,
-        search: searchController.value,
-        specialty:
-            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus:
-            verifiedOnlyFilter.value ? 'VERIFIED' : '',
+        // search: searchController.value,
+        // specialty:
+        //     specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        // verificationStatus:
+        //     verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
 

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 
-class ProcedureCard extends StatelessWidget {
+class ProcedureCard extends StatefulWidget {
   final bool isPrivateCard;
   final String cardId;
   final String title;
@@ -29,16 +29,46 @@ class ProcedureCard extends StatelessWidget {
     required this.updatedTime,
     required this.isFavorite,
     required this.onFavoriteToggle,
-    this.onDownloadTap,
+    required this.onDownloadTap,
   });
+
+  @override
+  State<ProcedureCard> createState() => _ProcedureCardState();
+}
+
+class _ProcedureCardState extends State<ProcedureCard> {
+  late bool _isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFavorite = widget.isFavorite;
+  }
+
+  Future<void> _handleFavoriteTap() async {
+    if (widget.onFavoriteToggle == null) return;
+
+    setState(() {
+      _isFavorite = !_isFavorite;
+    });
+
+    try {
+      await widget.onFavoriteToggle!.call();
+    } catch (_) {
+      // If needed, you can revert the state here
+      // setState(() => _isFavorite = !_isFavorite);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: 
-          () {
-            Get.toNamed(AppRoutes.CARD_DETAILS, arguments: {'cardId': cardId});
-          },
+      onTap: () {
+        Get.toNamed(
+          AppRoutes.CARD_DETAILS,
+          arguments: {'cardId': widget.cardId},
+        );
+      },
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
@@ -60,7 +90,7 @@ class ProcedureCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    title,
+                    widget.title,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
@@ -69,7 +99,7 @@ class ProcedureCard extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: onFavoriteToggle,
+                  onTap: _handleFavoriteTap,
                   child: Container(
                     height: 36.w,
                     width: 36.w,
@@ -78,9 +108,10 @@ class ProcedureCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30.r),
                     ),
                     child: Icon(
-                      isFavorite ? Icons.star : Icons.star_outline,
-                      color:
-                          isFavorite ? const Color(0xFFFFB800) : const Color(0xFF9CA3AF),
+                      _isFavorite ? Icons.star : Icons.star_outline,
+                      color: _isFavorite
+                          ? const Color(0xFFFFB800)
+                          : const Color(0xFF9CA3AF),
                       size: 22.sp,
                     ),
                   ),
@@ -100,7 +131,7 @@ class ProcedureCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
-                    specialty,
+                    widget.specialty,
                     style: GoogleFonts.arimo(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w500,
@@ -109,7 +140,7 @@ class ProcedureCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8.w),
-                if (isVerified) ...[
+                if (widget.isVerified) ...[
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 6.w,
@@ -144,7 +175,7 @@ class ProcedureCard extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              doctor,
+              widget.doctor,
               style: GoogleFonts.arimo(
                 fontSize: 13.sp,
                 color: const Color(0xFF79747E),
@@ -155,16 +186,16 @@ class ProcedureCard extends StatelessWidget {
             SizedBox(height: 12.h),
             Row(
               children: [
-                if (!isPrivateCard)
+                if (!widget.isPrivateCard) 
                   Icon(
                     Icons.file_download_outlined,
                     color: const Color(0xFF6B7280),
                     size: 20.sp,
                   ),
                 SizedBox(width: 4.w),
-                if (!isPrivateCard)
+                if (!widget.isPrivateCard)
                   Text(
-                    downloads.toString(),
+                    widget.downloads.toString(),
                     style: GoogleFonts.arimo(
                       fontSize: 13.sp,
                       color: const Color(0xFF6B7280),
@@ -172,7 +203,7 @@ class ProcedureCard extends StatelessWidget {
                   ),
                 SizedBox(width: 16.w),
                 Text(
-                  "updated: ${updatedTime.day}/${updatedTime.month}/${updatedTime.year}",
+                  "updated: ${widget.updatedTime.day}/${widget.updatedTime.month}/${widget.updatedTime.year}",
                   style: GoogleFonts.arimo(
                     fontSize: 13.sp,
                     color: const Color(0xFF6B7280),
@@ -180,7 +211,7 @@ class ProcedureCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 GestureDetector(
-                  onTap: onDownloadTap,
+                  onTap: widget.onDownloadTap,
                   child: Container(
                     width: 36.w,
                     height: 36.w,
@@ -203,4 +234,3 @@ class ProcedureCard extends StatelessWidget {
     );
   }
 }
-

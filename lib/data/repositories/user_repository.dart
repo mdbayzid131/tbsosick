@@ -80,21 +80,21 @@ class UserDataRepository {
   // Get all favorite preference card
   Future<Response<dynamic>> getFavoriteCard({
     int page = 1,
-    String search = '',
-    String specialty = '',
-    String verificationStatus = '',
+    // String search = '',
+    // String specialty = '',
+    // String verificationStatus = '',
   }) async {
     final query = <String, dynamic>{
       'page': page,
       'limit': 10,
-      'searchTerm': search,
+      // 'searchTerm': search,
     };
-    if (specialty.isNotEmpty) {
-      query['specialty'] = specialty;
-    }
-    if (verificationStatus.isNotEmpty) {
-      query['verificationStatus'] = verificationStatus;
-    }
+    // if (specialty.isNotEmpty) {
+    //   query['specialty'] = specialty;
+    // }
+    // if (verificationStatus.isNotEmpty) {
+    //   query['verificationStatus'] = verificationStatus;
+    // }
     return await _apiClient.getData(
       ApiConstants.getFavoriteCard,
       query: query,

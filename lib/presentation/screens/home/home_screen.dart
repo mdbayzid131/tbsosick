@@ -7,6 +7,7 @@ import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
@@ -45,6 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return 'Good night,';
   }
+ final PrefranceCardDetailsController _prefranceCardDetailsController = Get.find<PrefranceCardDetailsController>(
+ 
+  );
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -189,6 +193,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Padding(
                           padding: EdgeInsets.only(bottom: 10.h),
                           child: ProcedureCard(
+                            onDownloadTap: () {
+                              _prefranceCardDetailsController.downloadCard(cardId: card.id);
+                            },
                             isPrivateCard: false,
                             cardId: card.id,
                             title: card.cardTitle,

@@ -30,7 +30,8 @@ class ApiConstants {
   static const String downloadCard = '/preference-card/{id}/download';
   static const String addToFavoriteList = '/preference-card/{id}/favorite';
   static const String removeFromFavoriteList = '/preference-card/{id}/favorite';
-  static const String getFavoriteCard = '/preference-card/favorite';
+  // static const String getFavoriteCard = '/preference-card/favorite';
+  static const String getFavoriteCard = '/preference-card/favorites';
 
 
   // Event Endpoints

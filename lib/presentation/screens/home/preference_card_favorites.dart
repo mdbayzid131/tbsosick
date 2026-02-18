@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/config/routes/app_pages.dart';
+
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 
 class PreferenceCardFavorites extends StatefulWidget {
@@ -22,6 +22,9 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
   final BottomNabBarController _bottomNabBarController =
       Get.find<BottomNabBarController>();
       final HomePageController _homePageController = Get.find<HomePageController>();
+      final PrefranceCardDetailsController _prefranceCardDetailsController = Get.find<PrefranceCardDetailsController>(
+      
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +110,9 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                         return Padding(
                           padding: EdgeInsets.only(bottom: 10.h),
                           child: ProcedureCard(
+                            onDownloadTap: () {
+                              _prefranceCardDetailsController.downloadCard(cardId: card.id);
+                            },
                             isPrivateCard: false,
                             cardId: card.id,
                             title: card.cardTitle,
