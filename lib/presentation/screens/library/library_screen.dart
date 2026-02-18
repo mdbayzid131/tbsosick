@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -61,46 +62,48 @@ class _LibraryScreenState extends State<LibraryScreen>
 
   final controller = Get.find<BottomNabBarController>();
   final homePageController = Get.find<HomePageController>();
- final PrefranceCardDetailsController _prefranceCardDetailsController = Get.find<PrefranceCardDetailsController>(
- 
-  );
+  final PrefranceCardDetailsController _prefranceCardDetailsController =
+      Get.find<PrefranceCardDetailsController>();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          // Header section with gradient background
-          _buildHeader(),
-
-          // Tab buttons - Preference card and Private Card
-          SizedBox(height: 30.h),
-
-          // _buildTabButtons(),
-          SizedBox(height: 16.h),
-          TabBar(
-            splashFactory: NoSplash.splashFactory,
-            overlayColor: WidgetStateProperty.all(Colors.transparent),
-
-            dividerColor: Colors.transparent,
-            controller: _tabController,
-            indicatorColor: Colors.transparent,
-            tabs: [_tab1('Preference card', 0), _tab2('Private Card', 1)],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await controller.refreshCards();
+          },
+          child: Column(
+            children: [
+              _buildHeader(),
+              SizedBox(height: 30.h),
+              SizedBox(height: 16.h),
+              TabBar(
+                splashFactory: NoSplash.splashFactory,
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                dividerColor: Colors.transparent,
+                controller: _tabController,
+                indicatorColor: Colors.transparent,
+                tabs: [_tab1('Preference card', 0), _tab2('Private Card', 1)],
+              ),
+              SizedBox(height: 16.h),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildPreferenceCardsList(),
+                    _buildPrivateCardsList(),
+                  ],
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 16.h),
-
-          // Content area
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // Preference cards list
-                _buildPreferenceCardsList(),
-                // Private cards list (same structure, different data)
-                _buildPrivateCardsList(),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

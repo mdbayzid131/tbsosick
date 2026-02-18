@@ -3,6 +3,7 @@ import 'package:tbsosick/core/widgets/screens/no_internet_screen.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/login_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/Interactive_tutorial_screen.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/interactive_tutorial_binding.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/preferred_note_method.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/welcome_page.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
@@ -39,24 +40,59 @@ class AppRoutes {
 final Transition transition = Transition.rightToLeft;
 
 final pages = [
-  GetPage(name: AppRoutes.SPLASH, page: () => const SplashScreen(),bindings: [SplashBinding()]),
-  GetPage(name: AppRoutes.ONBOARDING, page: () => const OnboardingScreen()),
-  GetPage(name: AppRoutes.LOGIN, page: () => LoginScreen()),
-  GetPage(name: AppRoutes.REGISTER, page: () => SignUpScreen()),
-  GetPage(name: AppRoutes.WELCOME_PAGE, page: () => WelcomePage()),
+  GetPage(
+    name: AppRoutes.SPLASH,
+    page: () => const SplashScreen(),
+    bindings: [SplashBinding()],
+  ),
+  GetPage(
+    name: AppRoutes.ONBOARDING,
+    page: () => const OnboardingScreen(),
+    bindings: [],
+  ),
+  GetPage(
+    name: AppRoutes.LOGIN,
+    page: () => LoginScreen(),
+    bindings: [],
+  ),
+  GetPage(
+    name: AppRoutes.REGISTER,
+    page: () => SignUpScreen(),
+    bindings: [],
+  ),
+  GetPage(
+    name: AppRoutes.WELCOME_PAGE,
+    page: () => WelcomePage(),
+    bindings: [],
+  ),
   GetPage(
     name: AppRoutes.WHAT_YOUR_SPECIALITY,
     page: () => WhatYourSpeciality(),
+    bindings: [],
   ),
   GetPage(
     name: AppRoutes.PREFERRED_NOTE_METHOD,
     page: () => PreferredNoteMethod(),
+    bindings: [],
   ),
   GetPage(
     name: AppRoutes.INTERACTIVE_TUTORIAL,
     page: () => InteractiveTutorialScreen(),
+    bindings: [InteractiveTutorialBinding()],
   ),
-  GetPage(name: AppRoutes.BOTTOM_NAV_BAR, page: () => BottomNabBarScreen(),bindings: [BottomNabBarBinding()]),
-  GetPage(name: AppRoutes.NO_INTERNET, page: () => NoInternetScreen()),
-  GetPage(name: AppRoutes.CARD_DETAILS, page: () => PreferenceCardDetails(),bindings: [CardDetailsBinding()]),
+  GetPage(
+    name: AppRoutes.BOTTOM_NAV_BAR,
+    page: () => BottomNabBarScreen(),
+    bindings: [BottomNabBarBinding()],
+  ),
+  GetPage(
+    name: AppRoutes.NO_INTERNET,
+    page: () => NoInternetScreen(),
+    bindings: [],
+  ),
+  GetPage(
+    name: AppRoutes.CARD_DETAILS,
+    page: () => PreferenceCardDetails(),
+    bindings: [CardDetailsBinding()],
+  ),
 ];

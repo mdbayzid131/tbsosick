@@ -14,7 +14,7 @@ import 'StepCreateCard2.dart';
 class InteractiveTutorialScreen extends StatelessWidget {
   InteractiveTutorialScreen({super.key});
 
-  final controller = Get.put(TutorialController());
+  final controller = Get.find<TutorialController>();
 
   @override
   Widget build(BuildContext context) {

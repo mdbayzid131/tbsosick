@@ -5,7 +5,6 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
@@ -213,6 +212,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 await _homePageController
                                     .addToFavoriteList(cardId: card.id);
                               }
+                              await _bottomNabBarController
+                                  .getFavoriteCard(showLoading: false);
                             },
                           ),
                         );

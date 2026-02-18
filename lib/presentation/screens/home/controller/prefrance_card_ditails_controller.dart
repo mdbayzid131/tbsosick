@@ -45,6 +45,10 @@ class PrefranceCardDetailsController extends GetxController {
   Future<void> downloadCard({required String cardId}) async {
     try {
       isDownloading.value = true;
+      Helpers.showCustomSnackBar(
+        "Download started...",
+        isError: false,
+      );
 
       // Request notification permission (Android 13+)
       if (await Permission.notification.isDenied) {
@@ -84,11 +88,6 @@ class PrefranceCardDetailsController extends GetxController {
             filePath: file.path,
             fileName: file.path.split('/').last,
           );
-
-          // Helpers.showCustomSnackBar(
-          //   "Download started. Check notifications.",
-          //   isError: false,
-          // );
         }
       }
     } catch (e) {

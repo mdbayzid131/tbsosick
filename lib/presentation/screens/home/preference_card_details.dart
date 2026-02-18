@@ -126,7 +126,6 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
         top: false,
-
         child: Obx(() {
           if (controller.isLoading.value) {
             return SizedBox(
@@ -140,61 +139,40 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
               child: const Center(child: Text('No details found')),
             );
           }
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Card - Doctor name and procedure title
-                _buildHeaderCard(),
-
-                SizedBox(height: 16.h),
-
-                // Surgeon Information Card
-                _buildSurgeonInformationCard(),
-
-                SizedBox(height: 16.h),
-
-                // Medication Card
-                _buildMedicationCard(),
-
-                SizedBox(height: 16.h),
-
-                // All Supplies Card
-                _buildAllSuppliesCard(),
-
-                SizedBox(height: 16.h),
-
-                // Sutures Card
-                _buildSuturesCard(),
-
-                SizedBox(height: 16.h),
-
-                // Instruments Card
-                _buildInstrumentsCard(),
-
-                SizedBox(height: 16.h),
-
-                // Positioning Card
-                _buildPositioningCard(),
-
-                SizedBox(height: 16.h),
-
-                // Prepping / Shaving Card
-                _buildPreppingCard(),
-
-                SizedBox(height: 16.h),
-
-                // Key Notes Card
-                _buildKeyNotesCard(),
-
-                SizedBox(height: 20.h),
-
-                // Photo Library
-                _buildPhotoLibrary(),
-
-                SizedBox(height: 30.h),
-              ],
+          return RefreshIndicator(
+            onRefresh: () async {
+              if (cardId.isNotEmpty) {
+                await controller.getCardDetails(cardId: cardId);
+              }
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeaderCard(),
+                  SizedBox(height: 16.h),
+                  _buildSurgeonInformationCard(),
+                  SizedBox(height: 16.h),
+                  _buildMedicationCard(),
+                  SizedBox(height: 16.h),
+                  _buildAllSuppliesCard(),
+                  SizedBox(height: 16.h),
+                  _buildSuturesCard(),
+                  SizedBox(height: 16.h),
+                  _buildInstrumentsCard(),
+                  SizedBox(height: 16.h),
+                  _buildPositioningCard(),
+                  SizedBox(height: 16.h),
+                  _buildPreppingCard(),
+                  SizedBox(height: 16.h),
+                  _buildKeyNotesCard(),
+                  SizedBox(height: 20.h),
+                  _buildPhotoLibrary(),
+                  SizedBox(height: 30.h),
+                ],
+              ),
             ),
           );
         }),
