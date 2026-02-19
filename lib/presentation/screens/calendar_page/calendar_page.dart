@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,7 +19,6 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  // Calendar controller
   DateTime _focusedDay = DateTime(2026, 1, 12);
   DateTime? _selectedDay = DateTime(2026, 1, 12);
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -34,30 +34,92 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: RefreshIndicator(
-        key: _refreshIndicatorKey,
-        color: const Color(0xFF9945FF),
-        onRefresh: _controller.refreshEvents,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              _buildHeader(),
-              Obx(
-                () => _controller.isLoading.value
-                    ? const LinearProgressIndicator(
-                        color: Color(0xFF9945FF),
-                        minHeight: 2,
-                      )
-                    : const SizedBox.shrink(),
+    // Status bar কে dark/black করার জন্য
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Color(0xFF271E3E), // dark purple/black
+        statusBarIconBrightness: Brightness.light, // আইকন গুলো white হবে
+        statusBarBrightness: Brightness.dark, // iOS এর জন্য
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F5F5),
+        body: RefreshIndicator(
+          key: _refreshIndicatorKey,
+          color: const Color(0xFF9945FF),
+          onRefresh: _controller.refreshEvents,
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              // ── Collapsing SliverAppBar ──
+              SliverAppBar(
+                expandedHeight: 120.h,
+                collapsedHeight: 60.h,
+                pinned: true,
+                floating: false,
+                elevation: 0,
+                // Collapsed হলে এই color দেখাবে (gradient এর শেষ color)
+                backgroundColor: const Color(0xFF6C36B2),
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarColor: Color(0xFF271E3E),
+                  statusBarIconBrightness: Brightness.light,
+                  statusBarBrightness: Brightness.dark,
+                ),
+                // শুধু FlexibleSpaceBar.title ই ব্যবহার করা হচ্ছে
+                // expanded এ বড়, collapsed এ ছোট হবে automatically
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: EdgeInsetsDirectional.only(
+                    start: 20.w,
+                    bottom: 16.h,
+                  ),
+                  title: Text(
+                    'Calendar',
+                    style: GoogleFonts.arimo(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  background: Container(
+                    decoration: const BoxDecoration(
+                      // gradient: LinearGradient(
+                      //   begin: Alignment.topRight,
+                      //   end: Alignment.bottomLeft,
+                      //   colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
+                      // ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
+                      ),
+                      color: Color(0xFF6C36B2),
+                    ),
+                  ),
+                  collapseMode: CollapseMode.pin,
+                ),
+                // Collapsed হলে bottom rounded corners থাকবে
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
+                  ),
+                ),
               ),
-              Padding(
+
+              // ── Loading indicator ──
+              SliverToBoxAdapter(
+                child: Obx(
+                  () => _controller.isLoading.value
+                      ? const LinearProgressIndicator(
+                          color: Color(0xFF9945FF),
+                          minHeight: 2,
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ),
+
+              // ── Main content ──
+              SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
                     SizedBox(height: 20.h),
                     _buildCalendar(),
                     SizedBox(height: 20.h),
@@ -67,43 +129,11 @@ class _CalendarPageState extends State<CalendarPage> {
                     SizedBox(height: 20.h),
                     _buildEventTypesLegend(),
                     SizedBox(height: 20.h),
-                  ],
+                  ]),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  // Header with gradient background
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(
-        left: 20.w,
-        right: 20.w,
-        top: 50.h,
-        bottom: 20.h,
-      ),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(24.r),
-          bottomRight: Radius.circular(24.r),
-        ),
-      ),
-      child: Text(
-        'Calendar',
-        style: GoogleFonts.arimo(
-          fontSize: 24.sp,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
         ),
       ),
     );
@@ -146,42 +176,34 @@ class _CalendarPageState extends State<CalendarPage> {
         onPageChanged: (focusedDay) {
           _focusedDay = focusedDay;
         },
-        // Calendar styling
         calendarStyle: CalendarStyle(
-          // Today's date styling
           todayDecoration: BoxDecoration(
             color: const Color(0xFF8B5CF6).withOpacity(0.3),
             shape: BoxShape.circle,
           ),
-          // Selected date styling
           selectedDecoration: const BoxDecoration(
             color: Color(0xFF9945FF),
             shape: BoxShape.circle,
           ),
-          // Default text style
           defaultTextStyle: GoogleFonts.arimo(
             fontSize: 14.sp,
             color: const Color(0xFF1C1B1F),
           ),
-          // Weekend text style
           weekendTextStyle: GoogleFonts.arimo(
             fontSize: 14.sp,
             color: const Color(0xFF1C1B1F),
           ),
-          // Selected text style
           selectedTextStyle: GoogleFonts.arimo(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
-          // Today text style
           todayTextStyle: GoogleFonts.arimo(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF8B5CF6),
           ),
         ),
-        // Header styling
         headerStyle: HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,
@@ -217,7 +239,6 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
         ),
-        // Days of week styling,
       ),
     );
   }
@@ -241,7 +262,6 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       child: Column(
         children: [
-          // Calendar icon with date
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -267,7 +287,6 @@ class _CalendarPageState extends State<CalendarPage> {
                       context,
                       initialDate: dateToUse,
                       onEventCreated: () {
-                        // Trigger refresh indicator animation
                         _refreshIndicatorKey.currentState?.show();
                       },
                     );
@@ -311,17 +330,12 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           SizedBox(height: 16.h),
-
-          // No events text
           SizedBox(height: 8.h),
-          // Add Event button
           TextButton(
             onPressed: () {
-              // TODO: Add event functionality
               showAddEventBottomSheet(
                 context,
                 onEventCreated: () {
-                  // Trigger refresh indicator animation
                   _refreshIndicatorKey.currentState?.show();
                 },
               );
@@ -437,7 +451,6 @@ class _CalendarPageState extends State<CalendarPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title
           Text(
             title,
             style: GoogleFonts.arimo(
@@ -447,7 +460,6 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           SizedBox(height: 8.h),
-          // Event type tag
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             decoration: BoxDecoration(
@@ -464,7 +476,6 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           SizedBox(height: 12.h),
-          // Time
           Row(
             children: [
               Icon(
@@ -483,7 +494,6 @@ class _CalendarPageState extends State<CalendarPage> {
             ],
           ),
           SizedBox(height: 6.h),
-          // Location
           Row(
             children: [
               Icon(
@@ -501,7 +511,6 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ],
           ),
-          // Patient info (if available)
           if (patient != null) ...[
             SizedBox(height: 6.h),
             Row(
@@ -523,14 +532,11 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ],
           SizedBox(height: 16.h),
-          // Action buttons
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    // TODO: View details functionality
-
                     showEventDetailsBottomSheet(context: context, id: id);
                     _controller.getEventDetailById(id: id);
                   },
@@ -558,7 +564,6 @@ class _CalendarPageState extends State<CalendarPage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: View card functionality
                     Get.to(ProcedureDetailsScreen(id: id));
                   },
                   style: ElevatedButton.styleFrom(
@@ -626,7 +631,6 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  // Event type legend item
   Widget _buildEventTypeLegendItem(String label, Color color) {
     return Row(
       children: [
