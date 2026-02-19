@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,236 +22,255 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final ProfileController profileController = Get.put(ProfileController());
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with gradient
-            _buildHeader(),
-
-            SizedBox(height: 20.h),
-
-            // Profile card
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: _buildProfileCard(),
-            ),
-
-            SizedBox(height: 16.h),
-
-            // Premium Plan card
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: _buildPremiumPlanCard(),
-            ),
-
-            SizedBox(height: 24.h),
-
-            // Account section
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Text(
-                'ACCOUNT',
-                style: GoogleFonts.arimo(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF9CA3AF),
-                  letterSpacing: 0.5,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Color(0xFF271E3E),
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F5F5),
+        body: RefreshIndicator(
+          key: _refreshIndicatorKey,
+          color: const Color(0xFF9945FF),
+          onRefresh: profileController.getProfileData,
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 120.h,
+                collapsedHeight: 60.h,
+                pinned: true,
+                floating: false,
+                elevation: 0,
+                backgroundColor: const Color(0xFF6C36B2),
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarColor: Color(0xFF271E3E),
+                  statusBarIconBrightness: Brightness.light,
+                  statusBarBrightness: Brightness.dark,
                 ),
-              ),
-            ),
-
-            SizedBox(height: 12.h),
-
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(
-                    color: const Color(0xFFE5E7EB),
-                    width: 1.w,
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: EdgeInsetsDirectional.only(
+                    start: 20.w,
+                    bottom: 16.h,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 8.r,
-                      offset: Offset(0, 2.h),
+                  title: Text(
+                    'Profile',
+                    style: GoogleFonts.arimo(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    _buildMenuItem(
-                      icon: Icons.camera_alt_outlined,
-                      iconColor: const Color(0xFF8B5CF6),
-                      title: 'Edit Profile',
-                      onTap: () {
-                        // TODO: Navigate to edit profile
-                        showEditProfileBottomSheet(context);
-                      },
-                    ),
-                    Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
-                    _buildMenuItem(
-                      icon: Icons.notifications_outlined,
-                      iconColor: const Color(0xFF8B5CF6),
-                      title: 'Notifications',
-                      badge: 3,
-                      onTap: () {
-                        // TODO: Navigate to notifications
-                        showNotificationBottomSheet(context);
-                      },
-                    ),
-                    Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
-                    _buildMenuItem(
-                      icon: Icons.credit_card_outlined,
-                      iconColor: const Color(0xFF8B5CF6),
-                      title: 'Subscription',
-                      onTap: () {
-                        // TODO: Navigate to subscription
-                        showUpdatePackageBottomSheet(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            SizedBox(height: 24.h),
-
-            // Preferences section
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Text(
-                'PREFERENCES',
-                style: GoogleFonts.arimo(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF9CA3AF),
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ),
-
-            SizedBox(height: 12.h),
-
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(
-                    color: const Color(0xFFE5E7EB),
-                    width: 1.w,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 8.r,
-                      offset: Offset(0, 2.h),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    _buildMenuItem(
-                      icon: Icons.lock_outline,
-                      iconColor: const Color(0xFF6B7280),
-                      title: 'Privacy & Security',
-                      onTap: () {
-                        showPrivacyAndSecurityBottomSheet(context);
-
-                        // TODO: Navigate to privacy & security
-                      },
-                    ),
-                    Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
-                    _buildMenuItem(
-                      icon: Icons.description_outlined,
-                      iconColor: const Color(0xFF6B7280),
-                      title: 'Terms of Service',
-                      onTap: () {
-                        // TODO: Navigate to terms of service
-                        showTermsOfServiceBottomSheet(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            SizedBox(height: 24.h),
-
-            // Sign Out button
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: GestureDetector(
-                onTap: () {
-                  // TODO: Sign out functionality
-                  showSignOutConfirmationBottomSheet(context);
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(
-                      color: const Color(0xFFE5E7EB),
-                      width: 1.w,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        blurRadius: 8.r,
-                        offset: Offset(0, 2.h),
+                  background: Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
                       ),
-                    ],
+                      color: Color(0xFF6C36B2),
+                    ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.logout,
-                        color: const Color(0xFFEF4444),
-                        size: 20.sp,
-                      ),
-                      SizedBox(width: 8.w),
+                  collapseMode: CollapseMode.pin,
+                ),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      SizedBox(height: 20.h),
+                      _buildProfileCard(),
+                      SizedBox(height: 16.h),
+                      _buildPremiumPlanCard(),
+                      SizedBox(height: 24.h),
                       Text(
-                        'Sign Out',
+                        'ACCOUNT',
                         style: GoogleFonts.arimo(
-                          fontSize: 16.sp,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFFEF4444),
+                          color: const Color(0xFF9CA3AF),
+                          letterSpacing: 0.5,
                         ),
                       ),
+                      SizedBox(height: 12.h),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16.r),
+                          border: Border.all(
+                            color: const Color(0xFFE5E7EB),
+                            width: 1.w,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.04),
+                              blurRadius: 8.r,
+                              offset: Offset(0, 2.h),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            _buildMenuItem(
+                              icon: Icons.camera_alt_outlined,
+                              iconColor: const Color(0xFF8B5CF6),
+                              title: 'Edit Profile',
+                              onTap: () {
+                                showEditProfileBottomSheet(context);
+                              },
+                            ),
+                            Divider(
+                              height: 1.h,
+                              color: const Color(0xFFF3F4F6),
+                            ),
+                            _buildMenuItem(
+                              icon: Icons.notifications_outlined,
+                              iconColor: const Color(0xFF8B5CF6),
+                              title: 'Notifications',
+                              badge: 3,
+                              onTap: () {
+                                showNotificationBottomSheet(context);
+                              },
+                            ),
+                            Divider(
+                              height: 1.h,
+                              color: const Color(0xFFF3F4F6),
+                            ),
+                            _buildMenuItem(
+                              icon: Icons.credit_card_outlined,
+                              iconColor: const Color(0xFF8B5CF6),
+                              title: 'Subscription',
+                              onTap: () {
+                                showUpdatePackageBottomSheet(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 24.h),
+                      Text(
+                        'PREFERENCES',
+                        style: GoogleFonts.arimo(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF9CA3AF),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16.r),
+                          border: Border.all(
+                            color: const Color(0xFFE5E7EB),
+                            width: 1.w,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.04),
+                              blurRadius: 8.r,
+                              offset: Offset(0, 2.h),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            _buildMenuItem(
+                              icon: Icons.lock_outline,
+                              iconColor: const Color(0xFF6B7280),
+                              title: 'Privacy & Security',
+                              onTap: () {
+                                showPrivacyAndSecurityBottomSheet(context);
+                              },
+                            ),
+                            Divider(
+                              height: 1.h,
+                              color: const Color(0xFFF3F4F6),
+                            ),
+                            _buildMenuItem(
+                              icon: Icons.description_outlined,
+                              iconColor: const Color(0xFF6B7280),
+                              title: 'Terms of Service',
+                              onTap: () {
+                                showTermsOfServiceBottomSheet(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 24.h),
+                      GestureDetector(
+                        onTap: () {
+                          showSignOutConfirmationBottomSheet(context);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.r),
+                            border: Border.all(
+                              color: const Color(0xFFE5E7EB),
+                              width: 1.w,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 8.r,
+                                offset: Offset(0, 2.h),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.logout,
+                                color: const Color(0xFFEF4444),
+                                size: 20.sp,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'Sign Out',
+                                style: GoogleFonts.arimo(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFFEF4444),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 24.h),
+                      Center(
+                        child: Text(
+                          'SMRTSCRUB Version 1.0.0',
+                          style: GoogleFonts.arimo(
+                            fontSize: 12.sp,
+                            color: const Color(0xFF9CA3AF),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 24.h),
                     ],
                   ),
                 ),
               ),
-            ),
-
-            SizedBox(height: 24.h),
-
-            // Version text
-            Center(
-              child: Text(
-                'SMRTSCRUB Version 1.0.0',
-                style: GoogleFonts.arimo(
-                  fontSize: 12.sp,
-                  color: const Color(0xFF9CA3AF),
-                ),
-              ),
-            ),
-
-            SizedBox(height: 24.h),
-          ],
+            ],
+          ),
         ),
       ),
     );

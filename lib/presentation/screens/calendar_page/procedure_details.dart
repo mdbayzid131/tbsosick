@@ -30,6 +30,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+        final statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       body: Obx(() {
         // Show loading indicator while data is being fetched
@@ -42,64 +43,78 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         // Show content when loading is complete
         return SafeArea(
           top: false,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Header section with gradient
-                _buildHeader(),
+          child: Stack(
+            children: [
 
-                // Scrollable content
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 16.h),
-
-                      // Duration and Location cards
-                      Row(
-                        children: [
-                          Expanded(child: _buildDurationCard()),
-                          SizedBox(width: 12.w),
-                          Expanded(child: _buildLocationCard()),
-                        ],
-                      ),
-
-                      SizedBox(height: 16.h),
-
-                      // Primary Information card
-                      _buildPrimaryInformationCard(),
-
-                      SizedBox(height: 16.h),
-
-                      // Surgical Team card
-                      _buildSurgicalTeamCard(),
-
-                      SizedBox(height: 16.h),
-
-                      // Linked Preference Card
-                      _buildLinkedPreferenceCard(),
-
-                      SizedBox(height: 16.h),
-
-                      // Procedure Notes card
-                      _buildProcedureNotesCard(),
-
-                      SizedBox(height: 16.h),
-
-                      // Reminders card
-                      _buildRemindersCard(),
-
-                      SizedBox(height: 20.h),
-                    ],
+             SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header section with gradient
+                  _buildHeader(),
+            
+                  // Scrollable content
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 16.h),
+            
+                        // Duration and Location cards
+                        Row(
+                          children: [
+                            Expanded(child: _buildDurationCard()),
+                            SizedBox(width: 12.w),
+                            Expanded(child: _buildLocationCard()),
+                          ],
+                        ),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Primary Information card
+                        _buildPrimaryInformationCard(),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Surgical Team card
+                        _buildSurgicalTeamCard(),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Linked Preference Card
+                        _buildLinkedPreferenceCard(),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Procedure Notes card
+                        _buildProcedureNotesCard(),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Reminders card
+                        _buildRemindersCard(),
+            
+                        SizedBox(height: 20.h),
+                      ],
+                    ),
                   ),
-                ),
-
-                // Bottom action buttons
-                _buildBottomActions(),
-              ],
+            
+                  // Bottom action buttons
+                  _buildBottomActions(),
+                ],
+              ),
+            ),
+         
+         Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: statusBarHeight, // status bar height + একটু extra
+            child: Container(
+              decoration: BoxDecoration(color: const Color(0xFF6C36B2)),
             ),
           ),
+         ] ),
         );
       }),
     );
@@ -116,11 +131,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         bottom: 24.h,
       ),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
-        ),
+        color: Color(0xFF6C36B2),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24.r),
           bottomRight: Radius.circular(24.r),
@@ -664,7 +675,12 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      _controller.eventDetails.value?.preferenceCard?.cardTitle ?? '',
+                      _controller
+                              .eventDetails
+                              .value
+                              ?.preferenceCard
+                              ?.cardTitle ??
+                          '',
                       style: GoogleFonts.arimo(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
@@ -684,9 +700,11 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
               onPressed: () {
                 final d = _controller.eventDetails.value;
                 final cardId = d!.preferenceCard?.id ?? '';
-               Get.toNamed(AppRoutes.CARD_DETAILS, arguments: {'cardId': cardId});
+                Get.toNamed(
+                  AppRoutes.CARD_DETAILS,
+                  arguments: {'cardId': cardId},
+                );
               },
-
 
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8B5CF6),

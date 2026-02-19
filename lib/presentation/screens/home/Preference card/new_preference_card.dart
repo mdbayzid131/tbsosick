@@ -236,7 +236,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                 ),
                               ),
                               DropdownButtonFormField<String>(
-                                value: postAnyCardController
+                                initialValue: postAnyCardController
                                         .specialitiesController.text.isEmpty
                                     ? null
                                     : postAnyCardController

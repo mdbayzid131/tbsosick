@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "344458357764",
+    "project_id": "smrt-scrub",
+    "storage_bucket": "smrt-scrub.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344458357764:android:ad7a40a92f56e69e205951",
+        "android_client_info": {
+          "package_name": "com.tbsosick.smrtscrub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9v8Da0Url68PBk8j7txjhPBZj-gjSjGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

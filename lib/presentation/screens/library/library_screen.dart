@@ -119,11 +119,7 @@ class _LibraryScreenState extends State<LibraryScreen>
         bottom: 20.h,
       ),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
-        ),
+                             color: Color(0xFF6C36B2),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24.r),
           bottomRight: Radius.circular(24.r),

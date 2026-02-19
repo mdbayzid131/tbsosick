@@ -84,35 +84,28 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.h),
+        child: _buildHeader(),
+      ),
       body: SafeArea(
-        top: false,
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Header with gradient
-              _buildHeader(),
-
-              // Form content
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.h),
-                    _buildProcedureInformationCard(),
-                    SizedBox(height: 16.h),
-                    _buildPersonnelCard(),
-                    SizedBox(height: 16.h),
-                    _buildLocationSetupCard(),
-                    SizedBox(height: 16.h),
-                    _buildProcedureNotesCard(),
-                    SizedBox(height: 20.h),
-                  ],
-                ),
-              ),
-
-              // Bottom buttons
-              _buildBottomActions(),
-            ],
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              children: [
+                SizedBox(height: 20.h),
+                _buildProcedureInformationCard(),
+                SizedBox(height: 16.h),
+                _buildPersonnelCard(),
+                SizedBox(height: 16.h),
+                _buildLocationSetupCard(),
+                SizedBox(height: 16.h),
+                _buildProcedureNotesCard(),
+                SizedBox(height: 20.h),
+                _buildBottomActions(),
+              ],
+            ),
           ),
         ),
       ),
@@ -130,11 +123,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
         bottom: 20.h,
       ),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
-        ),
+                              color: Color(0xFF6C36B2),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24.r),
           bottomRight: Radius.circular(24.r),

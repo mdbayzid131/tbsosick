@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -27,173 +28,161 @@ class _HomeScreenState extends State<HomeScreen> {
   final BottomNabBarController _bottomNabBarController = Get.put(
     BottomNabBarController(),
   );
-  final HomePageController _homePageController = Get.put(
-    HomePageController(),
-  );
+  final HomePageController _homePageController = Get.put(HomePageController());
 
   String _greetingForNow() {
     final now = DateTime.now();
     final hour = now.hour;
-    if (hour >= 5 && hour < 12) {
-      return 'Good morning,';
-    }
-    if (hour >= 12 && hour < 17) {
-      return 'Good afternoon,';
-    }
-    if (hour >= 17 && hour < 22) {
-      return 'Good evening,';
-    }
+    if (hour >= 5 && hour < 12) return 'Good morning,';
+    if (hour >= 12 && hour < 17) return 'Good afternoon,';
+    if (hour >= 17 && hour < 22) return 'Good evening,';
     return 'Good night,';
   }
- final PrefranceCardDetailsController _prefranceCardDetailsController = Get.find<PrefranceCardDetailsController>(
- 
-  );
+
+  final PrefranceCardDetailsController _prefranceCardDetailsController =
+      Get.find<PrefranceCardDetailsController>();
+
   @override
   Widget build(BuildContext context) {
+    // Status bar icons white করার জন্য
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor:
+            Colors.transparent, // transparent রাখব, overlay দিয়ে handle করব
+        statusBarIconBrightness: Brightness.light, // Android: white icons
+        statusBarBrightness: Brightness.dark, // iOS: white icons
+      ),
+    );
+
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+
     return RefreshIndicator(
       onRefresh: () async {
         final result = await Connectivity().checkConnectivity();
-
-        // ignore: unrelated_type_equality_checks
         if (result == ConnectivityResult.none) {
           Helpers.showCustomSnackBar('No internet connection', isError: true);
           return;
         }
-
         await _bottomNabBarController.loadHomeData();
       },
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Fixed header
-            _headerSection(),
-
-            // Scrollable body
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Column(
-                children: [
-                  // Quick Actions title
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Quick Actions',
-                      style: GoogleFonts.arimo(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xff1C1B1F),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 12.h),
-
-                  // Quick action cards row
-                  Row(
+      child: Stack(
+        children: [
+          // ── Main scrollable content ──
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _headerSection(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: _quickActionCard(
-                          title: 'Create Preference card',
-                          onTap: () {
-                            Get.to(
-                              NewPreferenceCard(isPrivate: false),
-                              binding: PostAnyCardBinding(),
-                            );
-                          },
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Quick Actions',
+                          style: GoogleFonts.arimo(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xff1C1B1F),
+                          ),
                         ),
                       ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: _quickActionCard(
-                          title: 'Create Private Card',
-                          onTap: () {
-                            Get.to(
-                              NewPreferenceCard(isPrivate: true),
-                              binding: PostAnyCardBinding(),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 20.h),
-
-                  // Preference card favorites header
-                  Row(
-                    children: [
-                      Text(
-                        'Preference card favorites',
-                        style: GoogleFonts.arimo(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff1C1B1F),
-                        ),
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          Get.to(() => const PreferenceCardFavorites());
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              'View All',
-                              style: GoogleFonts.arimo(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: const Color(0xff6750A4),
-                              ),
+                      SizedBox(height: 12.h),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _quickActionCard(
+                              title: 'Create Preference card',
+                              onTap: () {
+                                Get.to(
+                                  NewPreferenceCard(isPrivate: false),
+                                  binding: PostAnyCardBinding(),
+                                );
+                              },
                             ),
-                            SizedBox(width: 4.w),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 14.sp,
-                              color: const Color(0xff6750A4),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: _quickActionCard(
+                              title: 'Create Private Card',
+                              onTap: () {
+                                Get.to(
+                                  NewPreferenceCard(isPrivate: true),
+                                  binding: PostAnyCardBinding(),
+                                );
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-
-                  SizedBox(height: 12.h),
-
-                  // List items
-                  Obx(() {
-                    if (_bottomNabBarController.isLoading.value) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (_bottomNabBarController.favoriteCards.isEmpty) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.h),
-                        child: const Center(child: Text("No cards found")),
-                      );
-                    }
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      itemCount: _bottomNabBarController.favoriteCards.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index ==
-                            _bottomNabBarController.favoriteCards.length) {
-                          return _buildLoadMoreButton(
-                            isLoading: _bottomNabBarController
-                                .isFavoriteMoreLoading
-                                .value,
-                            hasMore:
-                                _bottomNabBarController.hasMoreFavorite.value,
-                            onPressed: () =>
-                                _bottomNabBarController.loadMoreFavorite(),
+                      SizedBox(height: 20.h),
+                      Row(
+                        children: [
+                          Text(
+                            'Preference card favorites',
+                            style: GoogleFonts.arimo(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: const Color(0xff1C1B1F),
+                            ),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Get.to(() => const PreferenceCardFavorites());
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  'View All',
+                                  style: GoogleFonts.arimo(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: const Color(0xff6750A4),
+                                  ),
+                                ),
+                                SizedBox(width: 4.w),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 14.sp,
+                                  color: const Color(0xff6750A4),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12.h),
+                      Obx(() {
+                        if (_bottomNabBarController.isLoading.value) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
                           );
                         }
-                        final card = _bottomNabBarController.favoriteCards[index];
+                        if (_bottomNabBarController.favoriteCards.isEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
+                            child: Center(
+                              child: Text(
+                                "No favorite item",
+                                style: GoogleFonts.arimo(
+                                  fontSize: 14.sp,
+                                  color: const Color(0xFF9CA3AF),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        final card =
+                            _bottomNabBarController.favoriteCards.first;
                         return Padding(
                           padding: EdgeInsets.only(bottom: 10.h),
                           child: ProcedureCard(
                             onDownloadTap: () {
-                              _prefranceCardDetailsController.downloadCard(cardId: card.id);
+                              _prefranceCardDetailsController.downloadCard(
+                                cardId: card.id,
+                              );
                             },
                             isPrivateCard: false,
                             cardId: card.id,
@@ -209,29 +198,41 @@ class _HomeScreenState extends State<HomeScreen> {
                                 await _homePageController
                                     .removeFromFavoriteList(cardId: card.id);
                               } else {
-                                await _homePageController
-                                    .addToFavoriteList(cardId: card.id);
+                                await _homePageController.addToFavoriteList(
+                                  cardId: card.id,
+                                );
                               }
-                              await _bottomNabBarController
-                                  .getFavoriteCard(showLoading: false);
+                              await _bottomNabBarController.getFavoriteCard(
+                                showLoading: false,
+                              );
                             },
                           ),
                         );
-                      },
-                    );
-                  }),
-
-                  SizedBox(height: 90.h),
-                ],
-              ),
+                      }),
+                      SizedBox(height: 90.h),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+
+          // ── Status bar gradient overlay ──
+          // scroll করলে যাই দেখা যাক, status bar area সবসময় পরিষ্কার থাকবে
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: statusBarHeight, // status bar height + একটু extra
+            child: Container(
+              decoration: BoxDecoration(color: const Color(0xFF6C36B2)),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  // Quick action card widget
   Widget _quickActionCard({
     required String title,
     required VoidCallback onTap,
@@ -256,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // ← এটা খুব জরুরি
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -280,7 +281,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.w400,
                 color: Colors.white,
               ),
-              // যদি title অনেক লম্বা হয় তাহলে এগুলো যোগ করতে পারো:
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -290,7 +290,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Header section with gradient
   Widget _headerSection() {
     return Column(
       children: [
@@ -310,11 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   bottomLeft: Radius.circular(24.r),
                   bottomRight: Radius.circular(24.r),
                 ),
-                gradient: const LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [Color(0xff9945FF), Color(0xff271E3E)],
-                ),
+                color: Color(0xFF6C36B2),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -474,7 +469,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Stat card widget
   Widget _statCard({
     required IconData icon,
     required String count,
@@ -524,47 +518,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // Load more button widget
-  Widget _buildLoadMoreButton({
-    required bool isLoading,
-    required bool hasMore,
-    required VoidCallback onPressed,
-  }) {
-    if (!hasMore) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: 20.h),
-        child: Center(
-          child: Text(
-            'No more data',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              color: const Color(0xFF9CA3AF),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.h),
-      child: Center(
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : TextButton(
-                onPressed: onPressed,
-                child: Text(
-                  'Load More',
-                  style: GoogleFonts.arimo(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF8B5CF6),
-                  ),
-                ),
-              ),
       ),
     );
   }
