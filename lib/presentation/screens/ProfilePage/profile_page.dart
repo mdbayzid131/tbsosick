@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverAppBar(
-                expandedHeight: 120.h,
+                expandedHeight: 60.h,
                 collapsedHeight: 60.h,
                 pinned: true,
                 floating: false,

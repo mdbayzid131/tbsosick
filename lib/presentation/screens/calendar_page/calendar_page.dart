@@ -52,7 +52,7 @@ class _CalendarPageState extends State<CalendarPage> {
             slivers: [
               // ── Collapsing SliverAppBar ──
               SliverAppBar(
-                expandedHeight: 120.h,
+                expandedHeight: 60.h,
                 collapsedHeight: 60.h,
                 pinned: true,
                 floating: false,
