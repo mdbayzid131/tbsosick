@@ -47,5 +47,16 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photo library to select images for the preference card.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.344458357764-205951</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
