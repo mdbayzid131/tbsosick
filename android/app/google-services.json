@@ -12,7 +12,20 @@
           "package_name": "com.tbsosick.smrtscrub"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "344458357764-b4f3nnorevqs5buef57l27nnfombc75n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tbsosick.smrtscrub",
+            "certificate_hash": "b7a2b816dbd18bb36a481944cbcdf4f0a84141d5"
+          }
+        },
+        {
+          "client_id": "344458357764-p7cinp8ik2ogrut9g54um2nqnn0nqg9g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD9v8Da0Url68PBk8j7txjhPBZj-gjSjGM"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344458357764-p7cinp8ik2ogrut9g54um2nqnn0nqg9g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "344458357764-l2q9u3m6an945rg6vnga1op45mhce06o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tbsosick.smrtscrub"
+              }
+            }
+          ]
         }
       }
     }
