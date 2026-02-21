@@ -1,6 +1,6 @@
-// ignore: implementation_imports
-import 'package:dio/src/response.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -71,10 +71,7 @@ class LoginController extends GetxController {
     Get.toNamed(AppRoutes.FORGOT_PASSWORD);
   }
 
-
-
-
-    Future<void> logout() async {
+  Future<void> logout() async {
     try {
       isLoading.value = true;
       await _authService.logout();
@@ -84,15 +81,39 @@ class LoginController extends GetxController {
       // print(response.statusCode);
       // print('==================================================');
       // if (response.statusCode == 200) {
-        Helpers.showCustomSnackBar('Logout successful', isError: false);
-        Get.offAllNamed(AppRoutes.LOGIN);
+      Helpers.showCustomSnackBar('Logout successful', isError: false);
+      Get.offAllNamed(AppRoutes.LOGIN);
       // }
     } catch (e) {
       Helpers.showCustomSnackBar(e.toString(), isError: true);
     } finally {
       isLoading.value = false;
     }
-   
-    
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      isLoading.value = true;
+      await _authService.signInWithGoogle();
+      Helpers.showCustomSnackBar('Google Login successful', isError: false);
+      await RouteDecider.goNext();
+    } catch (e) {
+      Helpers.showCustomSnackBar(e.toString(), isError: true);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> signInWithApple() async {
+    try {
+      isLoading.value = true;
+      await _authService.signInWithApple();
+      Helpers.showCustomSnackBar('Apple Login successful', isError: false);
+      await RouteDecider.goNext();
+    } catch (e) {
+      Helpers.showCustomSnackBar(e.toString(), isError: true);
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

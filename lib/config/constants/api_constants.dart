@@ -41,4 +41,7 @@ class ApiConstants {
   static const String postEvent = '/events';
   static const String patchEvent = '/events/{id}';
   static const String deleteEvent = '/events/{id}';
+
+  // Google Sign In
+  static const String googleSignIn = '/auth/google';
 }
