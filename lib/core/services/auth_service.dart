@@ -106,7 +106,7 @@ class AuthService extends GetxService {
   /// ===================== RESEND OTP =====================
   Future<void> resendOtp(String email) async {
     try {
-      await _authRepo.resentOtp(email: email);
+      await _authRepo.resendOtp(email: email);
     } catch (e) {
       rethrow;
     }
@@ -134,19 +134,21 @@ class AuthService extends GetxService {
 
   Future<void> signInWithGoogle() async {
     try {
-      await _authRepo.signInWithGoogle();
       // AuthRepo returns raw map from apiClient.postData, which might be response.data or already nested.
       // We need to wrap it back into a Response for _handleAuthResponse or refactor _handleAuthResponse.
       // In AuthRepo, we already call _saveAuthResponse, so here we just need to update state.
+      final response = await _authRepo.signInWithGoogle();
+      await _handleAuthResponse(response);
       isLoggedIn.value = true;
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> signInWithApple() async {
+  Future<void> signInWithApple() async {  
     try {
-      await _authRepo.signInWithApple();
+      final response = await _authRepo.signInWithApple();
+      await _handleAuthResponse(response);
       isLoggedIn.value = true;
     } catch (e) {
       rethrow;

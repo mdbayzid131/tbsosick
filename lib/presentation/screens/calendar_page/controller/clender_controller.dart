@@ -44,7 +44,10 @@ class CalendarController extends GetxController {
       final response = await _userDataRepository.deleteEvent(id: id);
       ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
-        Helpers.showCustomSnackBar('Event deleted successfully', isError: false);
+        Helpers.showCustomSnackBar(
+          'Event deleted successfully',
+          isError: false,
+        );
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
         events.removeWhere((element) => element.id == id);
@@ -65,7 +68,7 @@ class CalendarController extends GetxController {
     required String eventType,
     required String location,
     required String notes,
-    required String linkPreferenceCardId,
+    String? linkPreferenceCardId,
     required PersonnelRequestModel personnel,
   }) async {
     final event = CreateEventRequestModel(
@@ -86,7 +89,10 @@ class CalendarController extends GetxController {
       ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
         // Show success message
-        Helpers.showCustomSnackBar('Event created successfully', isError: false);
+        Helpers.showCustomSnackBar(
+          'Event created successfully',
+          isError: false,
+        );
 
         // Refresh the events list immediately to update UI
         await getEvents();
@@ -109,6 +115,7 @@ class CalendarController extends GetxController {
     required String location,
     required String notes,
     required PersonnelRequestModel personnel,
+    String? linkPreferenceCardId,
   }) async {
     final event = CreateEventRequestModel(
       title: title,
@@ -119,6 +126,7 @@ class CalendarController extends GetxController {
       location: location,
       notes: notes,
       personnel: personnel,
+      linkPreferenceCardId: linkPreferenceCardId,
     );
     try {
       isLoading.value = true;
@@ -129,7 +137,10 @@ class CalendarController extends GetxController {
       ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
         // Show success message
-        Helpers.showCustomSnackBar('Event updated successfully', isError: false);
+        Helpers.showCustomSnackBar(
+          'Event updated successfully',
+          isError: false,
+        );
         await getEvents();
       }
     } catch (e) {

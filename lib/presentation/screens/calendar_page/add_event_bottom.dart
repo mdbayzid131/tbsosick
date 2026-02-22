@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-import 'package:tbsosick/core/utils/validators.dart';
 
 import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_date_picker.dart';
@@ -132,21 +131,13 @@ void showAddEventBottomSheet(
                             CustomTextField(
                               controller: linkPreferenceCardIdController,
                               label: 'Link Preference Card',
-                              hintText: 'Enter preference card ID',
+                              hintText: 'Enter preference card ID(optional)',
                               validator: (v) {
-                                final minError = Validators.minLength(
-                                  v,
-                                  24,
-                                  message:
-                                      'Preference card ID must be 24 characters long',
-                                );
-                                if (minError != null) return minError;
-                                return Validators.maxLength(
-                                  v,
-                                  24,
-                                  message:
-                                      'Preference card ID must be 24 characters long',
-                                );
+                                if (v == null || v.trim().isEmpty) return null;
+                                if (v.trim().length != 24) {
+                                  return 'Preference card ID must be 24 characters long';
+                                }
+                                return null;
                               },
                             ),
 
@@ -334,7 +325,9 @@ void showAddEventBottomSheet(
                                         durationHours: dur,
                                         eventType: eventType,
                                         location: loc,
-                                        linkPreferenceCardId: linkPreferenceCardIdController.text.trim(),
+                                        linkPreferenceCardId:
+                                            linkPreferenceCardIdController.text
+                                                .trim(),
                                         notes: notes,
                                         personnel: personnel,
                                       );

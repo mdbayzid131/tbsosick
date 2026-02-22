@@ -19,11 +19,11 @@ class CreateEventRequestModel {
     required this.location,
     required this.notes,
     required this.personnel,
-     this.linkPreferenceCardId,
+    this.linkPreferenceCardId,
   });
 
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> data = {
       "title": title,
       "date": date,
       "time": time,
@@ -32,12 +32,13 @@ class CreateEventRequestModel {
       "location": location,
       "notes": notes,
       "personnel": personnel.toJson(),
-      "preferenceCard": linkPreferenceCardId,
     };
+    if (linkPreferenceCardId != null && linkPreferenceCardId!.isNotEmpty) {
+      data["preferenceCard"] = linkPreferenceCardId;
+    }
+    return data;
   }
 }
-
-
 
 class PersonnelRequestModel {
   final String leadSurgeon;
@@ -49,9 +50,6 @@ class PersonnelRequestModel {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      "leadSurgeon": leadSurgeon,
-      "surgicalTeam": surgicalTeam,
-    };
+    return {"leadSurgeon": leadSurgeon, "surgicalTeam": surgicalTeam};
   }
 }
