@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 
 class ProcedureCard extends StatefulWidget {
@@ -16,6 +17,7 @@ class ProcedureCard extends StatefulWidget {
   final bool isFavorite;
   final Future<void> Function()? onFavoriteToggle;
   final VoidCallback? onDownloadTap;
+  final bool isPaidUser;
 
   const ProcedureCard({
     super.key,
@@ -30,6 +32,7 @@ class ProcedureCard extends StatefulWidget {
     required this.isFavorite,
     required this.onFavoriteToggle,
     required this.onDownloadTap,
+    this.isPaidUser = false, // Default to false for safety/testing
   });
 
   @override
@@ -186,7 +189,7 @@ class _ProcedureCardState extends State<ProcedureCard> {
             SizedBox(height: 12.h),
             Row(
               children: [
-                if (!widget.isPrivateCard) 
+                if (!widget.isPrivateCard)
                   Icon(
                     Icons.file_download_outlined,
                     color: const Color(0xFF6B7280),
@@ -211,7 +214,13 @@ class _ProcedureCardState extends State<ProcedureCard> {
                 ),
                 const Spacer(),
                 GestureDetector(
-                  onTap: widget.onDownloadTap,
+                  onTap: () {
+                    if (widget.isPaidUser) {
+                      widget.onDownloadTap?.call();
+                    } else {
+                      SubscriptionHelper.showSubscriptionDialog();
+                    }
+                  },
                   child: Container(
                     width: 36.w,
                     height: 36.w,

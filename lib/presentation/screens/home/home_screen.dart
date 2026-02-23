@@ -179,6 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Padding(
                           padding: EdgeInsets.only(bottom: 10.h),
                           child: ProcedureCard(
+                            isPaidUser: false, // Testing download popup
                             onDownloadTap: () {
                               _prefranceCardDetailsController.downloadCard(
                                 cardId: card.id,

@@ -1,7 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 
 class PreferenceCardDetails extends StatefulWidget {
@@ -104,7 +106,12 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           SizedBox(width: 16.w),
           InkWell(
             onTap: () {
-              controller.downloadCard(cardId: cardId);
+              bool isPaidUser = false; // Simulating non-paid user for testing
+              if (isPaidUser) {
+                controller.downloadCard(cardId: cardId);
+              } else {
+                SubscriptionHelper.showSubscriptionDialog();
+              }
             },
             child: Container(
               width: 40.w,
@@ -169,7 +176,9 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                   SizedBox(height: 16.h),
                   _buildKeyNotesCard(),
                   SizedBox(height: 20.h),
-                  _buildPhotoLibrary(),
+                  _buildPhotoLibrary(
+                    false,
+                  ), // Pass false to test blurry images and popup
                   SizedBox(height: 30.h),
                 ],
               ),
@@ -783,7 +792,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
   }
 
   // Photo Library Section
-  Widget _buildPhotoLibrary() {
+  Widget _buildPhotoLibrary(bool isPaidUser) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -826,33 +835,67 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
               final photo = controller.cardDetails.value?.photoLibrary[index];
               return Padding(
                 padding: EdgeInsets.only(bottom: 30.h),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20.r),
-                  child: Image.network(
-                    photo ?? '',
-                    width: double.infinity,
-                    height: 250.h,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Container(
-                        width: double.infinity,
-                        height: 250.h,
-                        color: Colors.grey[200],
-                        child: const Center(child: CircularProgressIndicator()),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: double.infinity,
-                        height: 250.h,
-                        color: Colors.grey[200],
-                        child: const Icon(
-                          Icons.error_outline,
-                          color: Colors.grey,
+                child: InkWell(
+                  onTap: () {
+                    if (!isPaidUser) {
+                      SubscriptionHelper.showSubscriptionDialog();
+                    }
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.r),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ImageFiltered(
+                          imageFilter: ImageFilter.blur(
+                            sigmaX: isPaidUser ? 0 : 10,
+                            sigmaY: isPaidUser ? 0 : 10,
+                          ),
+                          child: Image.network(
+                            photo ?? '',
+                            width: double.infinity,
+                            height: 250.h,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                width: double.infinity,
+                                height: 250.h,
+                                color: Colors.grey[200],
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: double.infinity,
+                                height: 250.h,
+                                color: Colors.grey[200],
+                                child: const Icon(
+                                  Icons.error_outline,
+                                  color: Colors.grey,
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      );
-                    },
+                        if (!isPaidUser)
+                          Container(
+                            width: 60.w,
+                            height: 60.w,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.5),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.lock_outline,
+                              color: const Color(0xFF9945FF),
+                              size: 30.sp,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               );
