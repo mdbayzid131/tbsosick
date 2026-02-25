@@ -21,6 +21,7 @@ class SuturesContainer extends StatefulWidget {
 
 class _SuturesContainerState extends State<SuturesContainer> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   final FocusNode _searchFocusNode = FocusNode();
   Timer? _debounce;
 
@@ -28,6 +29,14 @@ class _SuturesContainerState extends State<SuturesContainer> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      homePageController.loadMoreSutures(search: _searchController.text);
+    }
   }
 
   void _onSearchChanged() {
@@ -45,9 +54,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
   List<SuppliesModel> get filteredSutures {
     final query = _searchController.text.trim().toLowerCase();
     if (query.isEmpty) return [];
-    return homePageController.sutures
-        .where((item) => item.name.toLowerCase().contains(query))
-        .toList();
+    return homePageController.sutures;
   }
 
   void removeItem(String id) {
@@ -159,7 +166,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                   children: [
                     SizedBox(height: 8.h),
                     Container(
-                      constraints: BoxConstraints(maxHeight: 250.h),
+                      constraints: BoxConstraints(maxHeight: 400.h),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(
@@ -176,9 +183,24 @@ class _SuturesContainerState extends State<SuturesContainer> {
                         ],
                       ),
                       child: ListView.builder(
+                        controller: _scrollController,
                         shrinkWrap: true,
-                        itemCount: results.length,
+                        itemCount:
+                            results.length +
+                            (homePageController.isSuturesMoreLoading.value
+                                ? 1
+                                : 0),
                         itemBuilder: (context, index) {
+                          if (index == results.length) {
+                            return Padding(
+                              padding: EdgeInsets.all(16.h),
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: Color(0xff9945FF),
+                                ),
+                              ),
+                            );
+                          }
                           final item = results[index];
                           final isSelected = widget.selectedIds.contains(
                             item.id,
@@ -411,7 +433,9 @@ class _SuturesContainerState extends State<SuturesContainer> {
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
+    _scrollController.removeListener(_onScroll);
     _searchController.dispose();
+    _scrollController.dispose();
     _searchFocusNode.dispose();
     _debounce?.cancel();
     super.dispose();

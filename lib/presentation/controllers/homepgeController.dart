@@ -19,11 +19,25 @@ class HomePageController extends GetxController {
   RxList<SuppliesModel> supplies = <SuppliesModel>[].obs;
   RxList<SuppliesModel> sutures = <SuppliesModel>[].obs;
 
+  // Pagination for Supplies
+  final RxInt _suppliesPage = 1.obs;
+  final RxBool hasMoreSupplies = true.obs;
+  final RxBool isSuppliesMoreLoading = false.obs;
+
+  // Pagination for Sutures
+  final RxInt _suturesPage = 1.obs;
+  final RxBool hasMoreSutures = true.obs;
+  final RxBool isSuturesMoreLoading = false.obs;
+
   Future<void> getSupplies({String search = ''}) async {
     try {
       isSuppliesLoading.value = true;
+      _suppliesPage.value = 1;
+      hasMoreSupplies.value = true;
+
       Response<dynamic> response = await _userDataRepository.getSupplies(
         search: search,
+        page: _suppliesPage.value,
       );
 
       ApiChecker.checkGetApi(response);
@@ -31,37 +45,111 @@ class HomePageController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final suppliesResponse = SuppliesResponse.fromJson(response.data);
         supplies.assignAll(suppliesResponse.supplies);
+        if (suppliesResponse.pagination != null) {
+          hasMoreSupplies.value =
+              _suppliesPage.value < suppliesResponse.pagination!.totalPage;
+        } else {
+          hasMoreSupplies.value = false;
+        }
       }
     } catch (e) {
-      /// ❗ NOTHING FOR USER
       Helpers.showDebugLog("getSupplies error => $e");
     } finally {
       isSuppliesLoading.value = false;
     }
   }
 
+  Future<void> loadMoreSupplies({String search = ''}) async {
+    if (isSuppliesMoreLoading.value || !hasMoreSupplies.value) return;
+
+    try {
+      isSuppliesMoreLoading.value = true;
+      _suppliesPage.value++;
+
+      Response<dynamic> response = await _userDataRepository.getSupplies(
+        search: search,
+        page: _suppliesPage.value,
+      );
+
+      ApiChecker.checkGetApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final suppliesResponse = SuppliesResponse.fromJson(response.data);
+        supplies.addAll(suppliesResponse.supplies);
+        if (suppliesResponse.pagination != null) {
+          hasMoreSupplies.value =
+              _suppliesPage.value < suppliesResponse.pagination!.totalPage;
+        } else {
+          hasMoreSupplies.value = false;
+        }
+      }
+    } catch (e) {
+      _suppliesPage.value--;
+      Helpers.showDebugLog("loadMoreSupplies error => $e");
+    } finally {
+      isSuppliesMoreLoading.value = false;
+    }
+  }
+
   Future<void> getSutures({String search = ''}) async {
     try {
       isSuturesLoading.value = true;
+      _suturesPage.value = 1;
+      hasMoreSutures.value = true;
+
       Response<dynamic> response = await _userDataRepository.getSutures(
         search: search,
+        page: _suturesPage.value,
       );
       ApiChecker.checkGetApi(response);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final suppliesResponse = SuppliesResponse.fromJson(response.data);
-
         sutures.assignAll(suppliesResponse.supplies);
+        if (suppliesResponse.pagination != null) {
+          hasMoreSutures.value =
+              _suturesPage.value < suppliesResponse.pagination!.totalPage;
+        } else {
+          hasMoreSutures.value = false;
+        }
       }
     } catch (e) {
-      /// ❗ NOTHING FOR USER
       Helpers.showDebugLog("getSutures error => $e");
     } finally {
       isSuturesLoading.value = false;
     }
   }
 
+  Future<void> loadMoreSutures({String search = ''}) async {
+    if (isSuturesMoreLoading.value || !hasMoreSutures.value) return;
 
+    try {
+      isSuturesMoreLoading.value = true;
+      _suturesPage.value++;
+
+      Response<dynamic> response = await _userDataRepository.getSutures(
+        search: search,
+        page: _suturesPage.value,
+      );
+      ApiChecker.checkGetApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final suppliesResponse = SuppliesResponse.fromJson(response.data);
+        sutures.addAll(suppliesResponse.supplies);
+        if (suppliesResponse.pagination != null) {
+          hasMoreSutures.value =
+              _suturesPage.value < suppliesResponse.pagination!.totalPage;
+        } else {
+          hasMoreSutures.value = false;
+        }
+      }
+    } catch (e) {
+      _suturesPage.value--;
+      Helpers.showDebugLog("loadMoreSutures error => $e");
+    } finally {
+      isSuturesMoreLoading.value = false;
+    }
+  }
 
   Future<void> addToFavoriteList({required String cardId}) async {
     try {
@@ -71,35 +159,28 @@ class HomePageController extends GetxController {
       );
       ApiChecker.checkWriteApi(response);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-
-      }
+      if (response.statusCode == 200 || response.statusCode == 201) {}
     } catch (e) {
       Helpers.showDebugLog("addToFavoriteList error => $e");
-      
     } finally {
       isLoading.value = false;
     }
   }
+
   Future<void> removeFromFavoriteList({required String cardId}) async {
     try {
       isLoading.value = true;
-      Response<dynamic> response = await _userDataRepository.removeFromFavoriteList(
-        cardId: cardId,
-      );
+      Response<dynamic> response = await _userDataRepository
+          .removeFromFavoriteList(cardId: cardId);
       ApiChecker.checkWriteApi(response);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-      }
+      if (response.statusCode == 200 || response.statusCode == 201) {}
     } catch (e) {
       Helpers.showDebugLog("removeFromFavoriteList error => $e");
-      
     } finally {
       isLoading.value = false;
     }
   }
-
-
 
   // Future<void> postPrivateCard({
   //   required String cardTitle,

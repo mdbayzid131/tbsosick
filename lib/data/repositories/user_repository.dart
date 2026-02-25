@@ -47,10 +47,7 @@ class UserDataRepository {
     if (verificationStatus.isNotEmpty) {
       query['verificationStatus'] = verificationStatus;
     }
-    return await _apiClient.getData(
-      ApiConstants.getPublicCard,
-      query: query,
-    );
+    return await _apiClient.getData(ApiConstants.getPublicCard, query: query);
   }
 
   // Get all private preference card
@@ -71,10 +68,7 @@ class UserDataRepository {
     if (verificationStatus.isNotEmpty) {
       query['verificationStatus'] = verificationStatus;
     }
-    return await _apiClient.getData(
-      ApiConstants.getPrivateCard,
-      query: query,
-    );
+    return await _apiClient.getData(ApiConstants.getPrivateCard, query: query);
   }
 
   // Get all favorite preference card
@@ -95,10 +89,7 @@ class UserDataRepository {
     // if (verificationStatus.isNotEmpty) {
     //   query['verificationStatus'] = verificationStatus;
     // }
-    return await _apiClient.getData(
-      ApiConstants.getFavoriteCard,
-      query: query,
-    );
+    return await _apiClient.getData(ApiConstants.getFavoriteCard, query: query);
   }
 
   Future<Response<dynamic>> getCardDetails({required String cardId}) async {
@@ -114,17 +105,25 @@ class UserDataRepository {
     );
   }
 
-  Future<Response<dynamic>> getSupplies({String search = ''}) async {
+  Future<Response<dynamic>> getSupplies({
+    String search = '',
+    int page = 1,
+    int limit = 10,
+  }) async {
     return await _apiClient.getData(
       ApiConstants.getSuppliesList,
-      query: {'searchTerm': search},
+      query: {'searchTerm': search, 'page': page, 'limit': limit},
     );
   }
 
-  Future<Response<dynamic>> getSutures({String search = ''}) async {
+  Future<Response<dynamic>> getSutures({
+    String search = '',
+    int page = 1,
+    int limit = 10,
+  }) async {
     return await _apiClient.getData(
       ApiConstants.getSuturesList,
-      query: {'searchTerm': search},
+      query: {'searchTerm': search, 'page': page, 'limit': limit},
     );
   }
 
@@ -135,10 +134,11 @@ class UserDataRepository {
     );
   }
 
-  Future<Response<dynamic>> removeFromFavoriteList({required String cardId}) async {
+  Future<Response<dynamic>> removeFromFavoriteList({
+    required String cardId,
+  }) async {
     return await _apiClient.deleteData(
       ApiConstants.removeFromFavoriteList.replaceAll('{id}', cardId),
-      
     );
   }
 

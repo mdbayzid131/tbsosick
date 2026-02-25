@@ -54,6 +54,7 @@ class _CalendarPageState extends State<CalendarPage> {
               SliverAppBar(
                 expandedHeight: 60.h,
                 collapsedHeight: 60.h,
+                toolbarHeight: 60.h,
                 pinned: true,
                 floating: false,
                 elevation: 0,
