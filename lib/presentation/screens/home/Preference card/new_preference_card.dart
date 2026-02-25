@@ -236,11 +236,15 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                 ),
                               ),
                               DropdownButtonFormField<String>(
-                                initialValue: postAnyCardController
-                                        .specialitiesController.text.isEmpty
+                                initialValue:
+                                    postAnyCardController
+                                        .specialitiesController
+                                        .text
+                                        .isEmpty
                                     ? null
                                     : postAnyCardController
-                                        .specialitiesController.text,
+                                          .specialitiesController
+                                          .text,
                                 validator: (value) =>
                                     Validators.required(value),
                                 isExpanded: true,
@@ -271,12 +275,14 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                     .toList(),
                                 onChanged: (value) {
                                   postAnyCardController
-                                          .specialitiesController.text =
+                                          .specialitiesController
+                                          .text =
                                       value ?? '';
                                 },
                                 decoration: InputDecoration(
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 0),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 0,
+                                  ),
                                   labelStyle: GoogleFonts.arimo(
                                     fontSize: 14.sp,
                                     color: const Color(0xff9E9E9E),

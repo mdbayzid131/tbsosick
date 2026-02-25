@@ -9,6 +9,7 @@ import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 class MedicalSuppliesScreen extends StatefulWidget {
   final List<String> selectedIds;
   final Function(List<String>) onSelectionChanged;
+
   const MedicalSuppliesScreen({
     super.key,
     required this.selectedIds,
@@ -49,391 +50,425 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
     setState(() {});
   }
 
+  final HomePageController homePageController = Get.find();
+
   List<SuppliesModel> get filteredSupplies {
     final query = _searchController.text.trim().toLowerCase();
     if (query.isEmpty) return [];
     return homePageController.supplies;
   }
 
-  void removeItem(String id) {
+  void removeItem(String name) {
     List<String> newList = List.from(widget.selectedIds);
-    newList.remove(id);
+    newList.remove(name);
     widget.onSelectionChanged(newList);
   }
 
-  void addItem(String id) {
-    if (!widget.selectedIds.contains(id)) {
+  void addItem(String name) {
+    if (!widget.selectedIds.contains(name)) {
       List<String> newList = List.from(widget.selectedIds);
-      newList.add(id);
+      newList.add(name);
       widget.onSelectionChanged(newList);
+      // No longer clearing search or unfocusing here
     }
   }
 
-  final HomePageController homePageController = Get.find();
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 600),
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Title
+        Padding(
+          padding: EdgeInsets.only(left: 4.w, bottom: 12.h),
+          child: Text(
+            'Medical Supplies',
+            style: GoogleFonts.arimo(
+              color: Colors.grey.shade800,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        ],
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'All Supplies',
-                  style: TextStyle(
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xff000000),
-                  ),
-                ),
-                Icon(Icons.search, color: const Color(0xff9945FF), size: 28.sp),
-              ],
-            ),
-            SizedBox(height: 24.h),
+        ),
 
-            // Search Bar
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xffF2F2F7),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: TextField(
-                controller: _searchController,
-                focusNode: _searchFocusNode,
-                decoration: InputDecoration(
-                  hintText: 'Search thousands of supplies...',
-                  hintStyle: GoogleFonts.arimo(
-                    fontSize: 16.sp,
-                    color: const Color(0xff8E8E93),
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: const Color(0xff8E8E93),
-                    size: 20.sp,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 14.h,
-                  ),
-                ),
-                style: GoogleFonts.arimo(fontSize: 16.sp, color: Colors.black),
-              ),
+        // Search Bar - Premium Design
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: _searchFocusNode.hasFocus
+                  ? const Color(0xff9945FF).withOpacity(0.5)
+                  : const Color(0xffE5E7EB),
+              width: 1.5.w,
             ),
-
-            // Search Results or No Results
-            Obx(() {
-              // Show loading indicator if supplies are being fetched
-              if (homePageController.isSuppliesLoading.value) {
-                return Column(
-                  children: [
-                    SizedBox(height: 24.h),
-                    const Center(
-                      child: CircularProgressIndicator(
-                        color: Color(0xff9945FF),
-                      ),
+            boxShadow: _searchFocusNode.hasFocus
+                ? [
+                    BoxShadow(
+                      color: const Color(0xff9945FF).withOpacity(0.1),
+                      blurRadius: 10.r,
+                      offset: Offset(0, 4.h),
                     ),
-                    SizedBox(height: 24.h),
+                  ]
+                : [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.02),
+                      blurRadius: 4.r,
+                      offset: Offset(0, 2.h),
+                    ),
                   ],
-                );
-              }
+          ),
+          child: TextField(
+            controller: _searchController,
+            focusNode: _searchFocusNode,
+            decoration: InputDecoration(
+              hintText: 'Search for supplies...',
+              hintStyle: GoogleFonts.arimo(
+                color: Colors.grey.shade400,
+                fontSize: 15.sp,
+              ),
+              prefixIcon: Icon(
+                Icons.search_rounded,
+                color: _searchFocusNode.hasFocus
+                    ? const Color(0xff9945FF)
+                    : Colors.grey.shade400,
+                size: 22.sp,
+              ),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? IconButton(
+                      icon: Icon(Icons.clear_rounded, size: 20.sp),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {});
+                      },
+                    )
+                  : null,
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 14.h,
+              ),
+            ),
+            style: GoogleFonts.arimo(
+              fontSize: 16.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
 
-              homePageController.supplies.length; // Register dependency
-              final results = filteredSupplies;
+        // Search Results Section
+        Obx(() {
+          if (homePageController.isSuppliesLoading.value) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.h),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xff9945FF),
+                  strokeWidth: 3,
+                ),
+              ),
+            );
+          }
 
-              if (_searchController.text.isNotEmpty) {
-                if (results.isNotEmpty) {
-                  return Column(
-                    children: [
-                      SizedBox(height: 8.h),
-                      Container(
-                        constraints: BoxConstraints(maxHeight: 400.h),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: const Color(0xff9945FF).withOpacity(0.3),
-                            width: 2.w,
-                          ),
-                          borderRadius: BorderRadius.circular(20.r),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 10.r,
-                              offset: Offset(0, 4.h),
-                            ),
-                          ],
-                        ),
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          itemCount:
-                              results.length +
-                              (homePageController.isSuppliesMoreLoading.value
-                                  ? 1
-                                  : 0),
-                          itemBuilder: (context, index) {
-                            if (index == results.length) {
-                              return Padding(
-                                padding: EdgeInsets.all(16.h),
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Color(0xff9945FF),
+          if (_searchController.text.isNotEmpty) {
+            final results = filteredSupplies;
+            final query = _searchController.text.trim().toLowerCase();
+            final exactMatch = results.any(
+              (element) => element.name.toLowerCase() == query,
+            );
+
+            return Column(
+              children: [
+                SizedBox(height: 8.h),
+                Container(
+                  constraints: BoxConstraints(maxHeight: 350.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(
+                      color: const Color(0xffF2F2F7),
+                      width: 1.w,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 15.r,
+                        offset: Offset(0, 5.h),
+                      ),
+                    ],
+                  ),
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount:
+                        results.length +
+                        (exactMatch ? 0 : 1) +
+                        (homePageController.isSuppliesMoreLoading.value
+                            ? 1
+                            : 0),
+                    itemBuilder: (context, index) {
+                      if (index < results.length) {
+                        final item = results[index];
+                        final isSelected = widget.selectedIds.contains(
+                          item.name,
+                        );
+
+                        return Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => isSelected
+                                ? removeItem(item.name)
+                                : addItem(item.name),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 14.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? const Color(0xff9945FF).withOpacity(0.04)
+                                    : null,
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Colors.grey.shade50,
+                                    width: 1.w,
                                   ),
                                 ),
-                              );
-                            }
-                            final item = results[index];
-                            final isSelected = widget.selectedIds.contains(
-                              item.id,
-                            );
-                            return InkWell(
-                              onTap: () {
-                                if (isSelected) {
-                                  removeItem(item.id);
-                                } else {
-                                  addItem(item.id);
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 16.w,
-                                  vertical: 12.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? const Color(
-                                          0xff9945FF,
-                                        ).withOpacity(0.05)
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(20.r),
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.grey.shade100,
-                                      width: 1.w,
-                                    ),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        item.name,
-                                        style: TextStyle(
-                                          color: isSelected
-                                              ? const Color(0xff9945FF)
-                                              : Colors.grey.shade700,
-                                          fontSize: 15.sp,
-                                          fontWeight: isSelected
-                                              ? FontWeight.w500
-                                              : FontWeight.normal,
-                                        ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      item.name,
+                                      style: GoogleFonts.arimo(
+                                        color: isSelected
+                                            ? const Color(0xff9945FF)
+                                            : Colors.grey.shade800,
+                                        fontSize: 15.sp,
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.w400,
                                       ),
                                     ),
-                                    Icon(
-                                      isSelected
-                                          ? Icons.check_circle
-                                          : Icons.add,
-                                      color: isSelected
+                                  ),
+                                  AnimatedScale(
+                                    scale: isSelected ? 1.0 : 0.8,
+                                    duration: const Duration(milliseconds: 200),
+                                    child: CircleAvatar(
+                                      radius: 12.r,
+                                      backgroundColor: isSelected
                                           ? const Color(0xff9945FF)
-                                          : Colors.grey.shade400,
-                                      size: 20.sp,
+                                          : Colors.grey.shade100,
+                                      child: Icon(
+                                        isSelected ? Icons.check : Icons.add,
+                                        size: 14.sp,
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.grey.shade400,
+                                      ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  // No results found
-                  return Column(
-                    children: [
-                      SizedBox(height: 8.h),
-                      Container(
-                        padding: EdgeInsets.all(16.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 2.w,
-                          ),
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'No supplies found',
-                            style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontSize: 15.sp,
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              }
-              return const SizedBox.shrink();
-            }),
+                        );
+                      } else if (!exactMatch && index == results.length) {
+                        // Custom Addition Tile
+                        final customName = _searchController.text.trim();
+                        final isSelected = widget.selectedIds.contains(
+                          customName,
+                        );
 
-            SizedBox(height: 24.h),
-
-            // Selected Items
-            Container(
-              padding: EdgeInsets.all(16.w),
-              decoration: BoxDecoration(
-                color: const Color(0xff9945FF).withOpacity(0.05),
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Selected Items (${widget.selectedIds.length})',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xff9945FF),
-                        ),
-                      ),
-                    ],
+                        return Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => isSelected
+                                ? removeItem(customName)
+                                : addItem(customName),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 14.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? const Color(0xff9945FF).withOpacity(0.04)
+                                    : null,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: GoogleFonts.arimo(
+                                          fontSize: 15.sp,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                        children: [
+                                          const TextSpan(text: 'Add '),
+                                          TextSpan(
+                                            text: '"$customName"',
+                                            style: const TextStyle(
+                                              color: Color(0xff9945FF),
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          const TextSpan(text: ' as custom'),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.add_circle_outline_rounded,
+                                    color: const Color(0xff9945FF),
+                                    size: 22.sp,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding: EdgeInsets.all(16.h),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xff9945FF),
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        );
+                      }
+                    },
                   ),
-                  SizedBox(height: 12.h),
-                  if (widget.selectedIds.isEmpty)
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.h),
-                        child: Text(
-                          'No item selected',
-                          style: TextStyle(
-                            color: Colors.grey.shade400,
-                            fontSize: 14.sp,
-                            fontStyle: FontStyle.italic,
-                          ),
+                ),
+              ],
+            );
+          }
+          return const SizedBox.shrink();
+        }),
+
+        SizedBox(height: 24.h),
+
+        // Selected Items Section
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(18.w),
+          decoration: BoxDecoration(
+            color: const Color(0xffF9FAFB),
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: const Color(0xffF2F2F7)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.selectedIds.isEmpty
+                        ? '0 item selected'
+                        : 'Selected (${widget.selectedIds.length})',
+                    style: GoogleFonts.arimo(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+                  if (widget.selectedIds.isNotEmpty)
+                    TextButton(
+                      onPressed: () => widget.onSelectionChanged([]),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        'Clear all',
+                        style: GoogleFonts.arimo(
+                          color: const Color(0xff9945FF),
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    )
-                  else
-                    Wrap(
-                      spacing: 8.w,
-                      runSpacing: 8.h,
-                      children: widget.selectedIds.map((id) {
-                        // Find the name for this ID from controller's full list
-                        final item = homePageController.supplies.firstWhere(
-                          (element) => element.id == id,
-                          orElse: () => SuppliesModel(id: id, name: 'Unknown'),
-                        );
-                        return Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16.w,
-                            vertical: 10.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: const Color(0xff9945FF).withOpacity(0.3),
-                              width: 2.w,
-                            ),
-                            borderRadius: BorderRadius.circular(12.r),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 4.r,
-                                offset: Offset(0, 2.h),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  item.name,
-                                  style: TextStyle(
-                                    color: const Color(0xff9945FF),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14.sp,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              SizedBox(width: 8.w),
-                              InkWell(
-                                onTap: () => removeItem(id),
-                                child: Container(
-                                  padding: EdgeInsets.all(2.w),
-                                  decoration: BoxDecoration(
-                                    color: const Color(
-                                      0xff9945FF,
-                                    ).withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(20.r),
-                                  ),
-                                  child: Icon(
-                                    Icons.close,
-                                    size: 16.sp,
-                                    color: const Color(0xff9945FF),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
                     ),
                 ],
               ),
-            ),
-            SizedBox(height: 24.h),
-
-            // Info Text
-            Container(
-              padding: EdgeInsets.only(top: 16.h),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.grey.shade200, width: 1.w),
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  'Search from thousands of medical supplies',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: Colors.grey.shade500,
+              SizedBox(height: 12.h),
+              if (widget.selectedIds.isEmpty)
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    child: Text(
+                      'No item selected',
+                      style: GoogleFonts.arimo(
+                        color: Colors.grey.shade400,
+                        fontSize: 14.sp,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
                   ),
+                )
+              else
+                Wrap(
+                  spacing: 10.w,
+                  runSpacing: 10.h,
+                  children: widget.selectedIds.map((name) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 8.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: const Color(0xffE5E7EB),
+                          width: 1.w,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.03),
+                            blurRadius: 4.r,
+                            offset: Offset(0, 2.h),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              name,
+                              style: GoogleFonts.arimo(
+                                color: Colors.grey.shade700,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13.sp,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          GestureDetector(
+                            onTap: () => removeItem(name),
+                            child: Icon(
+                              Icons.close_rounded,
+                              size: 16.sp,
+                              color: Colors.grey.shade400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
