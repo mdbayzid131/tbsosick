@@ -768,16 +768,19 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            name,
-            style: GoogleFonts.arimo(
-              fontSize: 17.sp,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFF000000),
+          Expanded(
+            child: Text(
+              name,
+              style: GoogleFonts.arimo(
+                fontSize: 17.sp,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF000000),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
+          SizedBox(width: 8.w),
           Text(
             '× $quantity',
             style: GoogleFonts.arimo(

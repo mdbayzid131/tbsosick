@@ -12,7 +12,9 @@ class PostAnyCardController extends GetxController {
   RxBool isLoading = false.obs;
 
   RxList<String> selectedSupplies = <String>[].obs;
+  RxMap<String, String> selectedSuppliesNames = <String, String>{}.obs;
   RxList<String> selectedSutures = <String>[].obs;
+  RxMap<String, String> selectedSuturesNames = <String, String>{}.obs;
 
   final ImagePicker picker = ImagePicker();
   RxList<File> selectedImages = <File>[].obs;
@@ -64,7 +66,9 @@ class PostAnyCardController extends GetxController {
     operativeWorkFlowController.clear();
     keyNotesController.clear();
     selectedSupplies.clear();
+    selectedSuppliesNames.clear();
     selectedSutures.clear();
+    selectedSuturesNames.clear();
     selectedImages.clear();
   }
 

@@ -173,10 +173,9 @@ class UserDataRepository {
       body['surgeon[$key]'] = value;
     });
 
-    // Add list items (using list values, Dio FormData.fromMap handles them)
-    // To ensure key[] syntax, we use that as the key name.
-    body['supplies[]'] = supplies;
-    body['sutures[]'] = sutures;
+    // To ensure correct formData parsing, we unwrap any RxList
+    body['supplies'] = supplies.toList();
+    body['sutures'] = sutures.toList();
 
     // 2. Prepare files for multipartBody
     List<MultipartBody> multipartConfig = photos.map((file) {

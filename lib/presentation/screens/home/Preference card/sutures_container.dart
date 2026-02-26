@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/data/models/supplies_model.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/controllers/post_any__card_controller.dart';
 
 class SuturesContainer extends StatefulWidget {
   final List<String> selectedIds;
@@ -51,6 +52,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
   }
 
   final HomePageController homePageController = Get.find();
+  final PostAnyCardController postAnyCardController = Get.find();
 
   List<SuppliesModel> get filteredSutures {
     final query = _searchController.text.trim().toLowerCase();
@@ -61,13 +63,15 @@ class _SuturesContainerState extends State<SuturesContainer> {
   void removeItem(String name) {
     List<String> newList = List.from(widget.selectedIds);
     newList.remove(name);
+    postAnyCardController.selectedSuturesNames.remove(name);
     widget.onSelectionChanged(newList);
   }
 
-  void addItem(String name) {
-    if (!widget.selectedIds.contains(name)) {
+  void addItem(String id, String name) {
+    if (!widget.selectedIds.contains(id)) {
       List<String> newList = List.from(widget.selectedIds);
-      newList.add(name);
+      newList.add(id);
+      postAnyCardController.selectedSuturesNames[id] = name;
       widget.onSelectionChanged(newList);
       // No longer clearing search or unfocusing here
     }
@@ -178,7 +182,6 @@ class _SuturesContainerState extends State<SuturesContainer> {
             final exactMatch = results.any(
               (element) => element.name.toLowerCase() == query,
             );
-
             return Column(
               children: [
                 SizedBox(height: 8.h),
@@ -209,16 +212,14 @@ class _SuturesContainerState extends State<SuturesContainer> {
                     itemBuilder: (context, index) {
                       if (index < results.length) {
                         final item = results[index];
-                        final isSelected = widget.selectedIds.contains(
-                          item.name,
-                        );
+                        final isSelected = widget.selectedIds.contains(item.id);
 
                         return Material(
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () => isSelected
-                                ? removeItem(item.name)
-                                : addItem(item.name),
+                                ? removeItem(item.id)
+                                : addItem(item.id, item.name),
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 16.w,
@@ -285,7 +286,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                           child: InkWell(
                             onTap: () => isSelected
                                 ? removeItem(customName)
-                                : addItem(customName),
+                                : addItem(customName, customName),
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 16.w,
@@ -378,7 +379,10 @@ class _SuturesContainerState extends State<SuturesContainer> {
                   ),
                   if (widget.selectedIds.isNotEmpty)
                     TextButton(
-                      onPressed: () => widget.onSelectionChanged([]),
+                      onPressed: () {
+                        postAnyCardController.selectedSuturesNames.clear();
+                        widget.onSelectionChanged([]);
+                      },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         minimumSize: Size.zero,
@@ -414,7 +418,13 @@ class _SuturesContainerState extends State<SuturesContainer> {
                 Wrap(
                   spacing: 10.w,
                   runSpacing: 10.h,
-                  children: widget.selectedIds.map((name) {
+                  children: widget.selectedIds.map((id) {
+                    final itemName =
+                        postAnyCardController.selectedSuturesNames[id] ??
+                        homePageController.sutures
+                            .firstWhereOrNull((e) => e.id == id)
+                            ?.name ??
+                        id;
                     return Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 14.w,
@@ -440,7 +450,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                         children: [
                           Flexible(
                             child: Text(
-                              name,
+                              itemName,
                               style: GoogleFonts.arimo(
                                 color: Colors.grey.shade700,
                                 fontWeight: FontWeight.w500,
@@ -451,7 +461,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                           ),
                           SizedBox(width: 8.w),
                           GestureDetector(
-                            onTap: () => removeItem(name),
+                            onTap: () => removeItem(id),
                             child: Icon(
                               Icons.close_rounded,
                               size: 16.sp,

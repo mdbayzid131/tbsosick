@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/data/models/supplies_model.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/controllers/post_any__card_controller.dart';
 
 class MedicalSuppliesScreen extends StatefulWidget {
   final List<String> selectedIds;
@@ -51,6 +52,7 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
   }
 
   final HomePageController homePageController = Get.find();
+  final PostAnyCardController postAnyCardController = Get.find();
 
   List<SuppliesModel> get filteredSupplies {
     final query = _searchController.text.trim().toLowerCase();
@@ -61,13 +63,18 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
   void removeItem(String name) {
     List<String> newList = List.from(widget.selectedIds);
     newList.remove(name);
+    postAnyCardController.selectedSuppliesNames.remove(name);
     widget.onSelectionChanged(newList);
   }
 
-  void addItem(String name) {
-    if (!widget.selectedIds.contains(name)) {
+  void addItem(String id, String name) {
+    if (!widget.selectedIds.contains(id)) {
       List<String> newList = List.from(widget.selectedIds);
-      newList.add(name);
+      newList.add(id);
+
+      // Store the name in the caching map
+      postAnyCardController.selectedSuppliesNames[id] = name;
+
       widget.onSelectionChanged(newList);
       // No longer clearing search or unfocusing here
     }
@@ -178,7 +185,6 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
             final exactMatch = results.any(
               (element) => element.name.toLowerCase() == query,
             );
-
             return Column(
               children: [
                 SizedBox(height: 8.h),
@@ -211,16 +217,14 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                     itemBuilder: (context, index) {
                       if (index < results.length) {
                         final item = results[index];
-                        final isSelected = widget.selectedIds.contains(
-                          item.name,
-                        );
+                        final isSelected = widget.selectedIds.contains(item.id);
 
                         return Material(
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () => isSelected
-                                ? removeItem(item.name)
-                                : addItem(item.name),
+                                ? removeItem(item.id)
+                                : addItem(item.id, item.name),
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 16.w,
@@ -287,7 +291,7 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                           child: InkWell(
                             onTap: () => isSelected
                                 ? removeItem(customName)
-                                : addItem(customName),
+                                : addItem(customName, customName),
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 16.w,
@@ -380,7 +384,10 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                   ),
                   if (widget.selectedIds.isNotEmpty)
                     TextButton(
-                      onPressed: () => widget.onSelectionChanged([]),
+                      onPressed: () {
+                        postAnyCardController.selectedSuppliesNames.clear();
+                        widget.onSelectionChanged([]);
+                      },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         minimumSize: Size.zero,
@@ -416,7 +423,16 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                 Wrap(
                   spacing: 10.w,
                   runSpacing: 10.h,
-                  children: widget.selectedIds.map((name) {
+                  children: widget.selectedIds.map((id) {
+                    // We check if it's an ObjectId (24 hex chars). If it's an ID but not found in list, it might show the ID instead of name.
+                    // But if it's a custom item, the 'id' is just the custom string name (e.g. 'My Custom Suture').
+                    // So we search in the supplies list for the name first.
+                    final itemName =
+                        postAnyCardController.selectedSuppliesNames[id] ??
+                        homePageController.supplies
+                            .firstWhereOrNull((e) => e.id == id)
+                            ?.name ??
+                        id;
                     return Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 14.w,
@@ -442,7 +458,7 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                         children: [
                           Flexible(
                             child: Text(
-                              name,
+                              itemName,
                               style: GoogleFonts.arimo(
                                 color: Colors.grey.shade700,
                                 fontWeight: FontWeight.w500,
@@ -453,7 +469,7 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                           ),
                           SizedBox(width: 8.w),
                           GestureDetector(
-                            onTap: () => removeItem(name),
+                            onTap: () => removeItem(id),
                             child: Icon(
                               Icons.close_rounded,
                               size: 16.sp,
