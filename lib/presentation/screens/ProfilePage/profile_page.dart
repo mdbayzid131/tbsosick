@@ -10,7 +10,9 @@ import '../../../config/constants/image_paths.dart';
 import '../home/notification_bottom.dart';
 import 'Privacy & Security bottom.dart';
 import 'UpdatePaymentMethodBottom.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 import 'edit_profile_bottom.dart';
+import 'language_bottom_sheet.dart';
 import 'log_out_bottom_sheet.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -27,6 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Color(0xFF271E3E),
@@ -187,6 +190,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             title: 'Privacy & Security',
                             onTap: () {
                               showPrivacyAndSecurityBottomSheet(context);
+                            },
+                          ),
+                          Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
+                          _buildMenuItem(
+                            icon: Icons.language_outlined,
+                            iconColor: const Color(0xFF6B7280),
+                            title: tr.languageRegion,
+                            onTap: () {
+                              showLanguageBottomSheet(context);
                             },
                           ),
                           Divider(height: 1.h, color: const Color(0xFFF3F4F6)),

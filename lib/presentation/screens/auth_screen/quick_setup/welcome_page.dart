@@ -5,6 +5,7 @@ import 'package:tbsosick/core/utils/validators.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/select_package.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/presentation/widgets/custom_text_field.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class WelcomePage extends StatelessWidget {
   WelcomePage({super.key});
@@ -13,6 +14,7 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Color(0xffF2F2F7),
       body: SafeArea(
@@ -24,7 +26,7 @@ class WelcomePage extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Welcome to\nSMRTSCRUB',
+                  tr.welcome.replaceFirst('to ', 'to\n'),
                   style: GoogleFonts.arimo(
                     fontSize: 30.sp,
                     fontWeight: FontWeight.w700,
@@ -36,7 +38,7 @@ class WelcomePage extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Let\'s start with your name',
+                  tr.startWithName,
                   style: GoogleFonts.arimo(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
@@ -50,15 +52,15 @@ class WelcomePage extends StatelessWidget {
                   SizedBox(height: 20.h),
                   CustomTextField(
                     hintText: 'Jon',
-                    label: "First Name",
+                    label: tr.firstName,
                     fillColior: Colors.white,
                     controller: firstNameController,
                     validator: Validators.name,
                   ),
                   SizedBox(height: 20.h),
                   CustomTextField(
-                    hintText: 'Due',
-                    label: "Last Name",
+                    hintText: 'Doe',
+                    label: tr.lastName,
                     fillColior: Colors.white,
                     controller: lastNameController,
                     validator: Validators.name,
@@ -68,7 +70,7 @@ class WelcomePage extends StatelessWidget {
 
               SizedBox(height: 40.h),
               CustomElevatedButton(
-                label: 'Continue',
+                label: tr.continue_button,
                 onPressed: () {
                   // if (_formKey.currentState!.validate()) {
                   //   print(firstNameController.text);

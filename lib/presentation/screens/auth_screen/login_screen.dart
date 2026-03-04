@@ -10,6 +10,7 @@ import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom1
 import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 // ignore: must_be_immutable
 class LoginScreen extends GetView<LoginController> {
@@ -18,6 +19,7 @@ class LoginScreen extends GetView<LoginController> {
   // final _authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -60,7 +62,7 @@ class LoginScreen extends GetView<LoginController> {
                     Expanded(
                       child: Text(
                         textAlign: TextAlign.center,
-                        "SURGICAL CASE LOG & PREFERENCE CARDS",
+                        tr.appDescription,
                         style: GoogleFonts.arimo(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w400,
@@ -85,8 +87,8 @@ class LoginScreen extends GetView<LoginController> {
                         ),
                         isLabelVisible: false,
                         errorText: controller.emailError.value,
-                        hintText: 'Email',
-                        label: 'Email',
+                        hintText: tr.email,
+                        label: tr.email,
                         controller: controller.emailController,
                       ),
                     ),
@@ -111,8 +113,8 @@ class LoginScreen extends GetView<LoginController> {
                             size: 20.sp,
                           ),
                         ),
-                        hintText: 'Password',
-                        label: 'Password',
+                        hintText: tr.passwordLabel,
+                        label: tr.passwordLabel,
                         controller: controller.passwordController,
                       ),
                     ),
@@ -122,7 +124,7 @@ class LoginScreen extends GetView<LoginController> {
                     ///================= Login Button =========================///
                     Obx(
                       () => CustomElevatedButton(
-                        label: 'Login',
+                        label: tr.loginButton,
                         onPressed: controller.login,
                         isLoading: controller.isLoading.value,
                       ),
@@ -142,7 +144,7 @@ class LoginScreen extends GetView<LoginController> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: Text(
-                          "Forgot Password?",
+                          tr.forgotPasswordButton,
                           style: GoogleFonts.arimo(
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w400,
@@ -163,7 +165,7 @@ class LoginScreen extends GetView<LoginController> {
                         ),
                         SizedBox(width: 10.w),
                         Text(
-                          'OR',
+                          tr.orText,
                           style: GoogleFonts.arimo(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w400,
@@ -196,7 +198,7 @@ class LoginScreen extends GetView<LoginController> {
                           SvgPicture.asset(ImagePaths.appleIcon, height: 20.h),
                           SizedBox(width: 10.w),
                           Text(
-                            'Continue with Apple',
+                            tr.continueApple,
                             style: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               fontWeight: FontWeight.w700,
@@ -228,7 +230,7 @@ class LoginScreen extends GetView<LoginController> {
                           SvgPicture.asset(ImagePaths.googleIcon, height: 20.h),
                           SizedBox(width: 10.w),
                           Text(
-                            'Continue with Google',
+                            tr.continueGoogle,
                             style: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               fontWeight: FontWeight.w700,
@@ -245,7 +247,7 @@ class LoginScreen extends GetView<LoginController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don’t have an account?",
+                          tr.dontHaveAccount,
                           style: GoogleFonts.arimo(
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w400,
@@ -259,7 +261,7 @@ class LoginScreen extends GetView<LoginController> {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 4.w),
                             child: Text(
-                              "Sign Up",
+                              tr.signUpButton,
                               style: GoogleFonts.arimo(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w700,
@@ -273,7 +275,7 @@ class LoginScreen extends GetView<LoginController> {
 
                     SizedBox(height: 30.h),
                     Text(
-                      'By continuing, you agree to SMRTSCRUB s Terms of service and Privacy policy',
+                      tr.termsPolicyText,
                       style: GoogleFonts.arimo(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w400,

@@ -256,7 +256,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                 dropdownColor: Colors.white,
                                 elevation: 8,
                                 borderRadius: BorderRadius.circular(16.r),
-                                items: specialties
+                                items: getSpecialties(context)
                                     .map(
                                       (item) => DropdownMenuItem<String>(
                                         value: item.title,

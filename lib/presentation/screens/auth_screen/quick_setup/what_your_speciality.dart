@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
-
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class WhatYourSpeciality extends StatelessWidget {
   WhatYourSpeciality({super.key});
@@ -14,6 +13,9 @@ class WhatYourSpeciality extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
+    final specialtiesList = getSpecialties(context);
+
     return Scaffold(
       backgroundColor: const Color(0xffF2F2F7),
       body: SingleChildScrollView(
@@ -24,7 +26,7 @@ class WhatYourSpeciality extends StatelessWidget {
             SizedBox(height: 65.h),
 
             Text(
-              "What's Your Speciality?",
+              tr.specialtyQuestion,
               style: GoogleFonts.arimo(
                 fontSize: 30.sp,
                 fontWeight: FontWeight.w700,
@@ -32,13 +34,12 @@ class WhatYourSpeciality extends StatelessWidget {
               ),
             ),
 
-
             SizedBox(height: 20.h),
 
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: specialties.length,
+              itemCount: specialtiesList.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 12.w,
@@ -70,14 +71,14 @@ class WhatYourSpeciality extends StatelessWidget {
                           mainAxisSize: .min,
                           children: [
                             Text(
-                              specialties[index].icon,
+                              specialtiesList[index].icon,
                               style: TextStyle(fontSize: 22.sp),
                             ),
 
                             const Spacer(),
 
                             Text(
-                              specialties[index].title,
+                              specialtiesList[index].title,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.arimo(
@@ -110,13 +111,16 @@ class SpecialtyItem {
   SpecialtyItem(this.title, this.icon);
 }
 
-final specialties = [
-  SpecialtyItem('Orthopedic Surgery', '🦴'),
-  SpecialtyItem('Cardiac Surgery', '❤️'),
-  SpecialtyItem('General Surgery', '🏥'),
-  SpecialtyItem('Neurosurgery', '🧠'),
-  SpecialtyItem('Plastic Surgery', '✨'),
-  SpecialtyItem('Vascular Surgery', '🩸'),
-  SpecialtyItem('Thoracic Surgery', '🫁'),
-  SpecialtyItem('Pediatric Surgery', '👶'),
-];
+List<SpecialtyItem> getSpecialties(BuildContext context) {
+  final tr = AppLocalizations.of(context)!;
+  return [
+    SpecialtyItem(tr.orthopedicSurgery, '🦴'),
+    SpecialtyItem(tr.cardiacSurgery, '❤️'),
+    SpecialtyItem(tr.generalSurgery, '🏥'),
+    SpecialtyItem(tr.neurosurgery, '🧠'),
+    SpecialtyItem(tr.plasticSurgery, '✨'),
+    SpecialtyItem(tr.vascularSurgery, '🩸'),
+    SpecialtyItem(tr.thoracicSurgery, '🫁'),
+    SpecialtyItem(tr.pediatricSurgery, '👶'),
+  ];
+}

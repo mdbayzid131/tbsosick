@@ -11,7 +11,7 @@ class ImagePaths {
   static String onboardingImage2="assets/images/onbordingImage2.png";
   static String onboardingImage3="assets/images/onbordingImage3.png";
   static String appLOgo="assets/dummy_image/appLogo.png";
-  static String googleIcon="assets/icons/googleIcon.svg";
+  static String googleIcon="assets/icons/google_icon.svg";
   static String appleIcon="assets/icons/apple_icon.svg";
   static String chosePlanIcon="assets/icons/chose_plan_icon.svg";
   static String homeIcon="assets/icons/home icon.svg";

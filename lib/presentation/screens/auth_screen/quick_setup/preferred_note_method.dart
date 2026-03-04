@@ -4,12 +4,14 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class PreferredNoteMethod extends StatelessWidget {
   const PreferredNoteMethod({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xffF2F2F7),
       body: SingleChildScrollView(
@@ -20,7 +22,7 @@ class PreferredNoteMethod extends StatelessWidget {
             SizedBox(height: 65.h),
 
             Text(
-              "Preferred Note Method?",
+              tr.noteMethodQuestion,
               style: GoogleFonts.arimo(
                 fontSize: 30.sp,
                 fontWeight: FontWeight.w700,
@@ -31,7 +33,7 @@ class PreferredNoteMethod extends StatelessWidget {
             SizedBox(height: 6.h),
 
             Text(
-              "Choose your default input method",
+              tr.chooseInputMethod,
               style: GoogleFonts.arimo(
                 fontSize: 16.sp,
                 color: const Color(0xff4A5565),
@@ -45,8 +47,8 @@ class PreferredNoteMethod extends StatelessWidget {
                 _optionTile(
                   icon: Icons.mic_outlined,
                   iconBg: Color(0xff2F6BFF),
-                  title: 'Voice to Text',
-                  subtitle: 'Dictate notes hands free',
+                  title: tr.voiceToText,
+                  subtitle: tr.voiceToTextDesc,
                   onTap: () {
                     Get.toNamed(AppRoutes.INTERACTIVE_TUTORIAL);
                   },
@@ -57,8 +59,8 @@ class PreferredNoteMethod extends StatelessWidget {
                 _optionTile(
                   icon: Icons.chevron_right,
                   iconBg: Color(0xff8E44FF),
-                  title: 'Rapid Checklist',
-                  subtitle: 'Quick tap through templates',
+                  title: tr.rapidChecklist,
+                  subtitle: tr.rapidChecklistDesc,
                   onTap: () {
                     Get.toNamed(AppRoutes.INTERACTIVE_TUTORIAL);
                   },
@@ -69,15 +71,14 @@ class PreferredNoteMethod extends StatelessWidget {
                 _optionTile(
                   icon: Icons.person_outline,
                   iconBg: Color(0xff00C853),
-                  title: 'Freehand Entry',
-                  subtitle: 'Type custom notes',
+                  title: tr.freehandEntry,
+                  subtitle: tr.freehandEntryDesc,
                   onTap: () {
                     Get.toNamed(AppRoutes.INTERACTIVE_TUTORIAL);
                   },
                 ),
               ],
             ),
-
 
             SizedBox(height: 20.h),
           ],
@@ -86,6 +87,7 @@ class PreferredNoteMethod extends StatelessWidget {
     );
   }
 }
+
 Widget _optionTile({
   required IconData icon,
   required Color iconBg,
@@ -112,11 +114,7 @@ Widget _optionTile({
               color: iconBg,
               borderRadius: BorderRadius.circular(12.r),
             ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 22.sp,
-            ),
+            child: Icon(icon, color: Colors.white, size: 22.sp),
           ),
 
           SizedBox(width: 14.w),
@@ -145,11 +143,7 @@ Widget _optionTile({
             ),
           ),
 
-          Icon(
-            Icons.chevron_right,
-            color: Color(0xffC7C7CC),
-            size: 22.sp,
-          ),
+          Icon(Icons.chevron_right, color: Color(0xffC7C7CC), size: 22.sp),
         ],
       ),
     ),

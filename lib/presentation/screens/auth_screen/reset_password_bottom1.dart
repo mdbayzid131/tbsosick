@@ -10,8 +10,10 @@ import 'package:tbsosick/core/utils/validators.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/otp_verify_bottom.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 void showResetPasswordBottomSheet(BuildContext context) {
+  final tr = AppLocalizations.of(context)!;
   final AuthService authService = Get.find();
   final emailController = TextEditingController();
   final emailError = RxnString();
@@ -32,9 +34,8 @@ void showResetPasswordBottomSheet(BuildContext context) {
 
       if (isSuccess.value) {
         // Prevent opening multiple bottom sheets
-          Get.back();
-          showOtpVerifyBottomSheet(Get.context!, emailController.text.trim());
-        
+        Get.back();
+        showOtpVerifyBottomSheet(Get.context!, emailController.text.trim());
 
         return;
       }
@@ -49,7 +50,7 @@ void showResetPasswordBottomSheet(BuildContext context) {
 
       if (response.statusCode == 200) {
         isSuccess.value = true;
-        Helpers.showCustomSnackBar('Password reset email sent', isError: false);
+        Helpers.showCustomSnackBar(tr.passwordResetSent, isError: false);
       }
     } catch (e) {
       Helpers.showDebugLog("forgotPassword error => $e");
@@ -85,7 +86,7 @@ void showResetPasswordBottomSheet(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Reset Password',
+                        tr.resetPasswordTitle,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -111,7 +112,7 @@ void showResetPasswordBottomSheet(BuildContext context) {
                   SizedBox(height: 12.h),
 
                   Text(
-                    "Enter your email address and we'll send you a link to reset your password.",
+                    tr.resetPasswordDesc,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       color: Color(0xff8E8E93),
@@ -139,7 +140,7 @@ void showResetPasswordBottomSheet(BuildContext context) {
                               SizedBox(width: 8.w),
                               Expanded(
                                 child: Text(
-                                  'Password reset link sent to your email!',
+                                  tr.passwordResetSent,
                                   style: GoogleFonts.arimo(
                                     fontSize: 14.sp,
                                     color: Colors.green,
@@ -160,7 +161,7 @@ void showResetPasswordBottomSheet(BuildContext context) {
                       readOnly: isSuccess.value,
                       isLabelVisible: false,
                       controller: emailController,
-                      hintText: 'Email',
+                      hintText: tr.email,
                       errorText: emailError.value,
                       prefixIcon: Icon(
                         Icons.email_outlined,
@@ -176,7 +177,7 @@ void showResetPasswordBottomSheet(BuildContext context) {
                   // Submit Button (Reactive)
                   Obx(
                     () => CustomElevatedButton(
-                      label: isSuccess.value ? 'Next' : 'Send Reset Link',
+                      label: isSuccess.value ? tr.next : tr.sendResetLink,
                       onPressed: forgotPassword,
                       isLoading: isLoading.value,
                     ),

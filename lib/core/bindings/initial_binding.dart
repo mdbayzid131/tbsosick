@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tbsosick/core/controllers/internet_controller.dart';
+import 'package:tbsosick/core/controllers/language_controller.dart';
 import 'package:tbsosick/core/services/connectivity_service.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
 import 'package:tbsosick/presentation/controllers/auth_controller.dart';
@@ -30,5 +31,6 @@ class InitialBinding extends Bindings {
     Get.put(ForgatePasswordController());
     Get.put(ResetPasswordController());
     Get.put(SignUpController());
+    Get.put(LanguageController());
   }
 }

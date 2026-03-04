@@ -65,6 +65,8 @@ dependencies:
   google_sign_in: ^7.2.0
   sign_in_with_apple: ^6.1.1
   in_app_purchase: ^3.1.13
+  flutter_localizations:
+    sdk: flutter
   
 
 
@@ -79,11 +81,18 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
 
+
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -10,6 +10,7 @@ import 'package:tbsosick/presentation/controllers/sign_up_controller.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/custom_dropdown_field.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class SignUpScreen extends GetView<SignUpController> {
   SignUpScreen({super.key});
@@ -18,6 +19,7 @@ class SignUpScreen extends GetView<SignUpController> {
   final RxBool confirmObscureText = true.obs;
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -54,7 +56,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     Expanded(
                       child: Text(
                         textAlign: TextAlign.center,
-                        "SURGICAL CASE LOG & PREFERENCE CARDS",
+                        tr.appDescription,
                         style: GoogleFonts.arimo(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w400,
@@ -79,8 +81,8 @@ class SignUpScreen extends GetView<SignUpController> {
                         ),
                         isLabelVisible: false,
                         errorText: controller.nameError.value,
-                        hintText: 'Full Name',
-                        label: 'Email',
+                        hintText: tr.fullNameLabel,
+                        label: tr.fullNameLabel,
                         controller: controller.nameController,
                       ),
                     ),
@@ -97,8 +99,8 @@ class SignUpScreen extends GetView<SignUpController> {
                         ),
                         isLabelVisible: false,
                         errorText: controller.emailError.value,
-                        hintText: 'Email',
-                        label: 'Email',
+                        hintText: tr.email,
+                        label: tr.email,
                         controller: controller.emailController,
                       ),
                     ),
@@ -115,8 +117,8 @@ class SignUpScreen extends GetView<SignUpController> {
                         ),
                         isLabelVisible: false,
                         errorText: controller.phoneError.value,
-                        hintText: 'Phone Number',
-                        label: 'Phone',
+                        hintText: tr.phoneNumberLabel,
+                        label: tr.phoneLabel,
                         controller: controller.phoneController,
                       ),
                     ),
@@ -127,8 +129,8 @@ class SignUpScreen extends GetView<SignUpController> {
                     Obx(
                       () => CustomDropdownField<String>(
                         errorText: controller.countryError.value,
-                        hintText: 'Select your country',
-                        label: 'Country',
+                        hintText: tr.selectCountryHint,
+                        label: tr.countryLabel,
                         items: controller.countries,
                         value: controller.selectedCountry.value.isEmpty
                             ? null
@@ -167,8 +169,8 @@ class SignUpScreen extends GetView<SignUpController> {
                             size: 20.sp,
                           ),
                         ),
-                        hintText: 'Password',
-                        label: 'Password',
+                        hintText: tr.passwordLabel,
+                        label: tr.passwordLabel,
                         controller: controller.passwordController,
                       ),
                     ),
@@ -192,8 +194,8 @@ class SignUpScreen extends GetView<SignUpController> {
                             size: 20.sp,
                           ),
                         ),
-                        hintText: 'Confirm Password',
-                        label: 'Password',
+                        hintText: tr.confirmPasswordLabel,
+                        label: tr.passwordLabel,
                         controller: controller.confirmPasswordController,
                       ),
                     ),
@@ -203,7 +205,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     ///================= Login Button =========================///
                     Obx(
                       () => CustomElevatedButton(
-                        label: 'Create Account',
+                        label: tr.createAccountButton,
                         isLoading: controller.isLoading.value,
                         onPressed: controller.signUp,
                       ),
@@ -220,7 +222,7 @@ class SignUpScreen extends GetView<SignUpController> {
                         ),
                         SizedBox(width: 10.w),
                         Text(
-                          'OR',
+                          tr.orText,
                           style: GoogleFonts.arimo(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w400,
@@ -253,7 +255,7 @@ class SignUpScreen extends GetView<SignUpController> {
                           SvgPicture.asset(ImagePaths.appleIcon, height: 20.h),
                           SizedBox(width: 10.w),
                           Text(
-                            'Continue with Apple',
+                            tr.continueApple,
                             style: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               fontWeight: FontWeight.w700,
@@ -285,7 +287,7 @@ class SignUpScreen extends GetView<SignUpController> {
                           SvgPicture.asset(ImagePaths.googleIcon, height: 20.h),
                           SizedBox(width: 10.w),
                           Text(
-                            'Continue with Google',
+                            tr.continueGoogle,
                             style: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               fontWeight: FontWeight.w700,
@@ -302,7 +304,7 @@ class SignUpScreen extends GetView<SignUpController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Already have an account?",
+                          tr.alreadyHaveAccount,
                           style: GoogleFonts.arimo(
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w400,
@@ -316,7 +318,7 @@ class SignUpScreen extends GetView<SignUpController> {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 4.w),
                             child: Text(
-                              "Sign In",
+                              tr.signInButton,
                               style: GoogleFonts.arimo(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w700,
@@ -330,7 +332,7 @@ class SignUpScreen extends GetView<SignUpController> {
 
                     SizedBox(height: 30.h),
                     Text(
-                      'By continuing, you agree to SMRTSCRUB s Terms of service and Privacy policy',
+                      tr.termsPolicyText,
                       style: GoogleFonts.arimo(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w400,

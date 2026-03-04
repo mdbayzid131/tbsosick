@@ -14,51 +14,52 @@ import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/reset_password_bottom2.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
 void showOtpVerifyBottomSheet(BuildContext context, String email) {
+  final tr = AppLocalizations.of(context)!;
   final AuthService authService = Get.find();
   final otpController = TextEditingController();
   final otpError = RxnString();
 
   final isLoading = false.obs;
 
-Future<void> verifyOtp() async {
-  try {
-    if (isLoading.value) return;
+  Future<void> verifyOtp() async {
+    try {
+      if (isLoading.value) return;
 
-    otpError.value = Validators.otp(otpController.text.trim(), length: 4);
-    if (otpError.value != null) return;
+      otpError.value = Validators.otp(otpController.text.trim(), length: 4);
+      if (otpError.value != null) return;
 
-    isLoading.value = true;
+      isLoading.value = true;
 
-    final Response response = await authService.verifyOtp(
-      email: email,
-      otp: int.parse(otpController.text.trim()),
-    );
+      final Response response = await authService.verifyOtp(
+        email: email,
+        otp: int.parse(otpController.text.trim()),
+      );
 
-    ApiChecker.checkWriteApi(response);
+      ApiChecker.checkWriteApi(response);
 
-    if (response.statusCode == 200 && response.data != null) {
-      final String token = response.data['data'];
+      if (response.statusCode == 200 && response.data != null) {
+        final String token = response.data['data'];
 
-      Helpers.showCustomSnackBar('Otp Verify Success', isError: false);
-     // ignore: use_build_context_synchronously
-     Navigator.pop(context);
+        Helpers.showCustomSnackBar(tr.otpVerifySuccess, isError: false);
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
 
-      if (Get.context != null) {
-        showResetPasswordBottomSheet2(Get.context!, token);
+        if (Get.context != null) {
+          showResetPasswordBottomSheet2(Get.context!, token);
+        }
       }
+    } catch (e) {
+      Helpers.showCustomSnackBar(e.toString(), isError: true);
+    } finally {
+      isLoading.value = false;
     }
-  } catch (e) {
-    Helpers.showCustomSnackBar(e.toString(), isError: true);
-  } finally {
-    isLoading.value = false;
   }
-}
-
 
   showModalBottomSheet(
     isDismissible: false,
@@ -87,7 +88,7 @@ Future<void> verifyOtp() async {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'OTP Verify',
+                        tr.otpVerifyTitle,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -111,7 +112,7 @@ Future<void> verifyOtp() async {
                   SizedBox(height: 12.h),
 
                   Text(
-                    "Enter your OTP code sent to your email address.",
+                    tr.otpSentDesc,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       color: Color(0xff8E8E93),
@@ -133,7 +134,7 @@ Future<void> verifyOtp() async {
                     ),
                     validator: (value) => Validators.otp(value, length: 4),
 
-                    label: 'OTP',
+                    label: tr.otpLabel,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
 
@@ -141,7 +142,7 @@ Future<void> verifyOtp() async {
 
                   Obx(
                     () => CustomElevatedButton(
-                      label: 'Next',
+                      label: tr.next,
                       onPressed: verifyOtp,
                       isLoading: isLoading.value,
                     ),

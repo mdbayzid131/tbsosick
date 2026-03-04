@@ -7,14 +7,16 @@ import 'package:tbsosick/config/routes/app_pages.dart';
 
 import '../../../config/constants/image_paths.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class OnboardingPage2 extends StatelessWidget {
   const OnboardingPage2({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,    
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ///<================= SKIP BUTTON =========================>///
         Align(
@@ -27,8 +29,11 @@ class OnboardingPage2 extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Skip",
-                  style: TextStyle(color: AppTheme.primaryColor, fontSize: 16.sp),  
+                  tr.skip,
+                  style: TextStyle(
+                    color: AppTheme.primaryColor,
+                    fontSize: 16.sp,
+                  ),
                 ),
               ],
             ),
@@ -36,13 +41,8 @@ class OnboardingPage2 extends StatelessWidget {
         ),
         Spacer(),
 
-
         ///<================= MAIN ILLUSTRATION =========================>///
-        Image.asset(
-          ImagePaths.onboardingImage2,
-          height: 450.h,
-
-        ),
+        Image.asset(ImagePaths.onboardingImage2, height: 450.h),
 
         SizedBox(height: 10.h),
 
@@ -50,7 +50,7 @@ class OnboardingPage2 extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
-            'Scrub Pockets Made for Phones',
+            tr.scrubPocketsTitle,
             textAlign: TextAlign.center,
             style: GoogleFonts.arimo(
               fontSize: 28.sp,
@@ -63,7 +63,7 @@ class OnboardingPage2 extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
-            'Not messy notepads. Minimalist UI designed for the high-pressure OR environment.',
+            tr.scrubPocketsDesc,
             textAlign: TextAlign.center,
             style: GoogleFonts.arimo(
               fontSize: 15.sp,
