@@ -16,6 +16,7 @@ import 'package:tbsosick/presentation/screens/home/Preference%20card/new_prefere
 import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dart';
 
 import 'notification_bottom.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,13 +31,14 @@ class _HomeScreenState extends State<HomeScreen> {
   );
   final HomePageController _homePageController = Get.put(HomePageController());
 
-  String _greetingForNow() {
+  String _greetingForNow(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final hour = now.hour;
-    if (hour >= 5 && hour < 12) return 'Good morning,';
-    if (hour >= 12 && hour < 17) return 'Good afternoon,';
-    if (hour >= 17 && hour < 22) return 'Good evening,';
-    return 'Good night,';
+    if (hour >= 5 && hour < 12) return tr.goodMorning;
+    if (hour >= 12 && hour < 17) return tr.goodAfternoon;
+    if (hour >= 17 && hour < 22) return tr.goodEvening;
+    return tr.goodNight;
   }
 
   final PrefranceCardDetailsController _prefranceCardDetailsController =
@@ -55,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     final statusBarHeight = MediaQuery.of(context).padding.top;
+    final tr = AppLocalizations.of(context)!;
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -71,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                _headerSection(),
+                _headerSection(context),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Column(
@@ -79,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Quick Actions',
+                          tr.quickActions,
                           style: GoogleFonts.arimo(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w400,
@@ -92,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Expanded(
                             child: _quickActionCard(
-                              title: 'Create Preference card',
+                              title: tr.createPreferenceCard,
                               onTap: () {
                                 Get.to(
                                   NewPreferenceCard(isPrivate: false),
@@ -104,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           SizedBox(width: 12.w),
                           Expanded(
                             child: _quickActionCard(
-                              title: 'Create Private Card',
+                              title: tr.createPrivateCard,
                               onTap: () {
                                 Get.to(
                                   NewPreferenceCard(isPrivate: true),
@@ -119,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         children: [
                           Text(
-                            'Preference card favorites',
+                            tr.preferenceCardFavorites,
                             style: GoogleFonts.arimo(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w400,
@@ -164,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: EdgeInsets.symmetric(vertical: 20.h),
                             child: Center(
                               child: Text(
-                                "No favorite item",
+                                tr.noFavoriteItem,
                                 style: GoogleFonts.arimo(
                                   fontSize: 14.sp,
                                   color: const Color(0xFF9CA3AF),
@@ -291,7 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _headerSection() {
+  Widget _headerSection(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Column(
       children: [
         Stack(
@@ -322,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _greetingForNow(),
+                              _greetingForNow(context),
                               style: GoogleFonts.arimo(
                                 fontSize: 16.sp,
                                 color: const Color(0xffE8DEF8),
@@ -414,7 +418,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.black,
                             ),
                             decoration: InputDecoration(
-                              hintText: 'Search procedures, cards...',
+                              hintText: tr.searchProceduresCards,
                               hintStyle: GoogleFonts.arimo(
                                 fontSize: 16.sp,
                                 color: const Color(0xff79747E),
@@ -446,7 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: Icons.description_outlined,
                           count:
                               "${_bottomNabBarController.cardCount.value?.allCardsCount ?? 00}",
-                          label: 'All Card',
+                          label: tr.allCard,
                         ),
                       ),
                       SizedBox(width: 12.w),
@@ -455,7 +459,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: Icons.person_outline,
                           count:
                               "${_bottomNabBarController.cardCount.value?.myCardsCount ?? 00}",
-                          label: 'My Cards',
+                          label: tr.myCards,
                         ),
                       ),
                     ],

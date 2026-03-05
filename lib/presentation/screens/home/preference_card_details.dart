@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class PreferenceCardDetails extends StatefulWidget {
   const PreferenceCardDetails({super.key});
@@ -48,7 +49,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                 ),
                 SizedBox(width: 6.w),
                 Text(
-                  'Back',
+                  AppLocalizations.of(context)!.back,
                   style: GoogleFonts.arimo(
                     fontSize: 17.sp,
                     fontWeight: FontWeight.w400,
@@ -143,7 +144,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           if (controller.cardDetails.value == null) {
             return SizedBox(
               height: ScreenUtil().screenHeight * 0.8,
-              child: const Center(child: Text('No details found')),
+              child: Center(child: Text(AppLocalizations.of(context)!.noDetailsFound)),
             );
           }
           return RefreshIndicator(
@@ -224,7 +225,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
             children: [
               controller.cardDetails.value?.published == true
                   ? Text(
-                      '${controller.cardDetails.value?.downloadCount ?? 0} downloads',
+                      '${controller.cardDetails.value?.downloadCount ?? 0} ${AppLocalizations.of(context)!.downloads}',
                       style: GoogleFonts.arimo(
                         fontSize: 15.sp,
                         color: const Color(0xFF8E8E93),
@@ -232,7 +233,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                     )
                   : const SizedBox.shrink(),
               Text(
-                ' •  Updated ${controller.cardDetails.value?.updatedAt.day.toString()}/${controller.cardDetails.value?.updatedAt.month.toString()}/${controller.cardDetails.value?.updatedAt.year.toString() ?? ''}',
+                ' •  ${AppLocalizations.of(context)!.updated} ${controller.cardDetails.value?.updatedAt.day.toString()}/${controller.cardDetails.value?.updatedAt.month.toString()}/${controller.cardDetails.value?.updatedAt.year.toString() ?? ''}',
                 style: GoogleFonts.arimo(
                   fontSize: 15.sp,
                   color: const Color(0xFF8E8E93),
@@ -267,7 +268,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
         children: [
           // Section header
           Text(
-            'SURGEON INFORMATION',
+            AppLocalizations.of(context)!.surgeonInformation.toUpperCase(),
             style: GoogleFonts.arimo(
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,
@@ -277,7 +278,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           ),
           SizedBox(height: 16.h),
           // Name
-          _buildInfoLabel('Name'),
+          _buildInfoLabel(AppLocalizations.of(context)!.name),
           SizedBox(height: 4.h),
           Text(
             controller.cardDetails.value?.surgeon.fullName ?? '',
@@ -289,7 +290,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           ),
           SizedBox(height: 16.h),
           // Specialty
-          _buildInfoLabel('Specialty'),
+          _buildInfoLabel(AppLocalizations.of(context)!.specialty),
           SizedBox(height: 4.h),
           Text(
             controller.cardDetails.value?.surgeon.specialty ?? '',
@@ -301,7 +302,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           ),
           SizedBox(height: 16.h),
           // Contact
-          _buildInfoLabel('Contact'),
+          _buildInfoLabel(AppLocalizations.of(context)!.contact),
           SizedBox(height: 4.h),
           Row(
             children: [
@@ -323,7 +324,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           ),
           SizedBox(height: 16.h),
           // Music Preferences
-          _buildInfoLabel('Music Preferences'),
+          _buildInfoLabel(AppLocalizations.of(context)!.musicPreferences),
           SizedBox(height: 4.h),
           Row(
             children: [
@@ -345,7 +346,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           ),
           SizedBox(height: 16.h),
           // Hand Preference
-          _buildInfoLabel('Hand Preference'),
+          _buildInfoLabel(AppLocalizations.of(context)!.handPreference),
           SizedBox(height: 4.h),
           Row(
             children: [
@@ -388,7 +389,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
         children: [
           // Section title
           Text(
-            'Medication',
+            AppLocalizations.of(context)!.medication,
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               fontWeight: FontWeight.w700,
@@ -432,7 +433,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
         children: [
           // Section header
           Text(
-            'All Supplies',
+            AppLocalizations.of(context)!.allSupplies,
             style: GoogleFonts.arimo(
               fontSize: 15.sp,
               fontWeight: FontWeight.w700,
@@ -457,7 +458,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                 ),
                 child: Center(
                   child: Text(
-                    'No supplies found',
+                    AppLocalizations.of(context)!.noSuppliesFound,
                     style: GoogleFonts.arimo(
                       fontSize: 17.sp,
                       fontWeight: FontWeight.w400,
@@ -507,7 +508,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
         children: [
           // Section header
           Text(
-            'Sutures',
+            AppLocalizations.of(context)!.sutures,
             style: GoogleFonts.arimo(
               fontSize: 15.sp,
               fontWeight: FontWeight.w700,
@@ -532,7 +533,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                 ),
                 child: Center(
                   child: Text(
-                    'No sutures found',
+                    AppLocalizations.of(context)!.noSuturesFound,
                     style: GoogleFonts.arimo(
                       fontSize: 17.sp,
                       fontWeight: FontWeight.w400,
@@ -582,7 +583,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
         children: [
           // Section title
           Text(
-            'Instruments',
+            AppLocalizations.of(context)!.instruments,
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               fontWeight: FontWeight.w700,
@@ -626,7 +627,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
         children: [
           // Section title
           Text(
-            'Positioning',
+            AppLocalizations.of(context)!.positioning,
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               fontWeight: FontWeight.w700,
@@ -635,7 +636,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           ),
           SizedBox(height: 12.h),
           // Equipment / Placement
-          _buildInfoLabel('Equipment / Placement'),
+          _buildInfoLabel(AppLocalizations.of(context)!.equipmentPlacement),
           SizedBox(height: 4.h),
           Text(
             controller.cardDetails.value?.positioningEquipment ?? '',
@@ -646,7 +647,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           ),
           SizedBox(height: 12.h),
           // Patient Position
-          _buildInfoLabel('Patient Position'),
+          _buildInfoLabel(AppLocalizations.of(context)!.patientPosition),
           SizedBox(height: 4.h),
           Text(
             controller.cardDetails.value?.positioningEquipment ?? '',
@@ -682,7 +683,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
         children: [
           // Section title
           Text(
-            'Prepping / Shaving',
+            AppLocalizations.of(context)!.preppingShaving,
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               fontWeight: FontWeight.w700,
@@ -723,7 +724,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
         children: [
           // Key Notes header with warning icon
           Text(
-            '⚠️ Key Notes',
+            '⚠️ ${AppLocalizations.of(context)!.keyNotes}',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               fontWeight: FontWeight.w700,
@@ -800,7 +801,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Photo library',
+          AppLocalizations.of(context)!.photoLibrary,
           style: GoogleFonts.arimo(
             fontSize: 17.sp,
             fontWeight: FontWeight.w700,
@@ -820,7 +821,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
               ),
               child: Center(
                 child: Text(
-                  'No photos found',
+                  AppLocalizations.of(context)!.noPhotosFound,
                   style: GoogleFonts.arimo(
                     fontSize: 17.sp,
                     fontWeight: FontWeight.w400,

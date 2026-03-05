@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 import 'add_event_bottom.dart';
 import 'event_details_bottom.dart';
@@ -73,7 +74,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     bottom: 16.h,
                   ),
                   title: Text(
-                    'Calendar',
+                    AppLocalizations.of(context)!.calendar,
                     style: GoogleFonts.arimo(
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
@@ -342,7 +343,7 @@ class _CalendarPageState extends State<CalendarPage> {
               );
             },
             child: Text(
-              'Add Event',
+              AppLocalizations.of(context)!.addEvent,
               style: GoogleFonts.arimo(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
@@ -378,7 +379,7 @@ class _CalendarPageState extends State<CalendarPage> {
           child: Column(
             children: [
               Text(
-                'No events scheduled',
+                AppLocalizations.of(context)!.noEventsScheduled,
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -393,7 +394,7 @@ class _CalendarPageState extends State<CalendarPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Upcoming Events',
+            AppLocalizations.of(context)!.upcomingEvents,
             style: GoogleFonts.arimo(
               fontSize: 16.sp,
               fontWeight: FontWeight.w400,
@@ -405,7 +406,7 @@ class _CalendarPageState extends State<CalendarPage> {
             final e = items[index];
             final color = _eventTypeColor(e.eventType);
             final timeText =
-                '${e.time} - ${e.durationHours} ${e.durationHours == 1 ? 'hour' : 'hours'}';
+                '${e.time} - ${e.durationHours} ${e.durationHours == 1 ? AppLocalizations.of(context)!.hour : AppLocalizations.of(context)!.hours}';
             return Padding(
               padding: EdgeInsets.only(bottom: 12.h),
               child: _buildEventCard(
@@ -552,7 +553,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                   ),
                   child: Text(
-                    'View Details',
+            AppLocalizations.of(context)!.viewDetails,
                     style: GoogleFonts.arimo(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
@@ -576,7 +577,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     elevation: 0,
                   ),
                   child: Text(
-                    'View Card',
+            AppLocalizations.of(context)!.viewCard,
                     style: GoogleFonts.arimo(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
@@ -612,7 +613,7 @@ class _CalendarPageState extends State<CalendarPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Event Types',
+            AppLocalizations.of(context)!.eventTypes,
             style: GoogleFonts.arimo(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
@@ -622,9 +623,9 @@ class _CalendarPageState extends State<CalendarPage> {
           SizedBox(height: 12.h),
           Row(
             children: [
-              _buildEventTypeLegendItem('Surgery', const Color(0xFF9945FF)),
+              _buildEventTypeLegendItem(AppLocalizations.of(context)!.surgery, const Color(0xFF9945FF)),
               SizedBox(width: 16.w),
-              _buildEventTypeLegendItem('Meeting', const Color(0xFFF59E0B)),
+              _buildEventTypeLegendItem(AppLocalizations.of(context)!.meeting, const Color(0xFFF59E0B)),
             ],
           ),
         ],

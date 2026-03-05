@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 import 'package:tbsosick/data/models/supplies_model.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/controllers/post_any__card_controller.dart';
@@ -79,6 +80,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,7 +88,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
         Padding(
           padding: EdgeInsets.only(left: 4.w, bottom: 12.h),
           child: Text(
-            'Sutures',
+            l10n.sutures,
             style: GoogleFonts.arimo(
               color: Colors.grey.shade800,
               fontSize: 16.sp,
@@ -127,7 +129,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
             controller: _searchController,
             focusNode: _searchFocusNode,
             decoration: InputDecoration(
-              hintText: 'Search for sutures...',
+              hintText: l10n.searchSuturesHint,
               hintStyle: GoogleFonts.arimo(
                 color: Colors.grey.shade400,
                 fontSize: 15.sp,
@@ -300,23 +302,11 @@ class _SuturesContainerState extends State<SuturesContainer> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: GoogleFonts.arimo(
-                                          fontSize: 15.sp,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                        children: [
-                                          const TextSpan(text: 'Add '),
-                                          TextSpan(
-                                            text: '"$customName"',
-                                            style: const TextStyle(
-                                              color: Color(0xff9945FF),
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                          const TextSpan(text: ' as custom'),
-                                        ],
+                                    child: Text(
+                                      l10n.addAsCustom(customName),
+                                      style: GoogleFonts.arimo(
+                                        fontSize: 15.sp,
+                                        color: Colors.grey.shade600,
                                       ),
                                     ),
                                   ),
@@ -369,8 +359,8 @@ class _SuturesContainerState extends State<SuturesContainer> {
                 children: [
                   Text(
                     widget.selectedIds.isEmpty
-                        ? '0 item selected'
-                        : 'Selected (${widget.selectedIds.length})',
+                        ? l10n.noItemSelected
+                        : l10n.selectedWithCount(widget.selectedIds.length),
                     style: GoogleFonts.arimo(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w700,
@@ -389,7 +379,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       child: Text(
-                        'Clear all',
+                        l10n.clearAll,
                         style: GoogleFonts.arimo(
                           color: const Color(0xff9945FF),
                           fontSize: 12.sp,
@@ -405,7 +395,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 8.h),
                     child: Text(
-                      'No item selected',
+                      l10n.noItemSelected,
                       style: GoogleFonts.arimo(
                         color: Colors.grey.shade400,
                         fontSize: 14.sp,

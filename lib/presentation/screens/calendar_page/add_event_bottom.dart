@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_date_picker.dart';
@@ -45,6 +46,7 @@ void showAddEventBottomSheet(
     isDismissible: false,
     backgroundColor: Colors.transparent,
     builder: (context) {
+      final l10n = AppLocalizations.of(context)!;
       return StatefulBuilder(
         builder: (context, setState) {
           return Padding(
@@ -65,7 +67,7 @@ void showAddEventBottomSheet(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Add Event',
+                        l10n.addEvent,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -89,10 +91,10 @@ void showAddEventBottomSheet(
                           children: [
                             CustomTextField(
                               controller: titleController,
-                              label: 'Event Title *',
-                              hintText: 'Enter event title',
+                              label: l10n.eventTitleLabel,
+                              hintText: l10n.enterEventTitle,
                               validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? 'Title is required'
+                                  ? l10n.titleRequired
                                   : null,
                             ),
 
@@ -100,10 +102,10 @@ void showAddEventBottomSheet(
 
                             CustomDatePickerField(
                               controller: dateController,
-                              label: 'Date *',
-                              hintText: 'Select date',
+                              label: '${l10n.date} *',
+                              hintText: l10n.selectDate,
                               validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? 'Date is required'
+                                  ? l10n.dateRequired
                                   : null,
                             ),
 
@@ -111,31 +113,31 @@ void showAddEventBottomSheet(
 
                             CustomTimePickerField(
                               controller: timeController,
-                              label: 'Time *',
-                              hintText: 'Select time',
+                              label: '${l10n.time} *',
+                              hintText: l10n.selectTime,
                               validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? 'Time is required'
+                                  ? l10n.timeRequired
                                   : null,
                             ),
 
                             SizedBox(height: 12.h),
                             CustomTextField(
                               controller: locationController,
-                              label: 'Location *',
-                              hintText: 'Enter location (e.g., OR 3)',
+                              label: l10n.locationRequired,
+                              hintText: l10n.enterLocationHint,
                               validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? 'Location is required'
+                                  ? l10n.locationRequired
                                   : null,
                             ),
                             SizedBox(height: 12.h),
                             CustomTextField(
                               controller: linkPreferenceCardIdController,
-                              label: 'Link Preference Card',
-                              hintText: 'Enter preference card ID(optional)',
+                              label: l10n.linkedPreferenceCard,
+                              hintText: l10n.linkPreferenceCardOptional,
                               validator: (v) {
                                 if (v == null || v.trim().isEmpty) return null;
                                 if (v.trim().length != 24) {
-                                  return 'Preference card ID must be 24 characters long';
+                                  return l10n.prefCardIdLengthError;
                                 }
                                 return null;
                               },
@@ -147,16 +149,16 @@ void showAddEventBottomSheet(
                                 Expanded(
                                   child: CustomTextField(
                                     controller: durationController,
-                                    label: 'Duration (hours) *',
+                                    label: '${l10n.durationHours} *',
                                     hintText: 'e.g., 2',
                                     keyboardType: TextInputType.number,
                                     validator: (v) {
                                       if (v == null || v.trim().isEmpty) {
-                                        return 'Duration is required';
+                                        return l10n.durationRequired;
                                       }
                                       final d = int.tryParse(v.trim());
                                       if (d == null || d <= 0) {
-                                        return 'Enter a valid positive number';
+                                        return l10n.enterValidPositiveNumber;
                                       }
                                       return null;
                                     },
@@ -169,7 +171,7 @@ void showAddEventBottomSheet(
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Event Type *',
+                                        l10n.eventTypeLabel,
                                         style: GoogleFonts.arimo(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w500,
@@ -194,7 +196,7 @@ void showAddEventBottomSheet(
                                               DropdownMenuItem(
                                                 value: 'SURGERY',
                                                 child: Text(
-                                                  'Surgery',
+                                                  l10n.surgery,
                                                   style: GoogleFonts.arimo(
                                                     fontSize: 17.sp,
                                                     fontWeight: FontWeight.w400,
@@ -205,7 +207,7 @@ void showAddEventBottomSheet(
                                               DropdownMenuItem(
                                                 value: 'MEETING',
                                                 child: Text(
-                                                  'Meeting',
+                                                  l10n.meeting,
                                                   style: GoogleFonts.arimo(
                                                     fontSize: 17.sp,
                                                     fontWeight: FontWeight.w400,
@@ -216,7 +218,7 @@ void showAddEventBottomSheet(
                                               DropdownMenuItem(
                                                 value: 'CONSULTATION',
                                                 child: Text(
-                                                  'Consultation',
+                                                  l10n.consultation,
                                                   style: GoogleFonts.arimo(
                                                     fontSize: 17.sp,
                                                     fontWeight: FontWeight.w400,
@@ -227,7 +229,7 @@ void showAddEventBottomSheet(
                                               DropdownMenuItem(
                                                 value: 'OTHER',
                                                 child: Text(
-                                                  'Other',
+                                                  l10n.other,
                                                   style: GoogleFonts.arimo(
                                                     fontSize: 17.sp,
                                                     fontWeight: FontWeight.w400,
@@ -254,6 +256,7 @@ void showAddEventBottomSheet(
 
                             /// PERSONNEL CARD
                             _buildPersonnelCard(
+                              l10n: l10n,
                               leadSurgeonController: leadSurgeonController,
                               teamMemberController: teamMemberController,
                               teamMembers: teamMembers,
@@ -276,8 +279,8 @@ void showAddEventBottomSheet(
 
                             CustomTextField(
                               controller: notesController,
-                              label: 'Notes',
-                              hintText: 'Additional notes...',
+                              label: l10n.notes,
+                              hintText: l10n.addNotesHint,
                               maxLines: 4,
                             ),
 
@@ -285,8 +288,8 @@ void showAddEventBottomSheet(
 
                             CustomElevatedButton(
                               label: submitting
-                                  ? 'Creating...'
-                                  : 'Create Event',
+                                  ? l10n.creating
+                                  : l10n.createEvent,
                               onPressed: submitting
                                   ? null
                                   : () async {
@@ -362,6 +365,7 @@ void showAddEventBottomSheet(
 }
 
 Widget _buildPersonnelCard({
+  required AppLocalizations l10n,
   required TextEditingController leadSurgeonController,
   required TextEditingController teamMemberController,
   required List<String> teamMembers,
@@ -369,22 +373,22 @@ Widget _buildPersonnelCard({
   required Function(String) onRemove,
 }) {
   return _buildCard(
-    title: 'Personnel',
+    title: l10n.personnel,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildTextField(
-          label: 'Lead Surgeon',
+          label: l10n.leadSurgeon,
           controller: leadSurgeonController,
           icon: Icons.person_outline,
           validator: (value) =>
-              value?.isEmpty ?? true ? 'Please enter a lead surgeon' : null,
+              value?.isEmpty ?? true ? l10n.pleaseEnterLeadSurgeon : null,
         ),
 
         SizedBox(height: 16.h),
 
         Text(
-          'Surgical Team',
+          l10n.surgicalTeam,
           style: GoogleFonts.arimo(
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
@@ -398,7 +402,7 @@ Widget _buildPersonnelCard({
             Expanded(
               child: _buildTextField(
                 controller: teamMemberController,
-                hint: 'Add team member',
+                hint: l10n.addTeamMember,
                 showLabel: false,
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 
 import '../../../config/constants/image_paths.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 void showNotificationBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -13,6 +14,7 @@ void showNotificationBottomSheet(BuildContext context) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
+      final tr = AppLocalizations.of(context)!;
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -30,7 +32,7 @@ void showNotificationBottomSheet(BuildContext context) {
                 Row(
                   children: [
                     Text(
-                      'Notifications',
+                      tr.notifications,
                       style: GoogleFonts.arimo(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w700,
@@ -41,7 +43,7 @@ void showNotificationBottomSheet(BuildContext context) {
                     TextButton(
                       onPressed: () {},
                       child: Text(
-                        'Mark all read',
+                        tr.markAllRead,
                         style: GoogleFonts.arimo(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
@@ -73,16 +75,15 @@ void showNotificationBottomSheet(BuildContext context) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Header
-
-
                         SizedBox(height: 16.h),
 
                         // Notification card 1
                         _notificationCard(
                           icon: Icons.assignment_outlined,
-                          title: 'New Card Added',
-                          subtitle: 'Dr. Sarah Johnson — Total\nKnee Replacement',
-                          actionText: 'View Card',
+                          title: tr.newCardAdded,
+                          subtitle:
+                              'Dr. Sarah Johnson — Total\nKnee Replacement',
+                          actionText: tr.viewCard,
                           time: '16m ago',
                         ),
 
@@ -91,9 +92,10 @@ void showNotificationBottomSheet(BuildContext context) {
                         // Notification card 2
                         _notificationCard(
                           icon: Icons.calendar_today_outlined,
-                          title: 'Event Scheduled',
-                          subtitle: 'Total Knee Replacement on\n2026-01-08 at 08:00',
-                          actionText: 'View Event',
+                          title: tr.eventScheduled,
+                          subtitle:
+                              'Total Knee Replacement on\n2026-01-08 at 08:00',
+                          actionText: tr.viewEvent,
                           time: '16m ago',
                         ),
                         SizedBox(height: 12.h),
@@ -101,9 +103,10 @@ void showNotificationBottomSheet(BuildContext context) {
                         // Notification card 2
                         _notificationCard(
                           icon: Icons.calendar_today_outlined,
-                          title: 'Event Scheduled',
-                          subtitle: 'Total Knee Replacement on\n2026-01-08 at 08:00',
-                          actionText: 'View Event',
+                          title: tr.eventScheduled,
+                          subtitle:
+                              'Total Knee Replacement on\n2026-01-08 at 08:00',
+                          actionText: tr.viewEvent,
                           time: '16m ago',
                         ),
                         SizedBox(height: 12.h),
@@ -111,9 +114,10 @@ void showNotificationBottomSheet(BuildContext context) {
                         // Notification card 2
                         _notificationCard(
                           icon: Icons.calendar_today_outlined,
-                          title: 'Event Scheduled',
-                          subtitle: 'Total Knee Replacement on\n2026-01-08 at 08:00',
-                          actionText: 'View Event',
+                          title: tr.eventScheduled,
+                          subtitle:
+                              'Total Knee Replacement on\n2026-01-08 at 08:00',
+                          actionText: tr.viewEvent,
                           time: '16m ago',
                         ),
                       ],

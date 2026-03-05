@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 import 'package:tbsosick/presentation/screens/calendar_page/controller/clender_controller.dart';
 import 'package:tbsosick/presentation/screens/calendar_page/edit_procedure.dart';
 
@@ -16,7 +17,8 @@ void showEventDetailsBottomSheet({
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) {
+    builder: (context) {
+      final l10n = AppLocalizations.of(context)!;
       return Obx(() {
         // Show loading indicator while data is being fetched
         if (calenderController.isLoading.value) {
@@ -51,7 +53,7 @@ void showEventDetailsBottomSheet({
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Event Details',
+                        l10n.eventDetails,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -109,7 +111,7 @@ void showEventDetailsBottomSheet({
                         final d = e?.date;
                         final time = e?.time ?? '';
                         final text = d != null
-                            ? '${DateFormat('EEEE, MMM d, y').format(d)} at $time'
+                            ? '${DateFormat('EEEE, MMM d, y').format(d)} ${l10n.at} $time'
                             : '';
                         return Text(
                           text,
@@ -138,7 +140,7 @@ void showEventDetailsBottomSheet({
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Location',
+                            l10n.location,
                             style: GoogleFonts.arimo(
                               fontSize: 14.sp,
                               color: const Color(0xff8E8E93),
@@ -179,7 +181,7 @@ void showEventDetailsBottomSheet({
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Preference Card',
+                              l10n.preferenceCardTab,
                               style: GoogleFonts.arimo(
                                 fontSize: 14.sp,
                                 color: const Color(0xff8E8E93),
@@ -208,7 +210,7 @@ void showEventDetailsBottomSheet({
 
                   // Notes section
                   Text(
-                    'Notes',
+                    l10n.notes,
                     style: GoogleFonts.arimo(
                       fontSize: 14.sp,
                       color: const Color(0xff8E8E93),
@@ -258,7 +260,7 @@ void showEventDetailsBottomSheet({
                               ),
                               SizedBox(width: 8.w),
                               Text(
-                                'Delete',
+                                l10n.delete,
                                 style: GoogleFonts.arimo(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w600,
@@ -297,7 +299,7 @@ void showEventDetailsBottomSheet({
                               ),
                               SizedBox(width: 8.w),
                               Text(
-                                'Edit',
+                                l10n.edit,
                                 style: GoogleFonts.arimo(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w600,

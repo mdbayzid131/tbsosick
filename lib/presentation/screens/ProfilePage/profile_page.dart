@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     bottom: 16.h,
                   ),
                   title: Text(
-                    'Profile',
+                    tr.profile,
                     style: GoogleFonts.arimo(
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
@@ -98,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     _buildPremiumPlanCard(),
                     SizedBox(height: 24.h),
                     Text(
-                      'ACCOUNT',
+                      tr.account,
                       style: GoogleFonts.arimo(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
@@ -128,7 +128,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildMenuItem(
                             icon: Icons.camera_alt_outlined,
                             iconColor: const Color(0xFF8B5CF6),
-                            title: 'Edit Profile',
+                            title: tr.editProfile,
                             onTap: () {
                               showEditProfileBottomSheet(context);
                             },
@@ -137,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildMenuItem(
                             icon: Icons.notifications_outlined,
                             iconColor: const Color(0xFF8B5CF6),
-                            title: 'Notifications',
+                            title: tr.notifications,
                             badge: 3,
                             onTap: () {
                               showNotificationBottomSheet(context);
@@ -147,7 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildMenuItem(
                             icon: Icons.credit_card_outlined,
                             iconColor: const Color(0xFF8B5CF6),
-                            title: 'Subscription',
+                            title: tr.subscription,
                             onTap: () {
                               showUpdatePackageBottomSheet(context);
                             },
@@ -157,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 24.h),
                     Text(
-                      'PREFERENCES',
+                      tr.preferences,
                       style: GoogleFonts.arimo(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
@@ -187,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildMenuItem(
                             icon: Icons.lock_outline,
                             iconColor: const Color(0xFF6B7280),
-                            title: 'Privacy & Security',
+                            title: tr.privacyAndSecurity,
                             onTap: () {
                               showPrivacyAndSecurityBottomSheet(context);
                             },
@@ -205,7 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildMenuItem(
                             icon: Icons.description_outlined,
                             iconColor: const Color(0xFF6B7280),
-                            title: 'Terms of Service',
+                            title: tr.termsOfService,
                             onTap: () {
                               showTermsOfServiceBottomSheet(context);
                             },
@@ -246,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              'Sign Out',
+                              tr.signOut,
                               style: GoogleFonts.arimo(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
@@ -260,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(height: 24.h),
                     Center(
                       child: Text(
-                        'SMRTSCRUB Version 1.0.0',
+                        'SMRTSCRUB ${tr.version} 1.0.0',
                         style: GoogleFonts.arimo(
                           fontSize: 12.sp,
                           color: const Color(0xFF9CA3AF),
@@ -280,6 +280,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Header with gradient background
   Widget _buildHeader() {
+    final tr = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
@@ -300,7 +301,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       child: Text(
-        'Profile',
+        tr.profile,
         style: GoogleFonts.arimo(
           fontSize: 24.sp,
           fontWeight: FontWeight.w700,
@@ -312,6 +313,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Profile card with avatar and stats
   Widget _buildProfileCard() {
+    final tr = AppLocalizations.of(context)!;
     return Obx(() {
       final user = profileController.user.value;
       return Container(
@@ -408,7 +410,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        user.name ?? 'Guest User',
+                        user.name ?? tr.guestUser,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -417,7 +419,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        user.specialty ?? 'Specialty not set',
+                        user.specialty ?? tr.specialtyNotSet,
                         style: GoogleFonts.arimo(
                           fontSize: 15.sp,
                           color: const Color(0xFF6B7280),
@@ -425,7 +427,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       SizedBox(height: 2.h),
                       Text(
-                        user.hospital ?? 'Hospital not set',
+                        user.hospital ?? tr.hospitalNotSet,
                         style: GoogleFonts.arimo(
                           fontSize: 14.sp,
                           color: const Color(0xFF9CA3AF),
@@ -466,6 +468,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Premium Plan card
   Widget _buildPremiumPlanCard() {
+    final tr = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -501,7 +504,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    'Premium Plan',
+                    tr.premiumPlanTitle,
                     style: GoogleFonts.arimo(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.w700,
@@ -554,7 +557,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 elevation: 0,
               ),
               child: Text(
-                'Manage Subscription',
+                tr.manageSubscription,
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,

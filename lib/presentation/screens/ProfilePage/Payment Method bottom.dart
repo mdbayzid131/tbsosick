@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 void showPaymentMethodBottomSheet(BuildContext context) {
   final emailController = TextEditingController();
@@ -24,6 +25,7 @@ void showPaymentMethodBottomSheet(BuildContext context) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
+      final tr = AppLocalizations.of(context)!;
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -45,7 +47,7 @@ void showPaymentMethodBottomSheet(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Payment Method',
+                        tr.paymentMethod,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -69,21 +71,21 @@ void showPaymentMethodBottomSheet(BuildContext context) {
                   SizedBox(height: 12.h),
                   CustomTextField(
                     controller: linkController,
-                    hintText: '1234 5678 9012 3456',
-                    label: 'Card Number',
+                    hintText: tr.cardNumberPlaceholder,
+                    label: tr.cardNumber,
                   ),
                   SizedBox(height: 12.h),
                   Row(
                     children: [
                       Expanded(
                         child: CustomTextField(
-                          hintText: 'MM/YY',
-                          label: 'Expiry Date',
+                          hintText: tr.expiryDatePlaceholder,
+                          label: tr.expiryDate,
                         ),
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
-                        child: CustomTextField(hintText: '123', label: 'CVV'),
+                        child: CustomTextField(hintText: tr.cvv, label: tr.cvv),
                       ),
                     ],
                   ),
@@ -91,8 +93,8 @@ void showPaymentMethodBottomSheet(BuildContext context) {
 
                   CustomTextField(
                     controller: locationController,
-                    hintText: 'John Doe',
-                    label: 'Cardholder Name ',
+                    hintText: tr.johnDoePlaceholder,
+                    label: tr.cardholderName,
                   ),
                   SizedBox(height: 12.h),
 
@@ -100,7 +102,7 @@ void showPaymentMethodBottomSheet(BuildContext context) {
                     height: 50.h,
 
                     child: CustomElevatedButton(
-                      label: 'Save Payment Method',
+                      label: tr.saveChanges,
                       onPressed: () {},
                     ),
                   ),

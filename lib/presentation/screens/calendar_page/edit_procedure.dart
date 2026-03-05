@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:tbsosick/config/constants/image_paths.dart';
 import 'package:tbsosick/presentation/screens/calendar_page/controller/clender_controller.dart';
 import 'package:tbsosick/data/models/create_event_request_model.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class EditProcedureScreen extends StatefulWidget {
   const EditProcedureScreen({super.key, required this.id});
@@ -133,7 +134,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Edit Event',
+            AppLocalizations.of(context)!.editEvent,
             style: GoogleFonts.arimo(
               fontSize: 20.sp,
               fontWeight: FontWeight.w600,
@@ -160,21 +161,21 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
   // Procedure Information Card
   Widget _buildProcedureInformationCard() {
     return _buildCard(
-      title: 'Procedure Information',
+      title: AppLocalizations.of(context)!.procedureInformation,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTextField(
-            label: 'Procedure Name',
+            label: AppLocalizations.of(context)!.procedureName,
             controller: _procedureNameController,
-            hint: 'Total Knee Replacement',
+            hint: AppLocalizations.of(context)!.totalKneeReplacement,
           ),
           SizedBox(height: 16.h),
           Row(
             children: [
               Expanded(
                 child: _buildTextField(
-                  label: 'Date',
+                  label: AppLocalizations.of(context)!.date,
                   controller: _dateController,
                   icon: Icons.date_range_outlined,
                   readOnly: true,
@@ -210,7 +211,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
               SizedBox(width: 12.w),
               Expanded(
                 child: _buildTextField(
-                  label: 'Time',
+                  label: AppLocalizations.of(context)!.time,
                   controller: _timeController,
                   icon: Icons.access_time,
                   readOnly: true,
@@ -254,7 +255,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
             children: [
               Expanded(
                 child: _buildTextField(
-                  label: 'Duration (hours)',
+                  label: AppLocalizations.of(context)!.durationHours,
                   controller: _durationController,
                   hint: '2',
                 ),
@@ -265,7 +266,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Event Type',
+                      AppLocalizations.of(context)!.eventType,
                       style: GoogleFonts.arimo(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
@@ -282,11 +283,11 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _eventType,
-                          items: const [
-                            DropdownMenuItem(value: 'SURGERY', child: Text('Surgery')),
-                            DropdownMenuItem(value: 'MEETING', child: Text('Meeting')),
-                            DropdownMenuItem(value: 'CONSULTATION', child: Text('Consultation')),
-                            DropdownMenuItem(value: 'OTHER', child: Text('Other')),
+                          items: [
+                            DropdownMenuItem(value: 'SURGERY', child: Text(AppLocalizations.of(context)!.surgery)),
+                            DropdownMenuItem(value: 'MEETING', child: Text(AppLocalizations.of(context)!.meeting)),
+                            DropdownMenuItem(value: 'CONSULTATION', child: Text(AppLocalizations.of(context)!.consultation)),
+                            DropdownMenuItem(value: 'OTHER', child: Text(AppLocalizations.of(context)!.other)),
                           ],
                           onChanged: (v) {
                             setState(() {
@@ -309,12 +310,12 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
   // Personnel Card
   Widget _buildPersonnelCard() {
     return _buildCard(
-      title: 'Personnel',
+      title: AppLocalizations.of(context)!.personnel,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTextField(
-            label: 'Lead Surgeon',
+            label: AppLocalizations.of(context)!.leadSurgeon,
             controller: _leadSurgeonController,
             icon: Icons.person_outline,
           ),
@@ -328,7 +329,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
               ),
               SizedBox(width: 6.w),
               Text(
-                'Surgical Team',
+                AppLocalizations.of(context)!.surgicalTeam,
                 style: GoogleFonts.arimo(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -343,7 +344,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
               Expanded(
                 child: _buildTextField(
                   controller: _teamMemberController,
-                  hint: 'Add team member',
+                  hint: AppLocalizations.of(context)!.addTeamMember,
                   showLabel: false,
                 ),
               ),
@@ -418,18 +419,18 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
   // Location & Setup Card
   Widget _buildLocationSetupCard() {
     return _buildCard(
-      title: 'Location & Setup',
+      title: AppLocalizations.of(context)!.locationSetup,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTextField(
-            label: 'Operating Room',
+            label: AppLocalizations.of(context)!.operatingRoom,
             controller: _operatingRoomController,
             icon: Icons.location_on_outlined,
           ),
           SizedBox(height: 16.h),
           _buildTextField(
-            label: 'Anesthesia Type',
+            label: AppLocalizations.of(context)!.anesthesiaType,
             controller: _anesthesiaController,
           ),
         ],
@@ -440,11 +441,11 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
   // Procedure Notes Card
   Widget _buildProcedureNotesCard() {
     return _buildCard(
-      title: 'Procedure Notes',
+      title: AppLocalizations.of(context)!.procedureNotes,
       titleIcon: Icons.description_outlined,
       child: _buildTextField(
         controller: _notesController,
-        hint: 'Add any special notes or requirements...',
+        hint: AppLocalizations.of(context)!.addNotesHint,
         maxLines: 5,
         showLabel: false,
       ),
@@ -482,7 +483,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    'Cancel',
+                    AppLocalizations.of(context)!.cancel,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,
@@ -535,7 +536,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    _submitting ? 'Saving...' : 'Save Changes',
+                    _submitting ? AppLocalizations.of(context)!.saving : AppLocalizations.of(context)!.saveChanges,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,

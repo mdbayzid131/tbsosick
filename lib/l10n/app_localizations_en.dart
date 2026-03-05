@@ -397,4 +397,642 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get german => 'German';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get account => 'ACCOUNT';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get subscription => 'Subscription';
+
+  @override
+  String get preferences => 'PREFERENCES';
+
+  @override
+  String get privacyAndSecurity => 'Privacy & Security';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get signOut => 'Sign Out';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get guestUser => 'Guest User';
+
+  @override
+  String get specialtyNotSet => 'Specialty not set';
+
+  @override
+  String get hospitalNotSet => 'Hospital not set';
+
+  @override
+  String get manageSubscription => 'Manage Subscription';
+
+  @override
+  String get john => 'John';
+
+  @override
+  String get doe => 'Doe';
+
+  @override
+  String get specialty => 'Specialty';
+
+  @override
+  String get cityHospital => 'City Hospital';
+
+  @override
+  String get hospital => 'Hospital';
+
+  @override
+  String get emailPlaceholder => 'john.doe@example.com';
+
+  @override
+  String get phonePlaceholder => '(555) 987-6543';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get shareData => 'Share Data';
+
+  @override
+  String get shareDataDesc => 'Allow SMRTSCRUB to share your data with third parties.';
+
+  @override
+  String get emailNotifications => 'Email Notifications';
+
+  @override
+  String get emailNotificationsDesc => 'Receive notifications via email.';
+
+  @override
+  String get pushNotifications => 'Push Notifications';
+
+  @override
+  String get pushNotificationsDesc => 'Receive notifications on your device.';
+
+  @override
+  String get paymentMethod => 'Payment Method';
+
+  @override
+  String get cardNumberPlaceholder => '1234 5678 9012 3456';
+
+  @override
+  String get cardNumber => 'Card Number';
+
+  @override
+  String get expiryDatePlaceholder => 'MM/YY';
+
+  @override
+  String get expiryDate => 'Expiry Date';
+
+  @override
+  String get cvv => 'CVV';
+
+  @override
+  String get johnDoePlaceholder => 'John Doe';
+
+  @override
+  String get cardholderName => 'Cardholder Name';
+
+  @override
+  String get updatePaymentMethod => 'Update Payment Method';
+
+  @override
+  String get signOutConfirm => 'Are you sure you want to sign out?';
+
+  @override
+  String get signOutDesc => 'You will be logged out of your account and will need to sign in again to access the service.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get terms1Title => '1. Acceptance of Terms';
+
+  @override
+  String get terms1Desc => 'By using the SMRTSCRUB service, you agree to be bound by these Terms of Service.';
+
+  @override
+  String get terms2Title => '2. Use of Service';
+
+  @override
+  String get terms2Desc => 'You agree to use the service only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of the service by any third party.';
+
+  @override
+  String get terms3Title => '3. Privacy Policy';
+
+  @override
+  String get terms3Desc => 'Your use of the service is also governed by our Privacy Policy, which is incorporated into these Terms of Service.';
+
+  @override
+  String get terms4Title => '4. Termination';
+
+  @override
+  String get terms4Desc => 'We may terminate or suspend access to the service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach these Terms of Service.';
+
+  @override
+  String get terms5Title => '5. Disclaimer of Warranties';
+
+  @override
+  String get terms5Desc => 'The service is provided on an \"as is\" and \"as available\" basis. We make no representations or warranties of any kind, express or implied, about the operation of the service, or the information, content, materials, or products included on the service.';
+
+  @override
+  String get terms6Title => '6. Limitation of Liability';
+
+  @override
+  String get terms6Desc => 'In no event will we be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of or in connection with the use of this service.';
+
+  @override
+  String get terms7Title => '7. Governing Law';
+
+  @override
+  String get terms7Desc => 'These Terms of Service shall be governed by and construed in accordance with the laws of the State of California, without regard to its conflict of law principles.';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get goodMorning => 'Good morning,';
+
+  @override
+  String get goodAfternoon => 'Good afternoon,';
+
+  @override
+  String get goodEvening => 'Good evening,';
+
+  @override
+  String get goodNight => 'Good night,';
+
+  @override
+  String get quickActions => 'Quick Actions';
+
+  @override
+  String get createPreferenceCard => 'Create Preference card';
+
+  @override
+  String get createPrivateCard => 'Create Private Card';
+
+  @override
+  String get preferenceCardFavorites => 'Preference card favorites';
+
+  @override
+  String get viewAll => 'View All';
+
+  @override
+  String get noFavoriteItem => 'No favorite item';
+
+  @override
+  String get searchProceduresCards => 'Search procedures, cards...';
+
+  @override
+  String get allCard => 'All Card';
+
+  @override
+  String get myCards => 'My Cards';
+
+  @override
+  String get markAllRead => 'Mark all read';
+
+  @override
+  String get newCardAdded => 'New Card Added';
+
+  @override
+  String get viewCard => 'View Card';
+
+  @override
+  String get eventScheduled => 'Event Scheduled';
+
+  @override
+  String get viewEvent => 'View Event';
+
+  @override
+  String get eventDetails => 'Event Details';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get upcoming => 'Upcoming';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get primaryInformation => 'Primary Information';
+
+  @override
+  String get surgeon => 'Surgeon';
+
+  @override
+  String get anesthesia => 'Anesthesia';
+
+  @override
+  String surgicalTeamWithCount(int count) {
+    return 'Surgical Team ($count)';
+  }
+
+  @override
+  String get leadSurgeon => 'Lead Surgeon';
+
+  @override
+  String get team => 'Team';
+
+  @override
+  String get linkedPreferenceCard => 'Linked Preference Card';
+
+  @override
+  String get viewCardDetails => 'View Card Details';
+
+  @override
+  String get reminders => 'Reminders';
+
+  @override
+  String get oneHourBefore => '1 hour before procedure';
+
+  @override
+  String get twentyFourHoursBefore => '24 hours before procedure';
+
+  @override
+  String get eventTitleLabel => 'Event Title *';
+
+  @override
+  String get enterEventTitle => 'Enter event title';
+
+  @override
+  String get titleRequired => 'Title is required';
+
+  @override
+  String get dateRequired => 'Date is required';
+
+  @override
+  String get timeRequired => 'Time is required';
+
+  @override
+  String get locationRequired => 'Location is required';
+
+  @override
+  String get enterLocationHint => 'Enter location (e.g., OR 3)';
+
+  @override
+  String get linkPreferenceCardOptional => 'Enter preference card ID(optional)';
+
+  @override
+  String get prefCardIdLengthError => 'Preference card ID must be 24 characters long';
+
+  @override
+  String get durationRequired => 'Duration is required';
+
+  @override
+  String get enterValidPositiveNumber => 'Enter a valid positive number';
+
+  @override
+  String get eventTypeLabel => 'Event Type *';
+
+  @override
+  String get addTeamMember => 'Add team member';
+
+  @override
+  String get pleaseEnterLeadSurgeon => 'Please enter a lead surgeon';
+
+  @override
+  String get creating => 'Creating...';
+
+  @override
+  String get createEvent => 'Create Event';
+
+  @override
+  String get medicalSupplies => 'Medical Supplies';
+
+  @override
+  String get searchSuppliesHint => 'Search for supplies...';
+
+  @override
+  String get sutures => 'Sutures';
+
+  @override
+  String get searchSuturesHint => 'Search for sutures...';
+
+  @override
+  String get itemSelected => '1 item selected';
+
+  @override
+  String itemsSelected(int count) {
+    return '$count items selected';
+  }
+
+  @override
+  String selectedWithCount(int count) {
+    return 'Selected ($count)';
+  }
+
+  @override
+  String get clearAll => 'Clear all';
+
+  @override
+  String get noItemSelected => 'No item selected';
+
+  @override
+  String addAsCustom(String name) {
+    return 'Add \"$name\" as custom';
+  }
+
+  @override
+  String get at => 'at';
+
+  @override
+  String get selectDate => 'Select date';
+
+  @override
+  String get selectTime => 'Select time';
+
+  @override
+  String get newPrivateCardTitle => 'New Private Card';
+
+  @override
+  String get newPreferenceCardTitle => 'New Preference Card';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get publish => 'Publish';
+
+  @override
+  String get cardTitleLabel => 'Card Title';
+
+  @override
+  String get cardTitleHint => 'Surgeon Name — Procedure Name';
+
+  @override
+  String get surgeonDetails => 'SURGEON DETAILS';
+
+  @override
+  String get enterFullName => 'Enter full name';
+
+  @override
+  String get handPreferenceSurgeon => 'Hand Preference (Surgeon)';
+
+  @override
+  String get enterHandPreference => 'Enter hand preference';
+
+  @override
+  String get specialtyLabel => 'Specialty';
+
+  @override
+  String get selectSpecialty => 'Select specialty';
+
+  @override
+  String get contactNumberLabel => 'Contact Number';
+
+  @override
+  String get musicPreferencesHint => 'Preferred music or silence';
+
+  @override
+  String get medicationHint => 'List all required medications...';
+
+  @override
+  String get medicalSuppliesRequired => 'Medical Supplies are required';
+
+  @override
+  String get suturesRequired => 'Sutures are required';
+
+  @override
+  String get instrumentsHint => 'List all required instruments...';
+
+  @override
+  String get positioningEquipmentPlacement => 'Positioning Equipment / Placement';
+
+  @override
+  String get positioningEquipmentHint => 'e.g., Leg holders, arm boards';
+
+  @override
+  String get positioningPrepping => 'Positioning / Prepping';
+
+  @override
+  String get patientPositioningHint => 'Patient positioning';
+
+  @override
+  String get operativeWorkflow => 'Operative Workflow';
+
+  @override
+  String get stepsOfCase => 'Steps of the Case';
+
+  @override
+  String get keyNotesHint => 'Critical reminders and important notes...';
+
+  @override
+  String get addPhotos => 'Add Photos';
+
+  @override
+  String get tapToSelectFromLibrary => 'Tap to select from library';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get calendar => 'Calendar';
+
+  @override
+  String get addEvent => 'Add Event';
+
+  @override
+  String get noEventsScheduled => 'No events scheduled';
+
+  @override
+  String get upcomingEvents => 'Upcoming Events';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get eventTypes => 'Event Types';
+
+  @override
+  String get hour => 'hour';
+
+  @override
+  String get hours => 'hours';
+
+  @override
+  String get preferenceLibraryTitle => 'Preference Library';
+
+  @override
+  String get preferenceCardTab => 'Preference card';
+
+  @override
+  String get privateCardTab => 'Private Card';
+
+  @override
+  String get preferenceCards => 'Preference cards';
+
+  @override
+  String get privateCards => 'Private cards';
+
+  @override
+  String get noCardsFound => 'No cards found';
+
+  @override
+  String get noPrivateCardsFound => 'No private cards found';
+
+  @override
+  String get noMoreData => 'No more data';
+
+  @override
+  String get loadMore => 'Load More';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get verifiedOnly => 'Verified Only';
+
+  @override
+  String get applyFilters => 'Apply Filters';
+
+  @override
+  String get by => 'By';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get noDetailsFound => 'No details found';
+
+  @override
+  String get downloads => 'downloads';
+
+  @override
+  String get updated => 'Updated';
+
+  @override
+  String get surgeonInformation => 'Surgeon Information';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get contact => 'Contact';
+
+  @override
+  String get musicPreferences => 'Music Preferences';
+
+  @override
+  String get handPreference => 'Hand Preference';
+
+  @override
+  String get medication => 'Medication';
+
+  @override
+  String get allSupplies => 'All Supplies';
+
+  @override
+  String get noSuppliesFound => 'No supplies found';
+
+  @override
+  String get noSuturesFound => 'No sutures found';
+
+  @override
+  String get instruments => 'Instruments';
+
+  @override
+  String get positioning => 'Positioning';
+
+  @override
+  String get equipmentPlacement => 'Equipment / Placement';
+
+  @override
+  String get patientPosition => 'Patient Position';
+
+  @override
+  String get preppingShaving => 'Prepping / Shaving';
+
+  @override
+  String get keyNotes => 'Key Notes';
+
+  @override
+  String get photoLibrary => 'Photo library';
+
+  @override
+  String get noPhotosFound => 'No photos found';
+
+  @override
+  String get editEvent => 'Edit Event';
+
+  @override
+  String get procedureInformation => 'Procedure Information';
+
+  @override
+  String get procedureName => 'Procedure Name';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get durationHours => 'Duration (hours)';
+
+  @override
+  String get eventType => 'Event Type';
+
+  @override
+  String get surgery => 'Surgery';
+
+  @override
+  String get meeting => 'Meeting';
+
+  @override
+  String get consultation => 'Consultation';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get personnel => 'Personnel';
+
+  @override
+  String get surgicalTeam => 'Surgical Team';
+
+  @override
+  String get locationSetup => 'Location & Setup';
+
+  @override
+  String get operatingRoom => 'Operating Room';
+
+  @override
+  String get anesthesiaType => 'Anesthesia Type';
+
+  @override
+  String get procedureNotes => 'Procedure Notes';
+
+  @override
+  String get addNotesHint => 'Add any special notes or requirements...';
+
+  @override
+  String get saving => 'Saving...';
 }

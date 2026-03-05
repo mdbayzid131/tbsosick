@@ -9,6 +9,7 @@ import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class PreferenceCardFavorites extends StatefulWidget {
   const PreferenceCardFavorites({super.key});
@@ -21,13 +22,13 @@ class PreferenceCardFavorites extends StatefulWidget {
 class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
   final BottomNabBarController _bottomNabBarController =
       Get.find<BottomNabBarController>();
-      final HomePageController _homePageController = Get.find<HomePageController>();
-      final PrefranceCardDetailsController _prefranceCardDetailsController = Get.find<PrefranceCardDetailsController>(
-      
-      );
+  final HomePageController _homePageController = Get.find<HomePageController>();
+  final PrefranceCardDetailsController _prefranceCardDetailsController =
+      Get.find<PrefranceCardDetailsController>();
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
@@ -46,14 +47,14 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                   bottom: 20.h,
                 ),
                 decoration: BoxDecoration(
-                                        color: Color(0xFF6C36B2),
+                  color: Color(0xFF6C36B2),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(24.r),
                     bottomRight: Radius.circular(24.r),
                   ),
                 ),
                 child: Text(
-                  'Favorites card',
+                  tr.preferenceCardFavorites,
                   style: GoogleFonts.arimo(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w700,
@@ -68,7 +69,7 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                   children: [
                     SizedBox(height: 20.h),
                     Text(
-                      'Preference card favorites',
+                      tr.preferenceCardFavorites,
                       style: GoogleFonts.roboto(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
@@ -79,16 +80,12 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                     Obx(() {
                       if (_bottomNabBarController.isLoading.value &&
                           _bottomNabBarController.favoriteCards.isEmpty) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return const Center(child: CircularProgressIndicator());
                       }
                       if (_bottomNabBarController.favoriteCards.isEmpty) {
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 20.h),
-                          child: const Center(
-                            child: Text("No favorite cards"),
-                          ),
+                          child: Center(child: Text(tr.noFavoriteItem)),
                         );
                       }
                       return ListView.builder(
@@ -108,8 +105,9 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                             padding: EdgeInsets.only(bottom: 10.h),
                             child: ProcedureCard(
                               onDownloadTap: () {
-                                _prefranceCardDetailsController
-                                    .downloadCard(cardId: card.id);
+                                _prefranceCardDetailsController.downloadCard(
+                                  cardId: card.id,
+                                );
                               },
                               isPrivateCard: false,
                               cardId: card.id,
@@ -123,14 +121,15 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                               onFavoriteToggle: () async {
                                 if (card.isFavorite) {
                                   await _homePageController
-                                      .removeFromFavoriteList(
-                                          cardId: card.id);
+                                      .removeFromFavoriteList(cardId: card.id);
                                 } else {
-                                  await _homePageController
-                                      .addToFavoriteList(cardId: card.id);
+                                  await _homePageController.addToFavoriteList(
+                                    cardId: card.id,
+                                  );
                                 }
-                                await _bottomNabBarController
-                                    .getFavoriteCard(showLoading: false);
+                                await _bottomNabBarController.getFavoriteCard(
+                                  showLoading: false,
+                                );
                               },
                             ),
                           );

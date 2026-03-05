@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 import 'controller/profile_controller.dart';
 
 import '../../widgets/custom_elevated_button.dart';
@@ -13,6 +14,7 @@ import '../../widgets/custom_text_field.dart';
 void showEditProfileBottomSheet(BuildContext context) {
   final profileController = Get.put(ProfileController());
   final user = profileController.user.value;
+  final tr = AppLocalizations.of(context)!;
 
   final firstNameController = TextEditingController(
     text: user.name != null ? user.name!.split(' ').first : '',
@@ -63,7 +65,7 @@ void showEditProfileBottomSheet(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Edit Profile',
+                        tr.editProfile,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -157,16 +159,16 @@ void showEditProfileBottomSheet(BuildContext context) {
                       Expanded(
                         child: CustomTextField(
                           controller: firstNameController,
-                          hintText: 'John',
-                          label: 'First Name',
+                          hintText: tr.john,
+                          label: tr.firstName,
                         ),
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
                         child: CustomTextField(
                           controller: lastNameController,
-                          hintText: 'Doe',
-                          label: 'Last Name',
+                          hintText: tr.doe,
+                          label: tr.lastName,
                         ),
                       ),
                     ],
@@ -175,26 +177,26 @@ void showEditProfileBottomSheet(BuildContext context) {
 
                   CustomTextField(
                     controller: specialtyController,
-                    hintText: 'General Surgery',
-                    label: 'Specialty',
+                    hintText: tr.generalSurgery,
+                    label: tr.specialty,
                   ),
                   SizedBox(height: 12.h),
                   CustomTextField(
                     controller: hospitalController,
-                    hintText: 'City Hospital',
-                    label: 'Hospital ',
+                    hintText: tr.cityHospital,
+                    label: tr.hospital,
                   ),
                   SizedBox(height: 12.h),
                   CustomTextField(
                     controller: emailController,
-                    hintText: 'john.doe@example.com',
-                    label: 'Email',
+                    hintText: tr.emailPlaceholder,
+                    label: tr.email,
                   ),
                   SizedBox(height: 12.h),
                   CustomTextField(
                     controller: phoneController,
-                    hintText: '(555) 987-6543',
-                    label: 'Phone',
+                    hintText: tr.phonePlaceholder,
+                    label: tr.phoneLabel,
                   ),
                   SizedBox(height: 25.h),
 
@@ -204,7 +206,7 @@ void showEditProfileBottomSheet(BuildContext context) {
                       return profileController.isLoading.value
                           ? const Center(child: CircularProgressIndicator())
                           : CustomElevatedButton(
-                              label: 'Save Changes',
+                              label: tr.saveChanges,
                               onPressed: () async {
                                 final name =
                                     '${firstNameController.text.trim()} ${lastNameController.text.trim()}'

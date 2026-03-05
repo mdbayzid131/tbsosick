@@ -7,6 +7,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
@@ -89,7 +90,10 @@ class _LibraryScreenState extends State<LibraryScreen>
                 dividerColor: Colors.transparent,
                 controller: _tabController,
                 indicatorColor: Colors.transparent,
-                tabs: [_tab1('Preference card', 0), _tab2('Private Card', 1)],
+                tabs: [
+                  _tab1(AppLocalizations.of(context)!.preferenceCardTab, 0),
+                  _tab2(AppLocalizations.of(context)!.privateCardTab, 1)
+                ],
               ),
               SizedBox(height: 16.h),
               Expanded(
@@ -130,7 +134,7 @@ class _LibraryScreenState extends State<LibraryScreen>
         children: [
           // Title
           Text(
-            'Preference Library',
+            AppLocalizations.of(context)!.preferenceLibraryTitle,
             style: GoogleFonts.arimo(
               fontSize: 24.sp,
               fontWeight: FontWeight.w700,
@@ -156,7 +160,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                 color: const Color(0xFF79747E),
               ),
               decoration: InputDecoration(
-                hintText: 'Search procedures...',
+                hintText: AppLocalizations.of(context)!.searchProceduresCards,
                 hintStyle: GoogleFonts.arimo(
                   fontSize: 15.sp,
                   color: const Color(0xFF79747E),
@@ -263,7 +267,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             SizedBox(width: 10.h),
             Expanded(
               child: Text(
-                'Private Card',
+                text,
                 style: GoogleFonts.roboto(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
@@ -320,7 +324,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             SizedBox(width: 10.h),
             Expanded(
               child: Text(
-                'Preference card',
+                text,
                 style: GoogleFonts.roboto(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
@@ -344,7 +348,7 @@ class _LibraryScreenState extends State<LibraryScreen>
           // Card count
           Obx(
             () => Text(
-              '${controller.publicCards.length} Preference cards',
+              '${controller.publicCards.length} ${AppLocalizations.of(context)!.preferenceCards}',
               style: GoogleFonts.arimo(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
@@ -412,7 +416,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                     return Center(child: Text(controller.errorMessage.value));
                   }
                   if (controller.publicCards.isEmpty) {
-                    return const Center(child: Text('No cards found'));
+                    return Center(child: Text(AppLocalizations.of(context)!.noCardsFound));
                   }
                   return ListView.builder(
                     shrinkWrap: true,
@@ -436,7 +440,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                             title: card.cardTitle,
                             specialty: card.surgeonSpecialty,
                             isVerified: card.isVerified,
-                            doctor: "By ${card.surgeonName}",
+                            doctor: "${AppLocalizations.of(context)!.by} ${card.surgeonName}",
                             downloads: card.totalDownloads,
                             updatedTime: card.updatedAt,
                             isFavorite: card.isFavorite,
@@ -473,7 +477,7 @@ class _LibraryScreenState extends State<LibraryScreen>
           // Card count
           Obx(
             () => Text(
-              '${controller.privateCards.length} Private cards',
+              '${controller.privateCards.length} ${AppLocalizations.of(context)!.privateCards}',
               style: GoogleFonts.arimo(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
@@ -497,8 +501,8 @@ class _LibraryScreenState extends State<LibraryScreen>
                   if (controller.privateCards.isEmpty) {
                     return Padding(
                       padding: EdgeInsets.only(top: 20.h),
-                      child: const Center(
-                        child: Text('No private cards found'),
+                      child: Center(
+                        child: Text(AppLocalizations.of(context)!.noPrivateCardsFound),
                       ),
                     );
                   }
@@ -565,7 +569,7 @@ class _LibraryScreenState extends State<LibraryScreen>
         padding: EdgeInsets.symmetric(vertical: 20.h),
         child: Center(
           child: Text(
-            'No more data',
+            AppLocalizations.of(context)!.noMoreData,
             style: GoogleFonts.arimo(
               fontSize: 14.sp,
               color: const Color(0xFF9CA3AF),
@@ -583,7 +587,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             : TextButton(
                 onPressed: onPressed,
                 child: Text(
-                  'Load More',
+                  AppLocalizations.of(context)!.loadMore,
                   style: GoogleFonts.arimo(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
@@ -625,7 +629,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                   SizedBox(height: 20.h),
                   // Title
                   Text(
-                    'Filters',
+                    AppLocalizations.of(context)!.filters,
                     style: GoogleFonts.arimo(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.w600,
@@ -635,7 +639,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                   SizedBox(height: 20.h),
                   // Specialty section
                   Text(
-                    'SPECIALTY',
+                    AppLocalizations.of(context)!.specialty.toUpperCase(),
                     style: GoogleFonts.arimo(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
@@ -649,13 +653,13 @@ class _LibraryScreenState extends State<LibraryScreen>
                     spacing: 8.w,
                     runSpacing: 8.h,
                     children: [
-                      _buildFilterChip('All', _selectedSpecialty == 'All', () {
+                      _buildFilterChip(AppLocalizations.of(context)!.all, _selectedSpecialty == 'All', () {
                         setModalState(() {
                           _selectedSpecialty = 'All';
                         });
                       }),
                       _buildFilterChip(
-                        'Orthopedic Surgery',
+                        AppLocalizations.of(context)!.orthopedicSurgery,
                         _selectedSpecialty == 'Orthopedic Surgery',
                         () {
                           setModalState(() {
@@ -664,7 +668,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                         },
                       ),
                       _buildFilterChip(
-                        'Cardiac Surgery',
+                        AppLocalizations.of(context)!.cardiacSurgery,
                         _selectedSpecialty == 'Cardiac Surgery',
                         () {
                           setModalState(() {
@@ -673,7 +677,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                         },
                       ),
                       _buildFilterChip(
-                        'General Surgery',
+                        AppLocalizations.of(context)!.generalSurgery,
                         _selectedSpecialty == 'General Surgery',
                         () {
                           setModalState(() {
@@ -682,7 +686,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                         },
                       ),
                       _buildFilterChip(
-                        'Neurosurgery',
+                        AppLocalizations.of(context)!.neurosurgery,
                         _selectedSpecialty == 'Neurosurgery',
                         () {
                           setModalState(() {
@@ -691,7 +695,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                         },
                       ),
                       _buildFilterChip(
-                        'Plastic Surgery',
+                        AppLocalizations.of(context)!.plasticSurgery,
                         _selectedSpecialty == 'Plastic Surgery',
                         () {
                           setModalState(() {
@@ -700,7 +704,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                         },
                       ),
                       _buildFilterChip(
-                        'Vascular Surgery',
+                        AppLocalizations.of(context)!.vascularSurgery,
                         _selectedSpecialty == 'Vascular Surgery',
                         () {
                           setModalState(() {
@@ -709,7 +713,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                         },
                       ),
                       _buildFilterChip(
-                        'Thoracic Surgery',
+                        AppLocalizations.of(context)!.thoracicSurgery,
                         _selectedSpecialty == 'Thoracic Surgery',
                         () {
                           setModalState(() {
@@ -718,7 +722,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                         },
                       ),
                       _buildFilterChip(
-                        'Pediatric Surgery',
+                        AppLocalizations.of(context)!.pediatricSurgery,
                         _selectedSpecialty == 'Pediatric Surgery',
                         () {
                           setModalState(() {
@@ -734,7 +738,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Verified Only',
+                        AppLocalizations.of(context)!.verifiedOnly,
                         style: GoogleFonts.arimo(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
@@ -764,7 +768,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                         controller.refreshCards();
                         Navigator.pop(context);
                       },
-                      label: 'Apply Filters',
+                      label: AppLocalizations.of(context)!.applyFilters,
                     ),
                   ),
                 ],

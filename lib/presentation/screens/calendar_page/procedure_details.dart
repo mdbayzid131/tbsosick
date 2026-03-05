@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import '../../../config/constants/image_paths.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 import 'edit_procedure.dart';
 import 'controller/clender_controller.dart';
 
@@ -30,7 +31,8 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-        final statusBarHeight = MediaQuery.of(context).padding.top;
+    final l10n = AppLocalizations.of(context)!;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       body: Obx(() {
         // Show loading indicator while data is being fetched
@@ -50,7 +52,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
               child: Column(
                 children: [
                   // Header section with gradient
-                  _buildHeader(),
+                  _buildHeader(l10n),
             
                   // Scrollable content
                   Padding(
@@ -63,36 +65,36 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                         // Duration and Location cards
                         Row(
                           children: [
-                            Expanded(child: _buildDurationCard()),
+                            Expanded(child: _buildDurationCard(l10n)),
                             SizedBox(width: 12.w),
-                            Expanded(child: _buildLocationCard()),
+                            Expanded(child: _buildLocationCard(l10n)),
                           ],
                         ),
             
                         SizedBox(height: 16.h),
             
                         // Primary Information card
-                        _buildPrimaryInformationCard(),
+                        _buildPrimaryInformationCard(l10n),
             
                         SizedBox(height: 16.h),
             
                         // Surgical Team card
-                        _buildSurgicalTeamCard(),
+                        _buildSurgicalTeamCard(l10n),
             
                         SizedBox(height: 16.h),
             
                         // Linked Preference Card
-                        _buildLinkedPreferenceCard(),
+                        _buildLinkedPreferenceCard(l10n),
             
                         SizedBox(height: 16.h),
             
                         // Procedure Notes card
-                        _buildProcedureNotesCard(),
+                        _buildProcedureNotesCard(l10n),
             
                         SizedBox(height: 16.h),
             
                         // Reminders card
-                        _buildRemindersCard(),
+                        _buildRemindersCard(l10n),
             
                         SizedBox(height: 20.h),
                       ],
@@ -100,7 +102,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                   ),
             
                   // Bottom action buttons
-                  _buildBottomActions(),
+                  _buildBottomActions(l10n),
                 ],
               ),
             ),
@@ -121,7 +123,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   }
 
   // Header with gradient background
-  Widget _buildHeader() {
+  Widget _buildHeader(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
@@ -145,7 +147,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Event Details',
+                l10n.eventDetails,
                 style: GoogleFonts.arimo(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w400,
@@ -207,7 +209,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        'Upcoming',
+                        l10n.upcoming,
                         style: GoogleFonts.arimo(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w500,
@@ -234,7 +236,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                       String txt = '';
                       if (e != null) {
                         txt =
-                            '${DateFormat('EEEE, MMMM d, y').format(e.date)} at ${e.time}';
+                            '${DateFormat('EEEE, MMMM d, y').format(e.date)} ${l10n.at} ${e.time}';
                       }
                       return Text(
                         txt,
@@ -255,7 +257,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   }
 
   // Duration card
-  Widget _buildDurationCard() {
+  Widget _buildDurationCard(AppLocalizations l10n) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -282,7 +284,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
               ),
               SizedBox(width: 6.w),
               Text(
-                'Duration',
+                l10n.duration,
                 style: GoogleFonts.arimo(
                   fontSize: 13.sp,
                   color: const Color(0xff79747E),
@@ -293,7 +295,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
           SizedBox(height: 8.h),
           Obx(() {
             final d = _controller.eventDetails.value;
-            final t = d != null ? '${d.durationHours} hours' : '';
+            final t = d != null ? '${d.durationHours} ${d.durationHours == 1 ? l10n.hour : l10n.hours}' : '';
             return Text(
               t,
               style: GoogleFonts.arimo(
@@ -309,7 +311,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   }
 
   // Location card
-  Widget _buildLocationCard() {
+  Widget _buildLocationCard(AppLocalizations l10n) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -336,7 +338,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
               ),
               SizedBox(width: 6.w),
               Text(
-                'Location',
+                l10n.location,
                 style: GoogleFonts.arimo(
                   fontSize: 13.sp,
                   color: const Color(0xff79747E),
@@ -363,7 +365,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   }
 
   // Primary Information card
-  Widget _buildPrimaryInformationCard() {
+  Widget _buildPrimaryInformationCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -383,7 +385,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Primary Information',
+            l10n.primaryInformation,
             style: GoogleFonts.arimo(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
@@ -412,7 +414,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Surgeon',
+                    l10n.surgeon,
                     style: GoogleFonts.arimo(
                       fontSize: 13.sp,
                       color: const Color(0xff79747E),
@@ -457,7 +459,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Anesthesia',
+                    l10n.anesthesia,
                     style: GoogleFonts.arimo(
                       fontSize: 13.sp,
                       color: const Color(0xff79747E),
@@ -482,7 +484,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   }
 
   // Surgical Team card
-  Widget _buildSurgicalTeamCard() {
+  Widget _buildSurgicalTeamCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -509,14 +511,17 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 color: const Color(0xff1C1B1F),
               ),
               SizedBox(width: 8.w),
-              Text(
-                'Surgical Team (3)',
-                style: GoogleFonts.arimo(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xff1C1B1F),
-                ),
-              ),
+              Obx(() {
+                final count = _controller.eventDetails.value?.personnel?.surgicalTeam.length ?? 0;
+                return Text(
+                  l10n.surgicalTeamWithCount(count + 1),
+                  style: GoogleFonts.arimo(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xff1C1B1F),
+                  ),
+                );
+              }),
             ],
           ),
           SizedBox(height: 16.h),
@@ -528,7 +533,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 _buildTeamMember(
                   initials: _initials(p.leadSurgeon),
                   name: p.leadSurgeon,
-                  role: 'Lead Surgeon',
+                  role: l10n.leadSurgeon,
                   isVerified: true,
                 ),
               );
@@ -538,7 +543,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                   _buildTeamMember(
                     initials: _initials(m),
                     name: m,
-                    role: 'Team',
+                    role: l10n.team,
                     isVerified: false,
                   ),
                 );
@@ -627,7 +632,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   }
 
   // Linked Preference Card
-  Widget _buildLinkedPreferenceCard() {
+  Widget _buildLinkedPreferenceCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -667,7 +672,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Linked Preference Card',
+                      l10n.linkedPreferenceCard,
                       style: GoogleFonts.arimo(
                         fontSize: 13.sp,
                         color: const Color(0xFF7C3AED),
@@ -715,7 +720,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 elevation: 0,
               ),
               child: Text(
-                'View Card Details',
+                l10n.viewCardDetails,
                 style: GoogleFonts.arimo(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
@@ -730,7 +735,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   }
 
   // Procedure Notes card
-  Widget _buildProcedureNotesCard() {
+  Widget _buildProcedureNotesCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -750,7 +755,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Procedure Notes',
+            l10n.procedureNotes,
             style: GoogleFonts.arimo(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
@@ -776,7 +781,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   }
 
   // Reminders card
-  Widget _buildRemindersCard() {
+  Widget _buildRemindersCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -804,7 +809,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
               ),
               SizedBox(width: 8.w),
               Text(
-                'Reminders',
+                l10n.reminders,
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -833,7 +838,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 ),
                 SizedBox(width: 12.w),
                 Text(
-                  '1 hour before procedure',
+                  l10n.oneHourBefore,
                   style: GoogleFonts.arimo(
                     fontSize: 14.sp,
                     color: const Color(0xFF1C1B1F),
@@ -862,7 +867,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 ),
                 SizedBox(width: 12.w),
                 Text(
-                  '24 hours before procedure',
+                  l10n.twentyFourHoursBefore,
                   style: GoogleFonts.arimo(
                     fontSize: 14.sp,
                     color: const Color(0xFF1C1B1F),
@@ -877,7 +882,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
   }
 
   // Bottom action buttons
-  Widget _buildBottomActions() {
+  Widget _buildBottomActions(AppLocalizations l10n) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -908,7 +913,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    'Back',
+                    l10n.back,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,
@@ -938,7 +943,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    'Edit Details',
+                    l10n.edit,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,
