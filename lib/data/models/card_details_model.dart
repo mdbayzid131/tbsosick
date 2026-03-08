@@ -1,4 +1,3 @@
-
 class PreferenceCardDetailsResponse {
   final bool success;
   final String message;
@@ -18,6 +17,7 @@ class PreferenceCardDetailsResponse {
     );
   }
 }
+
 class PreferenceCardDetailsModel {
   final String id;
   final String createdBy;
@@ -87,16 +87,14 @@ class PreferenceCardDetailsModel {
   }
 }
 
-
 class NameItem {
   final String name;
+  final int quantity;
 
-  NameItem({required this.name});
+  NameItem({required this.name, required this.quantity});
 
   factory NameItem.fromJson(Map<String, dynamic> json) {
-    return NameItem(
-      name: json['name'] ?? '',
-    );
+    return NameItem(name: json['name'] ?? '', quantity: json['quantity'] ?? 1);
   }
 }
 

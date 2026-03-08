@@ -145,8 +145,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                               fontSize: 16.sp,
                               color: const Color(0xff9E9E9E),
                             ),
-                            hintText:
-                                AppLocalizations.of(context)!.cardTitleHint,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.cardTitleHint,
                             hintStyle: GoogleFonts.arimo(
                               fontSize: 18.sp,
                               color: const Color(0xffC6C6C8),
@@ -215,9 +216,12 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
 
                         // Hand Preference TextFormField
                         _buildTextField(
-                          label:
-                              AppLocalizations.of(context)!.handPreferenceSurgeon,
-                          hint: AppLocalizations.of(context)!.enterHandPreference,
+                          label: AppLocalizations.of(
+                            context,
+                          )!.handPreferenceSurgeon,
+                          hint: AppLocalizations.of(
+                            context,
+                          )!.enterHandPreference,
                           controller:
                               postAnyCardController.handpreferenceController,
                           validator: Validators.required,
@@ -294,8 +298,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                     fontSize: 14.sp,
                                     color: const Color(0xff9E9E9E),
                                   ),
-                                  hintText:
-                                      AppLocalizations.of(context)!.selectSpecialty,
+                                  hintText: AppLocalizations.of(
+                                    context,
+                                  )!.selectSpecialty,
                                   hintStyle: GoogleFonts.arimo(
                                     fontSize: 17.sp,
                                     color: const Color(0xffC6C6C8),
@@ -317,7 +322,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
 
                         // Contact Number TextFormField
                         _buildTextField(
-                          label: AppLocalizations.of(context)!.contactNumberLabel,
+                          label: AppLocalizations.of(
+                            context,
+                          )!.contactNumberLabel,
                           hint: AppLocalizations.of(context)!.phonePlaceholder,
                           controller: postAnyCardController.contactController,
                           validator: Validators.phoneNumber,
@@ -329,7 +336,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                         // Music Preferences TextFormField
                         _buildTextField(
                           label: AppLocalizations.of(context)!.musicPreferences,
-                          hint: AppLocalizations.of(context)!.musicPreferencesHint,
+                          hint: AppLocalizations.of(
+                            context,
+                          )!.musicPreferencesHint,
                           controller:
                               postAnyCardController.musicPreferenceController,
                           validator: Validators.required,
@@ -365,7 +374,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                               fontSize: 14.sp,
                               color: const Color(0xff9E9E9E),
                             ),
-                            hintText: AppLocalizations.of(context)!.medicationHint,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.medicationHint,
                             hintStyle: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               color: const Color(0xffC6C6C8),
@@ -386,7 +397,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                   SizedBox(height: 20.h),
 
                   MedicalSuppliesScreen(
-                    selectedIds: postAnyCardController.selectedSupplies,
+                    selectedItems: postAnyCardController.selectedSupplies,
                     onSelectionChanged: (items) {
                       setState(() {
                         postAnyCardController.selectedSupplies.assignAll(items);
@@ -410,7 +421,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
 
                   SizedBox(height: 20.h),
                   SuturesContainer(
-                    selectedIds: postAnyCardController.selectedSutures,
+                    selectedItems: postAnyCardController.selectedSutures,
                     onSelectionChanged: (items) {
                       setState(() {
                         postAnyCardController.selectedSutures.assignAll(items);
@@ -458,8 +469,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                               fontSize: 14.sp,
                               color: const Color(0xff9E9E9E),
                             ),
-                            hintText:
-                                AppLocalizations.of(context)!.instrumentsHint,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.instrumentsHint,
                             hintStyle: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               color: const Color(0xffC6C6C8),
@@ -483,7 +495,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            AppLocalizations.of(context)!.positioningEquipmentPlacement,
+                            AppLocalizations.of(
+                              context,
+                            )!.positioningEquipmentPlacement,
                             style: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               fontWeight: FontWeight.w700,
@@ -503,8 +517,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                               fontSize: 14.sp,
                               color: const Color(0xff9E9E9E),
                             ),
-                            hintText:
-                                AppLocalizations.of(context)!.positioningEquipmentHint,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.positioningEquipmentHint,
                             hintStyle: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               color: const Color(0xffC6C6C8),
@@ -547,8 +562,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                               fontSize: 14.sp,
                               color: const Color(0xff9E9E9E),
                             ),
-                            hintText:
-                                AppLocalizations.of(context)!.patientPositioningHint,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.patientPositioningHint,
                             hintStyle: GoogleFonts.arimo(
                               fontSize: 17.sp,
                               color: const Color(0xffC6C6C8),
@@ -667,8 +683,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                   horizontal: 10.w,
                                 ),
                                 border: InputBorder.none,
-                                hintText:
-                                    AppLocalizations.of(context)!.keyNotesHint,
+                                hintText: AppLocalizations.of(
+                                  context,
+                                )!.keyNotesHint,
                                 hintStyle: GoogleFonts.arimo(
                                   fontSize: 14.sp,
                                   color: const Color(0xFF9CA3AF),
@@ -738,7 +755,9 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                     ),
                                     SizedBox(height: 4.h),
                                     Text(
-                                      AppLocalizations.of(context)!.tapToSelectFromLibrary,
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.tapToSelectFromLibrary,
                                       style: GoogleFonts.arimo(
                                         fontSize: 12.sp,
                                         color: const Color(0xFF8E8E93),

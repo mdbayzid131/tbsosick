@@ -15,14 +15,13 @@ class SplashScreen extends GetView<SplashController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Center(child: Image.asset(ImagePaths.appLOgo,)),
-             SizedBox(height: 20.h),
-  
-            Text(
-              'SMRTSCRUB',
-              style: TextStyle(
-                fontSize: 24.sp,
-                fontWeight: FontWeight.bold,
+            Center(child: Image.asset(ImagePaths.appLOgo)),
+            SizedBox(height: 20.h),
+
+            Center(
+              child: Text(
+                'SMRTSCRUB',
+                style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
               ),
             ),
           ],

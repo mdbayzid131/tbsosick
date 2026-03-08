@@ -9,12 +9,12 @@ import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/controllers/post_any__card_controller.dart';
 
 class MedicalSuppliesScreen extends StatefulWidget {
-  final List<String> selectedIds;
-  final Function(List<String>) onSelectionChanged;
+  final List<Map<String, dynamic>> selectedItems;
+  final Function(List<Map<String, dynamic>>) onSelectionChanged;
 
   const MedicalSuppliesScreen({
     super.key,
-    required this.selectedIds,
+    required this.selectedItems,
     required this.onSelectionChanged,
   });
 
@@ -61,23 +61,34 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
     return homePageController.supplies;
   }
 
-  void removeItem(String name) {
-    List<String> newList = List.from(widget.selectedIds);
-    newList.remove(name);
-    postAnyCardController.selectedSuppliesNames.remove(name);
+  void removeItem(String id) {
+    List<Map<String, dynamic>> newList = List.from(widget.selectedItems);
+    newList.removeWhere((element) => element['name'] == id);
+    postAnyCardController.selectedSuppliesNames.remove(id);
     widget.onSelectionChanged(newList);
   }
 
+  void updateQuantity(String id, int delta) {
+    List<Map<String, dynamic>> newList = List.from(widget.selectedItems);
+    final index = newList.indexWhere((element) => element['name'] == id);
+    if (index != -1) {
+      int newQty = (newList[index]['quantity'] as int) + delta;
+      if (newQty > 0) {
+        newList[index]['quantity'] = newQty;
+        widget.onSelectionChanged(newList);
+      }
+    }
+  }
+
   void addItem(String id, String name) {
-    if (!widget.selectedIds.contains(id)) {
-      List<String> newList = List.from(widget.selectedIds);
-      newList.add(id);
+    if (!widget.selectedItems.any((element) => element['name'] == id)) {
+      List<Map<String, dynamic>> newList = List.from(widget.selectedItems);
+      newList.add({'name': id, 'quantity': 1});
 
       // Store the name in the caching map
       postAnyCardController.selectedSuppliesNames[id] = name;
 
       widget.onSelectionChanged(newList);
-      // No longer clearing search or unfocusing here
     }
   }
 
@@ -219,7 +230,9 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                     itemBuilder: (context, index) {
                       if (index < results.length) {
                         final item = results[index];
-                        final isSelected = widget.selectedIds.contains(item.id);
+                        final isSelected = widget.selectedItems.any(
+                          (element) => element['name'] == item.id,
+                        );
 
                         return Material(
                           color: Colors.transparent,
@@ -284,8 +297,8 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                       } else if (!exactMatch && index == results.length) {
                         // Custom Addition Tile
                         final customName = _searchController.text.trim();
-                        final isSelected = widget.selectedIds.contains(
-                          customName,
+                        final isSelected = widget.selectedItems.any(
+                          (element) => element['name'] == customName,
                         );
 
                         return Material(
@@ -363,16 +376,16 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.selectedIds.isEmpty
+                    widget.selectedItems.isEmpty
                         ? l10n.noItemSelected
-                        : l10n.selectedWithCount(widget.selectedIds.length),
+                        : l10n.selectedWithCount(widget.selectedItems.length),
                     style: GoogleFonts.arimo(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w700,
                       color: Colors.grey.shade800,
                     ),
                   ),
-                  if (widget.selectedIds.isNotEmpty)
+                  if (widget.selectedItems.isNotEmpty)
                     TextButton(
                       onPressed: () {
                         postAnyCardController.selectedSuppliesNames.clear();
@@ -395,7 +408,7 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                 ],
               ),
               SizedBox(height: 12.h),
-              if (widget.selectedIds.isEmpty)
+              if (widget.selectedItems.isEmpty)
                 Center(
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -410,23 +423,27 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                   ),
                 )
               else
-                Wrap(
-                  spacing: 10.w,
-                  runSpacing: 10.h,
-                  children: widget.selectedIds.map((id) {
-                    // We check if it's an ObjectId (24 hex chars). If it's an ID but not found in list, it might show the ID instead of name.
-                    // But if it's a custom item, the 'id' is just the custom string name (e.g. 'My Custom Suture').
-                    // So we search in the supplies list for the name first.
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.selectedItems.length,
+                  separatorBuilder: (context, index) => SizedBox(height: 10.h),
+                  itemBuilder: (context, index) {
+                    final selectedItem = widget.selectedItems[index];
+                    final String id = selectedItem['name'];
+                    final int quantity = selectedItem['quantity'] ?? 1;
+
                     final itemName =
                         postAnyCardController.selectedSuppliesNames[id] ??
                         homePageController.supplies
                             .firstWhereOrNull((e) => e.id == id)
                             ?.name ??
                         id;
+
                     return Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 14.w,
-                        vertical: 8.h,
+                        vertical: 10.h,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -444,9 +461,8 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                         ],
                       ),
                       child: Row(
-                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Flexible(
+                          Expanded(
                             child: Text(
                               itemName,
                               style: GoogleFonts.arimo(
@@ -458,23 +474,71 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                             ),
                           ),
                           SizedBox(width: 8.w),
+                          // Quantity Selector
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xffF3F4F6),
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _buildQtyButton(
+                                  icon: Icons.remove,
+                                  onPressed: () => updateQuantity(id, -1),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                  ),
+                                  child: Text(
+                                    quantity.toString(),
+                                    style: GoogleFonts.arimo(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: const Color(0xff9945FF),
+                                    ),
+                                  ),
+                                ),
+                                _buildQtyButton(
+                                  icon: Icons.add,
+                                  onPressed: () => updateQuantity(id, 1),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
                           GestureDetector(
                             onTap: () => removeItem(id),
                             child: Icon(
                               Icons.close_rounded,
-                              size: 16.sp,
-                              color: Colors.grey.shade400,
+                              size: 18.sp,
+                              color: Colors.red.shade300,
                             ),
                           ),
                         ],
                       ),
                     );
-                  }).toList(),
+                  },
                 ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildQtyButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(8.r),
+      child: Padding(
+        padding: EdgeInsets.all(6.w),
+        child: Icon(icon, size: 16.sp, color: Colors.grey.shade600),
+      ),
     );
   }
 

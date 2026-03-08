@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -146,8 +147,8 @@ class UserDataRepository {
     required String cardTitle,
     required Map<String, dynamic> surgeon,
     required String medication,
-    required List<String> supplies,
-    required List<String> sutures,
+    required List<Map<String, dynamic>> supplies,
+    required List<Map<String, dynamic>> sutures,
     required String instruments,
     required String positioningEquipment,
     required String prepping,
@@ -173,9 +174,9 @@ class UserDataRepository {
       body['surgeon[$key]'] = value;
     });
 
-    // To ensure correct formData parsing, we unwrap any RxList
-    body['supplies'] = supplies.toList();
-    body['sutures'] = sutures.toList();
+    // To ensure correct formData parsing with proper types (like numbers), we jsonEncode these lists
+    body['supplies'] = jsonEncode(supplies);
+    body['sutures'] = jsonEncode(sutures);
 
     // 2. Prepare files for multipartBody
     List<MultipartBody> multipartConfig = photos.map((file) {

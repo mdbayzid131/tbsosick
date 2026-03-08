@@ -144,7 +144,9 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           if (controller.cardDetails.value == null) {
             return SizedBox(
               height: ScreenUtil().screenHeight * 0.8,
-              child: Center(child: Text(AppLocalizations.of(context)!.noDetailsFound)),
+              child: Center(
+                child: Text(AppLocalizations.of(context)!.noDetailsFound),
+              ),
             );
           }
           return RefreshIndicator(
@@ -476,7 +478,10 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                 final supply = controller.cardDetails.value?.supplies[index];
                 return Padding(
                   padding: EdgeInsets.only(bottom: 16.h),
-                  child: _buildSupplyItem(supply?.name ?? '', 1),
+                  child: _buildSupplyItem(
+                    supply?.name ?? '',
+                    supply?.quantity ?? 1,
+                  ),
                 );
               },
             );
@@ -551,7 +556,10 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                 final suture = controller.cardDetails.value?.sutures[index];
                 return Padding(
                   padding: EdgeInsets.only(bottom: 16.h),
-                  child: _buildSupplyItem(suture?.name ?? '', 1),
+                  child: _buildSupplyItem(
+                    suture?.name ?? '',
+                    suture?.quantity ?? 1,
+                  ),
                 );
               },
             );

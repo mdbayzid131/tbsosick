@@ -11,9 +11,9 @@ class PostAnyCardController extends GetxController {
   final UserDataRepository userDataRepository = UserDataRepository();
   RxBool isLoading = false.obs;
 
-  RxList<String> selectedSupplies = <String>[].obs;
+  RxList<Map<String, dynamic>> selectedSupplies = <Map<String, dynamic>>[].obs;
   RxMap<String, String> selectedSuppliesNames = <String, String>{}.obs;
-  RxList<String> selectedSutures = <String>[].obs;
+  RxList<Map<String, dynamic>> selectedSutures = <Map<String, dynamic>>[].obs;
   RxMap<String, String> selectedSuturesNames = <String, String>{}.obs;
 
   final ImagePicker picker = ImagePicker();
@@ -86,8 +86,8 @@ class PostAnyCardController extends GetxController {
           'musicPreference': musicPreferenceController.text,
         },
         medication: medicationController.text,
-        supplies: selectedSupplies,
-        sutures: selectedSutures,
+        supplies: selectedSupplies.toList(),
+        sutures: selectedSutures.toList(),
         instruments: instrumentController.text,
         positioningEquipment: postingEquipmentController.text,
         prepping: positionController.text,

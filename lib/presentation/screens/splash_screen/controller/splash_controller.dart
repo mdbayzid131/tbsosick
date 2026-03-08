@@ -12,6 +12,7 @@ class SplashController extends GetxController {
   void onInit() async {
     super.onInit();
     await getOrCreateDeviceToken();
+    await Future.delayed(const Duration(seconds: 3));
     await RouteDecider.goNext();
   }
 
@@ -34,25 +35,17 @@ class SplashController extends GetxController {
   //  }
   // }
 
+  Future<String> getOrCreateDeviceToken() async {
+    String token = await StorageService.getString(StorageConstants.deviceToken);
+    AppConstants.deviceToken = token;
 
+    if (token.isEmpty) {
+      token = const Uuid().v4(); // unique device token
+      await StorageService.setString(StorageConstants.deviceToken, token);
+    }
 
-
-
-Future<String> getOrCreateDeviceToken() async {
-  String token = await StorageService.getString(StorageConstants.deviceToken);
-  AppConstants.deviceToken = token;
-
-  if (token.isEmpty) {
-    token = const Uuid().v4(); // unique device token
-    await StorageService.setString(
-      StorageConstants.deviceToken,
-      token,
-    );
+    return token;
   }
-
-  return token;
-}
-
 }
 
 class RouteDecider {
@@ -73,7 +66,8 @@ class RouteDecider {
     }
 
     final quickSetupDone =
-        await StorageService.getBool(StorageConstants.quickSetupCompleted) ?? false;
+        await StorageService.getBool(StorageConstants.quickSetupCompleted) ??
+        false;
 
     if (quickSetupDone) {
       Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
