@@ -1,8 +1,14 @@
+import 'dart:convert';
+import 'dart:io' show Platform;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
+import 'package:tbsosick/core/utils/nonce_helper.dart' hide generateNonce;
 import 'package:tbsosick/data/repositories/auth_repository.dart';
 
 class AuthService extends GetxService {
@@ -88,6 +94,79 @@ class AuthService extends GetxService {
     }
   }
 
+  /// ===================== SOCIAL LOGIN (GOOGLE) =====================
+  Future<Response?> signInWithGoogle() async {
+    try {
+      final googleSignIn = GoogleSignIn(
+        clientId: Platform.isIOS
+            ? '344458357764-l2q9u3m6an945rg6vnga1op45mhce06o.apps.googleusercontent.com'
+            : null,
+        serverClientId:
+            '344458357764-p7cinp8ik2ogrut9g54um2nqnn0nqg9g.apps.googleusercontent.com',
+      );
+
+      final account = await googleSignIn.signIn();
+      if (account == null) return null; // user cancelled
+
+      final auth = await account.authentication;
+      final idToken = auth.idToken;
+      if (idToken == null) return null;
+
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      final response = await _authRepo.socialLogin(
+        provider: 'google',
+        idToken: idToken,
+        deviceToken: fcmToken,
+        platform: Platform.isIOS ? 'ios' : 'android',
+      );
+
+      await _handleAuthResponse(response);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// ===================== SOCIAL LOGIN (APPLE) =====================
+  Future<Response?> signInWithApple() async {
+    try {
+      final rawNonce = generateNonce();
+      final hashedNonce = sha256OfString(rawNonce);
+
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: hashedNonce,
+        webAuthenticationOptions: Platform.isAndroid
+            ? WebAuthenticationOptions(
+                clientId: 'com.tbsosick.smrtscrub.service',
+                redirectUri: Uri.parse(
+                    'https://www.smrtscrub.com/api/v1/auth/apple/callback'),
+              )
+            : null,
+      );
+
+      final idToken = credential.identityToken;
+      if (idToken == null) return null;
+
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      final response = await _authRepo.socialLogin(
+        provider: 'apple',
+        idToken: idToken,
+        nonce: rawNonce,
+        deviceToken: fcmToken,
+        platform: Platform.isIOS ? 'ios' : 'android',
+      );
+
+      await _handleAuthResponse(response);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// ===================== OTP VERIFY =====================
   Future<Response> verifyOtp({required String email, required int otp}) async {
     try {
@@ -125,31 +204,6 @@ class AuthService extends GetxService {
         confirmPassword: confirmPassword,
       );
       return response;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  /// ===================== SOCIAL LOGIN =====================
-
-  Future<void> signInWithGoogle() async {
-    try {
-      // AuthRepo returns raw map from apiClient.postData, which might be response.data or already nested.
-      // We need to wrap it back into a Response for _handleAuthResponse or refactor _handleAuthResponse.
-      // In AuthRepo, we already call _saveAuthResponse, so here we just need to update state.
-      final response = await _authRepo.signInWithGoogle();
-      await _handleAuthResponse(response);
-      isLoggedIn.value = true;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<void> signInWithApple() async {  
-    try {
-      final response = await _authRepo.signInWithApple();
-      await _handleAuthResponse(response);
-      isLoggedIn.value = true;
     } catch (e) {
       rethrow;
     }

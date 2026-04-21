@@ -240,7 +240,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     SizedBox(height: 15.h),
 
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: controller.signInWithApple,
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 51.h),
                         backgroundColor: Color(0xff000000),
@@ -268,7 +268,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     SizedBox(height: 20.h),
 
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: controller.signInWithGoogle,
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 51.h),
                         backgroundColor: Color(0xffffffff),

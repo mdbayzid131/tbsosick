@@ -99,6 +99,7 @@ class LoginController extends GetxController {
       await RouteDecider.goNext();
     } catch (e) {
       Helpers.showCustomSnackBar(e.toString(), isError: true);
+      Helpers.showDebugLog(e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -112,6 +113,7 @@ class LoginController extends GetxController {
       await RouteDecider.goNext();
     } catch (e) {
       Helpers.showCustomSnackBar(e.toString(), isError: true);
+      Helpers.showDebugLog(e.toString());
     } finally {
       isLoading.value = false;
     }

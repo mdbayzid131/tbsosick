@@ -45,4 +45,5 @@ class ApiConstants {
   // Google Sign In
   static const String googleSignIn = '/auth/google';
   static const String appleSignIn = '/auth/apple';
+  static const String socialLogin = '/auth/social-login';
 }

@@ -5,6 +5,7 @@ import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
+import 'package:tbsosick/presentation/screens/splash_screen/controller/splash_controller.dart';
 
 class SignUpController extends GetxController {
   final AuthService _authService = Get.find();
@@ -88,11 +89,35 @@ class SignUpController extends GetxController {
     }
   }
 
+  Future<void> signInWithGoogle() async {
+    try {
+      isLoading.value = true;
+      await _authService.signInWithGoogle();
+      Helpers.showCustomSnackBar('Google Login successful', isError: false);
+      await RouteDecider.goNext();
+    } catch (e) {
+      Helpers.showCustomSnackBar(e.toString(), isError: true);
+      Helpers.showDebugLog(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
+  Future<void> signInWithApple() async {
+    try {
+      isLoading.value = true;
+      await _authService.signInWithApple();
+      Helpers.showCustomSnackBar('Apple Login successful', isError: false);
+      await RouteDecider.goNext();
+    } catch (e) {
+      Helpers.showCustomSnackBar(e.toString(), isError: true);
+          Helpers.showDebugLog(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
-
-
-   final countries = [
+  final countries = [
     "Afghanistan",
     "Albania",
     "Algeria",

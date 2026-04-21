@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 
@@ -12,7 +10,7 @@ class AuthRepo {
     return FirebaseAuth.instance;
   }
   
-  final googleSignIn = GoogleSignIn.instance;
+  // final googleSignIn = GoogleSignIn.instance;
   //  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   // Future<String> getDeviceId() async {
@@ -94,6 +92,25 @@ class AuthRepo {
     }, resetToken: token);
   }
 
+  /// ===================== SOCIAL LOGIN =====================
+  Future<Response> socialLogin({
+    required String provider,
+    required String idToken,
+    String? nonce,
+    String? deviceToken,
+    required String platform,
+  }) async {
+    final Map<String, dynamic> body = {
+      "provider": provider,
+      "idToken": idToken,
+      "platform": platform,
+    };
+    if (nonce != null) body["nonce"] = nonce;
+    if (deviceToken != null) body["deviceToken"] = deviceToken;
+
+    return await apiClient.postData(ApiConstants.socialLogin, body);
+  }
+
   /// ===================== LOGOUT =====================
   Future<Response> logout(String deviceToken) async {
     return await apiClient.postData(ApiConstants.logout, {
@@ -121,48 +138,4 @@ class AuthRepo {
     });
   }
 
-  // final gsign.GoogleSignIn _googleSignIn = gsign.GoogleSignIn(
-  //   scopes: ['email', 'profile'],
-  // );
-  final List<String> scopes = ['email', 'profile'];
-
-  // ─── Google Sign-In ───────────────────────────────────────────
-
-  Future<Response> signInWithGoogle() async {
-    await googleSignIn.initialize();
-
-    final googleUser = await googleSignIn.authenticate();
-    // final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-    if (googleUser == null) throw Exception('Google Sign-In বাতিল হয়েছে');
-
-    final googleAuth = googleUser.authentication;
-
-    return await apiClient.postData(ApiConstants.googleSignIn, {
-      'id_token': googleAuth.idToken,
-      'email': googleUser.email,
-      'name': googleUser.displayName,
-      'photo': googleUser.photoUrl,
-    });
-  }
-
-  // ─── Apple Sign-In ────────────────────────────────────────────
-  Future<Response> signInWithApple() async {
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
-
-    final String? fullName =
-        '${credential.givenName ?? ''} ${credential.familyName ?? ''}'.trim();
-
-    return await apiClient.postData(ApiConstants.appleSignIn, {
-      'identity_token': credential.identityToken,
-      'authorization_code': credential.authorizationCode,
-      'email': credential.email,
-      'name': fullName?.isEmpty == true ? null : fullName,
-      'user_id': credential.userIdentifier,
-    });
-  }
 }
