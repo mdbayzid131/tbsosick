@@ -1,28 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 import '../../../config/constants/image_paths.dart';
 import '../../widgets/custom_date_picker.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/custom_time_picker.dart';
+import 'controller/clender_controller.dart';
+import 'package:tbsosick/data/models/create_event_request_model.dart';
 
-void showAddEventBottomSheet(BuildContext context) {
+void showAddEventBottomSheet(
+  BuildContext context, {
+  DateTime? initialDate,
+  VoidCallback? onEventCreated,
+}) {
+  final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final dateController = TextEditingController();
   final timeController = TextEditingController();
   final notesController = TextEditingController();
+  final locationController = TextEditingController();
+  final durationController = TextEditingController(text: '1');
+  final linkPreferenceCardIdController = TextEditingController();
 
   final leadSurgeonController = TextEditingController();
   final teamMemberController = TextEditingController();
 
-  List<String> teamMembers = ['Dr. Mike Chen', 'Nurse Amy Park'];
+  List<String> teamMembers = [];
+  String eventType = 'SURGERY';
+  bool submitting = false;
+  final CalendarController controller = Get.find<CalendarController>();
 
-  final formKey = GlobalKey<FormState>();
+  if (initialDate != null) {
+    dateController.text = DateFormat('yyyy-MM-dd').format(initialDate);
+  }
 
   showModalBottomSheet(
     context: context,
@@ -30,6 +46,7 @@ void showAddEventBottomSheet(BuildContext context) {
     isDismissible: false,
     backgroundColor: Colors.transparent,
     builder: (context) {
+      final l10n = AppLocalizations.of(context)!;
       return StatefulBuilder(
         builder: (context, setState) {
           return Padding(
@@ -43,63 +60,203 @@ void showAddEventBottomSheet(BuildContext context) {
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
               ),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    /// Header
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Add Event',
-                          style: GoogleFonts.arimo(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
+              child: Column(
+                children: [
+                  /// Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        l10n.addEvent,
+                        style: GoogleFonts.arimo(
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.w700,
                         ),
-                        InkWell(
-                          onTap: () => Get.back(),
-                          child: const Icon(Icons.close),
-                        ),
-                      ],
-                    ),
+                      ),
+                      InkWell(
+                        onTap: () => Get.back(),
+                        child: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
 
-                    SizedBox(height: 16.h),
-                    
-                    Expanded(
-                      child: SingleChildScrollView(
+                  SizedBox(height: 16.h),
+
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Form(
+                        key: formKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                                   
-                                      
                             CustomTextField(
                               controller: titleController,
-                              label: 'Event Title *',
-                              hintText: 'Enter event title',
+                              label: l10n.eventTitleLabel,
+                              hintText: l10n.enterEventTitle,
+                              validator: (v) => (v == null || v.trim().isEmpty)
+                                  ? l10n.titleRequired
+                                  : null,
                             ),
-                                      
+
                             SizedBox(height: 12.h),
-                                      
+
                             CustomDatePickerField(
                               controller: dateController,
-                              label: 'Date *',
-                              hintText: 'Select date',
+                              label: '${l10n.date} *',
+                              hintText: l10n.selectDate,
+                              validator: (v) => (v == null || v.trim().isEmpty)
+                                  ? l10n.dateRequired
+                                  : null,
                             ),
-                                      
+
                             SizedBox(height: 12.h),
-                                      
+
                             CustomTimePickerField(
                               controller: timeController,
-                              label: 'Time *',
-                              hintText: 'Select time',
+                              label: '${l10n.time} *',
+                              hintText: l10n.selectTime,
+                              validator: (v) => (v == null || v.trim().isEmpty)
+                                  ? l10n.timeRequired
+                                  : null,
                             ),
-                                      
+
+                            SizedBox(height: 12.h),
+                            CustomTextField(
+                              controller: locationController,
+                              label: l10n.locationRequired,
+                              hintText: l10n.enterLocationHint,
+                              validator: (v) => (v == null || v.trim().isEmpty)
+                                  ? l10n.locationRequired
+                                  : null,
+                            ),
+                            SizedBox(height: 12.h),
+                            CustomTextField(
+                              controller: linkPreferenceCardIdController,
+                              label: l10n.linkedPreferenceCard,
+                              hintText: l10n.linkPreferenceCardOptional,
+                              validator: (v) {
+                                if (v == null || v.trim().isEmpty) return null;
+                                if (v.trim().length != 24) {
+                                  return l10n.prefCardIdLengthError;
+                                }
+                                return null;
+                              },
+                            ),
+
+                            SizedBox(height: 12.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    controller: durationController,
+                                    label: '${l10n.durationHours} *',
+                                    hintText: 'e.g., 2',
+                                    keyboardType: TextInputType.number,
+                                    validator: (v) {
+                                      if (v == null || v.trim().isEmpty) {
+                                        return l10n.durationRequired;
+                                      }
+                                      final d = int.tryParse(v.trim());
+                                      if (d == null || d <= 0) {
+                                        return l10n.enterValidPositiveNumber;
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        l10n.eventTypeLabel,
+                                        style: GoogleFonts.arimo(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: const Color(0xff333333),
+                                        ),
+                                      ),
+                                      SizedBox(height: 6.h),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 12.w,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xffF2F2F7),
+                                          borderRadius: BorderRadius.circular(
+                                            16.r,
+                                          ),
+                                        ),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton<String>(
+                                            value: eventType,
+                                            items: [
+                                              DropdownMenuItem(
+                                                value: 'SURGERY',
+                                                child: Text(
+                                                  l10n.surgery,
+                                                  style: GoogleFonts.arimo(
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff8E8E93),
+                                                  ),
+                                                ),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: 'MEETING',
+                                                child: Text(
+                                                  l10n.meeting,
+                                                  style: GoogleFonts.arimo(
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff8E8E93),
+                                                  ),
+                                                ),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: 'CONSULTATION',
+                                                child: Text(
+                                                  l10n.consultation,
+                                                  style: GoogleFonts.arimo(
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff8E8E93),
+                                                  ),
+                                                ),
+                                              ),
+                                              DropdownMenuItem(
+                                                value: 'OTHER',
+                                                child: Text(
+                                                  l10n.other,
+                                                  style: GoogleFonts.arimo(
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff8E8E93),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                            onChanged: (val) {
+                                              setState(() {
+                                                eventType = val ?? 'SURGERY';
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+
                             SizedBox(height: 16.h),
-                                      
+
                             /// PERSONNEL CARD
                             _buildPersonnelCard(
+                              l10n: l10n,
                               leadSurgeonController: leadSurgeonController,
                               teamMemberController: teamMemberController,
                               teamMembers: teamMembers,
@@ -117,30 +274,87 @@ void showAddEventBottomSheet(BuildContext context) {
                                 });
                               },
                             ),
-                                      
+
                             SizedBox(height: 16.h),
-                                      
+
                             CustomTextField(
                               controller: notesController,
-                              label: 'Notes',
-                              hintText: 'Additional notes...',
+                              label: l10n.notes,
+                              hintText: l10n.addNotesHint,
                               maxLines: 4,
                             ),
-                                      
+
                             SizedBox(height: 24.h),
-                                      
+
                             CustomElevatedButton(
-                              label: 'Create Event',
-                              onPressed: () {
-                                // submit logic
-                              },
+                              label: submitting
+                                  ? l10n.creating
+                                  : l10n.createEvent,
+                              onPressed: submitting
+                                  ? null
+                                  : () async {
+                                      if (!(formKey.currentState?.validate() ??
+                                          false)) {
+                                        return;
+                                      }
+                                      final title = titleController.text.trim();
+                                      final date = dateController.text.trim();
+                                      final time = timeController.text.trim();
+                                      final loc = locationController.text
+                                          .trim();
+                                      final notes = notesController.text.trim();
+                                      final dur =
+                                          int.tryParse(
+                                            durationController.text.trim(),
+                                          ) ??
+                                          1;
+
+                                      setState(() {
+                                        submitting = true;
+                                      });
+
+                                      final personnel = PersonnelRequestModel(
+                                        leadSurgeon: leadSurgeonController.text
+                                            .trim(),
+                                        surgicalTeam: List<String>.from(
+                                          teamMembers,
+                                        ),
+                                      );
+
+                                      await controller.postEvent(
+                                        title: title,
+                                        date: date,
+                                        time: time,
+                                        durationHours: dur,
+                                        eventType: eventType,
+                                        location: loc,
+                                        linkPreferenceCardId:
+                                            linkPreferenceCardIdController.text
+                                                .trim(),
+                                        notes: notes,
+                                        personnel: personnel,
+                                      );
+
+                                      setState(() {
+                                        submitting = false;
+                                      });
+
+                                      // Trigger the refresh indicator animation
+                                      onEventCreated?.call();
+
+                                      // Close the bottom sheet after a brief delay to allow UI to update
+                                      await Future.delayed(
+                                        const Duration(milliseconds: 300),
+                                      );
+                                      Get.back();
+                                    },
                             ),
                           ],
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
@@ -151,6 +365,7 @@ void showAddEventBottomSheet(BuildContext context) {
 }
 
 Widget _buildPersonnelCard({
+  required AppLocalizations l10n,
   required TextEditingController leadSurgeonController,
   required TextEditingController teamMemberController,
   required List<String> teamMembers,
@@ -158,20 +373,22 @@ Widget _buildPersonnelCard({
   required Function(String) onRemove,
 }) {
   return _buildCard(
-    title: 'Personnel',
+    title: l10n.personnel,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildTextField(
-          label: 'Lead Surgeon',
+          label: l10n.leadSurgeon,
           controller: leadSurgeonController,
           icon: Icons.person_outline,
+          validator: (value) =>
+              value?.isEmpty ?? true ? l10n.pleaseEnterLeadSurgeon : null,
         ),
 
         SizedBox(height: 16.h),
 
         Text(
-          'Surgical Team',
+          l10n.surgicalTeam,
           style: GoogleFonts.arimo(
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
@@ -185,7 +402,7 @@ Widget _buildPersonnelCard({
             Expanded(
               child: _buildTextField(
                 controller: teamMemberController,
-                hint: 'Add team member',
+                hint: l10n.addTeamMember,
                 showLabel: false,
               ),
             ),
@@ -284,6 +501,7 @@ Widget _buildTextField({
   bool readOnly = false,
   VoidCallback? onTap,
   bool showLabel = true,
+  String? Function(String?)? validator,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,8 +526,9 @@ Widget _buildTextField({
         ),
         SizedBox(height: 8.h),
       ],
-      TextField(
+      TextFormField(
         controller: controller,
+        validator: validator,
         maxLines: maxLines,
         readOnly: readOnly,
         onTap: onTap,

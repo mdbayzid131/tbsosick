@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "344458357764",
+    "project_id": "smrt-scrub",
+    "storage_bucket": "smrt-scrub.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344458357764:android:ad7a40a92f56e69e205951",
+        "android_client_info": {
+          "package_name": "com.tbsosick.smrtscrub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344458357764-nb044aiepibnbg2r50g2r6113lf32vob.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tbsosick.smrtscrub",
+            "certificate_hash": "e191d16c7258696c73ba6c130da46faf3c42e15d"
+          }
+        },
+        {
+          "client_id": "344458357764-su8jpg9s3kt3c2tnheeh63d5ua8beb8u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tbsosick.smrtscrub",
+            "certificate_hash": "a12916ffa01888854bb646b0de72a625435320ad"
+          }
+        },
+        {
+          "client_id": "344458357764-p7cinp8ik2ogrut9g54um2nqnn0nqg9g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9v8Da0Url68PBk8j7txjhPBZj-gjSjGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344458357764-p7cinp8ik2ogrut9g54um2nqnn0nqg9g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "344458357764-l2q9u3m6an945rg6vnga1op45mhce06o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tbsosick.smrtscrub"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

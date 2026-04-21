@@ -1,7 +1,248 @@
+import 'package:dio/dio.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:tbsosick/core/services/api_checker.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
+import 'package:tbsosick/data/models/private_card_model.dart';
+import 'package:tbsosick/data/models/supplies_model.dart';
+import 'package:tbsosick/data/repositories/user_repository.dart';
 
+class HomePageController extends GetxController {
+  final UserDataRepository _userDataRepository = UserDataRepository();
 
+  RxBool isFavorite = false.obs;
+  RxBool isLoading = false.obs;
+  RxBool isSuppliesLoading = false.obs;
+  RxBool isSuturesLoading = false.obs;
+  RxList<PrivateCard> privateCard = <PrivateCard>[].obs;
 
+  RxList<SuppliesModel> supplies = <SuppliesModel>[].obs;
+  RxList<SuppliesModel> sutures = <SuppliesModel>[].obs;
 
+  // Pagination for Supplies
+  final RxInt _suppliesPage = 1.obs;
+  final RxBool hasMoreSupplies = true.obs;
+  final RxBool isSuppliesMoreLoading = false.obs;
+
+  // Pagination for Sutures
+  final RxInt _suturesPage = 1.obs;
+  final RxBool hasMoreSutures = true.obs;
+  final RxBool isSuturesMoreLoading = false.obs;
+
+  Future<void> getSupplies({String search = ''}) async {
+    try {
+      isSuppliesLoading.value = true;
+      _suppliesPage.value = 1;
+      hasMoreSupplies.value = true;
+
+      Response<dynamic> response = await _userDataRepository.getSupplies(
+        search: search,
+        page: _suppliesPage.value,
+      );
+
+      ApiChecker.checkGetApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final suppliesResponse = SuppliesResponse.fromJson(response.data);
+        supplies.assignAll(suppliesResponse.supplies);
+        if (suppliesResponse.pagination != null) {
+          hasMoreSupplies.value =
+              _suppliesPage.value < suppliesResponse.pagination!.totalPage;
+        } else {
+          hasMoreSupplies.value = false;
+        }
+      }
+    } catch (e) {
+      Helpers.showDebugLog("getSupplies error => $e");
+    } finally {
+      isSuppliesLoading.value = false;
+    }
+  }
+
+  Future<void> loadMoreSupplies({String search = ''}) async {
+    if (isSuppliesMoreLoading.value || !hasMoreSupplies.value) return;
+
+    try {
+      isSuppliesMoreLoading.value = true;
+      _suppliesPage.value++;
+
+      Response<dynamic> response = await _userDataRepository.getSupplies(
+        search: search,
+        page: _suppliesPage.value,
+      );
+
+      ApiChecker.checkGetApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final suppliesResponse = SuppliesResponse.fromJson(response.data);
+        supplies.addAll(suppliesResponse.supplies);
+        if (suppliesResponse.pagination != null) {
+          hasMoreSupplies.value =
+              _suppliesPage.value < suppliesResponse.pagination!.totalPage;
+        } else {
+          hasMoreSupplies.value = false;
+        }
+      }
+    } catch (e) {
+      _suppliesPage.value--;
+      Helpers.showDebugLog("loadMoreSupplies error => $e");
+    } finally {
+      isSuppliesMoreLoading.value = false;
+    }
+  }
+
+  Future<void> getSutures({String search = ''}) async {
+    try {
+      isSuturesLoading.value = true;
+      _suturesPage.value = 1;
+      hasMoreSutures.value = true;
+
+      Response<dynamic> response = await _userDataRepository.getSutures(
+        search: search,
+        page: _suturesPage.value,
+      );
+      ApiChecker.checkGetApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final suppliesResponse = SuppliesResponse.fromJson(response.data);
+        sutures.assignAll(suppliesResponse.supplies);
+        if (suppliesResponse.pagination != null) {
+          hasMoreSutures.value =
+              _suturesPage.value < suppliesResponse.pagination!.totalPage;
+        } else {
+          hasMoreSutures.value = false;
+        }
+      }
+    } catch (e) {
+      Helpers.showDebugLog("getSutures error => $e");
+    } finally {
+      isSuturesLoading.value = false;
+    }
+  }
+
+  Future<void> loadMoreSutures({String search = ''}) async {
+    if (isSuturesMoreLoading.value || !hasMoreSutures.value) return;
+
+    try {
+      isSuturesMoreLoading.value = true;
+      _suturesPage.value++;
+
+      Response<dynamic> response = await _userDataRepository.getSutures(
+        search: search,
+        page: _suturesPage.value,
+      );
+      ApiChecker.checkGetApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final suppliesResponse = SuppliesResponse.fromJson(response.data);
+        sutures.addAll(suppliesResponse.supplies);
+        if (suppliesResponse.pagination != null) {
+          hasMoreSutures.value =
+              _suturesPage.value < suppliesResponse.pagination!.totalPage;
+        } else {
+          hasMoreSutures.value = false;
+        }
+      }
+    } catch (e) {
+      _suturesPage.value--;
+      Helpers.showDebugLog("loadMoreSutures error => $e");
+    } finally {
+      isSuturesMoreLoading.value = false;
+    }
+  }
+
+  Future<void> addToFavoriteList({required String cardId}) async {
+    try {
+      isLoading.value = true;
+      Response<dynamic> response = await _userDataRepository.addToFavoriteList(
+        cardId: cardId,
+      );
+      ApiChecker.checkWriteApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {}
+    } catch (e) {
+      Helpers.showDebugLog("addToFavoriteList error => $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> removeFromFavoriteList({required String cardId}) async {
+    try {
+      isLoading.value = true;
+      Response<dynamic> response = await _userDataRepository
+          .removeFromFavoriteList(cardId: cardId);
+      ApiChecker.checkWriteApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {}
+    } catch (e) {
+      Helpers.showDebugLog("removeFromFavoriteList error => $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Future<void> postPrivateCard({
+  //   required String cardTitle,
+  //   required String surgeonName,
+  //   required String handPreference,
+  //   required String specialty,
+  //   required String contactNumber,
+  //   required String musicPreference,
+  //   required String medication,
+  //   required List<String> supplies,
+  //   required List<String> sutures,
+  //   required String instruments,
+  //   required String positioningEquipment,
+  //   required String prepping,
+  //   required String workflow,
+  //   required String keyNotes,
+  //   required List<String> photoLibrary,
+  //   required bool published,
+  // }) async {
+  //   try {
+  //     isLoading(true);
+
+  //     Response<dynamic> response = await _userDataRepository.postAnyCard(
+  //       cardTitle: cardTitle,
+  //       surgeonName: surgeonName,
+  //       handPreference: handPreference,
+  //       specialty: specialty,
+  //       contactNumber: contactNumber,
+  //       musicPreference: musicPreference,
+  //       medication: medication,
+  //       supplies: supplies,
+  //       sutures: sutures,
+  //       instruments: instruments,
+  //       positioningEquipment: positioningEquipment,
+  //       prepping: prepping,
+  //       workflow: workflow,
+  //       keyNotes: keyNotes,
+  //       photoLibrary: photoLibrary,
+  //       published: published,
+  //     );
+  //     ApiChecker.checkApi(response);
+
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       final privateCardResponse = PrivateCardsResponse.fromJson(
+  //         response.data,
+  //       );
+
+  //       privateCard.assignAll(privateCardResponse.data);
+  //     } else {
+  //       showCustomSnackBar("Server is not responding", isError: true);
+  //     }
+  //   } catch (e) {
+  //     if (e is DioException) {
+  //       ApiChecker.handleError(e);
+  //     } else {
+  //       showCustomSnackBar("Failed to connect to server ", isError: true);
+  //     }
+  //   } finally {
+  //     isLoading(false);
+  //   }
+  // }
+}
 
 // /*
 // import 'dart:typed_data';

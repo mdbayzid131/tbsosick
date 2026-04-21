@@ -7,6 +7,8 @@ class StorageConstants {
   static const String isLoggedIn = 'is_logged_in';
   static const String language = 'language';
   static const String theme = 'theme';
-  
-  // Add your storage keys here
+  static const String onboardingSeen = 'onboarding_seen';
+  static const String deviceToken = 'device_token';
+  static const String quickSetupCompleted = 'quick_setup_completed';
+  static const String languageCode = 'language_code';
 }

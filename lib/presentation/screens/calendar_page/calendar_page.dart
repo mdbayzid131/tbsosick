@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 import 'add_event_bottom.dart';
 import 'event_details_bottom.dart';
 import 'procedure_details.dart';
+import 'controller/clender_controller.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -17,82 +20,122 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  // Calendar controller
   DateTime _focusedDay = DateTime(2026, 1, 12);
   DateTime? _selectedDay = DateTime(2026, 1, 12);
   CalendarFormat _calendarFormat = CalendarFormat.month;
+  final CalendarController _controller = Get.put(CalendarController());
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.getEvents();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header section with gradient
-            _buildHeader(),
-
-            // Scrollable content
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Calendar widget
-                  SizedBox(height: 20.h),
-                  _buildCalendar(),
-
-                  SizedBox(height: 20.h),
-                  // No events card (shown when no events)
-                  _buildNoEventsCard(),
-
-                  SizedBox(height: 20.h),
-
-                  // Upcoming Events section
-                  _buildUpcomingEventsSection(),
-
-                  SizedBox(height: 20.h),
-
-                  // Event Types legend
-                  _buildEventTypesLegend(),
-
-                  SizedBox(height: 20.h),
-                ],
+    // Status bar কে dark/black করার জন্য
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Color(0xFF271E3E), // dark purple/black
+        statusBarIconBrightness: Brightness.light, // আইকন গুলো white হবে
+        statusBarBrightness: Brightness.dark, // iOS এর জন্য
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F5F5),
+        body: RefreshIndicator(
+          key: _refreshIndicatorKey,
+          color: const Color(0xFF9945FF),
+          onRefresh: _controller.refreshEvents,
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              // ── Collapsing SliverAppBar ──
+              SliverAppBar(
+                expandedHeight: 60.h,
+                collapsedHeight: 60.h,
+                toolbarHeight: 60.h,
+                pinned: true,
+                floating: false,
+                elevation: 0,
+                // Collapsed হলে এই color দেখাবে (gradient এর শেষ color)
+                backgroundColor: const Color(0xFF6C36B2),
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarColor: Color(0xFF271E3E),
+                  statusBarIconBrightness: Brightness.light,
+                  statusBarBrightness: Brightness.dark,
+                ),
+                // শুধু FlexibleSpaceBar.title ই ব্যবহার করা হচ্ছে
+                // expanded এ বড়, collapsed এ ছোট হবে automatically
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: EdgeInsetsDirectional.only(
+                    start: 20.w,
+                    bottom: 16.h,
+                  ),
+                  title: Text(
+                    AppLocalizations.of(context)!.calendar,
+                    style: GoogleFonts.arimo(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  background: Container(
+                    decoration: const BoxDecoration(
+                      // gradient: LinearGradient(
+                      //   begin: Alignment.topRight,
+                      //   end: Alignment.bottomLeft,
+                      //   colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
+                      // ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
+                      ),
+                      color: Color(0xFF6C36B2),
+                    ),
+                  ),
+                  collapseMode: CollapseMode.pin,
+                ),
+                // Collapsed হলে bottom rounded corners থাকবে
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
+                  ),
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  // Header with gradient background
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(
-        left: 20.w,
-        right: 20.w,
-        top: 50.h,
-        bottom: 20.h,
-      ),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(24.r),
-          bottomRight: Radius.circular(24.r),
-        ),
-      ),
-      child: Text(
-        'Calendar',
-        style: GoogleFonts.arimo(
-          fontSize: 24.sp,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
+              // ── Loading indicator ──
+              SliverToBoxAdapter(
+                child: Obx(
+                  () => _controller.isLoading.value
+                      ? const LinearProgressIndicator(
+                          color: Color(0xFF9945FF),
+                          minHeight: 2,
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ),
+
+              // ── Main content ──
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    SizedBox(height: 20.h),
+                    _buildCalendar(),
+                    SizedBox(height: 20.h),
+                    _buildNoEventsCard(),
+                    SizedBox(height: 20.h),
+                    _buildUpcomingEventsSection(),
+                    SizedBox(height: 20.h),
+                    _buildEventTypesLegend(),
+                    SizedBox(height: 20.h),
+                  ]),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -135,42 +178,34 @@ class _CalendarPageState extends State<CalendarPage> {
         onPageChanged: (focusedDay) {
           _focusedDay = focusedDay;
         },
-        // Calendar styling
         calendarStyle: CalendarStyle(
-          // Today's date styling
           todayDecoration: BoxDecoration(
             color: const Color(0xFF8B5CF6).withOpacity(0.3),
             shape: BoxShape.circle,
           ),
-          // Selected date styling
           selectedDecoration: const BoxDecoration(
             color: Color(0xFF9945FF),
             shape: BoxShape.circle,
           ),
-          // Default text style
           defaultTextStyle: GoogleFonts.arimo(
             fontSize: 14.sp,
             color: const Color(0xFF1C1B1F),
           ),
-          // Weekend text style
           weekendTextStyle: GoogleFonts.arimo(
             fontSize: 14.sp,
             color: const Color(0xFF1C1B1F),
           ),
-          // Selected text style
           selectedTextStyle: GoogleFonts.arimo(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
-          // Today text style
           todayTextStyle: GoogleFonts.arimo(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF8B5CF6),
           ),
         ),
-        // Header styling
         headerStyle: HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,
@@ -206,7 +241,6 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
         ),
-        // Days of week styling,
       ),
     );
   }
@@ -230,12 +264,11 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       child: Column(
         children: [
-          // Calendar icon with date
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Monday, January 12',
+                DateFormat('EEEE, MMMM d').format(_selectedDay ?? _focusedDay),
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -251,7 +284,14 @@ class _CalendarPageState extends State<CalendarPage> {
                 ),
                 child: InkWell(
                   onTap: () {
-                    showAddEventBottomSheet(context);
+                    final dateToUse = _selectedDay ?? _focusedDay;
+                    showAddEventBottomSheet(
+                      context,
+                      initialDate: dateToUse,
+                      onEventCreated: () {
+                        _refreshIndicatorKey.currentState?.show();
+                      },
+                    );
                   },
                   child: Icon(Icons.add, color: Colors.white, size: 24.sp),
                 ),
@@ -270,7 +310,9 @@ class _CalendarPageState extends State<CalendarPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'JAN',
+                  DateFormat(
+                    'MMM',
+                  ).format(_selectedDay ?? _focusedDay).toUpperCase(),
                   style: GoogleFonts.arimo(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w600,
@@ -279,7 +321,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  '17',
+                  DateFormat('d').format(_selectedDay ?? _focusedDay),
                   style: GoogleFonts.arimo(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w700,
@@ -290,23 +332,18 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           SizedBox(height: 16.h),
-          // No events text
-          Text(
-            'No events scheduled',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              color: const Color(0xFF9CA3AF),
-            ),
-          ),
           SizedBox(height: 8.h),
-          // Add Event button
           TextButton(
             onPressed: () {
-              // TODO: Add event functionality
-              showAddEventBottomSheet(context);
+              showAddEventBottomSheet(
+                context,
+                onEventCreated: () {
+                  _refreshIndicatorKey.currentState?.show();
+                },
+              );
             },
             child: Text(
-              'Add Event',
+              AppLocalizations.of(context)!.addEvent,
               style: GoogleFonts.arimo(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
@@ -321,44 +358,77 @@ class _CalendarPageState extends State<CalendarPage> {
 
   // Upcoming Events section
   Widget _buildUpcomingEventsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section title
-        Text(
-          'Upcoming Events',
-          style: GoogleFonts.arimo(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF1C1B1F),
+    return Obx(() {
+      final items = _controller.events;
+      if (items.isEmpty) {
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 8.r,
+                offset: Offset(0, 2.h),
+              ),
+            ],
           ),
-        ),
-        SizedBox(height: 12.h),
-        // Event cards
-        _buildEventCard(
-          title: 'Total Knee Replacement',
-          type: 'Surgery',
-          typeColor: const Color(0xFF9945FF),
-          time: '08:00 AM - 2-3 hours',
-          location: 'OR 3',
-          patient: 'Patient #17147',
-        ),
-        SizedBox(height: 12.h),
-        _buildEventCard(
-          title: 'Team Meeting',
-          type: 'Meeting',
-          typeColor: const Color(0xFFF59E0B),
-          time: '02:00 PM - 1 hour',
-          location: 'Conference Room A',
-          patient: null,
-        ),
-      ],
-    );
+          child: Column(
+            children: [
+              Text(
+                AppLocalizations.of(context)!.noEventsScheduled,
+                style: GoogleFonts.arimo(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF9CA3AF),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            AppLocalizations.of(context)!.upcomingEvents,
+            style: GoogleFonts.arimo(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF1C1B1F),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          ...List.generate(items.length, (index) {
+            final e = items[index];
+            final color = _eventTypeColor(e.eventType);
+            final timeText =
+                '${e.time} - ${e.durationHours} ${e.durationHours == 1 ? AppLocalizations.of(context)!.hour : AppLocalizations.of(context)!.hours}';
+            return Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: _buildEventCard(
+                id: e.id,
+                title: e.title,
+                type: e.eventType,
+                typeColor: color,
+                time: timeText,
+                location: e.location,
+                patient: null,
+              ),
+            );
+          }),
+        ],
+      );
+    });
   }
 
   // Individual event card
   Widget _buildEventCard({
     required String title,
+    required String id,
     required String type,
     required Color typeColor,
     required String time,
@@ -383,7 +453,6 @@ class _CalendarPageState extends State<CalendarPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title
           Text(
             title,
             style: GoogleFonts.arimo(
@@ -393,7 +462,6 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           SizedBox(height: 8.h),
-          // Event type tag
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             decoration: BoxDecoration(
@@ -410,7 +478,6 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           SizedBox(height: 12.h),
-          // Time
           Row(
             children: [
               Icon(
@@ -429,7 +496,6 @@ class _CalendarPageState extends State<CalendarPage> {
             ],
           ),
           SizedBox(height: 6.h),
-          // Location
           Row(
             children: [
               Icon(
@@ -447,7 +513,6 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ],
           ),
-          // Patient info (if available)
           if (patient != null) ...[
             SizedBox(height: 6.h),
             Row(
@@ -469,14 +534,13 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ],
           SizedBox(height: 16.h),
-          // Action buttons
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    // TODO: View details functionality
-                    Get.to(const ProcedureDetailsScreen());
+                    showEventDetailsBottomSheet(context: context, id: id);
+                    _controller.getEventDetailById(id: id);
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(
@@ -489,7 +553,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                   ),
                   child: Text(
-                    'View Details',
+            AppLocalizations.of(context)!.viewDetails,
                     style: GoogleFonts.arimo(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
@@ -502,8 +566,7 @@ class _CalendarPageState extends State<CalendarPage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: View card functionality
-                    showEventDetailsBottomSheet(context);
+                    Get.to(ProcedureDetailsScreen(id: id));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF9945FF),
@@ -514,7 +577,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     elevation: 0,
                   ),
                   child: Text(
-                    'View Card',
+            AppLocalizations.of(context)!.viewCard,
                     style: GoogleFonts.arimo(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
@@ -550,7 +613,7 @@ class _CalendarPageState extends State<CalendarPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Event Types',
+            AppLocalizations.of(context)!.eventTypes,
             style: GoogleFonts.arimo(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
@@ -560,9 +623,9 @@ class _CalendarPageState extends State<CalendarPage> {
           SizedBox(height: 12.h),
           Row(
             children: [
-              _buildEventTypeLegendItem('Surgery', const Color(0xFF9945FF)),
+              _buildEventTypeLegendItem(AppLocalizations.of(context)!.surgery, const Color(0xFF9945FF)),
               SizedBox(width: 16.w),
-              _buildEventTypeLegendItem('Meeting', const Color(0xFFF59E0B)),
+              _buildEventTypeLegendItem(AppLocalizations.of(context)!.meeting, const Color(0xFFF59E0B)),
             ],
           ),
         ],
@@ -570,7 +633,6 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  // Event type legend item
   Widget _buildEventTypeLegendItem(String label, Color color) {
     return Row(
       children: [
@@ -589,5 +651,12 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
       ],
     );
+  }
+
+  Color _eventTypeColor(String type) {
+    final t = type.toLowerCase();
+    if (t.contains('surgery')) return const Color(0xFF9945FF);
+    if (t.contains('meeting')) return const Color(0xFFF59E0B);
+    return const Color(0xFF6B7280);
   }
 }

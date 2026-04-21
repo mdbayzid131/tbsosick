@@ -3,16 +3,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/core/services/storage_service.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 import '../../../config/constants/image_paths.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 
 class OnboardingPage1 extends StatelessWidget {
   const OnboardingPage1({super.key});
+  
 
   @override
   Widget build(BuildContext context) {
+        final tr = AppLocalizations.of(context)!;
     return Column(
       mainAxisAlignment: .center,
       children: [
@@ -21,12 +26,13 @@ class OnboardingPage1 extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: () {
-              Get.toNamed(RoutePages.loginScreen);
+              Get.offAllNamed(AppRoutes.LOGIN);
+              StorageService.setBool(StorageConstants.onboardingSeen, true);
             },
             child: Align(
               alignment: Alignment.topRight,
               child: Text(
-                "Skip",
+                tr.skip,
                 style: TextStyle(color: AppTheme.primaryColor, fontSize: 16.sp),
               ),
             ),
@@ -43,7 +49,7 @@ class OnboardingPage1 extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
-            'Stop Relying on Loose Paper',
+            tr.stopRelyingTitle,
             textAlign: TextAlign.center,
             style: GoogleFonts.arimo(
               fontSize: 28.sp,
@@ -56,7 +62,7 @@ class OnboardingPage1 extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
-            'SMRTSCRUB keeps your surgical notes organized and accessible',
+            tr.stopRelyingDesc,
             textAlign: TextAlign.center,
             style: GoogleFonts.arimo(
               fontSize: 15.sp,

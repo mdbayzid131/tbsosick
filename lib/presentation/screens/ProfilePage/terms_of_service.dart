@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 void showTermsOfServiceBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -10,6 +11,7 @@ void showTermsOfServiceBottomSheet(BuildContext context) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
+      final tr = AppLocalizations.of(context)!;
       return Container(
         height: MediaQuery.of(context).size.height * 0.9,
         padding: EdgeInsets.fromLTRB(20.w, 15.w, 20.w, 0),
@@ -26,7 +28,7 @@ void showTermsOfServiceBottomSheet(BuildContext context) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Terms of Service',
+                    tr.termsOfService,
                     style: GoogleFonts.arimo(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.w700,
@@ -51,9 +53,9 @@ void showTermsOfServiceBottomSheet(BuildContext context) {
                   ),
                 ],
               ),
-          
+
               SizedBox(height: 24.h),
-          
+
               // Scrollable content
               Expanded(
                 child: SingleChildScrollView(
@@ -61,82 +63,68 @@ void showTermsOfServiceBottomSheet(BuildContext context) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // 1. Acceptance of Terms
-                      _buildSectionTitle('1. Acceptance of Terms'),
+                      _buildSectionTitle(tr.terms1Title),
                       SizedBox(height: 8.h),
-                      _buildSectionContent(
-                        'By using the SMRTSCRUB service, you agree to be bound by these Terms of Service.',
-                      ),
-          
+                      _buildSectionContent(tr.terms1Desc),
+
                       SizedBox(height: 24.h),
-          
+
                       // 2. Use of Service
-                      _buildSectionTitle('2. Use of Service'),
+                      _buildSectionTitle(tr.terms2Title),
                       SizedBox(height: 8.h),
-                      _buildSectionContent(
-                        'You agree to use the service only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of the service by any third party.',
-                      ),
-          
+                      _buildSectionContent(tr.terms2Desc),
+
                       SizedBox(height: 24.h),
-          
+
                       // 3. Privacy Policy
-                      _buildSectionTitle('3. Privacy Policy'),
+                      _buildSectionTitle(tr.terms3Title),
                       SizedBox(height: 8.h),
-                      _buildSectionContent(
-                        'Your use of the service is also governed by our Privacy Policy, which is incorporated into these Terms of Service.',
-                      ),
-          
+                      _buildSectionContent(tr.terms3Desc),
+
                       SizedBox(height: 24.h),
-          
+
                       // 4. Termination
-                      _buildSectionTitle('4. Termination'),
+                      _buildSectionTitle(tr.terms4Title),
                       SizedBox(height: 8.h),
-                      _buildSectionContent(
-                        'We may terminate or suspend access to the service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach these Terms of Service.',
-                      ),
-          
+                      _buildSectionContent(tr.terms4Desc),
+
                       SizedBox(height: 24.h),
-          
+
                       // 5. Disclaimer of Warranties
-                      _buildSectionTitle('5. Disclaimer of Warranties'),
+                      _buildSectionTitle(tr.terms5Title),
                       SizedBox(height: 8.h),
-                      _buildSectionContent(
-                        'The service is provided on an "as is" and "as available" basis. We make no representations or warranties of any kind, express or implied, about the operation of the service, or the information, content, materials, or products included on the service.',
-                      ),
-          
+                      _buildSectionContent(tr.terms5Desc),
+
                       SizedBox(height: 24.h),
-          
+
                       // 6. Limitation of Liability
-                      _buildSectionTitle('6. Limitation of Liability'),
+                      _buildSectionTitle(tr.terms6Title),
                       SizedBox(height: 8.h),
-                      _buildSectionContent(
-                        'In no event will we be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of or in connection with the use of this service.',
-                      ),
-          
+                      _buildSectionContent(tr.terms6Desc),
+
                       SizedBox(height: 24.h),
-          
+
                       // 7. Governing Law
-                      _buildSectionTitle('7. Governing Law'),
+                      _buildSectionTitle(tr.terms7Title),
                       SizedBox(height: 8.h),
-                      _buildSectionContent(
-                        'These Terms of Service shall be governed by and construed in accordance with the laws of the State of California, without regard to its conflict of law principles.',
-                      ),
-          
+                      _buildSectionContent(tr.terms7Desc),
+
                       SizedBox(height: 24.h),
                     ],
                   ),
                 ),
               ),
-          
+
               // Close button at bottom
               SizedBox(height: 16.h),
               SizedBox(
                 height: 50.h,
                 child: CustomElevatedButton(
                   onPressed: () => Get.back(),
-                  label: 'Close',
+                  label: tr.close,
                 ),
               ),
-          
+
               SizedBox(height: 10.h),
             ],
           ),

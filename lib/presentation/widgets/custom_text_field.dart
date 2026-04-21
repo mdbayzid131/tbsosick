@@ -18,8 +18,7 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final List<TextInputFormatter>? inputFormatters;
   final Color? fillColior;
-
-
+  final String? errorText;
 
   const CustomTextField({
     super.key,
@@ -34,7 +33,10 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     this.readOnly = false,
     this.keyboardType = TextInputType.text,
-    this.onTap, this.inputFormatters, this.fillColior,
+    this.onTap,
+    this.inputFormatters,
+    this.fillColior,
+    this.errorText,
   });
 
   @override
@@ -42,7 +44,6 @@ class CustomTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         /// ================= LABEL =================
         if (isLabelVisible)
           Padding(
@@ -74,6 +75,7 @@ class CustomTextField extends StatelessWidget {
           ),
 
           decoration: InputDecoration(
+            errorText: errorText,
             hintText: hintText,
             hintStyle: GoogleFonts.arimo(
               fontSize: 17.sp,
@@ -113,10 +115,7 @@ class CustomTextField extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
 
-            errorStyle: GoogleFonts.arimo(
-              fontSize: 11.sp,
-              color: Colors.red,
-            ),
+            errorStyle: GoogleFonts.arimo(fontSize: 11.sp, color: Colors.red),
           ),
           inputFormatters: inputFormatters,
         ),

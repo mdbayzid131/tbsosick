@@ -10,6 +10,7 @@ import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import '../../../config/constants/image_paths.dart';
 import 'Payment Method bottom.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 void showUpdatePackageBottomSheet(BuildContext context) {
   final selectedPlan = 1.obs;
@@ -20,6 +21,7 @@ void showUpdatePackageBottomSheet(BuildContext context) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) {
+      final tr = AppLocalizations.of(context)!;
       return Container(
         height: MediaQuery.of(context).size.height * 0.9,
         padding: EdgeInsets.fromLTRB(0, 16.w, 0, 20),
@@ -36,7 +38,7 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Terms of Service',
+                      tr.choosePlanTitle,
                       style: GoogleFonts.arimo(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w700,
@@ -106,7 +108,7 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                             SizedBox(height: 16),
 
                             Text(
-                              'Unlock SMRTSCRUB',
+                              tr.unlockSmrtscrub,
                               style: GoogleFonts.arimo(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
@@ -117,7 +119,7 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                             SizedBox(height: 6),
 
                             Text(
-                              'Choose the plan that works for you',
+                              tr.chooseWorksForYou,
                               style: GoogleFonts.arimo(
                                 fontSize: 14.sp,
                                 color: Colors.white.withOpacity(.9),
@@ -136,7 +138,7 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'Choose a Plan',
+                                tr.choosePlanTitle,
                                 style: GoogleFonts.arimo(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
@@ -151,7 +153,7 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                               onTap: () => selectedPlan.value = 0,
                               child: Obx(
                                 () => _planCard(
-                                  title: 'Free',
+                                  title: tr.freePlanTitle,
                                   price: '\$0 ',
                                   features: [
                                     '2 basic preference cards',
@@ -171,9 +173,9 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                               onTap: () => selectedPlan.value = 1,
                               child: Obx(
                                 () => _planCard(
-                                  title: 'Premium',
+                                  title: tr.premiumPlanTitle,
                                   price: '\$5.99',
-                                  badge: 'Popular',
+                                  badge: tr.popularBadge,
                                   features: [
                                     '20 preference cards',
                                     'Basic calendar',
@@ -194,9 +196,9 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                               onTap: () => selectedPlan.value = 2,
                               child: Obx(
                                 () => _planCard(
-                                  title: 'Enterprise',
+                                  title: tr.enterprisePlanTitle,
                                   price: '\$9.99',
-                                  badge: 'Popular',
+                                  badge: tr.popularBadge,
                                   features: [
                                     'Unlimited cards',
                                     'Advanced calendar',
@@ -211,7 +213,7 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                             SizedBox(height: 25),
 
                             CustomElevatedButton(
-                              label: 'Update Payment Method',
+                              label: tr.updatePaymentMethod,
                               onPressed: () {
                                 showPaymentMethodBottomSheet(context);
                                 // TODO: Navigate to update payment method

@@ -9,11 +9,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 import '../../../../config/constants/image_paths.dart';
 
 void showSelectPackageBottomSheet(BuildContext context) {
   final selectedPlan = 1.obs;
+  final tr = AppLocalizations.of(context)!;
 
   showModalBottomSheet(
     isDismissible: false,
@@ -41,7 +43,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Choose a Plan',
+                        tr.choosePlanTitle,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -111,7 +113,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
                               SizedBox(height: 16),
 
                               Text(
-                                'Unlock SMRTSCRUB',
+                                tr.unlockSmrtscrub,
                                 style: GoogleFonts.arimo(
                                   fontSize: 22.sp,
                                   fontWeight: FontWeight.w700,
@@ -122,7 +124,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
                               SizedBox(height: 6),
 
                               Text(
-                                'Choose the plan that works for you',
+                                tr.chooseWorksForYou,
                                 style: GoogleFonts.arimo(
                                   fontSize: 14.sp,
                                   color: Colors.white.withOpacity(.9),
@@ -141,7 +143,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Choose a Plan',
+                                  tr.choosePlanTitle,
                                   style: GoogleFonts.arimo(
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.w700,
@@ -156,13 +158,14 @@ void showSelectPackageBottomSheet(BuildContext context) {
                                 onTap: () => selectedPlan.value = 0,
                                 child: Obx(
                                   () => _planCard(
-                                    title: 'Free',
+                                    context: context,
+                                    title: tr.freePlanTitle,
                                     price: '\$0 ',
                                     features: [
-                                      '2 basic preference cards',
-                                      'No library access',
-                                      'No calendar',
-                                      'Email support',
+                                      tr.featureBasicCards,
+                                      tr.featureNoLibrary,
+                                      tr.featureNoCalendar,
+                                      tr.featureEmailSupport,
                                     ],
                                     isSelected: selectedPlan.value == 0,
                                   ),
@@ -176,15 +179,16 @@ void showSelectPackageBottomSheet(BuildContext context) {
                                 onTap: () => selectedPlan.value = 1,
                                 child: Obx(
                                   () => _planCard(
-                                    title: 'Premium',
+                                    context: context,
+                                    title: tr.premiumPlanTitle,
                                     price: '\$5.99',
-                                    badge: 'Popular',
+                                    badge: tr.popularBadge,
                                     features: [
-                                      '20 preference cards',
-                                      'Basic calendar',
-                                      'Access to public library (upload & download)',
-                                      'No team collaboration',
-                                      'No verified card',
+                                      tr.featurePremiumCards,
+                                      tr.featureBasicCalendar,
+                                      tr.featurePublicLibrary,
+                                      tr.featureNoCollaboration,
+                                      tr.featureNoVerifiedCard,
                                     ],
                                     isSelected: selectedPlan.value == 1,
                                     showCheck: true,
@@ -199,15 +203,16 @@ void showSelectPackageBottomSheet(BuildContext context) {
                                 onTap: () => selectedPlan.value = 2,
                                 child: Obx(
                                   () => _planCard(
-                                    title: 'Enterprise',
+                                    context: context,
+                                    title: tr.enterprisePlanTitle,
                                     price: '\$9.99',
-                                    badge: 'Popular',
+                                    badge: tr.popularBadge,
                                     features: [
-                                      'Unlimited cards',
-                                      'Advanced calendar',
-                                      'Access to public library (upload & download)',
-                                      'Team collaboration',
-                                      'Verified preference cards',
+                                      tr.featureUnlimitedCards,
+                                      tr.featureAdvancedCalendar,
+                                      tr.featurePublicLibrary,
+                                      tr.featureTeamCollaboration,
+                                      tr.featureVerifiedCards,
                                     ],
                                     isSelected: selectedPlan.value == 2,
                                   ),
@@ -218,12 +223,12 @@ void showSelectPackageBottomSheet(BuildContext context) {
                               Obx(
                                 () => CustomElevatedButton(
                                   label: selectedPlan.value == 0
-                                      ? 'Continue with free'
+                                      ? tr.continueWithFree
                                       : selectedPlan.value == 1
-                                      ? 'Continue with premium'
-                                      : 'Continue with enterprise',
+                                      ? tr.continueWithPremium
+                                      : tr.continueWithEnterprise,
                                   onPressed: () {
-                                    Get.toNamed(RoutePages.whatYourSpeciality);
+                                    Get.toNamed(AppRoutes.WHAT_YOUR_SPECIALITY);
                                   },
                                 ),
                               ),
@@ -245,6 +250,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
 }
 
 Widget _planCard({
+  required BuildContext context,
   required String title,
   required String price,
   required List<String> features,
@@ -252,6 +258,7 @@ Widget _planCard({
   bool showCheck = false,
   String? badge,
 }) {
+  final tr = AppLocalizations.of(context)!;
   return Container(
     padding: EdgeInsets.all(16),
     decoration: BoxDecoration(
@@ -308,7 +315,7 @@ Widget _planCard({
             ),
             SizedBox(width: 4.w),
             Text(
-              '/month',
+              tr.monthLabel,
               style: GoogleFonts.arimo(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w400,

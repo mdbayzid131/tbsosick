@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/presentation/controllers/login_controller.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 void showSignOutConfirmationBottomSheet(BuildContext context) {
+  final controller = Get.find<LoginController>();
+  final tr = AppLocalizations.of(context)!;
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -26,7 +30,7 @@ void showSignOutConfirmationBottomSheet(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Sign Out',
+                      tr.signOut,
                       style: GoogleFonts.arimo(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w700,
@@ -51,12 +55,12 @@ void showSignOutConfirmationBottomSheet(BuildContext context) {
                     ),
                   ],
                 ),
-            
+
                 SizedBox(height: 32.h),
-            
+
                 // Confirmation question
                 Text(
-                  'Are you sure you want to sign out?',
+                  tr.signOutConfirm,
                   style: GoogleFonts.arimo(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w700,
@@ -64,21 +68,21 @@ void showSignOutConfirmationBottomSheet(BuildContext context) {
                     height: 1.3,
                   ),
                 ),
-            
+
                 SizedBox(height: 16.h),
-            
+
                 // Description text
                 Text(
-                  'You will be logged out of your account and will need to sign in again to access the service.',
+                  tr.signOutDesc,
                   style: GoogleFonts.arimo(
                     fontSize: 13.sp,
                     color: const Color(0xFF8E8E93),
                     height: 1.5,
                   ),
                 ),
-            
+
                 SizedBox(height: 32.h),
-            
+
                 // Action buttons
                 Row(
                   children: [
@@ -95,7 +99,7 @@ void showSignOutConfirmationBottomSheet(BuildContext context) {
                           elevation: 0,
                         ),
                         child: Text(
-                          'Cancel',
+                          tr.cancel,
                           style: GoogleFonts.arimo(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
@@ -104,16 +108,14 @@ void showSignOutConfirmationBottomSheet(BuildContext context) {
                         ),
                       ),
                     ),
-            
+
                     SizedBox(width: 12.w),
-            
+
                     // Sign Out button
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // TODO: Implement sign out logic
-                          Get.back();
-                          // Navigate to login screen or perform sign out
+                          controller.logout();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFF3B30),
@@ -124,7 +126,7 @@ void showSignOutConfirmationBottomSheet(BuildContext context) {
                           elevation: 0,
                         ),
                         child: Text(
-                          'Sign Out',
+                          tr.signOut,
                           style: GoogleFonts.arimo(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
@@ -135,7 +137,7 @@ void showSignOutConfirmationBottomSheet(BuildContext context) {
                     ),
                   ],
                 ),
-            
+
                 SizedBox(height: 16.h),
               ],
             ),

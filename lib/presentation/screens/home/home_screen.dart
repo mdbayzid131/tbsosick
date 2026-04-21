@@ -1,13 +1,22 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
+import 'package:tbsosick/presentation/widgets/procedure_card.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
+import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
+import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/screens/home/Preference%20card/new_preference_card.dart';
-import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dart';
 
 import 'notification_bottom.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,127 +26,210 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final BottomNabBarController _bottomNabBarController = Get.put(
+    BottomNabBarController(),
+  );
+  final HomePageController _homePageController = Get.put(HomePageController());
+
+  String _greetingForNow(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
+    final now = DateTime.now();
+    final hour = now.hour;
+    if (hour >= 5 && hour < 12) return tr.goodMorning;
+    if (hour >= 12 && hour < 17) return tr.goodAfternoon;
+    if (hour >= 17 && hour < 22) return tr.goodEvening;
+    return tr.goodNight;
+  }
+
+  final PrefranceCardDetailsController _prefranceCardDetailsController =
+      Get.find<PrefranceCardDetailsController>();
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Fixed header
-          _headerSection(),
+    // Status bar icons white করার জন্য
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor:
+            Colors.transparent, // transparent রাখব, overlay দিয়ে handle করব
+        statusBarIconBrightness: Brightness.light, // Android: white icons
+        statusBarBrightness: Brightness.dark, // iOS: white icons
+      ),
+    );
 
-          // Scrollable body
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+    final tr = AppLocalizations.of(context)!;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        final result = await Connectivity().checkConnectivity();
+        if (result == ConnectivityResult.none) {
+          Helpers.showCustomSnackBar('No internet connection', isError: true);
+          return;
+        }
+        await _bottomNabBarController.loadHomeData();
+      },
+      child: Stack(
+        children: [
+          // ── Main scrollable content ──
+          SingleChildScrollView(
             child: Column(
               children: [
-                // Quick Actions title
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Quick Actions',
-                    style: GoogleFonts.arimo(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xff1C1B1F),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 12.h),
-
-                // Quick action cards row
-                Row(
-                  children: [
-                    Expanded(
-                      child: _quickActionCard(
-                        title: 'Create Preference card',
-                        onTap: () {
-                          Get.to(NewPreferenceCard(isPrivate: false,));
-                        },
+                _headerSection(context),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          tr.quickActions,
+                          style: GoogleFonts.arimo(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xff1C1B1F),
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: _quickActionCard(
-                        title: 'Create Private Card',
-                        onTap: () {
-                          Get.to(NewPreferenceCard(isPrivate: true,));
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 20.h),
-
-                // Preference card favorites header
-                Row(
-                  children: [
-                    Text(
-                      'Preference card favorites',
-                      style: GoogleFonts.arimo(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xff1C1B1F),
-                      ),
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        Get.to(() => const PreferenceCardFavorites());
-                      },
-                      child: Row(
+                      SizedBox(height: 12.h),
+                      Row(
                         children: [
-                          Text(
-                            'View All',
-                            style: GoogleFonts.arimo(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xff6750A4),
+                          Expanded(
+                            child: _quickActionCard(
+                              title: tr.createPreferenceCard,
+                              onTap: () {
+                                Get.to(
+                                  NewPreferenceCard(isPrivate: false),
+                                  binding: PostAnyCardBinding(),
+                                );
+                              },
                             ),
                           ),
-                          SizedBox(width: 4.w),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 14.sp,
-                            color: const Color(0xff6750A4),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: _quickActionCard(
+                              title: tr.createPrivateCard,
+                              onTap: () {
+                                Get.to(
+                                  NewPreferenceCard(isPrivate: true),
+                                  binding: PostAnyCardBinding(),
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 12.h),
-
-                // List items
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 10.h),
-                      child: InkWell(
-                        onTap: () {
-                          Get.to(() => const PreferenceCardDetails(isPrivate: false));
-                        },
-                        child: favoriteCard(
-                          title: 'Total Knee Replacement',
-                          status: 'Completed',
-                          statusColor: const Color(0xffE6F6EA),
-                          statusTextColor: const Color(0xff2E9B4E),
-                          date: '2026-01-02',
-                          doctor: 'Dr. Sarah Johnson',
-                        ),
+                      SizedBox(height: 20.h),
+                      Row(
+                        children: [
+                          Text(
+                            tr.preferenceCardFavorites,
+                            style: GoogleFonts.arimo(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: const Color(0xff1C1B1F),
+                            ),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Get.to(() => const PreferenceCardFavorites());
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  'View All',
+                                  style: GoogleFonts.arimo(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: const Color(0xff6750A4),
+                                  ),
+                                ),
+                                SizedBox(width: 4.w),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 14.sp,
+                                  color: const Color(0xff6750A4),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  },
+                      SizedBox(height: 12.h),
+                      Obx(() {
+                        if (_bottomNabBarController.isLoading.value) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (_bottomNabBarController.favoriteCards.isEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
+                            child: Center(
+                              child: Text(
+                                tr.noFavoriteItem,
+                                style: GoogleFonts.arimo(
+                                  fontSize: 14.sp,
+                                  color: const Color(0xFF9CA3AF),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        final card =
+                            _bottomNabBarController.favoriteCards.first;
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 10.h),
+                          child: ProcedureCard(
+                            isPaidUser: false, // Testing download popup
+                            onDownloadTap: () {
+                              _prefranceCardDetailsController.downloadCard(
+                                cardId: card.id,
+                              );
+                            },
+                            isPrivateCard: false,
+                            cardId: card.id,
+                            title: card.cardTitle,
+                            specialty: card.surgeonSpecialty,
+                            isVerified: card.isVerified,
+                            doctor: card.surgeonName,
+                            downloads: card.totalDownloads,
+                            updatedTime: card.updatedAt,
+                            isFavorite: card.isFavorite,
+                            onFavoriteToggle: () async {
+                              if (card.isFavorite) {
+                                await _homePageController
+                                    .removeFromFavoriteList(cardId: card.id);
+                              } else {
+                                await _homePageController.addToFavoriteList(
+                                  cardId: card.id,
+                                );
+                              }
+                              await _bottomNabBarController.getFavoriteCard(
+                                showLoading: false,
+                              );
+                            },
+                          ),
+                        );
+                      }),
+                      SizedBox(height: 10.h),
+                    ],
+                  ),
                 ),
-
-                SizedBox(height: 90.h),
               ],
+            ),
+          ),
+
+          // ── Status bar gradient overlay ──
+          // scroll করলে যাই দেখা যাক, status bar area সবসময় পরিষ্কার থাকবে
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: statusBarHeight, // status bar height + একটু extra
+            child: Container(
+              decoration: BoxDecoration(color: const Color(0xFF6C36B2)),
             ),
           ),
         ],
@@ -145,7 +237,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Quick action card widget
   Widget _quickActionCard({
     required String title,
     required VoidCallback onTap,
@@ -170,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,           // ← এটা খুব জরুরি
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -194,7 +285,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.w400,
                 color: Colors.white,
               ),
-              // যদি title অনেক লম্বা হয় তাহলে এগুলো যোগ করতে পারো:
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -204,8 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Header section with gradient
-  Widget _headerSection() {
+  Widget _headerSection(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Column(
       children: [
         Stack(
@@ -224,11 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   bottomLeft: Radius.circular(24.r),
                   bottomRight: Radius.circular(24.r),
                 ),
-                gradient: const LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [Color(0xff9945FF), Color(0xff271E3E)],
-                ),
+                color: Color(0xFF6C36B2),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,19 +326,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Good morning,',
+                              _greetingForNow(context),
                               style: GoogleFonts.arimo(
-                                fontSize: 14.sp,
+                                fontSize: 16.sp,
                                 color: const Color(0xffE8DEF8),
                               ),
                             ),
                             SizedBox(height: 4.h),
-                            Text(
-                              'Dr. Anderson',
-                              style: GoogleFonts.arimo(
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white,
+                            Obx(
+                              () => Text(
+                                _bottomNabBarController.user.value?.name ??
+                                    'Loading...',
+                                style: GoogleFonts.arimo(
+                                  fontSize: 24.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ],
@@ -297,7 +386,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 20.h),
                   Container(
                     height: 46.h,
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 1.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 1.h,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xffF2F2F7),
                       borderRadius: BorderRadius.circular(24.r),
@@ -312,12 +404,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(width: 10.w),
                         Expanded(
                           child: TextField(
+                            controller: TextEditingController(
+                              text: _bottomNabBarController
+                                  .searchController
+                                  .value,
+                            ),
+                            onChanged: (value) {
+                              _bottomNabBarController.searchController.value =
+                                  value;
+                            },
                             style: GoogleFonts.arimo(
                               fontSize: 14.sp,
                               color: Colors.black,
                             ),
                             decoration: InputDecoration(
-                              hintText: 'Search procedures, cards...',
+                              hintText: tr.searchProceduresCards,
                               hintStyle: GoogleFonts.arimo(
                                 fontSize: 16.sp,
                                 color: const Color(0xff79747E),
@@ -341,24 +442,28 @@ class _HomeScreenState extends State<HomeScreen> {
               right: 0,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _statCard(
-                        icon: Icons.description_outlined,
-                        count: '6',
-                        label: 'All Card',
+                child: Obx(
+                  () => Row(
+                    children: [
+                      Expanded(
+                        child: _statCard(
+                          icon: Icons.description_outlined,
+                          count:
+                              "${_bottomNabBarController.cardCount.value?.allCardsCount ?? 00}",
+                          label: tr.allCard,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: _statCard(
-                        icon: Icons.person_outline,
-                        count: '0',
-                        label: 'My Cards',
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: _statCard(
+                          icon: Icons.person_outline,
+                          count:
+                              "${_bottomNabBarController.cardCount.value?.myCardsCount ?? 00}",
+                          label: tr.myCards,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -369,7 +474,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Stat card widget
   Widget _statCard({
     required IconData icon,
     required String count,
@@ -422,101 +526,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  // Favorite card widget
-
-}
-
-Widget favoriteCard({
-  required String title,
-  required String status,
-  required Color statusColor,
-  required Color statusTextColor,
-  required String date,
-  required String doctor,
-}) {
-  return Container(
-    padding: EdgeInsets.all(14.w),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16.r),
-      border: Border.all(color: const Color(0xffE7E0EC), width: 1.w),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.06),
-          blurRadius: 12.r,
-          offset: Offset(0, 6.h),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: GoogleFonts.arimo(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xff1C1B1F),
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: statusColor,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Text(
-                status,
-                style: GoogleFonts.arimo(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                  color: statusTextColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height:15.h),
-        Row(
-          children: [
-            Icon(
-              Icons.access_time_outlined,
-              size: 14.sp,
-              color: const Color(0xff79747E),
-            ),
-            SizedBox(width: 4.w),
-            Text(
-              date,
-              style: GoogleFonts.arimo(
-                fontSize: 14.sp,
-                color: const Color(0xff79747E),
-              ),
-            ),
-            SizedBox(width: 14.w),
-            Icon(
-              Icons.person_outline_outlined,
-              size: 14.sp,
-              color: const Color(0xff79747E),
-            ),
-            SizedBox(width: 4.w),
-            Expanded(
-              child: Text(
-                doctor,
-                style: GoogleFonts.arimo(
-                  fontSize: 14.sp,
-                  color: const Color(0xff79747E),
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
 }

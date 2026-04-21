@@ -1,9 +1,14 @@
-
+import 'dart:convert';
+import 'dart:io' show Platform;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
+import 'package:tbsosick/core/utils/nonce_helper.dart' hide generateNonce;
 import 'package:tbsosick/data/repositories/auth_repository.dart';
 
 class AuthService extends GetxService {
@@ -17,7 +22,6 @@ class AuthService extends GetxService {
     super.onInit();
     // Explicitly find ApiClient to ensure it's initialized before AuthRepo
     _authRepo = AuthRepo(apiClient: Get.put(ApiClient()));
-
 
     // Check initial login state
     _checkLoginStatus();
@@ -33,7 +37,7 @@ class AuthService extends GetxService {
   }
 
   /// ===================== SIGNUP =====================
-  Future<void> signup({
+  Future<Response> signup({
     required String name,
     required String email,
     required String password,
@@ -41,26 +45,28 @@ class AuthService extends GetxService {
     required String country,
   }) async {
     try {
-      await _authRepo.signup(
+      final response = await _authRepo.signup(
         name: name,
         email: email,
         password: password,
         phone: phone,
         country: country,
       );
-
-      // Optional: Auto login after signup or wait for verification
-      // handleAuthResponse(response);
+      return response;
     } catch (e) {
       rethrow;
     }
   }
 
   /// ===================== LOGIN =====================
-  Future<void> login({required String email, required String password}) async {
+  Future<Response> login({
+    required String email,
+    required String password,
+  }) async {
     try {
       final response = await _authRepo.login(email: email, password: password);
       await _handleAuthResponse(response);
+      return response;
     } catch (e) {
       rethrow;
     }
@@ -69,29 +75,108 @@ class AuthService extends GetxService {
   /// ===================== LOGOUT =====================
   Future<void> logout() async {
     try {
-      await _authRepo.logout();
-    } catch (e) {
-      // Continue to clear local storage even if API call fails
-    } finally {
+      // final response = await _authRepo.logout(deviceToken);
       await _clearLocalAuth();
+      // return response;
+    } catch (e) {
+      await _clearLocalAuth();
+      rethrow;
     }
   }
 
   /// ===================== FORGOT PASSWORD =====================
-  Future<void> forgotPassword(String email) async {
+  Future<Response> forgotPassword(String email) async {
     try {
-      await _authRepo.forgotPassword(email: email);
+      final response = await _authRepo.forgotPassword(email: email);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// ===================== SOCIAL LOGIN (GOOGLE) =====================
+  Future<Response?> signInWithGoogle() async {
+    try {
+      final googleSignIn = GoogleSignIn(
+        clientId: Platform.isIOS
+            ? '344458357764-l2q9u3m6an945rg6vnga1op45mhce06o.apps.googleusercontent.com'
+            : null,
+        serverClientId:
+            '344458357764-p7cinp8ik2ogrut9g54um2nqnn0nqg9g.apps.googleusercontent.com',
+      );
+
+      final account = await googleSignIn.signIn();
+      if (account == null) return null; // user cancelled
+
+      final auth = await account.authentication;
+      final idToken = auth.idToken;
+      if (idToken == null) return null;
+
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      final response = await _authRepo.socialLogin(
+        provider: 'google',
+        idToken: idToken,
+        deviceToken: fcmToken,
+        platform: Platform.isIOS ? 'ios' : 'android',
+      );
+
+      await _handleAuthResponse(response);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// ===================== SOCIAL LOGIN (APPLE) =====================
+  Future<Response?> signInWithApple() async {
+    try {
+      final rawNonce = generateNonce();
+      final hashedNonce = sha256OfString(rawNonce);
+
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: hashedNonce,
+        webAuthenticationOptions: Platform.isAndroid
+            ? WebAuthenticationOptions(
+                clientId: 'com.tbsosick.smrtscrub.service',
+                redirectUri: Uri.parse(
+                    'https://www.smrtscrub.com/api/v1/auth/apple/callback'),
+              )
+            : null,
+      );
+
+      final idToken = credential.identityToken;
+      if (idToken == null) return null;
+
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      final response = await _authRepo.socialLogin(
+        provider: 'apple',
+        idToken: idToken,
+        nonce: rawNonce,
+        deviceToken: fcmToken,
+        platform: Platform.isIOS ? 'ios' : 'android',
+      );
+
+      await _handleAuthResponse(response);
+      return response;
     } catch (e) {
       rethrow;
     }
   }
 
   /// ===================== OTP VERIFY =====================
-  Future<void> verifyOtp({required String email, required int otp}) async {
+  Future<Response> verifyOtp({required String email, required int otp}) async {
     try {
-      await _authRepo.otpVerify(email: email, oneTimeCode: otp);
+      final response = await _authRepo.otpVerify(
+        email: email,
+        oneTimeCode: otp,
+      );
       // If OTP verification logs the user in directly:
       // await _handleAuthResponse(response);
+      return response;
     } catch (e) {
       rethrow;
     }
@@ -100,22 +185,25 @@ class AuthService extends GetxService {
   /// ===================== RESEND OTP =====================
   Future<void> resendOtp(String email) async {
     try {
-      await _authRepo.resentOtp(email: email);
+      await _authRepo.resendOtp(email: email);
     } catch (e) {
       rethrow;
     }
   }
 
   /// ===================== RESET PASSWORD =====================
-  Future<void> resetPassword({
+  Future<Response> resetPassword({
+    required String token,
     required String newPassword,
     required String confirmPassword,
   }) async {
     try {
-      await _authRepo.resetPassword(
+      final response = await _authRepo.resetPassword(
+        token: token,
         newPassword: newPassword,
         confirmPassword: confirmPassword,
       );
+      return response;
     } catch (e) {
       rethrow;
     }
@@ -170,6 +258,7 @@ class AuthService extends GetxService {
     await StorageService.remove(StorageConstants.bearerToken);
     await StorageService.remove(StorageConstants.refreshToken);
     await StorageService.remove(StorageConstants.userData);
+
     isLoggedIn.value = false;
   }
 

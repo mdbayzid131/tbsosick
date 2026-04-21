@@ -1,13 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
-
 
 class AuthRepo {
   final ApiClient apiClient;
   AuthRepo({required this.apiClient});
-
-
+  Future<FirebaseAuth> get auth async {
+    return FirebaseAuth.instance;
+  }
+  
+  // final googleSignIn = GoogleSignIn.instance;
+  //  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   // Future<String> getDeviceId() async {
   //   final deviceInfo = DeviceInfoPlugin();
@@ -23,8 +27,6 @@ class AuthRepo {
   //   }
   // }
 
-
-
   /// ===================== SIGNUP =====================
   Future<Response> signup({
     required String name,
@@ -32,7 +34,6 @@ class AuthRepo {
     required String password,
     required String phone,
     required String country,
-    String role = "PARENT",
   }) async {
     return await apiClient.postData(ApiConstants.signup, {
       "name": name,
@@ -40,7 +41,6 @@ class AuthRepo {
       "password": password,
       "phone": phone,
       "country": country,
-      "role": role,
     });
   }
 
@@ -63,8 +63,8 @@ class AuthRepo {
   }
 
   /// ===================== RESEND OTP =====================
-  Future<Response> resentOtp({required String email}) async {
-    return await apiClient.postData(ApiConstants.resendVerifyEmail, {   
+  Future<Response> resendOtp({required String email}) async {
+    return await apiClient.postData(ApiConstants.resendVerifyEmail, {
       "email": email,
     });
   }
@@ -82,20 +82,39 @@ class AuthRepo {
 
   /// ===================== RESET PASSWORD =====================
   Future<Response> resetPassword({
+    required String token,
     required String newPassword,
     required String confirmPassword,
   }) async {
     return await apiClient.postData(ApiConstants.resetPassword, {
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
-    });
+    }, resetToken: token);
+  }
+
+  /// ===================== SOCIAL LOGIN =====================
+  Future<Response> socialLogin({
+    required String provider,
+    required String idToken,
+    String? nonce,
+    String? deviceToken,
+    required String platform,
+  }) async {
+    final Map<String, dynamic> body = {
+      "provider": provider,
+      "idToken": idToken,
+      "platform": platform,
+    };
+    if (nonce != null) body["nonce"] = nonce;
+    if (deviceToken != null) body["deviceToken"] = deviceToken;
+
+    return await apiClient.postData(ApiConstants.socialLogin, body);
   }
 
   /// ===================== LOGOUT =====================
-  Future<Response> logout() async {
-
-
+  Future<Response> logout(String deviceToken) async {
     return await apiClient.postData(ApiConstants.logout, {
+      "deviceToken": deviceToken,
     });
   }
 
@@ -112,12 +131,11 @@ class AuthRepo {
     required String newPassword,
     required String confirmPassword,
   }) async {
-    return await apiClient.postData(ApiConstants.resetPassword, {      
+    return await apiClient.postData(ApiConstants.resetPassword, {
       "currentPassword": currentPassword,
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
     });
   }
-
 
 }

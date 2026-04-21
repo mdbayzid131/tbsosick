@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 // GetX Controller for managing state
 class PrivacySettingsController extends GetxController {
@@ -15,6 +16,7 @@ class PrivacySettingsController extends GetxController {
 void showPrivacyAndSecurityBottomSheet(BuildContext context) {
   // Initialize controller
   final controller = Get.put(PrivacySettingsController());
+  final tr = AppLocalizations.of(context)!;
 
   showModalBottomSheet(
     isDismissible: true,
@@ -43,7 +45,7 @@ void showPrivacyAndSecurityBottomSheet(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Privacy & Security',
+                        tr.privacyAndSecurity,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -64,55 +66,54 @@ void showPrivacyAndSecurityBottomSheet(BuildContext context) {
                       ),
                     ],
                   ),
-              
+
                   SizedBox(height: 24.h),
-              
+
                   // Share Data option
                   Obx(
                     () => _buildSettingItem(
                       icon: Icons.lock_outline,
-                      title: 'Share Data',
-                      description:
-                          'Allow SMRTSCRUB to share your data with third parties.',
+                      title: tr.shareData,
+                      description: tr.shareDataDesc,
                       value: controller.shareData.value,
                       onChanged: (value) {
                         controller.shareData.value = value;
                       },
                     ),
                   ),
-              
+
                   SizedBox(height: 16.h),
-              
+
                   // Email Notifications option
                   Obx(
                     () => _buildSettingItem(
                       icon: Icons.notifications_outlined,
-                      title: 'Email Notifications',
-                      description: 'Receive notifications via email.',
+                      title: tr.emailNotifications,
+                      description: tr.emailNotificationsDesc,
                       value: controller.emailNotifications.value,
                       onChanged: (value) {
                         controller.emailNotifications.value = value;
                       },
                     ),
                   ),
-              
+
                   SizedBox(height: 16.h),
-              
+
                   // Push Notifications option
                   Obx(
                     () => _buildSettingItem(
                       icon: Icons.notifications_outlined,
-                      title: 'Push Notifications',
-                      description: 'Receive notifications on your device.',
+                      title: tr.pushNotifications,
+                      description: tr.pushNotificationsDesc,
                       value: controller.pushNotifications.value,
                       onChanged: (value) {
                         controller.pushNotifications.value = value;
                       },
                     ),
                   ),
-              
+
                   SizedBox(height: 24.h),
-              
+
                   // Save button
                   SizedBox(
                     width: double.infinity,
@@ -121,10 +122,10 @@ void showPrivacyAndSecurityBottomSheet(BuildContext context) {
                         // TODO: Save settings
                         Get.back();
                       },
-                      label: 'Save Changes',
+                      label: tr.saveChanges,
                     ),
                   ),
-              
+
                   SizedBox(height: 10.h),
                 ],
               ),

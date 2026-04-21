@@ -1,4 +1,4 @@
-package com.example.tbsosick
+package com.tbsosick.smrtscrub
 
 import io.flutter.embedding.android.FlutterActivity
 

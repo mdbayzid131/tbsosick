@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
+import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
+
+import 'package:tbsosick/presentation/widgets/procedure_card.dart';
+import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
+import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
-
-
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -55,47 +61,53 @@ class _LibraryScreenState extends State<LibraryScreen>
     );
   }
 
+  final controller = Get.find<BottomNabBarController>();
+  final homePageController = Get.find<HomePageController>();
+  final PrefranceCardDetailsController _prefranceCardDetailsController =
+      Get.find<PrefranceCardDetailsController>();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          // Header section with gradient background
-          _buildHeader(),
-
-          // Tab buttons - Preference card and Private Card
-          SizedBox(height: 30.h),
-
-          // _buildTabButtons(),
-          SizedBox(height: 16.h),
-          TabBar(
-            splashFactory: NoSplash.splashFactory,
-            overlayColor: WidgetStateProperty.all(Colors.transparent),
-
-            dividerColor: Colors.transparent,
-            controller: _tabController,
-            indicatorColor: Colors.transparent,
-            tabs: [
-              Tab1('Preference card', 0),
-              Tab2('Private Card', 1),
-              // _buildTabButtons('Private Card'),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await controller.refreshCards();
+          },
+          child: Column(
+            children: [
+              _buildHeader(),
+              SizedBox(height: 30.h),
+              SizedBox(height: 16.h),
+              TabBar(
+                splashFactory: NoSplash.splashFactory,
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                dividerColor: Colors.transparent,
+                controller: _tabController,
+                indicatorColor: Colors.transparent,
+                tabs: [
+                  _tab1(AppLocalizations.of(context)!.preferenceCardTab, 0),
+                  _tab2(AppLocalizations.of(context)!.privateCardTab, 1)
+                ],
+              ),
+              SizedBox(height: 16.h),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildPreferenceCardsList(),
+                    _buildPrivateCardsList(),
+                  ],
+                ),
+              ),
             ],
           ),
-          SizedBox(height: 16.h),
-
-          // Content area
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // Preference cards list
-                _buildPreferenceCardsList(),
-                // Private cards list (same structure, different data)
-                _buildPrivateCardsList(),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -111,11 +123,7 @@ class _LibraryScreenState extends State<LibraryScreen>
         bottom: 20.h,
       ),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
-        ),
+                             color: Color(0xFF6C36B2),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24.r),
           bottomRight: Radius.circular(24.r),
@@ -126,7 +134,7 @@ class _LibraryScreenState extends State<LibraryScreen>
         children: [
           // Title
           Text(
-            'Preference Library',
+            AppLocalizations.of(context)!.preferenceLibraryTitle,
             style: GoogleFonts.arimo(
               fontSize: 24.sp,
               fontWeight: FontWeight.w700,
@@ -144,12 +152,15 @@ class _LibraryScreenState extends State<LibraryScreen>
             ),
             child: TextField(
               controller: _searchController,
+              onChanged: (value) {
+                controller.searchController.value = value;
+              },
               style: GoogleFonts.arimo(
                 fontSize: 15.sp,
                 color: const Color(0xFF79747E),
               ),
               decoration: InputDecoration(
-                hintText: 'Search procedures...',
+                hintText: AppLocalizations.of(context)!.searchProceduresCards,
                 hintStyle: GoogleFonts.arimo(
                   fontSize: 15.sp,
                   color: const Color(0xFF79747E),
@@ -213,7 +224,7 @@ class _LibraryScreenState extends State<LibraryScreen>
   //   );
   // }
 
-  Container Tab2(String text, int index) {
+  Widget _tab2(String text, int index) {
     final bool isSelected = _tabController.index == index;
     return Container(
       height: 90.h,
@@ -256,7 +267,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             SizedBox(width: 10.h),
             Expanded(
               child: Text(
-                'Private Card',
+                text,
                 style: GoogleFonts.roboto(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
@@ -270,7 +281,7 @@ class _LibraryScreenState extends State<LibraryScreen>
     );
   }
 
-  Container Tab1(String text, int index) {
+  Widget _tab1(String text, int index) {
     final bool isSelected = _tabController.index == index;
     return Container(
       height: 90.h,
@@ -313,7 +324,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             SizedBox(width: 10.h),
             Expanded(
               child: Text(
-                'Preference card',
+                text,
                 style: GoogleFonts.roboto(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
@@ -335,12 +346,14 @@ class _LibraryScreenState extends State<LibraryScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Card count
-          Text(
-            '3 Preference cards',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF6B7280),
+          Obx(
+            () => Text(
+              '${controller.publicCards.length} ${AppLocalizations.of(context)!.preferenceCards}',
+              style: GoogleFonts.arimo(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF6B7280),
+              ),
             ),
           ),
           SizedBox(height: 12.h),
@@ -395,37 +408,57 @@ class _LibraryScreenState extends State<LibraryScreen>
                     ],
                   ),
                 ),*/
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Total Knee Replacement',
-                  specialty: 'Orthopedic',
-                  isVerified: true,
-                  doctor: 'By Sarah Johnson',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: true,
-                ),
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Coronary Artery Bypass',
-                  specialty: 'Cardiothoracic',
-                  isVerified: true,
-                  doctor: 'By Michael Chen',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: false,
-                ),
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Laparoscopic Cholecystectomy',
-                  specialty: 'General Surgery',
-                  isVerified: false,
-                  doctor: 'By Emily Rodriguez',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: false,
-                ),
-                SizedBox(height: 12.h),
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.errorMessage.isNotEmpty) {
+                    return Center(child: Text(controller.errorMessage.value));
+                  }
+                  if (controller.publicCards.isEmpty) {
+                    return Center(child: Text(AppLocalizations.of(context)!.noCardsFound));
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.publicCards.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == controller.publicCards.length) {
+                        return _buildLoadMoreButton(
+                          isLoading: controller.isPublicMoreLoading.value,
+                          hasMore: controller.hasMorePublic.value,
+                          onPressed: () => controller.loadMorePublic(),
+                        );
+                      }
+                      final card = controller.publicCards[index];
+                      return Column(
+                        children: [
+                          ProcedureCard(
+                            onDownloadTap: () => _prefranceCardDetailsController.downloadCard(cardId: card.id),
+                            // isPrivetCard: false,
+                            cardId: card.id,
+                            title: card.cardTitle,
+                            specialty: card.surgeonSpecialty,
+                            isVerified: card.isVerified,
+                            doctor: "${AppLocalizations.of(context)!.by} ${card.surgeonName}",
+                            downloads: card.totalDownloads,
+                            updatedTime: card.updatedAt,
+                            isFavorite: card.isFavorite,
+                            isPrivateCard: false,
+                            onFavoriteToggle: () async {
+                              if (card.isFavorite) {
+                                await homePageController.removeFromFavoriteList(cardId: card.id);
+                              } else {
+                                await homePageController.addToFavoriteList(cardId: card.id);
+                              }
+                            },
+                          ),
+                          SizedBox(height: 12.h),
+                        ],
+                      );
+                    },
+                  );
+                }),
               ],
             ),
           ),
@@ -441,54 +474,82 @@ class _LibraryScreenState extends State<LibraryScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '0 Private cards',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF6B7280),
+          // Card count
+          Obx(
+            () => Text(
+              '${controller.privateCards.length} ${AppLocalizations.of(context)!.privateCards}',
+              style: GoogleFonts.arimo(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF6B7280),
+              ),
             ),
           ),
-          SizedBox(height: 12.h),
           SizedBox(height: 12.h),
           // Cards list
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _buildProcedureCard(
-                  title: 'Total Knee Replacement',
-                  specialty: 'Orthopedic',
-                  isVerified: true,
-                  doctor: 'By Sarah Johnson',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: true,
-                  isPrivetCard: true,
-                ),
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Coronary Artery Bypass',
-                  specialty: 'Cardiothoracic',
-                  isVerified: true,
-                  doctor: 'By Michael Chen',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: false,
-                  isPrivetCard: true,
-                ),
-                SizedBox(height: 12.h),
-                _buildProcedureCard(
-                  title: 'Laparoscopic Cholecystectomy',
-                  specialty: 'General Surgery',
-                  isVerified: false,
-                  doctor: 'By Emily Rodriguez',
-                  downloads: 236,
-                  updatedTime: 'Updated Just now',
-                  isFavorite: false,
-                  isPrivetCard: true,
-                ),
-                SizedBox(height: 12.h),
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.errorMessage.isNotEmpty) {
+                    return Center(child: Text(controller.errorMessage.value));
+                  }
+                  if (controller.privateCards.isEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 20.h),
+                      child: Center(
+                        child: Text(AppLocalizations.of(context)!.noPrivateCardsFound),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.privateCards.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == controller.privateCards.length) {
+                        return _buildLoadMoreButton(
+                          isLoading: controller.isPrivateMoreLoading.value,
+                          hasMore: controller.hasMorePrivate.value,
+                          onPressed: () => controller.loadMorePrivate(),
+                        );
+                      }
+                      final card = controller.privateCards[index];
+                      return Column(
+                        children: [
+                          ProcedureCard(
+                            onDownloadTap: () => _prefranceCardDetailsController.downloadCard(cardId: card.id),
+                            isPrivateCard: true,
+                            cardId: card.id,
+                            title: card.cardTitle,
+                            specialty: card.surgeonSpecialty,
+                            isVerified: card.isVerified,
+                            doctor: card.surgeonName,
+                            downloads: card.totalDownloads,
+                            updatedTime: card.updatedAt,
+                            isFavorite: card.isFavorite,
+                            onFavoriteToggle: () async {
+                              if (card.isFavorite) {
+                                await homePageController.removeFromFavoriteList(
+                                  cardId: card.id,
+                                );
+                              } else {
+                                await homePageController.addToFavoriteList(
+                                  cardId: card.id,
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(height: 12.h),
+                        ],
+                      );
+                    },
+                  );
+                }),
               ],
             ),
           ),
@@ -497,197 +558,43 @@ class _LibraryScreenState extends State<LibraryScreen>
     );
   }
 
-  // Individual procedure card
-  Widget _buildProcedureCard({
-    bool isPrivetCard = false,
-    required String title,
-    required String specialty,
-    required bool isVerified,
-    required String doctor,
-    required int downloads,
-    required String updatedTime,
-    required bool isFavorite,
+  // Load more button widget
+  Widget _buildLoadMoreButton({
+    required bool isLoading,
+    required bool hasMore,
+    required VoidCallback onPressed,
   }) {
-    return GestureDetector(
-      onTap: () {
-        if (isPrivetCard) {
-          Get.to(PreferenceCardDetails(isPrivate: true));
-        } else {
-          Get.to(PreferenceCardDetails(isPrivate: false));
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 8.r,
-              offset: Offset(0, 2.h),
+    if (!hasMore) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 20.h),
+        child: Center(
+          child: Text(
+            AppLocalizations.of(context)!.noMoreData,
+            style: GoogleFonts.arimo(
+              fontSize: 14.sp,
+              color: const Color(0xFF9CA3AF),
             ),
-          ],
+          ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title and favorite icon
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: GoogleFonts.arimo(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF000000),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // 👉 এখানে favorite action দাও
-                    print("Favorite tapped for $title");
-                  },
-                  child: Container(
-                    height: 36.w,
-                    width: 36.w,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE8DEF8),
-                      borderRadius: BorderRadius.circular(30.r),
-                    ),
-                    child: Icon(
-                      isFavorite ? Icons.star : Icons.star_outline,
-                      color: isFavorite
-                          ? const Color(0xFFFFB800)
-                          : const Color(0xFF9CA3AF),
-                      size: 22.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.h),
+      );
+    }
 
-            // Tags row
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 4.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEDE9FE),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Text(
-                    specialty,
-                    style: GoogleFonts.arimo(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF6750A4),
-                    ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 20.h),
+      child: Center(
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : TextButton(
+                onPressed: onPressed,
+                child: Text(
+                  AppLocalizations.of(context)!.loadMore,
+                  style: GoogleFonts.arimo(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF8B5CF6),
                   ),
                 ),
-                SizedBox(width: 8.w),
-                if (isVerified) ...[
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.w,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD1FAE5),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.check_circle,
-                          color: const Color(0xFF10B981),
-                          size: 14.sp,
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          'Verified',
-                          style: GoogleFonts.arimo(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF10B981),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                ],
-              ],
-            ),
-            SizedBox(height: 8.h),
-
-            // Doctor name
-            Text(
-              doctor,
-              style: GoogleFonts.arimo(
-                fontSize: 13.sp,
-                color: const Color(0xFF79747E),
               ),
-            ),
-            SizedBox(height: 12.h),
-            Divider(height: 1.5.h, color: const Color(0xFFE7E0EC)),
-            SizedBox(height: 12.h),
-
-            // Bottom row
-            Row(
-              children: [
-                Icon(
-                  Icons.file_download_outlined,
-                  color: const Color(0xFF6B7280),
-                  size: 20.sp,
-                ),
-                SizedBox(width: 4.w),
-                Text(
-                  downloads.toString(),
-                  style: GoogleFonts.arimo(
-                    fontSize: 13.sp,
-                    color: const Color(0xFF6B7280),
-                  ),
-                ),
-                SizedBox(width: 16.w),
-                Text(
-                  updatedTime,
-                  style: GoogleFonts.arimo(
-                    fontSize: 13.sp,
-                    color: const Color(0xFF6B7280),
-                  ),
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    // 👉 এখানে download action দাও
-                    print("Download tapped for $title");
-                  },
-                  child: Container(
-                    width: 36.w,
-                    height: 36.w,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF6750A4),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.file_download_outlined,
-                      color: Colors.white,
-                      size: 18.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -722,7 +629,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                   SizedBox(height: 20.h),
                   // Title
                   Text(
-                    'Filters',
+                    AppLocalizations.of(context)!.filters,
                     style: GoogleFonts.arimo(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.w600,
@@ -732,7 +639,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                   SizedBox(height: 20.h),
                   // Specialty section
                   Text(
-                    'SPECIALTY',
+                    AppLocalizations.of(context)!.specialty.toUpperCase(),
                     style: GoogleFonts.arimo(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
@@ -746,13 +653,13 @@ class _LibraryScreenState extends State<LibraryScreen>
                     spacing: 8.w,
                     runSpacing: 8.h,
                     children: [
-                      _buildFilterChip('All', _selectedSpecialty == 'All', () {
+                      _buildFilterChip(AppLocalizations.of(context)!.all, _selectedSpecialty == 'All', () {
                         setModalState(() {
                           _selectedSpecialty = 'All';
                         });
                       }),
                       _buildFilterChip(
-                        'Orthopedic Surgery',
+                        AppLocalizations.of(context)!.orthopedicSurgery,
                         _selectedSpecialty == 'Orthopedic Surgery',
                         () {
                           setModalState(() {
@@ -761,20 +668,65 @@ class _LibraryScreenState extends State<LibraryScreen>
                         },
                       ),
                       _buildFilterChip(
-                        'Cardiothoracic Surgery',
-                        _selectedSpecialty == 'Cardiothoracic Surgery',
+                        AppLocalizations.of(context)!.cardiacSurgery,
+                        _selectedSpecialty == 'Cardiac Surgery',
                         () {
                           setModalState(() {
-                            _selectedSpecialty = 'Cardiothoracic Surgery';
+                            _selectedSpecialty = 'Cardiac Surgery';
                           });
                         },
                       ),
                       _buildFilterChip(
-                        'General Surgery',
+                        AppLocalizations.of(context)!.generalSurgery,
                         _selectedSpecialty == 'General Surgery',
                         () {
                           setModalState(() {
                             _selectedSpecialty = 'General Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        AppLocalizations.of(context)!.neurosurgery,
+                        _selectedSpecialty == 'Neurosurgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Neurosurgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        AppLocalizations.of(context)!.plasticSurgery,
+                        _selectedSpecialty == 'Plastic Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Plastic Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        AppLocalizations.of(context)!.vascularSurgery,
+                        _selectedSpecialty == 'Vascular Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Vascular Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        AppLocalizations.of(context)!.thoracicSurgery,
+                        _selectedSpecialty == 'Thoracic Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Thoracic Surgery';
+                          });
+                        },
+                      ),
+                      _buildFilterChip(
+                        AppLocalizations.of(context)!.pediatricSurgery,
+                        _selectedSpecialty == 'Pediatric Surgery',
+                        () {
+                          setModalState(() {
+                            _selectedSpecialty = 'Pediatric Surgery';
                           });
                         },
                       ),
@@ -786,7 +738,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Verified Only',
+                        AppLocalizations.of(context)!.verifiedOnly,
                         style: GoogleFonts.arimo(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
@@ -811,9 +763,12 @@ class _LibraryScreenState extends State<LibraryScreen>
                     height: 52.h,
                     child: CustomElevatedButton(
                       onPressed: () {
+                        controller.specialtyFilter.value = _selectedSpecialty;
+                        controller.verifiedOnlyFilter.value = _verifiedOnly;
+                        controller.refreshCards();
                         Navigator.pop(context);
                       },
-                      label: 'Apply Filters',
+                      label: AppLocalizations.of(context)!.applyFilters,
                     ),
                   ),
                 ],

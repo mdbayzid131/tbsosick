@@ -7,6 +7,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
+import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 
 import '../../../config/constants/image_paths.dart';
 import '../../controllers/bottom_nab_bar_controller.dart';
@@ -55,32 +56,38 @@ class CustomBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 80.h,
-      decoration: const BoxDecoration(color: Color(0xffF2F2F7)),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _icon(ImagePaths.homeIcon, 0),
-              _icon(ImagePaths.libraryIcon, 1),
-              SizedBox(width: 70.w),
-              _icon(ImagePaths.calenderIcon, 2),
-              ppIcon(3),
-            ],
-          ),
-
-          Positioned(
-            child: GestureDetector(
-              onTap: () {
-                Get.to(NewPreferenceCard(isPrivate: false,), transition: Transition.downToUp);
-              },
-              child: _centerButton(),
+    return Obx(
+      () => Container(
+        height: 80.h,
+        decoration: const BoxDecoration(color: Color(0xffF2F2F7)),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _icon(ImagePaths.homeIcon, 0),
+                _icon(ImagePaths.libraryIcon, 1),
+                SizedBox(width: 70.w),
+                _icon(ImagePaths.calenderIcon, 2),
+                ppIcon(3),
+              ],
             ),
-          ),
-        ],
+
+            Positioned(
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(
+                    NewPreferenceCard(isPrivate: false),
+                    binding: PostAnyCardBinding(),
+                    transition: Transition.downToUp,
+                  );
+                },
+                child: _centerButton(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -114,19 +121,41 @@ class CustomBottomBar extends StatelessWidget {
           border: Border.all(
             color: nav.currentIndex.value == index
                 ? AppTheme.primaryColor
-                : Colors.white,
+                : Colors.grey,
             width: 2.w,
           ),
         ),
-        padding: EdgeInsets.all(3.w),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: Image.network('https://picsum.photos/250?image=9').image,
-
-              fit: BoxFit.cover,
-            ),
+        padding: EdgeInsets.all(0.w),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100.r),
+          child: Builder(
+            builder: (context) {
+              final profileUrl = nav.user.value?.profilePicture;
+              if (profileUrl != null && profileUrl.isNotEmpty) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(profileUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF8E3DF6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.person,
+                      size: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              }
+            },
           ),
         ),
       ),

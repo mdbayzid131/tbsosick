@@ -3,82 +3,127 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:intl/intl.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import '../../../config/constants/image_paths.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 import 'edit_procedure.dart';
+import 'controller/clender_controller.dart';
 
-class ProcedureDetailsScreen extends StatelessWidget {
-  const ProcedureDetailsScreen({super.key});
+class ProcedureDetailsScreen extends StatefulWidget {
+  final String id;
+  const ProcedureDetailsScreen({super.key, required this.id});
+
+  @override
+  State<ProcedureDetailsScreen> createState() => _ProcedureDetailsScreenState();
+}
+
+class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
+  final CalendarController _controller = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.getEventDetailById(id: widget.id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
-      body: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          child: Column(
+      body: Obx(() {
+        // Show loading indicator while data is being fetched
+        if (_controller.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFF9945FF)),
+          );
+        }
+
+        // Show content when loading is complete
+        return SafeArea(
+          top: false,
+          child: Stack(
             children: [
-              // Header section with gradient
-              _buildHeader(),
-        
-              // Scrollable content
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 16.h),
-        
-                    // Duration and Location cards
-                    Row(
+
+             SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header section with gradient
+                  _buildHeader(l10n),
+            
+                  // Scrollable content
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: _buildDurationCard()),
-                        SizedBox(width: 12.w),
-                        Expanded(child: _buildLocationCard()),
+                        SizedBox(height: 16.h),
+            
+                        // Duration and Location cards
+                        Row(
+                          children: [
+                            Expanded(child: _buildDurationCard(l10n)),
+                            SizedBox(width: 12.w),
+                            Expanded(child: _buildLocationCard(l10n)),
+                          ],
+                        ),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Primary Information card
+                        _buildPrimaryInformationCard(l10n),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Surgical Team card
+                        _buildSurgicalTeamCard(l10n),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Linked Preference Card
+                        _buildLinkedPreferenceCard(l10n),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Procedure Notes card
+                        _buildProcedureNotesCard(l10n),
+            
+                        SizedBox(height: 16.h),
+            
+                        // Reminders card
+                        _buildRemindersCard(l10n),
+            
+                        SizedBox(height: 20.h),
                       ],
                     ),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Primary Information card
-                    _buildPrimaryInformationCard(),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Surgical Team card
-                    _buildSurgicalTeamCard(),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Linked Preference Card
-                    _buildLinkedPreferenceCard(),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Procedure Notes card
-                    _buildProcedureNotesCard(),
-        
-                    SizedBox(height: 16.h),
-        
-                    // Reminders card
-                    _buildRemindersCard(),
-        
-                    SizedBox(height: 20.h),
-                  ],
-                ),
+                  ),
+            
+                  // Bottom action buttons
+                  _buildBottomActions(l10n),
+                ],
               ),
-        
-              // Bottom action buttons
-              _buildBottomActions(),
-            ],
+            ),
+         
+         Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: statusBarHeight, // status bar height + একটু extra
+            child: Container(
+              decoration: BoxDecoration(color: const Color(0xFF6C36B2)),
+            ),
           ),
-        ),
-      ),
+         ] ),
+        );
+      }),
     );
   }
 
   // Header with gradient background
-  Widget _buildHeader() {
+  Widget _buildHeader(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
@@ -88,11 +133,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
         bottom: 24.h,
       ),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
-        ),
+        color: Color(0xFF6C36B2),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24.r),
           bottomRight: Radius.circular(24.r),
@@ -106,7 +147,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Event Details',
+                l10n.eventDetails,
                 style: GoogleFonts.arimo(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w400,
@@ -144,15 +185,19 @@ class ProcedureDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Text(
-                        'Total Knee\nReplacement',
-                        style: GoogleFonts.arimo(
-                          fontSize: 24.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          height: 1.2,
-                        ),
-                      ),
+                      child: Obx(() {
+                        final e = _controller.eventDetails.value;
+                        final t = e?.title ?? '';
+                        return Text(
+                          t,
+                          style: GoogleFonts.arimo(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            height: 1.2,
+                          ),
+                        );
+                      }),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -164,7 +209,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        'Upcoming',
+                        l10n.upcoming,
                         style: GoogleFonts.arimo(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w500,
@@ -186,13 +231,21 @@ class ProcedureDetailsScreen extends StatelessWidget {
                       color: Colors.white,
                     ),
                     SizedBox(width: 8.w),
-                    Text(
-                      'Tuesday, January 6, 2026 at 09:00 AM',
-                      style: GoogleFonts.arimo(
-                        fontSize: 14.sp,
-                        color: Color(0xffE8DEF8),
-                      ),
-                    ),
+                    Obx(() {
+                      final e = _controller.eventDetails.value;
+                      String txt = '';
+                      if (e != null) {
+                        txt =
+                            '${DateFormat('EEEE, MMMM d, y').format(e.date)} ${l10n.at} ${e.time}';
+                      }
+                      return Text(
+                        txt,
+                        style: GoogleFonts.arimo(
+                          fontSize: 14.sp,
+                          color: Color(0xffE8DEF8),
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ],
@@ -204,7 +257,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
   }
 
   // Duration card
-  Widget _buildDurationCard() {
+  Widget _buildDurationCard(AppLocalizations l10n) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -231,7 +284,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                'Duration',
+                l10n.duration,
                 style: GoogleFonts.arimo(
                   fontSize: 13.sp,
                   color: const Color(0xff79747E),
@@ -240,21 +293,25 @@ class ProcedureDetailsScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.h),
-          Text(
-            '2-3 hours',
-            style: GoogleFonts.arimo(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xff1C1B1F),
-            ),
-          ),
+          Obx(() {
+            final d = _controller.eventDetails.value;
+            final t = d != null ? '${d.durationHours} ${d.durationHours == 1 ? l10n.hour : l10n.hours}' : '';
+            return Text(
+              t,
+              style: GoogleFonts.arimo(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xff1C1B1F),
+              ),
+            );
+          }),
         ],
       ),
     );
   }
 
   // Location card
-  Widget _buildLocationCard() {
+  Widget _buildLocationCard(AppLocalizations l10n) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -281,7 +338,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                'Location',
+                l10n.location,
                 style: GoogleFonts.arimo(
                   fontSize: 13.sp,
                   color: const Color(0xff79747E),
@@ -290,21 +347,25 @@ class ProcedureDetailsScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.h),
-          Text(
-            'OR-3',
-            style: GoogleFonts.arimo(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xff1C1B1F),
-            ),
-          ),
+          Obx(() {
+            final d = _controller.eventDetails.value;
+            final t = d?.location ?? '';
+            return Text(
+              t,
+              style: GoogleFonts.arimo(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xff1C1B1F),
+              ),
+            );
+          }),
         ],
       ),
     );
   }
 
   // Primary Information card
-  Widget _buildPrimaryInformationCard() {
+  Widget _buildPrimaryInformationCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -324,7 +385,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Primary Information',
+            l10n.primaryInformation,
             style: GoogleFonts.arimo(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
@@ -353,21 +414,25 @@ class ProcedureDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Surgeon',
+                    l10n.surgeon,
                     style: GoogleFonts.arimo(
                       fontSize: 13.sp,
                       color: const Color(0xff79747E),
                     ),
                   ),
                   SizedBox(height: 2.h),
-                  Text(
-                    'Dr. Sarah Johnson',
-                    style: GoogleFonts.arimo(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xff1C1B1F),
-                    ),
-                  ),
+                  Obx(() {
+                    final d = _controller.eventDetails.value;
+                    final t = d?.personnel?.leadSurgeon ?? '';
+                    return Text(
+                      t,
+                      style: GoogleFonts.arimo(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xff1C1B1F),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ],
@@ -394,7 +459,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Anesthesia',
+                    l10n.anesthesia,
                     style: GoogleFonts.arimo(
                       fontSize: 13.sp,
                       color: const Color(0xff79747E),
@@ -419,7 +484,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
   }
 
   // Surgical Team card
-  Widget _buildSurgicalTeamCard() {
+  Widget _buildSurgicalTeamCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -446,40 +511,46 @@ class ProcedureDetailsScreen extends StatelessWidget {
                 color: const Color(0xff1C1B1F),
               ),
               SizedBox(width: 8.w),
-              Text(
-                'Surgical Team (3)',
-                style: GoogleFonts.arimo(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xff1C1B1F),
-                ),
-              ),
+              Obx(() {
+                final count = _controller.eventDetails.value?.personnel?.surgicalTeam.length ?? 0;
+                return Text(
+                  l10n.surgicalTeamWithCount(count + 1),
+                  style: GoogleFonts.arimo(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xff1C1B1F),
+                  ),
+                );
+              }),
             ],
           ),
           SizedBox(height: 16.h),
-          // Team member 1 - Lead Surgeon
-          _buildTeamMember(
-            initials: 'DSJ',
-            name: 'Dr. Sarah Johnson',
-            role: 'Lead Surgeon',
-            isVerified: true,
-          ),
-          SizedBox(height: 12.h),
-          // Team member 2 - Assistant Surgeon
-          _buildTeamMember(
-            initials: 'DMC',
-            name: 'Dr. Mike Chen',
-            role: 'Assistant Surgeon',
-            isVerified: false,
-          ),
-          SizedBox(height: 12.h),
-          // Team member 3 - Surgical Nurse
-          _buildTeamMember(
-            initials: 'NAP',
-            name: 'Nurse Amy Park',
-            role: 'Surgical Nurse',
-            isVerified: false,
-          ),
+          Obx(() {
+            final p = _controller.eventDetails.value?.personnel;
+            final widgets = <Widget>[];
+            if (p != null) {
+              widgets.add(
+                _buildTeamMember(
+                  initials: _initials(p.leadSurgeon),
+                  name: p.leadSurgeon,
+                  role: l10n.leadSurgeon,
+                  isVerified: true,
+                ),
+              );
+              for (final m in p.surgicalTeam) {
+                widgets.add(SizedBox(height: 12.h));
+                widgets.add(
+                  _buildTeamMember(
+                    initials: _initials(m),
+                    name: m,
+                    role: l10n.team,
+                    isVerified: false,
+                  ),
+                );
+              }
+            }
+            return Column(children: widgets);
+          }),
         ],
       ),
     );
@@ -561,7 +632,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
   }
 
   // Linked Preference Card
-  Widget _buildLinkedPreferenceCard() {
+  Widget _buildLinkedPreferenceCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -601,7 +672,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Linked Preference Card',
+                      l10n.linkedPreferenceCard,
                       style: GoogleFonts.arimo(
                         fontSize: 13.sp,
                         color: const Color(0xFF7C3AED),
@@ -609,7 +680,12 @@ class ProcedureDetailsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      'Total Knee Replacement',
+                      _controller
+                              .eventDetails
+                              .value
+                              ?.preferenceCard
+                              ?.cardTitle ??
+                          '',
                       style: GoogleFonts.arimo(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
@@ -627,8 +703,14 @@ class ProcedureDetailsScreen extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // TODO: View card details
+                final d = _controller.eventDetails.value;
+                final cardId = d!.preferenceCard?.id ?? '';
+                Get.toNamed(
+                  AppRoutes.CARD_DETAILS,
+                  arguments: {'cardId': cardId},
+                );
               },
+
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8B5CF6),
                 shape: RoundedRectangleBorder(
@@ -638,7 +720,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
                 elevation: 0,
               ),
               child: Text(
-                'View Card Details',
+                l10n.viewCardDetails,
                 style: GoogleFonts.arimo(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
@@ -653,7 +735,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
   }
 
   // Procedure Notes card
-  Widget _buildProcedureNotesCard() {
+  Widget _buildProcedureNotesCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -673,7 +755,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Procedure Notes',
+            l10n.procedureNotes,
             style: GoogleFonts.arimo(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
@@ -681,21 +763,25 @@ class ProcedureDetailsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
-          Text(
-            'Patient has history of hypertension. Pre-op antibiotics administered.',
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              height: 1.5,
-              color: const Color(0xFF6B7280),
-            ),
-          ),
+          Obx(() {
+            final d = _controller.eventDetails.value;
+            final t = d?.notes ?? '';
+            return Text(
+              t,
+              style: GoogleFonts.arimo(
+                fontSize: 14.sp,
+                height: 1.5,
+                color: const Color(0xFF6B7280),
+              ),
+            );
+          }),
         ],
       ),
     );
   }
 
   // Reminders card
-  Widget _buildRemindersCard() {
+  Widget _buildRemindersCard(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -723,7 +809,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
               ),
               SizedBox(width: 8.w),
               Text(
-                'Reminders',
+                l10n.reminders,
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -752,7 +838,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 12.w),
                 Text(
-                  '1 hour before procedure',
+                  l10n.oneHourBefore,
                   style: GoogleFonts.arimo(
                     fontSize: 14.sp,
                     color: const Color(0xFF1C1B1F),
@@ -781,7 +867,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 12.w),
                 Text(
-                  '24 hours before procedure',
+                  l10n.twentyFourHoursBefore,
                   style: GoogleFonts.arimo(
                     fontSize: 14.sp,
                     color: const Color(0xFF1C1B1F),
@@ -796,7 +882,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
   }
 
   // Bottom action buttons
-  Widget _buildBottomActions() {
+  Widget _buildBottomActions(AppLocalizations l10n) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -827,7 +913,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    'Cancel',
+                    l10n.back,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,
@@ -843,8 +929,11 @@ class ProcedureDetailsScreen extends StatelessWidget {
           Expanded(
             flex: 1,
             child: GestureDetector(
-              onTap: () {
-                Get.to(EditProcedureScreen());
+              onTap: () async {
+                // Navigate to edit screen and wait for return
+                await Get.to(() => EditProcedureScreen(id: widget.id));
+                // Refresh event details after returning from edit
+                await _controller.getEventDetailById(id: widget.id);
               },
               child: Container(
                 height: 52.h,
@@ -854,7 +943,7 @@ class ProcedureDetailsScreen extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    'Edit Details',
+                    l10n.edit,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,
@@ -869,4 +958,23 @@ class ProcedureDetailsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+// Helper
+String _initials(String name) {
+  final trimmed = name.trim();
+  if (trimmed.isEmpty) return '';
+  final parts = trimmed
+      .split(RegExp(r'\\s+'))
+      .where((p) => p.isNotEmpty)
+      .toList();
+  final take = parts.length >= 3 ? 3 : parts.length;
+  final buf = StringBuffer();
+  for (var i = 0; i < take; i++) {
+    final s = parts[i];
+    if (s.isNotEmpty) {
+      buf.write(s[0].toUpperCase());
+    }
+  }
+  return buf.toString();
 }

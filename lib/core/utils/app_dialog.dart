@@ -23,10 +23,10 @@ class AppDialog {
       transitionDuration: duration,
 
       /// ================= PAGE ================= ///
-      pageBuilder: (_, __, ___) => child,
+      pageBuilder: (_, _, _) => child,
 
       /// ================= TRANSITION ================= ///
-      transitionBuilder: (_, animationController, __, child) {
+      transitionBuilder: (_, animationController, _, child) {
         switch (animation) {
           case DialogAnimation.fade:
             return FadeTransition(

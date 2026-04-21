@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
+import 'package:tbsosick/core/services/storage_service.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
 
 import '../../widgets/custom_elevated_button.dart';
 import 'onboardingPage1.dart';
@@ -30,6 +33,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Scaffold(
       ///<================= BODY =========================>///
       body: SafeArea(
@@ -84,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   ///<================= BUTTON SECTION =========================>///
                   CustomElevatedButton(
-                    label: _currentPage == 2 ? "Get Started" : "Next",
+                    label: _currentPage == 2 ? tr.getStarted : tr.next,
                     onPressed: () {
                       if (_currentPage < 2) {
                         _pageController.nextPage(
@@ -92,7 +96,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           curve: Curves.ease,
                         );
                       } else {
-                        Get.toNamed(RoutePages.loginScreen);
+                        StorageService.setBool(
+                          StorageConstants.onboardingSeen,
+                          true,
+                        );
+
+                        Get.offAllNamed(AppRoutes.LOGIN);
                       }
                     },
                   ),
