@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 
 // 🔥 Background handler (must be top-level)
 @pragma('vm:entry-point')
@@ -22,8 +24,29 @@ class FirebaseNotificationService {
     print('🔐 Permission: ${settings.authorizationStatus}');
 
     // ✅ Get FCM Token
-    String? token = await _messaging.getToken();
-    print('🔑 FCM Token: $token');
+    try {
+      if (Platform.isIOS) {
+        // iOS-এ APNS token পেতে সময় লাগতে পারে, তাই কিছুটা অপেক্ষা করা ভালো
+        String? apnsToken = await _messaging.getAPNSToken();
+        int retryCount = 0;
+        while (apnsToken == null && retryCount < 3) {
+          await Future.delayed(const Duration(seconds: 2));
+          apnsToken = await _messaging.getAPNSToken();
+          retryCount++;
+          debugPrint('⏳ Waiting for APNS Token... (Retry: $retryCount)');
+        }
+      }
+
+      String? token = await _messaging.getToken();
+      debugPrint('🔑 FCM Token: $token');
+    } catch (e) {
+      debugPrint('❌ Error getting FCM Token: $e');
+    }
+
+    // ✅ Listen for Token Refresh
+    _messaging.onTokenRefresh.listen((newToken) {
+      debugPrint('🔄 FCM Token Refreshed: $newToken');
+    });
 
     // 👉 TODO: backend এ পাঠাতে চাইলে এখানে পাঠাও
 
