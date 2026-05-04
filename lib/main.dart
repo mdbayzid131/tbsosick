@@ -17,7 +17,8 @@ void main() async {
   } catch (e) {
     debugPrint("Firebase initialization failed: $e");
   }
-    await FirebaseNotificationService.initialize();
+  await FirebaseNotificationService.initialize();
 
   runApp(MyApp());
 }
+//
