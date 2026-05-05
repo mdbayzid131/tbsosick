@@ -177,13 +177,7 @@ class StepCreateCard4 extends StatelessWidget {
 
           // Finalize button
           CustomElevatedButton(
-            onPressed: () {
-              StorageService.setBool(
-                StorageConstants.quickSetupCompleted,
-                true,
-              );
-              Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
-            },
+            onPressed: controller.finalizeSetup,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryColor,
               minimumSize: Size(double.infinity, 55.h),

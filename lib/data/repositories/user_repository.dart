@@ -17,6 +17,11 @@ class UserDataRepository {
     return await _apiClient.getData(ApiConstants.profile);
   }
 
+  // Complete onboarding
+  Future<Response<dynamic>> completeOnboarding() async {
+    return await _apiClient.patchData(ApiConstants.completeOnboarding, {});
+  }
+
   // Get all preference card count
   Future<Response<dynamic>> getCardCount() async {
     return await _apiClient.getData(ApiConstants.getCardCount);

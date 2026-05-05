@@ -44,7 +44,16 @@ class OtpController extends GetxController {
 
       if (response.statusCode == 200) {
         Helpers.showSuccess('Email verified successfully');
-        Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+        
+        final data = response.data;
+        final authData = data['data'] is Map ? data['data'] : data;
+        final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
+
+        if (!isOnboardingCompleted) {
+          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+        } else {
+          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+        }
       }
     } catch (e) {
       Helpers.showError(e.toString());

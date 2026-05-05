@@ -196,13 +196,11 @@ class AuthService extends GetxService {
   Future<Response> resetPassword({
     required String token,
     required String newPassword,
-    required String confirmPassword,
   }) async {
     try {
       final response = await _authRepo.resetPassword(
         token: token,
         newPassword: newPassword,
-        confirmPassword: confirmPassword,
       );
       return response;
     } catch (e) {

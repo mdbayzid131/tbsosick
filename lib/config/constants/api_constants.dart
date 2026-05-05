@@ -9,11 +9,10 @@ class ApiConstants {
   static const String signup = '/users';
   static const String logout = '/auth/logout';
   static const String refreshToken = '/auth/refresh';
-  static const String forgotPassword = '/auth/forget-password';
+  static const String forgotPassword = '/auth/forgot-password';
 
   // User Endpoints
-
-  // Add your API endpoints here
+  static const String completeOnboarding = '/users/complete-onboarding';
   static const String resendVerifyEmail = '/auth/resend-otp';
   static const String verifyEmail = '/auth/verify-otp';
   static const String resetPassword = '/auth/reset-password';
@@ -33,7 +32,6 @@ class ApiConstants {
   static const String removeFromFavoriteList = '/preference-card/{id}/favorite';
   // static const String getFavoriteCard = '/preference-card/favorite';
   static const String getFavoriteCard = '/preference-card/favorites';
-
 
   // Event Endpoints
   static const String getEventsList = '/events';

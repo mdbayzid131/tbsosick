@@ -57,7 +57,16 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200) {
         Helpers.showSuccess('Login successful');
-        Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+        
+        final data = response.data;
+        final authData = data['data'] is Map ? data['data'] : data;
+        final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
+
+        if (!isOnboardingCompleted) {
+          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+        } else {
+          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+        }
       } else if ((response.data is Map &&
           response.data['message'] != null &&
           response.data['message'].toString().contains(

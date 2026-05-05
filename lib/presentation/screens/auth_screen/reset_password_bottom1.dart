@@ -1,44 +1,31 @@
-import 'package:dio/src/response.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/l10n/app_localizations.dart';
+import 'package:dio/src/response.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/otp_verify_bottom.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/forgot_password_success_bottom.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
-import 'package:tbsosick/l10n/app_localizations.dart';
 
 void showResetPasswordBottomSheet(BuildContext context) {
   final tr = AppLocalizations.of(context)!;
   final AuthService authService = Get.find();
   final emailController = TextEditingController();
   final emailError = RxnString();
-  final isSuccess = false.obs;
   final isLoading = false.obs;
 
   Future<void> forgotPassword() async {
     try {
       if (isLoading.value) return;
 
-      // 1. Validate form
       emailError.value = Validators.email(emailController.text.trim());
-
-      if (emailError.value != null) {
-        isLoading.value = false;
-        return;
-      }
-
-      if (isSuccess.value) {
-        // Prevent opening multiple bottom sheets
-        Get.back();
-        showOtpVerifyBottomSheet(Get.context!, emailController.text.trim());
-
-        return;
-      }
+      if (emailError.value != null) return;
 
       isLoading.value = true;
 
@@ -49,8 +36,8 @@ void showResetPasswordBottomSheet(BuildContext context) {
       ApiChecker.checkWriteApi(response);
 
       if (response.statusCode == 200) {
-        isSuccess.value = true;
-        Helpers.showSuccess(tr.passwordResetSent);
+        Get.back();
+        showForgotPasswordSuccessBottomSheet(Get.context!, emailController.text.trim());
       }
     } catch (e) {
       Helpers.showError(e.toString());
@@ -121,63 +108,27 @@ void showResetPasswordBottomSheet(BuildContext context) {
 
                   SizedBox(height: 16.h),
 
-                  // Success Message (Reactive)
-                  Obx(() {
-                    if (!isSuccess.value) return SizedBox.shrink();
-
-                    return Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(12.w),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFE9FFF3),
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: Border.all(color: Colors.green, width: 1.w),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.check_circle, color: Colors.green),
-                              SizedBox(width: 8.w),
-                              Expanded(
-                                child: Text(
-                                  tr.passwordResetSent,
-                                  style: GoogleFonts.arimo(
-                                    fontSize: 14.sp,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-                      ],
-                    );
-                  }),
-
-                  // Email Field (Reactive for readOnly)
-                  Obx(
-                    () => CustomTextField(
-                      readOnly: isSuccess.value,
-                      isLabelVisible: false,
-                      controller: emailController,
-                      hintText: tr.email,
-                      errorText: emailError.value,
-                      prefixIcon: Icon(
-                        Icons.email_outlined,
-                        color: const Color(0xff8E8E93),
-                        size: 20.sp,
-                      ),
-                      label: '',
+                  // Email Field
+                  CustomTextField(
+                    readOnly: false,
+                    isLabelVisible: false,
+                    controller: emailController,
+                    hintText: tr.email,
+                    errorText: emailError.value,
+                    prefixIcon: Icon(
+                      Icons.email_outlined,
+                      color: const Color(0xff8E8E93),
+                      size: 20.sp,
                     ),
+                    label: '',
                   ),
 
                   SizedBox(height: 20.h),
 
-                  // Submit Button (Reactive)
+                  // Submit Button
                   Obx(
                     () => CustomElevatedButton(
-                      label: isSuccess.value ? tr.next : tr.sendResetLink,
+                      label: tr.sendResetLink,
                       onPressed: forgotPassword,
                       isLoading: isLoading.value,
                     ),

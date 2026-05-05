@@ -1,31 +1,34 @@
-import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart' hide Response;
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:dio/src/response.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/reset_password_success_bottom.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
 void showResetPasswordBottomSheet2(BuildContext context, String token) {
   final obscureText = true.obs;
   final confirmObscureText = true.obs;
+
   final AuthService authService = Get.find();
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final passwordError = RxnString();
   final confirmPasswordError = RxnString();
-  final isSuccess = false.obs;
   final isLoading = false.obs;
 
   Future<void> resetPassword() async {
     try {
       if (isLoading.value) return;
-
-      // 1. Validate form
 
       passwordError.value = Validators.password(
         newPasswordController.text.trim(),
@@ -38,28 +41,20 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
       final isValid =
           passwordError.value == null && confirmPasswordError.value == null;
 
-      if (!isValid) {
-        isLoading.value = false;
-        return;
-      }
-
-      if (isSuccess.value) {
-        Get.back(); // close current bottom sheet
-      }
+      if (!isValid) return;
 
       isLoading.value = true;
 
       final Response response = await authService.resetPassword(
         token: token,
         newPassword: newPasswordController.text.trim(),
-        confirmPassword: confirmPasswordController.text.trim(),
       );
 
       ApiChecker.checkWriteApi(response);
 
       if (response.statusCode == 200) {
-        isSuccess.value = true;
-        Helpers.showSuccess('Password reset successfully');
+        Get.back();
+        showResetPasswordSuccessBottomSheet(Get.context!);
       }
     } catch (e) {
       Helpers.showError(e.toString());
@@ -120,143 +115,74 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
 
                   SizedBox(height: 16.h),
 
-                  // Success Message (Reactive)
-                  Obx(() {
-                    if (!isSuccess.value) return SizedBox.shrink();
+                  Text(
+                    "Enter your new password below.",
+                    style: GoogleFonts.arimo(
+                      fontSize: 16.sp,
+                      color: Color(0xff8E8E93),
+                    ),
+                  ),
 
-                    return Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(12.w),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFE9FFF3),
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: Border.all(color: Colors.green, width: 1.w),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.check_circle, color: Colors.green),
-                              SizedBox(width: 8.w),
-                              Expanded(
-                                child: Text(
-                                  'Password reset successful!',
-                                  style: GoogleFonts.arimo(
-                                    fontSize: 14.sp,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                  SizedBox(height: 12.h),
+
+                  // New Password Field
+                  Obx(
+                    () => CustomTextField(
+                      readOnly: false,
+                      isLabelVisible: false,
+                      controller: newPasswordController,
+                      hintText: 'New Password',
+                      errorText: passwordError.value,
+                      obscureText: obscureText.value,
+                      prefixIcon: GestureDetector(
+                        onTap: () {
+                          obscureText.value = !obscureText.value;
+                        },
+                        child: Icon(
+                          obscureText.value
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: const Color(0xff8E8E93),
+                          size: 20.sp,
                         ),
-                        SizedBox(height: 12.h),
-                        Text(
-                          "You can now log in using your new password.",
-                          style: GoogleFonts.arimo(
-                            fontSize: 16.sp,
-                            color: Color(0xff8E8E93),
-                          ),
+                      ),
+                      label: '',
+                    ),
+                  ),
+
+                  SizedBox(height: 12.h),
+
+                  // Confirm Password Field
+                  Obx(
+                    () => CustomTextField(
+                      readOnly: false,
+                      isLabelVisible: false,
+                      controller: confirmPasswordController,
+                      hintText: 'Confirm New Password',
+                      errorText: confirmPasswordError.value,
+                      obscureText: confirmObscureText.value,
+                      prefixIcon: GestureDetector(
+                        onTap: () {
+                          confirmObscureText.value = !confirmObscureText.value;
+                        },
+                        child: Icon(
+                          confirmObscureText.value
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: const Color(0xff8E8E93),
+                          size: 20.sp,
                         ),
-                        SizedBox(height: 16.h),
-                      ],
-                    );
-                  }),
+                      ),
+                      label: '',
+                    ),
+                  ),
 
-                  // Form Fields (Only show when not success)
-                  Obx(() {
-                    if (isSuccess.value) return SizedBox.shrink();
+                  SizedBox(height: 20.h),
 
-                    return Column(
-                      children: [
-                        Text(
-                          "Enter the reset token from your email and set a new password.",
-                          style: GoogleFonts.arimo(
-                            fontSize: 16.sp,
-                            color: Color(0xff8E8E93),
-                          ),
-                        ),
-
-                        SizedBox(height: 12.h),
-
-                        // Obx(
-                        //   () => CustomTextField(
-                        //     readOnly: false,
-                        //     isLabelVisible: false,
-                        //     controller: tokenController,
-                        //     hintText: 'Reset Token',
-                        //     errorText: tokenError.value,
-                        //     prefixIcon: Icon(
-                        //       Icons.key_outlined,
-                        //       color: const Color(0xff8E8E93),
-                        //       size: 20.sp,
-                        //     ),
-                        //     label: '',
-                        //   ),
-                        // ),
-                        SizedBox(height: 12.h),
-
-                        // New Password Field (with reactive obscureText)
-                        Obx(
-                          () => CustomTextField(
-                            readOnly: false,
-                            isLabelVisible: false,
-                            controller: newPasswordController,
-                            hintText: 'New Password',
-                            errorText: passwordError.value,
-                            obscureText: obscureText.value,
-                            prefixIcon: GestureDetector(
-                              onTap: () {
-                                obscureText.value = !obscureText.value;
-                              },
-                              child: Icon(
-                                obscureText.value
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                                color: const Color(0xff8E8E93),
-                                size: 20.sp,
-                              ),
-                            ),
-                            label: '',
-                          ),
-                        ),
-
-                        SizedBox(height: 12.h),
-
-                        // Confirm Password Field (with reactive obscureText)
-                        Obx(
-                          () => CustomTextField(
-                            readOnly: false,
-                            isLabelVisible: false,
-                            controller: confirmPasswordController,
-                            hintText: 'Confirm New Password',
-                            errorText: confirmPasswordError.value,
-                            obscureText: confirmObscureText.value,
-                            prefixIcon: GestureDetector(
-                              onTap: () {
-                                confirmObscureText.value =
-                                    !confirmObscureText.value;
-                              },
-                              child: Icon(
-                                confirmObscureText.value
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                                color: const Color(0xff8E8E93),
-                                size: 20.sp,
-                              ),
-                            ),
-                            label: '',
-                          ),
-                        ),
-
-                        SizedBox(height: 20.h),
-                      ],
-                    );
-                  }),
-
-                  // Submit Button (Reactive)
+                  // Submit Button
                   Obx(
                     () => CustomElevatedButton(
-                      label: isSuccess.value ? 'Done' : 'Reset Password',
+                      label: 'Reset Password',
                       onPressed: resetPassword,
                       isLoading: isLoading.value,
                     ),

@@ -84,12 +84,12 @@ class AuthRepo {
   Future<Response> resetPassword({
     required String token,
     required String newPassword,
-    required String confirmPassword,
   }) async {
-    return await apiClient.postData(ApiConstants.resetPassword, {
-      "newPassword": newPassword,
-      "confirmPassword": confirmPassword,
-    });
+    return await apiClient.postData(
+      ApiConstants.resetPassword,
+      {"newPassword": newPassword},
+      extraHeaders: {'Authorization': 'Bearer $token'},
+    );
   }
 
   /// ===================== SOCIAL LOGIN =====================
