@@ -97,9 +97,19 @@ class SignUpController extends GetxController {
   Future<void> signInWithGoogle() async {
     try {
       isLoading.value = true;
-      await _authService.signInWithGoogle();
-      Helpers.showSuccess('Google Login successful');
-      await RouteDecider.goNext();
+      final response = await _authService.signInWithGoogle();
+      if(response?.statusCode == 200){
+        final data = response?.data;
+        final authData = data['data'] is Map ? data['data'] : data;
+        final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
+        if(!isOnboardingCompleted){
+          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+        }else{
+          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+        }
+      }else{
+        Helpers.showError(response?.data['message']);
+      }
     } catch (e) {
       Helpers.showError(e.toString());
       Helpers.showDebugLog(e.toString());
@@ -111,9 +121,19 @@ class SignUpController extends GetxController {
   Future<void> signInWithApple() async {
     try {
       isLoading.value = true;
-      await _authService.signInWithApple();
-      Helpers.showSuccess('Apple Login successful');
-      await RouteDecider.goNext();
+      final response = await _authService.signInWithApple();
+      if(response?.statusCode == 200){
+        final data = response?.data;
+        final authData = data['data'] is Map ? data['data'] : data;
+        final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
+        if(!isOnboardingCompleted){
+          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+        }else{
+          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+        }
+      }else{
+        Helpers.showError(response?.data['message']);
+      }
     } catch (e) {
       Helpers.showError(e.toString());
       Helpers.showDebugLog(e.toString());

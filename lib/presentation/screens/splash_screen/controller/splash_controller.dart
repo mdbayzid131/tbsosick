@@ -19,29 +19,6 @@ class SplashController extends GetxController {
 
     final token = await StorageService.getString(StorageConstants.bearerToken);
 
-    // 🔹 Onboarding already seen
-    if (onboardingSeen) {
-      if (token.isNotEmpty) {
-        Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
-      } else {
-        Get.offAllNamed(AppRoutes.LOGIN);
-      }
-    }
-   else{
-    Get.offAllNamed(AppRoutes.ONBOARDING);
-   }
-  }
-
-
-}
-
-class RouteDecider {
-  static Future<void> goNext() async {
-    final onboardingSeen =
-        await StorageService.getBool(StorageConstants.onboardingSeen) ?? false;
-
-    final token = await StorageService.getString(StorageConstants.bearerToken);
-
     if (!onboardingSeen) {
       Get.offAllNamed(AppRoutes.ONBOARDING);
       return;
@@ -52,17 +29,17 @@ class RouteDecider {
       return;
     }
 
-    final quickSetupDone =
-        await StorageService.getBool(StorageConstants.quickSetupCompleted) ??
-        false;
+    final bool quickSetupCompleted = 
+        await StorageService.getBool(StorageConstants.quickSetupCompleted) ?? false;
 
-    if (quickSetupDone) {
+    if (quickSetupCompleted) {
       Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
     } else {
       Get.offAllNamed(AppRoutes.WELCOME_PAGE);
     }
   }
 }
+
 
 
 
