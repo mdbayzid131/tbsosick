@@ -38,7 +38,7 @@ void showOtpVerifyBottomSheet(BuildContext context, String email) {
 
       final Response response = await authService.verifyOtp(
         email: email,
-        otp: int.parse(otpController.text.trim()),
+        otp: otpController.text.trim(),
       );
 
       ApiChecker.checkWriteApi(response);
@@ -46,7 +46,7 @@ void showOtpVerifyBottomSheet(BuildContext context, String email) {
       if (response.statusCode == 200 && response.data != null) {
         final String token = response.data['data'];
 
-        Helpers.showCustomSnackBar(tr.otpVerifySuccess, isError: false);
+        Helpers.showSuccess(tr.otpVerifySuccess);
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
 
@@ -55,7 +55,7 @@ void showOtpVerifyBottomSheet(BuildContext context, String email) {
         }
       }
     } catch (e) {
-      Helpers.showCustomSnackBar(e.toString(), isError: true);
+      Helpers.showError(e.toString());
     } finally {
       isLoading.value = false;
     }

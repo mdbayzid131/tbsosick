@@ -51,14 +51,11 @@ class ProfileController extends GetxController {
       if (response.statusCode != null &&
           response.statusCode! >= 200 &&
           response.statusCode! < 300) {
-        Helpers.showCustomSnackBar(
-          'Profile updated successfully',
-          isError: false,
-        );
+        Helpers.showSuccess('Profile updated successfully');
         await getProfileData(); // Refresh data
       }
     } catch (e) {
-      Helpers.showDebugLog("updateProfile error => $e");
+      Helpers.showError(e.toString());
     } finally {
       isLoading.value = false;
     }

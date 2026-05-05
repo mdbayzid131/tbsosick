@@ -9,7 +9,7 @@ class AuthRepo {
   Future<FirebaseAuth> get auth async {
     return FirebaseAuth.instance;
   }
-  
+
   // final googleSignIn = GoogleSignIn.instance;
   //  final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -72,11 +72,11 @@ class AuthRepo {
   /// ===================== OTP VERIFY =====================
   Future<Response> otpVerify({
     required String email,
-    required int oneTimeCode,
+    required String otp,
   }) async {
     return await apiClient.postData(ApiConstants.verifyEmail, {
       "email": email,
-      "oneTimeCode": oneTimeCode,
+      "otp": otp,
     });
   }
 
@@ -89,7 +89,7 @@ class AuthRepo {
     return await apiClient.postData(ApiConstants.resetPassword, {
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
-    }, resetToken: token);
+    });
   }
 
   /// ===================== SOCIAL LOGIN =====================
@@ -137,5 +137,4 @@ class AuthRepo {
       "confirmPassword": confirmPassword,
     });
   }
-
 }

@@ -11,7 +11,7 @@ class SignUpController extends GetxController {
   final AuthService _authService = Get.find();
 
   final selectedCountry = "".obs;
- 
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -40,11 +40,16 @@ class SignUpController extends GetxController {
   }
 
   Future<void> signUp() async {
-  
     nameError.value = Validators.name(nameController.text);
     emailError.value = Validators.email(emailController.text);
     phoneError.value = Validators.phoneNumber(phoneController.text);
-    passwordError.value = Validators.password(passwordController.text,requireDigit: true,requireSpecialChar: true,requireUppercase: true,minLength: 8);
+    passwordError.value = Validators.password(
+      passwordController.text,
+      requireDigit: true,
+      requireSpecialChar: true,
+      requireUppercase: true,
+      minLength: 8,
+    );
     confirmPasswordError.value = Validators.confirmPassword(
       passwordController.text,
       confirmPasswordController.text,
@@ -72,14 +77,14 @@ class SignUpController extends GetxController {
         phone: phoneController.text.trim(),
         country: selectedCountry.value,
       );
-     ApiChecker.checkWriteApi(response);
+      ApiChecker.checkWriteApi(response);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Helpers.showCustomSnackBar(
-          'Registration successful. Login now.', isError: false); 
+        Helpers.showSuccess('Registration successful. Plz verify your email');
         // Navigate to VerifyEmail screen and pass the email
         Get.toNamed(
-          AppRoutes.LOGIN,
+          AppRoutes.OTP_VERIFICATION,
+          arguments: emailController.text.trim(),
         );
       }
     } catch (e) {
@@ -93,10 +98,10 @@ class SignUpController extends GetxController {
     try {
       isLoading.value = true;
       await _authService.signInWithGoogle();
-      Helpers.showCustomSnackBar('Google Login successful', isError: false);
+      Helpers.showSuccess('Google Login successful');
       await RouteDecider.goNext();
     } catch (e) {
-      Helpers.showCustomSnackBar(e.toString(), isError: true);
+      Helpers.showError(e.toString());
       Helpers.showDebugLog(e.toString());
     } finally {
       isLoading.value = false;
@@ -107,11 +112,11 @@ class SignUpController extends GetxController {
     try {
       isLoading.value = true;
       await _authService.signInWithApple();
-      Helpers.showCustomSnackBar('Apple Login successful', isError: false);
+      Helpers.showSuccess('Apple Login successful');
       await RouteDecider.goNext();
     } catch (e) {
-      Helpers.showCustomSnackBar(e.toString(), isError: true);
-          Helpers.showDebugLog(e.toString());
+      Helpers.showError(e.toString());
+      Helpers.showDebugLog(e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -313,7 +318,6 @@ class SignUpController extends GetxController {
     "Vietnam",
     "Yemen",
     "Zambia",
-    "Zimbabwe"
+    "Zimbabwe",
   ].obs;
-
 }

@@ -74,7 +74,7 @@ class BottomNabBarController extends GetxController {
         getFavoriteCard(showLoading: false),
       ]);
     } catch (e) {
-      Helpers.showCustomSnackBar(e.toString(), isError: true);
+      Helpers.showError(e.toString());
     } finally {
       isLoading.value = false;
     }

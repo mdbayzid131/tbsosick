@@ -6,7 +6,7 @@ class ApiConstants {
   //
   // Auth Endpoints
   static const String login = '/auth/login';
-  static const String signup = '/user';
+  static const String signup = '/users';
   static const String logout = '/auth/logout';
   static const String refreshToken = '/auth/refresh';
   static const String forgotPassword = '/auth/forget-password';
@@ -14,8 +14,8 @@ class ApiConstants {
   // User Endpoints
 
   // Add your API endpoints here
-  static const String resendVerifyEmail = '/auth/resend-verify-email';
-  static const String verifyEmail = '/auth/verify-email';
+  static const String resendVerifyEmail = '/auth/resend-otp';
+  static const String verifyEmail = '/auth/verify-otp';
   static const String resetPassword = '/auth/reset-password';
 
   //  Endpoints

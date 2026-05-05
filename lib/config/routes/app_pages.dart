@@ -7,6 +7,7 @@ import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactiv
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/preferred_note_method.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/welcome_page.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/otp_verification_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/sign_up_screen.dart';
 
 import 'package:tbsosick/presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
@@ -88,6 +89,11 @@ final pages = [
   GetPage(
     name: AppRoutes.NO_INTERNET,
     page: () => NoInternetScreen(),
+    bindings: [],
+  ),
+  GetPage(
+    name: AppRoutes.OTP_VERIFICATION,
+    page: () => OtpVerificationScreen(),
     bindings: [],
   ),
   GetPage(

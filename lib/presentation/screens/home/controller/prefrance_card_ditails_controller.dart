@@ -45,10 +45,7 @@ class PrefranceCardDetailsController extends GetxController {
   Future<void> downloadCard({required String cardId}) async {
     try {
       isDownloading.value = true;
-      Helpers.showCustomSnackBar(
-        "Download started...",
-        isError: false,
-      );
+      Helpers.showSuccess("Download started...");
 
       // Request notification permission (Android 13+)
       if (await Permission.notification.isDenied) {

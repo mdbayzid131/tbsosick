@@ -59,10 +59,10 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
 
       if (response.statusCode == 200) {
         isSuccess.value = true;
-        Helpers.showCustomSnackBar('Password reset successfully', isError: false);
+        Helpers.showSuccess('Password reset successfully');
       }
     } catch (e) {
-      Helpers.showDebugLog("resetPassword error => $e");
+      Helpers.showError(e.toString());
     } finally {
       isLoading.value = false;
     }

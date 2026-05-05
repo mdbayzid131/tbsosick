@@ -50,10 +50,10 @@ void showResetPasswordBottomSheet(BuildContext context) {
 
       if (response.statusCode == 200) {
         isSuccess.value = true;
-        Helpers.showCustomSnackBar(tr.passwordResetSent, isError: false);
+        Helpers.showSuccess(tr.passwordResetSent);
       }
     } catch (e) {
-      Helpers.showDebugLog("forgotPassword error => $e");
+      Helpers.showError(e.toString());
     } finally {
       isLoading.value = false;
     }

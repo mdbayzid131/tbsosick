@@ -168,14 +168,15 @@ class AuthService extends GetxService {
   }
 
   /// ===================== OTP VERIFY =====================
-  Future<Response> verifyOtp({required String email, required int otp}) async {
+  Future<Response> verifyOtp({required String email, required String otp}) async {
     try {
       final response = await _authRepo.otpVerify(
         email: email,
-        oneTimeCode: otp,
+        otp: otp,
       );
-      // If OTP verification logs the user in directly:
-      // await _handleAuthResponse(response);
+      if (response.statusCode == 200) {
+        await _handleAuthResponse(response);
+      }
       return response;
     } catch (e) {
       rethrow;
@@ -183,9 +184,9 @@ class AuthService extends GetxService {
   }
 
   /// ===================== RESEND OTP =====================
-  Future<void> resendOtp(String email) async {
+  Future<Response> resendOtp(String email) async {
     try {
-      await _authRepo.resendOtp(email: email);
+      return await _authRepo.resendOtp(email: email);
     } catch (e) {
       rethrow;
     }
@@ -233,9 +234,10 @@ class AuthService extends GetxService {
     // Adjust these keys based on your actual API response structure
     // Example: { "data": { "accessToken": "...", "refreshToken": "..." } }
     final data = response.data;
+    if (data is! Map) return;
 
     // Check if data is nested
-    final authData = data['data'] ?? data;
+    final authData = data['data'] is Map ? data['data'] : data;
 
     final String? accessToken = authData['accessToken'] ?? authData['token'];
     final String? refreshToken = authData['refreshToken'];
@@ -249,6 +251,14 @@ class AuthService extends GetxService {
       await StorageService.setString(
         StorageConstants.refreshToken,
         refreshToken,
+      );
+    }
+
+    final bool? isOnboardingCompleted = authData['isOnboardingCompleted'];
+    if (isOnboardingCompleted != null) {
+      await StorageService.setBool(
+        StorageConstants.quickSetupCompleted,
+        isOnboardingCompleted,
       );
     }
   }

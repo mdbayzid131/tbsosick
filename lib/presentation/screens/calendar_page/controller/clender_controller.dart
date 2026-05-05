@@ -44,16 +44,13 @@ class CalendarController extends GetxController {
       final response = await _userDataRepository.deleteEvent(id: id);
       ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
-        Helpers.showCustomSnackBar(
-          'Event deleted successfully',
-          isError: false,
-        );
+        Helpers.showSuccess('Event deleted successfully');
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
         events.removeWhere((element) => element.id == id);
       }
     } catch (e) {
-      Helpers.showDebugLog("deleteEvent error => $e");
+      Helpers.showError(e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -89,10 +86,7 @@ class CalendarController extends GetxController {
       ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
         // Show success message
-        Helpers.showCustomSnackBar(
-          'Event created successfully',
-          isError: false,
-        );
+        Helpers.showSuccess('Event created successfully');
 
         // Refresh the events list immediately to update UI
         await getEvents();
@@ -137,14 +131,11 @@ class CalendarController extends GetxController {
       ApiChecker.checkWriteApi(response);
       if (response.statusCode == 200) {
         // Show success message
-        Helpers.showCustomSnackBar(
-          'Event updated successfully',
-          isError: false,
-        );
+        Helpers.showSuccess('Event updated successfully');
         await getEvents();
       }
     } catch (e) {
-      Helpers.showDebugLog("updateEvent error => $e");
+      Helpers.showError(e.toString());
     } finally {
       isLoading.value = false;
     }

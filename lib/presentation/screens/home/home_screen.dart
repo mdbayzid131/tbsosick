@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onRefresh: () async {
         final result = await Connectivity().checkConnectivity();
         if (result == ConnectivityResult.none) {
-          Helpers.showCustomSnackBar('No internet connection', isError: true);
+          Helpers.showError('No internet connection');
           return;
         }
         await _bottomNabBarController.loadHomeData();

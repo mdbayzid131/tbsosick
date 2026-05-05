@@ -45,16 +45,29 @@ class LoginController extends GetxController {
     try {
       isLoading.value = true;
 
+      final email = emailController.text.trim();
+      final password = passwordController.text.trim();
+
       Response response = await _authService.login(
-        email: emailController.text,
-        password: passwordController.text,
+        email: email,
+        password: password,
       );
 
-      // ApiChecker response validate
       ApiChecker.checkWriteApi(response);
+
       if (response.statusCode == 200) {
-        Helpers.showCustomSnackBar('Login successful', isError: false);
-        await RouteDecider.goNext();
+        Helpers.showSuccess('Login successful');
+        Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+      } else if ((response.data is Map &&
+          response.data['message'] != null &&
+          response.data['message'].toString().contains(
+            'Please verify your account',
+          ))) {
+        // If unverified, resend OTP and go to verification screen
+        await _authService.resendOtp(email);
+        Get.toNamed(AppRoutes.OTP_VERIFICATION, arguments: email);
+      } else {
+        Helpers.showError(response.data['message']);
       }
     } catch (e) {
       Helpers.showDebugLog("login error => $e");
@@ -81,11 +94,11 @@ class LoginController extends GetxController {
       // print(response.statusCode);
       // print('==================================================');
       // if (response.statusCode == 200) {
-      Helpers.showCustomSnackBar('Logout successful', isError: false);
+      Helpers.showSuccess('Logout successful');
       Get.offAllNamed(AppRoutes.LOGIN);
       // }
     } catch (e) {
-      Helpers.showCustomSnackBar(e.toString(), isError: true);
+      Helpers.showError(e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -95,10 +108,10 @@ class LoginController extends GetxController {
     try {
       isLoading.value = true;
       await _authService.signInWithGoogle();
-      Helpers.showCustomSnackBar('Google Login successful', isError: false);
+      Helpers.showSuccess('Google Login successful');
       await RouteDecider.goNext();
     } catch (e) {
-      Helpers.showCustomSnackBar(e.toString(), isError: true);
+      Helpers.showError(e.toString());
       Helpers.showDebugLog(e.toString());
     } finally {
       isLoading.value = false;
@@ -109,10 +122,10 @@ class LoginController extends GetxController {
     try {
       isLoading.value = true;
       await _authService.signInWithApple();
-      Helpers.showCustomSnackBar('Apple Login successful', isError: false);
+      Helpers.showSuccess('Apple Login successful');
       await RouteDecider.goNext();
     } catch (e) {
-      Helpers.showCustomSnackBar(e.toString(), isError: true);
+      Helpers.showError(e.toString());
       Helpers.showDebugLog(e.toString());
     } finally {
       isLoading.value = false;
