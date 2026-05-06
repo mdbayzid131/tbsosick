@@ -4,6 +4,7 @@ import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/models/card_count_model.dart';
 import 'package:tbsosick/data/models/favorite_Card_model.dart';
 import 'package:tbsosick/data/models/private_card_model.dart';
+import 'package:tbsosick/data/models/library_card_model.dart';
 import 'package:tbsosick/data/models/public_card_model.dart';
 import 'package:tbsosick/data/models/user_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
@@ -21,6 +22,8 @@ class BottomNabBarController extends GetxController {
   final RxList<PublicCard> publicCards = <PublicCard>[].obs;
   // card list
   final RxList<PrivateCard> privateCards = <PrivateCard>[].obs;
+  // library cards (unified list)
+  final RxList<LibraryCard> libraryCards = <LibraryCard>[].obs;
   // favorite cards
   final RxList<FavoriteCard> favoriteCards = <FavoriteCard>[].obs;
   // user data
@@ -36,6 +39,7 @@ class BottomNabBarController extends GetxController {
   final RxBool isPublicMoreLoading = false.obs;
   final RxBool isPrivateMoreLoading = false.obs;
   final RxBool isFavoriteMoreLoading = false.obs;
+  final RxBool isLibraryMoreLoading = false.obs;
 
 
 
@@ -43,9 +47,11 @@ class BottomNabBarController extends GetxController {
   int _publicPage = 1;
   int _privatePage = 1;
   int _favoritePage = 1;
+  int _libraryPage = 1;
   final RxBool hasMoreFavorite = true.obs;
   final RxBool hasMorePublic = true.obs;
   final RxBool hasMorePrivate = true.obs;
+  final RxBool hasMoreLibrary = true.obs;
 
   // Search
   final RxString searchController = ''.obs;
@@ -72,6 +78,7 @@ class BottomNabBarController extends GetxController {
         getPrivateCard(showLoading: false),
         getPublicCard(showLoading: false),
         getFavoriteCard(showLoading: false),
+        getLibraryCards(showLoading: false),
       ]);
     } catch (e) {
       Helpers.showError(e.toString());
@@ -146,6 +153,67 @@ class BottomNabBarController extends GetxController {
       Helpers.showDebugLog("Error loading more public cards: $e");
     } finally {
       isPublicMoreLoading.value = false;
+    }
+  }
+
+  /// 🔥 GET LIBRARY CARDS (Unified List)
+  Future<void> getLibraryCards({bool showLoading = true}) async {
+    try {
+      if (showLoading) isLoading.value = true;
+      _libraryPage = 1;
+
+      final response = await _userDataRepository.getLibraryCards(
+        page: _libraryPage,
+        search: searchController.value,
+        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
+      );
+      ApiChecker.checkGetApi(response);
+      if (response.statusCode == 200 && response.data != null) {
+        final Map<String, dynamic> data =
+            (response.data['data'] is Map<String, dynamic>)
+                ? response.data['data']
+                : response.data;
+
+        final result = LibraryCardsResponse.fromJson(data);
+        libraryCards.assignAll(result.data);
+        hasMoreLibrary.value = _libraryPage < result.meta.totalPages;
+      }
+    } catch (e) {
+      Helpers.showDebugLog("Error loading library cards: $e");
+    } finally {
+      if (showLoading) isLoading.value = false;
+    }
+  }
+
+  Future<void> loadMoreLibraryCards() async {
+    if (!hasMoreLibrary.value || isLibraryMoreLoading.value) return;
+
+    try {
+      isLibraryMoreLoading.value = true;
+      _libraryPage++;
+
+      final response = await _userDataRepository.getLibraryCards(
+        page: _libraryPage,
+        search: searchController.value,
+        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
+      );
+      ApiChecker.checkGetApi(response);
+      if (response.statusCode == 200 && response.data != null) {
+        final Map<String, dynamic> data =
+            (response.data['data'] is Map<String, dynamic>)
+                ? response.data['data']
+                : response.data;
+        final result = LibraryCardsResponse.fromJson(data);
+        libraryCards.addAll(result.data);
+        hasMoreLibrary.value = _libraryPage < result.meta.totalPages;
+      }
+    } catch (e) {
+      _libraryPage--; // rollback
+      Helpers.showDebugLog("Error loading more library cards: $e");
+    } finally {
+      isLibraryMoreLoading.value = false;
     }
   }
 

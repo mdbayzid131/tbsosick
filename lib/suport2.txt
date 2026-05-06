@@ -1,7 +1,54 @@
-I/flutter (28825): ➡️ ====> API Request: POST http://10.10.7.47:5001/api/v1/auth/social-login
- 
-I/flutter (28825): ➡️ ====> API Headers: {Content-Type: application/json, Authorization: null}
- 
-I/flutter (28825): ➡️ ====> API Query Parameters: {}
- 
-I/flutter (28825): ➡️ ====> API Data: {provider: google, idToken: eyJhbGciOiJSUzI1NiIsImtpZCI6IjY0NzAxNGY5YTRhNGNiYmI2ZTlhYTFmOWUzMGVlNmNjNzBkYTc0MmEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIzNDQ0NTgzNTc3NjQtbmIwNDRhaWVwaWJuYmcycjUwZzJyNjExM2xmMzJ2b2IuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIzNDQ0NTgzNTc3NjQtcDdjaW5wOGlrMm9ncnV0OWc1NHVtMm5xbm4wbnFnOWcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTM2NDU5MDczNTAyNzU3ODEwNjMiLCJlbWFpbCI6Im1kc29oYWcwODUyNjdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJNZCBTb2hhZyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJX0JiOGRTcUU5VFJYUEIyS3Ewd3VMZmJ6SGVFNWc5d0JYQnA4M3U2cWdDaHRHWnc9czk2LWMiLCJnaXZlbl9uYW1lIjoiTWQiLCJmYW1pbHlfbmFtZSI6IlNvaGFnIiwiaWF0IjoxNzc2NzIwNTQ2LCJleHAiOjE3NzY3MjQxNDZ9.GfePUPT6w2Z7bqrs73ZpBFeFjB2kDr07t8Z44uqqKp5hxpJbBx2UZEALD64u9-9xeabGTvgJFrnhkSvHl8sPSkZ3otvFtB0zSGoz3vRsYUXqSPS2huuxEKkob7LRrDOhu9FSSM5mehNUw9BwbtZdjgDHCkv1tXJRmM_5w9bv911bsB1NxpXoz8ec0nnlaZ7Vi-xDHZ8A3jNsbXlGDXzZAzx-nNk8
+{
+    "success": true,
+    "statusCode": 200,
+    "message": "Public preference cards fetched successfully",
+    "meta": {
+        "total": 3,
+        "limit": 10,
+        "page": 1,
+        "totalPages": 1,
+        "hasNext": false,
+        "hasPrev": false
+    },
+    "data": [
+        {
+            "id": "69fa75bf2e847c6eff532b84",
+            "cardTitle": "private card",
+            "surgeon": {
+                "name": "Dr. Smith",
+                "specialty": "Orthopedics"
+            },
+            "verificationStatus": "UNVERIFIED",
+            "isFavorited": false,
+            "downloadCount": 0,
+            "createdAt": "2026-05-05T22:57:03.066Z",
+            "updatedAt": "2026-05-05T22:57:03.066Z"
+        },
+        {
+            "id": "69fa75722e847c6eff532b2e",
+            "cardTitle": "Knee Arthroscopy",
+            "surgeon": {
+                "name": "Dr. Smith",
+                "specialty": "Orthopedics"
+            },
+            "verificationStatus": "UNVERIFIED",
+            "isFavorited": false,
+            "downloadCount": 0,
+            "createdAt": "2026-05-05T22:55:46.375Z",
+            "updatedAt": "2026-05-05T22:55:46.375Z"
+        },
+        {
+            "id": "69fa74ed6a09469aab1a3d46",
+            "cardTitle": "public card",
+            "surgeon": {
+                "name": "Dr. Smith",
+                "specialty": "Orthopedics"
+            },
+            "verificationStatus": "UNVERIFIED",
+            "isFavorited": false,
+            "downloadCount": 0,
+            "createdAt": "2026-05-05T22:53:33.440Z",
+            "updatedAt": "2026-05-05T22:53:33.440Z"
+        }
+    ]
+}

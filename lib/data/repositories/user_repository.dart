@@ -35,6 +35,29 @@ class UserDataRepository {
     );
   }
 
+  // Get library cards (unified list)
+  Future<Response<dynamic>> getLibraryCards({
+    int page = 1,
+    String search = '',
+    String specialty = '',
+    String verificationStatus = '',
+  }) async {
+    final query = <String, dynamic>{
+      'page': page,
+      'limit': 10,
+    };
+    if (search.isNotEmpty) {
+      query['searchTerm'] = search;
+    }
+    if (specialty.isNotEmpty) {
+      query['specialty'] = specialty;
+    }
+    if (verificationStatus.isNotEmpty) {
+      query['verificationStatus'] = verificationStatus;
+    }
+    return await _apiClient.getData(ApiConstants.getAllCardsList, query: query);
+  }
+
   // Get all public preference card
   Future<Response<dynamic>> getPublicCard({
     int page = 1,

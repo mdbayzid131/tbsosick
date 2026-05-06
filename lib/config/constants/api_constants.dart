@@ -22,8 +22,9 @@ class ApiConstants {
   static const String getSuturesList = '/sutures';
 
   static const String profile = '/user/profile';
-  static const String getCardCount = '/preference-card/count';
+  static const String getCardCount = '/preference-cards/stats';
   static const String getAllCard = '/preference-card';
+  static const String getAllCardsList = '/preference-cards';
   static const String getPublicCard = '/preference-card/public';
   static const String getPrivateCard = '/preference-card/private';
   static const String getCardDetails = '/preference-card/{id}';

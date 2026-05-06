@@ -21,11 +21,7 @@ class LibraryScreen extends StatefulWidget {
   State<LibraryScreen> createState() => _LibraryScreenState();
 }
 
-class _LibraryScreenState extends State<LibraryScreen>
-    with SingleTickerProviderStateMixin {
-  // Tab controller for switching between Preference card and Private Card
-  late TabController _tabController;
-
+class _LibraryScreenState extends State<LibraryScreen> {
   // Search controller
   final TextEditingController _searchController = TextEditingController();
 
@@ -34,19 +30,7 @@ class _LibraryScreenState extends State<LibraryScreen>
   bool _verifiedOnly = false;
 
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-
-    _tabController.addListener(() {
-      // এখানে indexIsChanging ব্যবহার করো না
-      setState(() {});
-    });
-  }
-
-  @override
   void dispose() {
-    _tabController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -84,26 +68,8 @@ class _LibraryScreenState extends State<LibraryScreen>
               _buildHeader(),
               SizedBox(height: 30.h),
               SizedBox(height: 16.h),
-              TabBar(
-                splashFactory: NoSplash.splashFactory,
-                overlayColor: WidgetStateProperty.all(Colors.transparent),
-                dividerColor: Colors.transparent,
-                controller: _tabController,
-                indicatorColor: Colors.transparent,
-                tabs: [
-                  _tab1(AppLocalizations.of(context)!.preferenceCardTab, 0),
-                  _tab2(AppLocalizations.of(context)!.privateCardTab, 1)
-                ],
-              ),
-              SizedBox(height: 16.h),
               Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildPreferenceCardsList(),
-                    _buildPrivateCardsList(),
-                  ],
-                ),
+                child: _buildLibraryCardsList(),
               ),
             ],
           ),
@@ -191,155 +157,9 @@ class _LibraryScreenState extends State<LibraryScreen>
     );
   }
 
-  // Tab buttons for Preference card and Private Card
-  // Widget _buildTabButtons(String text, int index) {
-  //   final isSelected = _tabController.index == index;
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: 20.w),
-  //     child: Row(
-  //       children: [
-  //         // Preference card tab
-  //         Expanded(
-  //           child: GestureDetector(
-  //             onTap: () {
-  //               // _tabController.animateTo(0);
-  //               // setState(() {});
-  //             },
-  //             child: Tab1(isSelected),
-  //           ),
-  //         ),
-  //         SizedBox(width: 12.w),
-  //         // Private Card tab
-  //         Expanded(
-  //           child: GestureDetector(
-  //             onTap: () {
-  //               _tabController.animateTo(1);
-  //               setState(() {});
-  //             },
-  //             child: Tab2(isSelected),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
-  Widget _tab2(String text, int index) {
-    final bool isSelected = _tabController.index == index;
-    return Container(
-      height: 90.h,
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18.r),
-        gradient: isSelected
-            ? LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff6950A7), Color(0xfF9746FB)],
-              )
-            : null,
-        color: !isSelected ? Color(0xffCFC8DF) : null,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 40.w,
-              width: 40.w,
-              decoration: BoxDecoration(
-                color: !isSelected ? Color(0xffD9D3E5) : Color(0xff9E6DE4),
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: Icon(
-                Icons.description_outlined,
-                color: !isSelected ? Color(0xff6D6D6D) : Colors.white,
-                size: 20.sp,
-              ),
-            ),
-            SizedBox(width: 10.h),
-            Expanded(
-              child: Text(
-                text,
-                style: GoogleFonts.roboto(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: !isSelected ? Color(0xff6D6D6D) : Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _tab1(String text, int index) {
-    final bool isSelected = _tabController.index == index;
-    return Container(
-      height: 90.h,
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18.r),
-        gradient: isSelected
-            ? LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff6950A7), Color(0xfF9746FB)],
-              )
-            : null,
-        color: !isSelected ? Color(0xffCFC8DF) : null,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 40.w,
-              width: 40.w,
-              decoration: BoxDecoration(
-                color: !isSelected ? Color(0xffD9D3E5) : Color(0xff9E6DE4),
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: Icon(
-                Icons.description_outlined,
-                color: !isSelected ? Color(0xff6D6D6D) : Colors.white,
-                size: 20.sp,
-              ),
-            ),
-            SizedBox(width: 10.h),
-            Expanded(
-              child: Text(
-                text,
-                style: GoogleFonts.roboto(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: !isSelected ? Color(0xff6D6D6D) : Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Preference cards list
-  Widget _buildPreferenceCardsList() {
+  // Unified Library Cards List
+  Widget _buildLibraryCardsList() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -348,7 +168,7 @@ class _LibraryScreenState extends State<LibraryScreen>
           // Card count
           Obx(
             () => Text(
-              '${controller.publicCards.length} ${AppLocalizations.of(context)!.preferenceCards}',
+              '${controller.libraryCards.length} Cards',
               style: GoogleFonts.arimo(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
@@ -362,185 +182,47 @@ class _LibraryScreenState extends State<LibraryScreen>
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                /// No Cards Found
-                /*Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 30.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(
-                      color: const Color(0xFFE5E7EB),
-                      width: 1.w,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        blurRadius: 8.r,
-                        offset: Offset(0, 2.h),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.search, color: Color(0xFF8B5CF6), size: 40.sp),
-                      SizedBox(height: 16.h),
-                      Text(
-                        'No cards found',
-                        style: GoogleFonts.arimo(
-                          fontSize: 17.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xff8E8E93),
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        'Try adjusting your filters',
-                        style: GoogleFonts.arimo(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFFC6C6C8),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),*/
                 Obx(() {
-                  if (controller.isLoading.value) {
+                  if (controller.isLoading.value && controller.libraryCards.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (controller.errorMessage.isNotEmpty) {
                     return Center(child: Text(controller.errorMessage.value));
                   }
-                  if (controller.publicCards.isEmpty) {
+                  if (controller.libraryCards.isEmpty) {
                     return Center(child: Text(AppLocalizations.of(context)!.noCardsFound));
                   }
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.publicCards.length + 1,
+                    itemCount: controller.libraryCards.length + 1,
                     itemBuilder: (context, index) {
-                      if (index == controller.publicCards.length) {
-                        return _buildLoadMoreButton(
-                          isLoading: controller.isPublicMoreLoading.value,
-                          hasMore: controller.hasMorePublic.value,
-                          onPressed: () => controller.loadMorePublic(),
+                      if (index == controller.libraryCards.length) {
+                         return _buildLoadMoreButton(
+                          isLoading: controller.isLibraryMoreLoading.value,
+                          hasMore: controller.hasMoreLibrary.value,
+                          onPressed: () => controller.loadMoreLibraryCards(),
                         );
                       }
-                      final card = controller.publicCards[index];
+                      final card = controller.libraryCards[index];
                       return Column(
                         children: [
                           ProcedureCard(
                             onDownloadTap: () => _prefranceCardDetailsController.downloadCard(cardId: card.id),
-                            // isPrivetCard: false,
                             cardId: card.id,
                             title: card.cardTitle,
                             specialty: card.surgeonSpecialty,
-                            isVerified: card.isVerified,
+                            isVerified: card.verificationStatus == 'VERIFIED',
                             doctor: "${AppLocalizations.of(context)!.by} ${card.surgeonName}",
-                            downloads: card.totalDownloads,
+                            downloads: card.downloadCount,
                             updatedTime: card.updatedAt,
-                            isFavorite: card.isFavorite,
+                            isFavorite: card.isFavorited,
                             isPrivateCard: false,
                             onFavoriteToggle: () async {
-                              if (card.isFavorite) {
+                              if (card.isFavorited) {
                                 await homePageController.removeFromFavoriteList(cardId: card.id);
                               } else {
                                 await homePageController.addToFavoriteList(cardId: card.id);
-                              }
-                            },
-                          ),
-                          SizedBox(height: 12.h),
-                        ],
-                      );
-                    },
-                  );
-                }),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Private cards list (same structure)
-  Widget _buildPrivateCardsList() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Card count
-          Obx(
-            () => Text(
-              '${controller.privateCards.length} ${AppLocalizations.of(context)!.privateCards}',
-              style: GoogleFonts.arimo(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF6B7280),
-              ),
-            ),
-          ),
-          SizedBox(height: 12.h),
-          // Cards list
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                Obx(() {
-                  if (controller.isLoading.value) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (controller.errorMessage.isNotEmpty) {
-                    return Center(child: Text(controller.errorMessage.value));
-                  }
-                  if (controller.privateCards.isEmpty) {
-                    return Padding(
-                      padding: EdgeInsets.only(top: 20.h),
-                      child: Center(
-                        child: Text(AppLocalizations.of(context)!.noPrivateCardsFound),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.privateCards.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == controller.privateCards.length) {
-                        return _buildLoadMoreButton(
-                          isLoading: controller.isPrivateMoreLoading.value,
-                          hasMore: controller.hasMorePrivate.value,
-                          onPressed: () => controller.loadMorePrivate(),
-                        );
-                      }
-                      final card = controller.privateCards[index];
-                      return Column(
-                        children: [
-                          ProcedureCard(
-                            onDownloadTap: () => _prefranceCardDetailsController.downloadCard(cardId: card.id),
-                            isPrivateCard: true,
-                            cardId: card.id,
-                            title: card.cardTitle,
-                            specialty: card.surgeonSpecialty,
-                            isVerified: card.isVerified,
-                            doctor: card.surgeonName,
-                            downloads: card.totalDownloads,
-                            updatedTime: card.updatedAt,
-                            isFavorite: card.isFavorite,
-                            onFavoriteToggle: () async {
-                              if (card.isFavorite) {
-                                await homePageController.removeFromFavoriteList(
-                                  cardId: card.id,
-                                );
-                              } else {
-                                await homePageController.addToFavoriteList(
-                                  cardId: card.id,
-                                );
                               }
                             },
                           ),

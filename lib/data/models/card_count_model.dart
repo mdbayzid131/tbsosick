@@ -2,22 +2,16 @@ class CardCountModel {
   final int allCardsCount;
   final int myCardsCount;
 
-  CardCountModel({
-    required this.allCardsCount,
-    required this.myCardsCount,
-  });
+  CardCountModel({required this.allCardsCount, required this.myCardsCount});
 
   factory CardCountModel.fromJson(Map<String, dynamic> json) {
     return CardCountModel(
-      allCardsCount: json['AllCardsCount'] ?? 0,
-      myCardsCount: json['myCardsCount'] ?? 0,
+      allCardsCount: json['publicCards'] ?? 0,
+      myCardsCount: json['myCards'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'AllCardsCount': allCardsCount,
-      'myCardsCount': myCardsCount,
-    };
+    return {'publicCards': allCardsCount, 'myCards': myCardsCount};
   }
 }
