@@ -43,14 +43,14 @@ class EventModel {
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
     return EventModel(
-      id: json['_id'] ?? '',
+      id: json['id'] ?? json['_id'] ?? '',
       title: json['title'] ?? '',
       date: DateTime.parse(json['date']),
       time: json['time'] ?? '',
-      durationHours: json['durationHours'] ?? 0,
+      durationHours: json['durationInHours'] ?? json['durationHours'] ?? 0,
       eventType: json['eventType'] ?? '',
       location: json['location'] ?? '',
-      notes: json['notes'], // null safe
+      notes: json['notes'],
     );
   }
 

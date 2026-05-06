@@ -73,18 +73,18 @@ class EventDetailsModel {
 
   factory EventDetailsModel.fromJson(Map<String, dynamic> json) {
     return EventDetailsModel(
-      id: json['_id'] ?? '',
+      id: json['id'] ?? json['_id'] ?? '',
       userId: json['userId'] ?? '',
       title: json['title'] ?? '',
       date: DateTime.parse(json['date']),
       time: json['time'] ?? '',
-      durationHours: json['durationHours'] ?? 0,
+      durationHours: json['durationInHours'] ?? json['durationHours'] ?? 0,
       eventType: json['eventType'] ?? '',
       location: json['location'] ?? '',
       preferenceCard: json['preferenceCard'] != null
           ? PreferenceCardModel.fromJson(json['preferenceCard'])
           : null,
-      notes: json['notes'],
+      notes: json['keyNotes'] ?? json['notes'],
       personnel: json['personnel'] != null
           ? PersonnelModel.fromJson(json['personnel'])
           : null,
@@ -123,7 +123,8 @@ class PersonnelModel {
   factory PersonnelModel.fromJson(Map<String, dynamic> json) {
     return PersonnelModel(
       leadSurgeon: json['leadSurgeon'] ?? '',
-      surgicalTeam: List<String>.from(json['surgicalTeam'] ?? []),
+      surgicalTeam: List<String>.from(
+          json['surgicalTeamMembers'] ?? json['surgicalTeam'] ?? []),
     );
   }
 

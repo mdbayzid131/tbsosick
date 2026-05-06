@@ -21,7 +21,7 @@ class ApiConstants {
   static const String getSuppliesList = '/supplies';
   static const String getSuturesList = '/sutures';
 
-  static const String profile = '/user/profile';
+  static const String profile = '/users/profile';
   static const String getSpecialties = '/specialties';
   static const String getCardCount = '/preference-cards/stats';
   static const String getAllCard = '/preference-card';
@@ -39,6 +39,7 @@ class ApiConstants {
   static const String getFavoriteCard = '/users/me/favorites';
 
   // Event Endpoints
+  static const String getCalendarHighlights = '/events/calendar-highlights';
   static const String getEventsList = '/events';
   static const String getEventDetailById = '/events/{id}';
   static const String postEvent = '/events';

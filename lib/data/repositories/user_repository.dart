@@ -243,8 +243,21 @@ class UserDataRepository {
   }
 
   // Event Endpoints
-  Future<Response<dynamic>> getEventsList() async {
-    return await _apiClient.getData(ApiConstants.getEventsList);
+  Future<Response<dynamic>> getCalendarHighlights({
+    required String from,
+    required String to,
+  }) async {
+    return await _apiClient.getData(
+      ApiConstants.getCalendarHighlights,
+      query: {'from': from, 'to': to},
+    );
+  }
+
+  Future<Response<dynamic>> getEventsList({String? date}) async {
+    return await _apiClient.getData(
+      ApiConstants.getEventsList,
+      query: date != null ? {'date': date} : null,
+    );
   }
 
   // Get event detail by id

@@ -2,24 +2,23 @@ class CreateEventRequestModel {
   final String title;
   final String date; // yyyy-MM-dd
   final String time;
-  final int durationHours;
+  final int durationInHours;
   final String eventType;
   final String location;
-  final String notes;
+  final String keyNotes;
   final PersonnelRequestModel personnel;
-
-  final String? linkPreferenceCardId;
+  final String? preferenceCard;
 
   CreateEventRequestModel({
     required this.title,
     required this.date,
     required this.time,
-    required this.durationHours,
+    required this.durationInHours,
     required this.eventType,
     required this.location,
-    required this.notes,
+    required this.keyNotes,
     required this.personnel,
-    this.linkPreferenceCardId,
+    this.preferenceCard,
   });
 
   Map<String, dynamic> toJson() {
@@ -27,14 +26,14 @@ class CreateEventRequestModel {
       "title": title,
       "date": date,
       "time": time,
-      "durationHours": durationHours,
+      "durationInHours": durationInHours,
       "eventType": eventType,
       "location": location,
-      "notes": notes,
+      "keyNotes": keyNotes,
       "personnel": personnel.toJson(),
     };
-    if (linkPreferenceCardId != null && linkPreferenceCardId!.isNotEmpty) {
-      data["preferenceCard"] = linkPreferenceCardId;
+    if (preferenceCard != null && preferenceCard!.isNotEmpty) {
+      data["preferenceCard"] = preferenceCard;
     }
     return data;
   }
@@ -42,14 +41,17 @@ class CreateEventRequestModel {
 
 class PersonnelRequestModel {
   final String leadSurgeon;
-  final List<String> surgicalTeam;
+  final List<String> surgicalTeamMembers;
 
   PersonnelRequestModel({
     required this.leadSurgeon,
-    required this.surgicalTeam,
+    required this.surgicalTeamMembers,
   });
 
   Map<String, dynamic> toJson() {
-    return {"leadSurgeon": leadSurgeon, "surgicalTeam": surgicalTeam};
+    return {
+      "leadSurgeon": leadSurgeon,
+      "surgicalTeamMembers": surgicalTeamMembers
+    };
   }
 }

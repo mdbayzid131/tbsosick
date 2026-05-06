@@ -13,11 +13,31 @@ class CalendarController extends GetxController {
   final UserDataRepository _userDataRepository = Get.find();
   final RxList<EventModel> events = <EventModel>[].obs;
   final Rx<EventDetailsModel?> eventDetails = Rx<EventDetailsModel?>(null);
+  final RxMap<String, int> calendarHighlights = <String, int>{}.obs;
 
-  Future<void> getEvents() async {
+  Future<void> getCalendarHighlights({
+    required String from,
+    required String to,
+  }) async {
+    try {
+      final response = await _userDataRepository.getCalendarHighlights(
+        from: from,
+        to: to,
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = response.data['data'] ?? {};
+        calendarHighlights.value =
+            data.map((key, value) => MapEntry(key, value as int));
+      }
+    } catch (e) {
+      Helpers.showDebugLog("getCalendarHighlights error => $e");
+    }
+  }
+
+  Future<void> getEvents({String? date}) async {
     try {
       isLoading.value = true;
-      final response = await _userDataRepository.getEventsList();
+      final response = await _userDataRepository.getEventsList(date: date);
       ApiChecker.checkGetApi(response);
 
       if (response.statusCode == 200) {
@@ -61,23 +81,23 @@ class CalendarController extends GetxController {
     required String title,
     required String date,
     required String time,
-    required int durationHours,
+    required int durationInHours,
     required String eventType,
     required String location,
-    required String notes,
-    String? linkPreferenceCardId,
+    required String keyNotes,
+    String? preferenceCard,
     required PersonnelRequestModel personnel,
   }) async {
     final event = CreateEventRequestModel(
       title: title,
       date: date,
       time: time,
-      durationHours: durationHours,
+      durationInHours: durationInHours,
       eventType: eventType,
       location: location,
-      notes: notes,
+      keyNotes: keyNotes,
       personnel: personnel,
-      linkPreferenceCardId: linkPreferenceCardId,
+      preferenceCard: preferenceCard,
     );
 
     try {
@@ -104,23 +124,23 @@ class CalendarController extends GetxController {
     required String title,
     required String date,
     required String time,
-    required int durationHours,
+    required int durationInHours,
     required String eventType,
     required String location,
-    required String notes,
+    required String keyNotes,
     required PersonnelRequestModel personnel,
-    String? linkPreferenceCardId,
+    String? preferenceCard,
   }) async {
     final event = CreateEventRequestModel(
       title: title,
       date: date,
       time: time,
-      durationHours: durationHours,
+      durationInHours: durationInHours,
       eventType: eventType,
       location: location,
-      notes: notes,
+      keyNotes: keyNotes,
       personnel: personnel,
-      linkPreferenceCardId: linkPreferenceCardId,
+      preferenceCard: preferenceCard,
     );
     try {
       isLoading.value = true;

@@ -58,7 +58,14 @@ void showAddEventBottomSheet(
               padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 20.r,
+                    offset: Offset(0, -5.h),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
@@ -316,7 +323,7 @@ void showAddEventBottomSheet(
                                       final personnel = PersonnelRequestModel(
                                         leadSurgeon: leadSurgeonController.text
                                             .trim(),
-                                        surgicalTeam: List<String>.from(
+                                        surgicalTeamMembers: List<String>.from(
                                           teamMembers,
                                         ),
                                       );
@@ -325,13 +332,13 @@ void showAddEventBottomSheet(
                                         title: title,
                                         date: date,
                                         time: time,
-                                        durationHours: dur,
+                                        durationInHours: dur,
                                         eventType: eventType,
                                         location: loc,
-                                        linkPreferenceCardId:
+                                        preferenceCard:
                                             linkPreferenceCardIdController.text
                                                 .trim(),
-                                        notes: notes,
+                                        keyNotes: notes,
                                         personnel: personnel,
                                       );
 
@@ -349,6 +356,8 @@ void showAddEventBottomSheet(
                                       Get.back();
                                     },
                             ),
+
+                            SizedBox(height: 30.h),
                           ],
                         ),
                       ),
@@ -406,20 +415,29 @@ Widget _buildPersonnelCard({
                 showLabel: false,
               ),
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: 12.w),
             GestureDetector(
               onTap: onAdd,
               child: Container(
                 width: 48.w,
                 height: 48.w,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6750A4),
-                  borderRadius: BorderRadius.circular(12.r),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF9945FF), Color(0xFF8B5CF6)],
+                  ),
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF9945FF).withOpacity(0.3),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 4.h),
+                    ),
+                  ],
                 ),
                 child: Icon(
-                  Icons.person_add_alt_outlined,
+                  Icons.add_rounded,
                   color: Colors.white,
-                  size: 22.sp,
+                  size: 28.sp,
                 ),
               ),
             ),
@@ -543,23 +561,26 @@ Widget _buildTextField({
             color: const Color(0xFF9CA3AF),
           ),
           filled: true,
-          fillColor: const Color(0xFFF9FAFB),
+          fillColor: const Color(0xFFF3F4F6),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: const BorderSide(color: Color(0xFF8B5CF6)),
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: const BorderSide(color: Color(0xFF9945FF), width: 1.5),
           ),
           contentPadding: EdgeInsets.symmetric(
             horizontal: 16.w,
-            vertical: 14.h,
+            vertical: 16.h,
           ),
+          prefixIcon: icon != null
+              ? Icon(icon, color: const Color(0xFF9945FF), size: 20.sp)
+              : null,
         ),
       ),
     ],

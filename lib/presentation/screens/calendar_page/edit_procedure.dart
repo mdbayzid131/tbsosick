@@ -509,17 +509,17 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                 });
                 final personnel = PersonnelRequestModel(
                   leadSurgeon: _leadSurgeonController.text.trim(),
-                  surgicalTeam: List<String>.from(_teamMembers),
+                  surgicalTeamMembers: List<String>.from(_teamMembers),
                 );
                 await calendarController.updateEvent(
                   id: widget.id,
                   title: title,
                   date: date,
                   time: time,
-                  durationHours: dur,
+                  durationInHours: dur,
                   eventType: _eventType,
                   location: loc,
-                  notes: notes,
+                  keyNotes: notes,
                   personnel: personnel,
                 );
                 setState(() {
