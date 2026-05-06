@@ -13,6 +13,8 @@ import 'package:tbsosick/presentation/screens/auth_screen/sign_up_screen.dart';
 import 'package:tbsosick/presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
 import 'package:tbsosick/presentation/screens/home/binding/card_datails_binding.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
+import 'package:tbsosick/presentation/screens/my%20cards/binding/my_cards_binding.dart';
+import 'package:tbsosick/presentation/screens/my%20cards/view/my_cards_screeen.dart';
 import 'package:tbsosick/presentation/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:tbsosick/presentation/screens/splash_screen/binding/splash_binding.dart';
 import 'package:tbsosick/presentation/screens/splash_screen/splash_screen.dart';
@@ -36,6 +38,7 @@ class AppRoutes {
   static const String OTP_VERIFICATION = '/otp-verification';
   static const String NO_INTERNET = '/no-internet';
   static const String CARD_DETAILS = '/card-details';
+  static const String MY_CARDS = '/my-cards';
 }
 
 final Transition transition = Transition.rightToLeft;
@@ -100,5 +103,10 @@ final pages = [
     name: AppRoutes.CARD_DETAILS,
     page: () => PreferenceCardDetails(),
     bindings: [CardDetailsBinding()],
+  ),
+  GetPage(
+    name: AppRoutes.MY_CARDS,
+    page: () => MyCardsScreen(),
+    bindings: [MyCardsBinding()],
   ),
 ];

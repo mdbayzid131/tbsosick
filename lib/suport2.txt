@@ -1,54 +1,48 @@
 {
     "success": true,
     "statusCode": 200,
-    "message": "Public preference cards fetched successfully",
-    "meta": {
-        "total": 3,
-        "limit": 10,
-        "page": 1,
-        "totalPages": 1,
-        "hasNext": false,
-        "hasPrev": false
-    },
-    "data": [
-        {
-            "id": "69fa75bf2e847c6eff532b84",
-            "cardTitle": "private card",
-            "surgeon": {
-                "name": "Dr. Smith",
-                "specialty": "Orthopedics"
-            },
-            "verificationStatus": "UNVERIFIED",
-            "isFavorited": false,
-            "downloadCount": 0,
-            "createdAt": "2026-05-05T22:57:03.066Z",
-            "updatedAt": "2026-05-05T22:57:03.066Z"
+    "message": "Preference card details fetched",
+    "data": {
+        "id": "69fa75722e847c6eff532b2e",
+        "createdBy": "69fa332f3fc3858c40265420",
+        "cardTitle": "Knee Arthroscopy",
+        "surgeon": {
+            "fullName": "Dr. Smith",
+            "handPreference": "Right",
+            "specialty": "Orthopedics",
+            "contactNumber": "+1234567890",
+            "musicPreference": "Classical"
         },
-        {
-            "id": "69fa75722e847c6eff532b2e",
-            "cardTitle": "Knee Arthroscopy",
-            "surgeon": {
-                "name": "Dr. Smith",
-                "specialty": "Orthopedics"
+        "supplies": [
+            {
+                "name": "Sterile Gauze",
+                "quantity": 10
             },
-            "verificationStatus": "UNVERIFIED",
-            "isFavorited": false,
-            "downloadCount": 0,
-            "createdAt": "2026-05-05T22:55:46.375Z",
-            "updatedAt": "2026-05-05T22:55:46.375Z"
-        },
-        {
-            "id": "69fa74ed6a09469aab1a3d46",
-            "cardTitle": "public card",
-            "surgeon": {
-                "name": "Dr. Smith",
-                "specialty": "Orthopedics"
-            },
-            "verificationStatus": "UNVERIFIED",
-            "isFavorited": false,
-            "downloadCount": 0,
-            "createdAt": "2026-05-05T22:53:33.440Z",
-            "updatedAt": "2026-05-05T22:53:33.440Z"
-        }
-    ]
+            {
+                "name": "Surgical Drape",
+                "quantity": 2
+            }
+        ],
+        "sutures": [
+            {
+                "name": "3-0 Vicryl",
+                "quantity": 1
+            }
+        ],
+        "medication": "Lidocaine with Epinephrine",
+        "instruments": "Standard arthroscopy set",
+        "positioningEquipment": "Leg holder",
+        "prepping": "Betadine",
+        "workflow": "Incision, portal placement, joint inspection...",
+        "keyNotes": "Be careful with the ACL",
+        "photoLibrary": [],
+        "downloadCount": 0,
+        "published": true,
+        "visibility": "PUBLIC",
+        "verificationStatus": "UNVERIFIED",
+        "isDeleted": false,
+        "createdAt": "2026-05-05T22:55:46.375Z",
+        "updatedAt": "2026-05-05T22:55:46.375Z",
+        "_v": 0
+    }
 }

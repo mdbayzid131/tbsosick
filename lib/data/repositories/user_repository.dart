@@ -42,10 +42,7 @@ class UserDataRepository {
     String specialty = '',
     String verificationStatus = '',
   }) async {
-    final query = <String, dynamic>{
-      'page': page,
-      'limit': 10,
-    };
+    final query = <String, dynamic>{'page': page, 'limit': 10};
     if (search.isNotEmpty) {
       query['searchTerm'] = search;
     }
@@ -100,6 +97,23 @@ class UserDataRepository {
     return await _apiClient.getData(ApiConstants.getPrivateCard, query: query);
   }
 
+  // Get my preference cards
+  Future<Response<dynamic>> getMyCards({
+    int page = 1,
+    String search = '',
+    String visibility = 'public',
+  }) async {
+    final query = <String, dynamic>{
+      'page': page,
+      'limit': 10,
+      'visibility': visibility,
+    };
+    if (search.isNotEmpty) {
+      query['searchTerm'] = search;
+    }
+    return await _apiClient.getData(ApiConstants.getMyCards, query: query);
+  }
+
   // Get all favorite preference card
   Future<Response<dynamic>> getFavoriteCard({
     int page = 1,
@@ -145,6 +159,15 @@ class UserDataRepository {
     );
   }
 
+  Future<Response<dynamic>> getSpecialties() async {
+    return await _apiClient.getData(
+      ApiConstants.getSpecialties,
+      query: {
+        'limit': 100,
+      }, // Assuming we want to fetch all specialties, giving a high limit
+    );
+  }
+
   Future<Response<dynamic>> getSutures({
     String search = '',
     int page = 1,
@@ -157,7 +180,7 @@ class UserDataRepository {
   }
 
   Future<Response<dynamic>> addToFavoriteList({required String cardId}) async {
-    return await _apiClient.postData(
+    return await _apiClient.putData(
       ApiConstants.addToFavoriteList.replaceAll('{id}', cardId),
       {},
     );

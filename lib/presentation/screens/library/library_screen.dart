@@ -66,11 +66,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
           child: Column(
             children: [
               _buildHeader(),
-              SizedBox(height: 30.h),
-              SizedBox(height: 16.h),
-              Expanded(
-                child: _buildLibraryCardsList(),
-              ),
+              // SizedBox(height: 30.h),
+              SizedBox(height: 12.h),
+              Expanded(child: _buildLibraryCardsList()),
             ],
           ),
         ),
@@ -89,7 +87,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         bottom: 20.h,
       ),
       decoration: BoxDecoration(
-                             color: Color(0xFF6C36B2),
+        color: Color(0xFF6C36B2),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24.r),
           bottomRight: Radius.circular(24.r),
@@ -157,7 +155,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
   }
 
-
   // Unified Library Cards List
   Widget _buildLibraryCardsList() {
     return Padding(
@@ -179,61 +176,64 @@ class _LibraryScreenState extends State<LibraryScreen> {
           SizedBox(height: 12.h),
           // Cards list
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                Obx(() {
-                  if (controller.isLoading.value && controller.libraryCards.isEmpty) {
-                    return const Center(child: CircularProgressIndicator());
+            child: Obx(() {
+              if (controller.isLoading.value &&
+                  controller.libraryCards.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (controller.errorMessage.isNotEmpty) {
+                return Center(child: Text(controller.errorMessage.value));
+              }
+              if (controller.libraryCards.isEmpty) {
+                return Center(
+                  child: Text(AppLocalizations.of(context)!.noCardsFound),
+                );
+              }
+              return ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: controller.libraryCards.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == controller.libraryCards.length) {
+                    return _buildLoadMoreButton(
+                      isLoading: controller.isLibraryMoreLoading.value,
+                      hasMore: controller.hasMoreLibrary.value,
+                      onPressed: () => controller.loadMoreLibraryCards(),
+                    );
                   }
-                  if (controller.errorMessage.isNotEmpty) {
-                    return Center(child: Text(controller.errorMessage.value));
-                  }
-                  if (controller.libraryCards.isEmpty) {
-                    return Center(child: Text(AppLocalizations.of(context)!.noCardsFound));
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.libraryCards.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == controller.libraryCards.length) {
-                         return _buildLoadMoreButton(
-                          isLoading: controller.isLibraryMoreLoading.value,
-                          hasMore: controller.hasMoreLibrary.value,
-                          onPressed: () => controller.loadMoreLibraryCards(),
-                        );
-                      }
-                      final card = controller.libraryCards[index];
-                      return Column(
-                        children: [
-                          ProcedureCard(
-                            onDownloadTap: () => _prefranceCardDetailsController.downloadCard(cardId: card.id),
-                            cardId: card.id,
-                            title: card.cardTitle,
-                            specialty: card.surgeonSpecialty,
-                            isVerified: card.verificationStatus == 'VERIFIED',
-                            doctor: "${AppLocalizations.of(context)!.by} ${card.surgeonName}",
-                            downloads: card.downloadCount,
-                            updatedTime: card.updatedAt,
-                            isFavorite: card.isFavorited,
-                            isPrivateCard: false,
-                            onFavoriteToggle: () async {
-                              if (card.isFavorited) {
-                                await homePageController.removeFromFavoriteList(cardId: card.id);
-                              } else {
-                                await homePageController.addToFavoriteList(cardId: card.id);
-                              }
-                            },
-                          ),
-                          SizedBox(height: 12.h),
-                        ],
-                      );
-                    },
+                  final card = controller.libraryCards[index];
+                  return Column(
+                    children: [
+                      ProcedureCard(
+                        onDownloadTap: () => _prefranceCardDetailsController
+                            .downloadCard(cardId: card.id),
+                        cardId: card.id,
+                        title: card.cardTitle,
+                        specialty: card.surgeonSpecialty,
+                        isVerified: card.verificationStatus == 'VERIFIED',
+                        doctor:
+                            "${AppLocalizations.of(context)!.by} ${card.surgeonName}",
+                        downloads: card.downloadCount,
+                        updatedTime: card.updatedAt,
+                        isFavorite: card.isFavorited,
+                        isPrivateCard: false,
+                        onFavoriteToggle: () async {
+                          if (card.isFavorited) {
+                            await homePageController.removeFromFavoriteList(
+                              cardId: card.id,
+                            );
+                          } else {
+                            await homePageController.addToFavoriteList(
+                              cardId: card.id,
+                            );
+                          }
+                        },
+                      ),
+                      SizedBox(height: 12.h),
+                    ],
                   );
-                }),
-              ],
-            ),
+                },
+              );
+            }),
           ),
         ],
       ),
@@ -331,88 +331,33 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   ),
                   SizedBox(height: 12.h),
                   // Specialty chips
-                  Wrap(
-                    spacing: 8.w,
-                    runSpacing: 8.h,
-                    children: [
-                      _buildFilterChip(AppLocalizations.of(context)!.all, _selectedSpecialty == 'All', () {
-                        setModalState(() {
-                          _selectedSpecialty = 'All';
-                        });
-                      }),
-                      _buildFilterChip(
-                        AppLocalizations.of(context)!.orthopedicSurgery,
-                        _selectedSpecialty == 'Orthopedic Surgery',
-                        () {
-                          setModalState(() {
-                            _selectedSpecialty = 'Orthopedic Surgery';
-                          });
-                        },
-                      ),
-                      _buildFilterChip(
-                        AppLocalizations.of(context)!.cardiacSurgery,
-                        _selectedSpecialty == 'Cardiac Surgery',
-                        () {
-                          setModalState(() {
-                            _selectedSpecialty = 'Cardiac Surgery';
-                          });
-                        },
-                      ),
-                      _buildFilterChip(
-                        AppLocalizations.of(context)!.generalSurgery,
-                        _selectedSpecialty == 'General Surgery',
-                        () {
-                          setModalState(() {
-                            _selectedSpecialty = 'General Surgery';
-                          });
-                        },
-                      ),
-                      _buildFilterChip(
-                        AppLocalizations.of(context)!.neurosurgery,
-                        _selectedSpecialty == 'Neurosurgery',
-                        () {
-                          setModalState(() {
-                            _selectedSpecialty = 'Neurosurgery';
-                          });
-                        },
-                      ),
-                      _buildFilterChip(
-                        AppLocalizations.of(context)!.plasticSurgery,
-                        _selectedSpecialty == 'Plastic Surgery',
-                        () {
-                          setModalState(() {
-                            _selectedSpecialty = 'Plastic Surgery';
-                          });
-                        },
-                      ),
-                      _buildFilterChip(
-                        AppLocalizations.of(context)!.vascularSurgery,
-                        _selectedSpecialty == 'Vascular Surgery',
-                        () {
-                          setModalState(() {
-                            _selectedSpecialty = 'Vascular Surgery';
-                          });
-                        },
-                      ),
-                      _buildFilterChip(
-                        AppLocalizations.of(context)!.thoracicSurgery,
-                        _selectedSpecialty == 'Thoracic Surgery',
-                        () {
-                          setModalState(() {
-                            _selectedSpecialty = 'Thoracic Surgery';
-                          });
-                        },
-                      ),
-                      _buildFilterChip(
-                        AppLocalizations.of(context)!.pediatricSurgery,
-                        _selectedSpecialty == 'Pediatric Surgery',
-                        () {
-                          setModalState(() {
-                            _selectedSpecialty = 'Pediatric Surgery';
-                          });
-                        },
-                      ),
-                    ],
+                  Obx(
+                    () => Wrap(
+                      spacing: 8.w,
+                      runSpacing: 8.h,
+                      children: [
+                        _buildFilterChip(
+                          AppLocalizations.of(context)!.all,
+                          _selectedSpecialty == 'All',
+                          () {
+                            setModalState(() {
+                              _selectedSpecialty = 'All';
+                            });
+                          },
+                        ),
+                        ...controller.specialtiesList.map(
+                          (specialty) => _buildFilterChip(
+                            specialty.name,
+                            _selectedSpecialty == specialty.name,
+                            () {
+                              setModalState(() {
+                                _selectedSpecialty = specialty.name;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 24.h),
                   // Verified Only toggle

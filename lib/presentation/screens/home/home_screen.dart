@@ -6,6 +6,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
@@ -301,143 +302,150 @@ class _HomeScreenState extends State<HomeScreen> {
         Stack(
           clipBehavior: Clip.none,
           children: [
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(
-                left: 20.w,
-                right: 20.w,
-                top: 50.h,
-                bottom: 32.h,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(24.r),
-                  bottomRight: Radius.circular(24.r),
-                ),
-                color: Color(0xFF6C36B2),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(
+                    left: 20.w,
+                    right: 20.w,
+                    top: 50.h,
+                    bottom: 32.h,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(24.r),
+                      bottomRight: Radius.circular(24.r),
+                    ),
+                    color: Color(0xFF6C36B2),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _greetingForNow(context),
-                              style: GoogleFonts.arimo(
-                                fontSize: 16.sp,
-                                color: const Color(0xffE8DEF8),
-                              ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _greetingForNow(context),
+                                  style: GoogleFonts.arimo(
+                                    fontSize: 16.sp,
+                                    color: const Color(0xffE8DEF8),
+                                  ),
+                                ),
+                                SizedBox(height: 4.h),
+                                Obx(
+                                  () => Text(
+                                    _bottomNabBarController.user.value?.name ??
+                                        'Loading...',
+                                    style: GoogleFonts.arimo(
+                                      fontSize: 24.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 4.h),
-                            Obx(
-                              () => Text(
-                                _bottomNabBarController.user.value?.name ??
-                                    'Loading...',
+                          ),
+                          Stack(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  showNotificationBottomSheet(context);
+                                },
+                                child: Container(
+                                  height: 40.w,
+                                  width: 40.w,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xff7965AF),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.notifications_none_rounded,
+                                    color: Colors.white,
+                                    size: 20.sp,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 6.w,
+                                top: 6.h,
+                                child: Container(
+                                  height: 8.w,
+                                  width: 8.w,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.h),
+                      Container(
+                        height: 46.h,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 14.w,
+                          vertical: 1.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xffF2F2F7),
+                          borderRadius: BorderRadius.circular(24.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.search_outlined,
+                              size: 22.sp,
+                              color: const Color(0xff9AA1AF),
+                            ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: TextField(
+                                controller: TextEditingController(
+                                  text: _bottomNabBarController
+                                      .searchController
+                                      .value,
+                                ),
+                                onChanged: (value) {
+                                  _bottomNabBarController
+                                          .searchController
+                                          .value =
+                                      value;
+                                },
                                 style: GoogleFonts.arimo(
-                                  fontSize: 24.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
+                                  fontSize: 14.sp,
+                                  color: Colors.black,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: tr.searchProceduresCards,
+                                  hintStyle: GoogleFonts.arimo(
+                                    fontSize: 16.sp,
+                                    color: const Color(0xff79747E),
+                                  ),
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.zero,
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Stack(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              showNotificationBottomSheet(context);
-                            },
-                            child: Container(
-                              height: 40.w,
-                              width: 40.w,
-                              decoration: const BoxDecoration(
-                                color: Color(0xff7965AF),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.notifications_none_rounded,
-                                color: Colors.white,
-                                size: 20.sp,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            right: 6.w,
-                            top: 6.h,
-                            child: Container(
-                              height: 8.w,
-                              width: 8.w,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      SizedBox(height: 80.h),
                     ],
                   ),
-                  SizedBox(height: 20.h),
-                  Container(
-                    height: 46.h,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14.w,
-                      vertical: 1.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffF2F2F7),
-                      borderRadius: BorderRadius.circular(24.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search_outlined,
-                          size: 22.sp,
-                          color: const Color(0xff9AA1AF),
-                        ),
-                        SizedBox(width: 10.w),
-                        Expanded(
-                          child: TextField(
-                            controller: TextEditingController(
-                              text: _bottomNabBarController
-                                  .searchController
-                                  .value,
-                            ),
-                            onChanged: (value) {
-                              _bottomNabBarController.searchController.value =
-                                  value;
-                            },
-                            style: GoogleFonts.arimo(
-                              fontSize: 14.sp,
-                              color: Colors.black,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: tr.searchProceduresCards,
-                              hintStyle: GoogleFonts.arimo(
-                                fontSize: 16.sp,
-                                color: const Color(0xff79747E),
-                              ),
-                              border: InputBorder.none,
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 80.h),
-                ],
-              ),
+                ),
+                SizedBox(height: 100.w),
+              ],
             ),
             Positioned(
-              bottom: -90.w,
+              bottom: 10.w,
               left: 0,
               right: 0,
               child: Padding(
@@ -446,20 +454,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   () => Row(
                     children: [
                       Expanded(
-                        child: _statCard(
-                          icon: Icons.description_outlined,
-                          count:
-                              "${_bottomNabBarController.cardCount.value?.allCardsCount ?? 00}",
-                          label: tr.allCard,
+                        child: Container(
+                          child: _statCard(
+                            onTap: () {
+                              // Get.toNamed(AppRoutes.ALL_CARDS); // Uncomment when all cards route exists
+                            },
+                            icon: Icons.description_outlined,
+                            count:
+                                "${_bottomNabBarController.cardCount.value?.allCardsCount ?? 00}",
+                            label: tr.allCard,
+                          ),
                         ),
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
-                        child: _statCard(
-                          icon: Icons.person_outline,
-                          count:
-                              "${_bottomNabBarController.cardCount.value?.myCardsCount ?? 00}",
-                          label: tr.myCards,
+                        child: Container(
+                          child: _statCard(
+                            onTap: () {
+                              Get.toNamed(AppRoutes.MY_CARDS);
+                            },
+                            icon: Icons.person_outline,
+                            count:
+                                "${_bottomNabBarController.cardCount.value?.myCardsCount ?? 00}",
+                            label: tr.myCards,
+                          ),
                         ),
                       ),
                     ],
@@ -469,60 +487,64 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        SizedBox(height: 100.w),
       ],
     );
   }
 
   Widget _statCard({
+    required VoidCallback onTap,
     required IconData icon,
     required String count,
     required String label,
   }) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xffE7E0EC), width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.08),
-            blurRadius: 12.r,
-            offset: Offset(0, 6.h),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 40.w,
-            width: 40.w,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14.r),
-              color: const Color(0xffE8DEF8),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: const Color(0xffE7E0EC), width: 1.w),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.08),
+              blurRadius: 12.r,
+              offset: Offset(0, 6.h),
             ),
-            child: Icon(icon, size: 20.sp, color: const Color(0xff6750A4)),
-          ),
-          SizedBox(height: 14.h),
-          Text(
-            count,
-            style: GoogleFonts.arimo(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xff1C1B1F),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 40.w,
+              width: 40.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14.r),
+                color: const Color(0xffE8DEF8),
+              ),
+              child: Icon(icon, size: 20.sp, color: const Color(0xff6750A4)),
             ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            label,
-            style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              color: const Color(0xff79747E),
+            SizedBox(height: 14.h),
+            Text(
+              count,
+              style: GoogleFonts.arimo(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xff1C1B1F),
+              ),
             ),
-          ),
-        ],
+            SizedBox(height: 4.h),
+            Text(
+              label,
+              style: GoogleFonts.arimo(
+                fontSize: 14.sp,
+                color: const Color(0xff79747E),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

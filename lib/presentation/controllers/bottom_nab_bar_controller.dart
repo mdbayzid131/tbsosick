@@ -8,6 +8,7 @@ import 'package:tbsosick/data/models/library_card_model.dart';
 import 'package:tbsosick/data/models/public_card_model.dart';
 import 'package:tbsosick/data/models/user_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
+import 'package:tbsosick/data/models/specialty_model.dart';
 
 class BottomNabBarController extends GetxController {
   final UserDataRepository _userDataRepository = UserDataRepository();
@@ -26,6 +27,8 @@ class BottomNabBarController extends GetxController {
   final RxList<LibraryCard> libraryCards = <LibraryCard>[].obs;
   // favorite cards
   final RxList<FavoriteCard> favoriteCards = <FavoriteCard>[].obs;
+  // specialties
+  final RxList<Specialty> specialtiesList = <Specialty>[].obs;
   // user data
   final Rx<UserModel?> user = Rx<UserModel?>(null);
   // card count
@@ -79,11 +82,24 @@ class BottomNabBarController extends GetxController {
         getPublicCard(showLoading: false),
         getFavoriteCard(showLoading: false),
         getLibraryCards(showLoading: false),
+        getSpecialtiesList(),
       ]);
     } catch (e) {
       Helpers.showError(e.toString());
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> getSpecialtiesList() async {
+    try {
+      final response = await _userDataRepository.getSpecialties();
+      if (response.data != null && response.data['success'] == true) {
+        final List<dynamic> data = response.data['data'];
+        specialtiesList.value = data.map((e) => Specialty.fromJson(e)).toList();
+      }
+    } catch (e) {
+      print("Error fetching specialties: $e");
     }
   }
 

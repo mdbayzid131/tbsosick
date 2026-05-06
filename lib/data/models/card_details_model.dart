@@ -37,6 +37,8 @@ class PreferenceCardDetailsModel {
   final String verificationStatus;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String visibility;
+  final bool isDeleted;
 
   PreferenceCardDetailsModel({
     required this.id,
@@ -57,11 +59,13 @@ class PreferenceCardDetailsModel {
     required this.verificationStatus,
     required this.createdAt,
     required this.updatedAt,
+    required this.visibility,
+    required this.isDeleted,
   });
 
   factory PreferenceCardDetailsModel.fromJson(Map<String, dynamic> json) {
     return PreferenceCardDetailsModel(
-      id: json['_id'] ?? '',
+      id: json['id'] ?? json['_id'] ?? '',
       createdBy: json['createdBy'] ?? '',
       cardTitle: json['cardTitle'] ?? '',
       surgeon: Surgeon.fromJson(json['surgeon'] ?? {}),
@@ -83,6 +87,8 @@ class PreferenceCardDetailsModel {
       verificationStatus: json['verificationStatus'] ?? '',
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+      visibility: json['visibility'] ?? '',
+      isDeleted: json['isDeleted'] ?? false,
     );
   }
 }

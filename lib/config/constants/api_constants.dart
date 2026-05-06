@@ -22,17 +22,21 @@ class ApiConstants {
   static const String getSuturesList = '/sutures';
 
   static const String profile = '/user/profile';
+  static const String getSpecialties = '/specialties';
   static const String getCardCount = '/preference-cards/stats';
   static const String getAllCard = '/preference-card';
   static const String getAllCardsList = '/preference-cards';
   static const String getPublicCard = '/preference-card/public';
   static const String getPrivateCard = '/preference-card/private';
-  static const String getCardDetails = '/preference-card/{id}';
+  static const String getMyCards = '/preference-cards/my-cards';
+  static const String getCardDetails = '/preference-cards/{id}';
   static const String downloadCard = '/preference-card/{id}/download';
-  static const String addToFavoriteList = '/preference-card/{id}/favorite';
-  static const String removeFromFavoriteList = '/preference-card/{id}/favorite';
+  static const String addToFavoriteList =
+      '/preference-cards/favorites/cards/{id}';
+  static const String removeFromFavoriteList =
+      '/preference-cards/favorites/cards/{id}';
   // static const String getFavoriteCard = '/preference-card/favorite';
-  static const String getFavoriteCard = '/preference-card/favorites';
+  static const String getFavoriteCard = '/users/me/favorites';
 
   // Event Endpoints
   static const String getEventsList = '/events';
