@@ -19,27 +19,34 @@ class EditProcedureScreen extends StatefulWidget {
 
 class _EditProcedureScreenState extends State<EditProcedureScreen> {
   final CalendarController calendarController = Get.find();
-  late final TextEditingController _procedureNameController = TextEditingController(
-    text: calendarController.eventDetails.value?.title ?? '',
-  );
+  late final TextEditingController _procedureNameController =
+      TextEditingController(
+        text: calendarController.eventDetails.value?.title ?? '',
+      );
 
   late final TextEditingController _dateController = TextEditingController(
     text: calendarController.eventDetails.value?.date != null
-        ? DateFormat('yyyy-MM-dd').format(calendarController.eventDetails.value!.date)
+        ? DateFormat(
+            'yyyy-MM-dd',
+          ).format(calendarController.eventDetails.value!.date)
         : '',
   );
   late final TextEditingController _timeController = TextEditingController(
     text: calendarController.eventDetails.value?.time ?? '',
-  );  
-  late final TextEditingController _durationController = TextEditingController(
-    text: calendarController.eventDetails.value?.durationHours.toString() ?? '1',
   );
-  late final TextEditingController _leadSurgeonController = TextEditingController();
-  late final TextEditingController _teamMemberController = TextEditingController();
+  late final TextEditingController _durationController = TextEditingController(
+    text:
+        calendarController.eventDetails.value?.durationHours.toString() ?? '1',
+  );
+  late final TextEditingController _leadSurgeonController =
+      TextEditingController();
+  late final TextEditingController _teamMemberController =
+      TextEditingController();
   late final TextEditingController _operatingRoomController =
       TextEditingController();
-  late final TextEditingController _anesthesiaController = TextEditingController();
-  late final TextEditingController _notesController = TextEditingController();  
+  late final TextEditingController _anesthesiaController =
+      TextEditingController();
+  late final TextEditingController _notesController = TextEditingController();
 
   List<String> _teamMembers = [];
   String _eventType = 'SURGERY';
@@ -124,7 +131,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
         bottom: 20.h,
       ),
       decoration: BoxDecoration(
-                              color: Color(0xFF6C36B2),
+        color: Color(0xFF6C36B2),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24.r),
           bottomRight: Radius.circular(24.r),
@@ -275,19 +282,42 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                     ),
                     SizedBox(height: 8.h),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF2F2F7),
+                        color: Color(0xFFF9FAFB),
                         borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: const Color(0xFFE5E7EB)),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: _eventType,
+                          dropdownColor: Colors.white,
                           items: [
-                            DropdownMenuItem(value: 'SURGERY', child: Text(AppLocalizations.of(context)!.surgery)),
-                            DropdownMenuItem(value: 'MEETING', child: Text(AppLocalizations.of(context)!.meeting)),
-                            DropdownMenuItem(value: 'CONSULTATION', child: Text(AppLocalizations.of(context)!.consultation)),
-                            DropdownMenuItem(value: 'OTHER', child: Text(AppLocalizations.of(context)!.other)),
+                            DropdownMenuItem(
+                              value: 'SURGERY',
+                              child: Text(
+                                AppLocalizations.of(context)!.surgery,
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: 'MEETING',
+                              child: Text(
+                                AppLocalizations.of(context)!.meeting,
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: 'CONSULTATION',
+                              child: Text(
+                                AppLocalizations.of(context)!.consultation,
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: 'OTHER',
+                              child: Text(AppLocalizations.of(context)!.other),
+                            ),
                           ],
                           onChanged: (v) {
                             setState(() {
@@ -483,7 +513,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    AppLocalizations.of(context)!.cancel,
+                    AppLocalizations.of(context)!.back,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,
@@ -536,7 +566,9 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    _submitting ? AppLocalizations.of(context)!.saving : AppLocalizations.of(context)!.saveChanges,
+                    _submitting
+                        ? AppLocalizations.of(context)!.saving
+                        : AppLocalizations.of(context)!.saveChanges,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,

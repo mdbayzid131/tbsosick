@@ -6,9 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
+import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 
 class PostAnyCardController extends GetxController {
   final UserDataRepository userDataRepository = UserDataRepository();
+  final HomePageController homePageController = Get.find();
   RxBool isLoading = false.obs;
 
   RxList<Map<String, dynamic>> selectedSupplies = <Map<String, dynamic>>[].obs;
@@ -73,6 +75,30 @@ class PostAnyCardController extends GetxController {
     try {
       isLoading.value = true;
 
+      // Map IDs to names for supplies
+      final mappedSupplies = selectedSupplies.map((item) {
+        final id = item['name'];
+        final name =
+            selectedSuppliesNames[id] ??
+            homePageController.supplies
+                .firstWhereOrNull((e) => e.id == id)
+                ?.name ??
+            id;
+        return {'name': name, 'quantity': item['quantity']};
+      }).toList();
+
+      // Map IDs to names for sutures
+      final mappedSutures = selectedSutures.map((item) {
+        final id = item['name'];
+        final name =
+            selectedSuturesNames[id] ??
+            homePageController.sutures
+                .firstWhereOrNull((e) => e.id == id)
+                ?.name ??
+            id;
+        return {'name': name, 'quantity': item['quantity']};
+      }).toList();
+
       final response = await userDataRepository.createPreferenceCard(
         cardTitle: cardTitleController.text,
         surgeon: {
@@ -83,14 +109,14 @@ class PostAnyCardController extends GetxController {
           'musicPreference': musicPreferenceController.text,
         },
         medication: medicationController.text,
-        supplies: selectedSupplies.toList(),
-        sutures: selectedSutures.toList(),
+        supplies: mappedSupplies,
+        sutures: mappedSutures,
         instruments: instrumentController.text,
         positioningEquipment: postingEquipmentController.text,
         prepping: positionController.text,
         workflow: operativeWorkFlowController.text,
         keyNotes: keyNotesController.text,
-        published: !isprivate,
+        visibility: isprivate ? 'PRIVATE' : 'PUBLIC',
         photos: selectedImages, // List<File>
       );
 

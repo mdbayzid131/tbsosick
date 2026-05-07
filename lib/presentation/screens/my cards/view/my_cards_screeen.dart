@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
+import 'package:tbsosick/presentation/widgets/my_procedure_card.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/screens/my%20cards/controller/my_cards_controller.dart';
@@ -227,7 +229,7 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
                   final card = controller.myCards[index];
                   return Column(
                     children: [
-                      ProcedureCard(
+                      MyProcedureCard(
                         onDownloadTap: () => _prefranceCardDetailsController
                             .downloadCard(cardId: card.id),
                         cardId: card.id,
@@ -241,6 +243,13 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
                         isFavorite: card.isFavorited,
                         isPrivateCard:
                             controller.selectedVisibility.value == 'private',
+                        onEditTap: () {
+                          // TODO: Navigate to edit screen
+                          Helpers.showSuccess('Edit screen coming soon');
+                        },
+                        onDeleteTap: () {
+                          _showDeleteConfirmation(context, card.id);
+                        },
                         onFavoriteToggle: () async {
                           if (card.isFavorited) {
                             await homePageController.removeFromFavoriteList(
@@ -301,6 +310,29 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
                   ),
                 ),
               ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, String cardId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Card'),
+        content: const Text('Are you sure you want to delete this card?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              controller.deleteCard(cardId);
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
       ),
     );
   }

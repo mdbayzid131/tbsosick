@@ -205,10 +205,10 @@ class UserDataRepository {
     required String prepping,
     required String workflow,
     required String keyNotes,
-    required bool published,
+    required String visibility, // Changed from bool published
     required List<File> photos,
   }) async {
-    // 1. Build the data map (flat fields + list items)
+    // 1. Build the data map (text fields)
     final Map<String, dynamic> body = {
       'cardTitle': cardTitle,
       'medication': medication,
@@ -217,17 +217,11 @@ class UserDataRepository {
       'prepping': prepping,
       'workflow': workflow,
       'keyNotes': keyNotes,
-      'published': published.toString(),
+      'visibility': visibility,
+      'surgeon': jsonEncode(surgeon),
+      'supplies': jsonEncode(supplies),
+      'sutures': jsonEncode(sutures),
     };
-
-    // Flatten surgeon map
-    surgeon.forEach((key, value) {
-      body['surgeon[$key]'] = value;
-    });
-
-    // To ensure correct formData parsing with proper types (like numbers), we jsonEncode these lists
-    body['supplies'] = jsonEncode(supplies);
-    body['sutures'] = jsonEncode(sutures);
 
     // 2. Prepare files for multipartBody
     List<MultipartBody> multipartConfig = photos.map((file) {
@@ -236,9 +230,18 @@ class UserDataRepository {
 
     // 3. Send using postMultipartData
     return await _apiClient.postMultipartData(
-      ApiConstants.getAllCard,
+      ApiConstants.getAllCardsList, // Updated from getAllCard (/preference-card) to getAllCardsList (/preference-cards)
       body,
       multipartBody: multipartConfig,
+    );
+  }
+
+  // Delete preference card
+  Future<Response<dynamic>> deletePreferenceCard({
+    required String cardId,
+  }) async {
+    return await _apiClient.deleteData(
+      ApiConstants.getCardDetails.replaceAll('{id}', cardId),
     );
   }
 

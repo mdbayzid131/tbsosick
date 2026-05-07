@@ -278,10 +278,10 @@ class _MedicalSuppliesScreenState extends State<MedicalSuppliesScreen> {
                                     child: CircleAvatar(
                                       radius: 12.r,
                                       backgroundColor: isSelected
-                                          ? const Color(0xff9945FF)
+                                          ? Colors.red.shade400
                                           : Colors.grey.shade100,
                                       child: Icon(
-                                        isSelected ? Icons.check : Icons.add,
+                                        isSelected ? Icons.close : Icons.add,
                                         size: 14.sp,
                                         color: isSelected
                                             ? Colors.white

@@ -1,0 +1,281 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/core/utils/subscription_helper.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:get/get.dart';
+
+class MyProcedureCard extends StatefulWidget {
+  final bool isPrivateCard;
+  final String cardId;
+  final String title;
+  final String specialty;
+  final bool isVerified;
+  final String doctor;
+  final int downloads;
+  final DateTime updatedTime;
+  final bool isFavorite;
+  final Future<void> Function()? onFavoriteToggle;
+  final VoidCallback? onDownloadTap;
+  final VoidCallback? onEditTap;
+  final VoidCallback? onDeleteTap;
+  final bool isPaidUser;
+
+  const MyProcedureCard({
+    super.key,
+    required this.isPrivateCard,
+    required this.cardId,
+    required this.title,
+    required this.specialty,
+    required this.isVerified,
+    required this.doctor,
+    required this.downloads,
+    required this.updatedTime,
+    required this.isFavorite,
+    required this.onFavoriteToggle,
+    required this.onDownloadTap,
+    this.onEditTap,
+    this.onDeleteTap,
+    this.isPaidUser = false,
+  });
+
+  @override
+  State<MyProcedureCard> createState() => _MyProcedureCardState();
+}
+
+class _MyProcedureCardState extends State<MyProcedureCard> {
+  late bool _isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFavorite = widget.isFavorite;
+  }
+
+  Future<void> _handleFavoriteTap() async {
+    if (widget.onFavoriteToggle == null) return;
+    setState(() => _isFavorite = !_isFavorite);
+    try {
+      await widget.onFavoriteToggle!.call();
+    } catch (_) {}
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(
+          AppRoutes.CARD_DETAILS,
+          arguments: {'cardId': widget.cardId},
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8.r,
+              offset: Offset(0, 2.h),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    style: GoogleFonts.arimo(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF000000),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: _handleFavoriteTap,
+                  child: Container(
+                    height: 36.w,
+                    width: 36.w,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE8DEF8),
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    child: Icon(
+                      _isFavorite ? Icons.star : Icons.star_outline,
+                      color: _isFavorite
+                          ? const Color(0xFFFFB800)
+                          : const Color(0xFF9CA3AF),
+                      size: 22.sp,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 12.h),
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEDE9FE),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    widget.specialty,
+                    style: GoogleFonts.arimo(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF6750A4),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                if (widget.isVerified) ...[
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 4.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD1FAE5),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.check_circle,
+                            color: const Color(0xFF10B981), size: 14.sp),
+                        SizedBox(width: 4.w),
+                        Text(
+                          'Verified',
+                          style: GoogleFonts.arimo(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF10B981),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                ],
+              ],
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              widget.doctor,
+              style: GoogleFonts.arimo(
+                fontSize: 13.sp,
+                color: const Color(0xFF79747E),
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Divider(height: 1.5.h, color: const Color(0xFFE7E0EC)),
+            SizedBox(height: 12.h),
+            Row(
+              children: [
+                if (!widget.isPrivateCard)
+                  Icon(Icons.file_download_outlined,
+                      color: const Color(0xFF6B7280), size: 20.sp),
+                SizedBox(width: 4.w),
+                if (!widget.isPrivateCard)
+                  Text(
+                    widget.downloads.toString(),
+                    style: GoogleFonts.arimo(
+                      fontSize: 13.sp,
+                      color: const Color(0xFF6B7280),
+                    ),
+                  ),
+                SizedBox(width: 16.w),
+                Text(
+                  "updated: ${widget.updatedTime.day}/${widget.updatedTime.month}/${widget.updatedTime.year}",
+                  style: GoogleFonts.arimo(
+                    fontSize: 13.sp,
+                    color: const Color(0xFF6B7280),
+                  ),
+                ),
+                const Spacer(),
+                PopupMenuButton<String>(
+                  icon: Container(
+                    width: 36.w,
+                    height: 36.w,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF6750A4),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.more_vert,
+                      color: Colors.white,
+                      size: 20.sp,
+                    ),
+                  ),
+                  color: Colors.white,
+                  onSelected: (value) {
+                    if (value == 'download') {
+                      if (widget.isPaidUser) {
+                        widget.onDownloadTap?.call();
+                      } else {
+                        SubscriptionHelper.showSubscriptionDialog();
+                      }
+                    } else if (value == 'edit') {
+                      widget.onEditTap?.call();
+                    } else if (value == 'delete') {
+                      widget.onDeleteTap?.call();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'download',
+                      child: Row(
+                        children: [
+                          Icon(Icons.file_download_outlined,
+                              size: 20.sp, color: const Color(0xFF1C1B1F)),
+                          SizedBox(width: 8.w),
+                          const Text('Download'),
+                        ],
+                      ),
+                    ),
+                    if (widget.onEditTap != null)
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit_outlined,
+                                size: 20.sp, color: const Color(0xFF1C1B1F)),
+                            SizedBox(width: 8.w),
+                            const Text('Edit'),
+                          ],
+                        ),
+                      ),
+                    if (widget.onDeleteTap != null)
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete_outline,
+                                size: 20.sp, color: Colors.red),
+                            SizedBox(width: 8.w),
+                            const Text('Delete',
+                                style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

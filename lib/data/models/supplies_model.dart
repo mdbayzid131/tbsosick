@@ -85,7 +85,7 @@ class SuppliesModel {
 
   factory SuppliesModel.fromJson(Map<String, dynamic> json) {
     return SuppliesModel(
-      id: json['_id']?.toString() ?? '',
+      id: (json['_id'] ?? json['id'])?.toString() ?? '',
       name: json['name']?.toString() ?? '',
     );
   }

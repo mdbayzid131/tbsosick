@@ -35,7 +35,9 @@ class AppLogger {
     debugPrint('');
     debugPrint('┌ ✅✅✅✅ RESPONSE $_divider ✅✅✅✅');
     debugPrint('│ [${response.statusCode}] ${response.requestOptions.uri}');
-    debugPrint('│ Data: ${_truncate(response.data?.toString())}');
+    debugPrint(
+      '│ Data: ${_truncate(response.data?.toString(), showAll: true)}',
+    );
     debugPrint('└ ✅✅✅✅ RESPONSE $_divider ✅✅✅✅');
     debugPrint('');
   }
@@ -50,7 +52,9 @@ class AppLogger {
     debugPrint('│ URL: ${e.requestOptions.uri}');
     if (e.response != null) {
       debugPrint('│ Status: ${e.response?.statusCode}');
-      debugPrint('│ Data: ${_truncate(e.response?.data?.toString())}');
+      debugPrint(
+        '│ Data: ${_truncate(e.response?.data?.toString(), showAll: true)}',
+      );
     }
     debugPrint('└ ❌❌❌❌ ERROR $_divider ❌❌❌❌ ');
     debugPrint('');

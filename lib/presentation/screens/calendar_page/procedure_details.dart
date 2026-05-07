@@ -209,7 +209,8 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        l10n.upcoming,
+                        _controller.eventDetails.value?.tag ??
+                            '',
                         style: GoogleFonts.arimo(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w500,

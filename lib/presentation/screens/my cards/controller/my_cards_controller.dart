@@ -100,4 +100,22 @@ class MyCardsController extends GetxController {
   Future<void> refreshCards() async {
     await fetchCards();
   }
+
+  Future<void> deleteCard(String cardId) async {
+    try {
+      isLoading.value = true;
+      final response = await _userDataRepository.deletePreferenceCard(
+        cardId: cardId,
+      );
+      ApiChecker.checkWriteApi(response);
+      if (response.statusCode == 200) {
+        Helpers.showSuccess('Card deleted successfully');
+        myCards.removeWhere((element) => element.id == cardId);
+      }
+    } catch (e) {
+      Helpers.showError(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }
