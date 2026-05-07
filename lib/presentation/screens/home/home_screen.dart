@@ -9,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
-import 'package:tbsosick/presentation/screens/library/library_screen.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
@@ -181,40 +180,48 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         }
-                        final card =
-                            _bottomNabBarController.favoriteCards.first;
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 10.h),
-                          child: ProcedureCard(
-                            isPaidUser: false, // Testing download popup
-                            onDownloadTap: () {
-                              _prefranceCardDetailsController.downloadCard(
+                        final cardsToShow = _bottomNabBarController
+                            .favoriteCards
+                            .take(10)
+                            .toList();
+                        return Column(
+                          children: cardsToShow.map((card) {
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 10.h),
+                              child: ProcedureCard(
+                                isPaidUser: false, // Testing download popup
+                                onDownloadTap: () {
+                                  _prefranceCardDetailsController.downloadCard(
+                                    cardId: card.id,
+                                  );
+                                },
+                                isPrivateCard: false,
                                 cardId: card.id,
-                              );
-                            },
-                            isPrivateCard: false,
-                            cardId: card.id,
-                            title: card.cardTitle,
-                            specialty: card.surgeonSpecialty,
-                            isVerified: card.isVerified,
-                            doctor: card.surgeonName,
-                            downloads: card.totalDownloads,
-                            updatedTime: card.updatedAt,
-                            isFavorite: card.isFavorite,
-                            onFavoriteToggle: () async {
-                              if (card.isFavorite) {
-                                await _homePageController
-                                    .removeFromFavoriteList(cardId: card.id);
-                              } else {
-                                await _homePageController.addToFavoriteList(
-                                  cardId: card.id,
-                                );
-                              }
-                              await _bottomNabBarController.getFavoriteCard(
-                                showLoading: false,
-                              );
-                            },
-                          ),
+                                title: card.cardTitle,
+                                specialty: card.surgeonSpecialty,
+                                isVerified: card.isVerified,
+                                doctor: card.surgeonName,
+                                downloads: card.totalDownloads,
+                                updatedTime: card.updatedAt,
+                                isFavorite: card.isFavorite,
+                                onFavoriteToggle: () async {
+                                  if (card.isFavorite) {
+                                    await _homePageController
+                                        .removeFromFavoriteList(
+                                          cardId: card.id,
+                                        );
+                                  } else {
+                                    await _homePageController.addToFavoriteList(
+                                      cardId: card.id,
+                                    );
+                                  }
+                                  await _bottomNabBarController.getFavoriteCard(
+                                    showLoading: false,
+                                  );
+                                },
+                              ),
+                            );
+                          }).toList(),
                         );
                       }),
                       SizedBox(height: 10.h),
@@ -480,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           child: _statCard(
                             onTap: () {
-                              _bottomNabBarController.changePage(1);  
+                              _bottomNabBarController.changePage(1);
                             },
                             icon: Icons.description_outlined,
                             count:
