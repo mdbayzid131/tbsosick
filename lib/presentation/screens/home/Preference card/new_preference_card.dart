@@ -138,7 +138,11 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                         ),
                         TextFormField(
                           controller: postAnyCardController.cardTitleController,
-                          validator: Validators.required,
+                          validator: (value) => Validators.minLength(
+                            value,
+                            3,
+                            message: 'Card Title must be at least 3 characters',
+                          ),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 0),
                             labelStyle: GoogleFonts.arimo(
@@ -208,7 +212,11 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           label: AppLocalizations.of(context)!.fullNameLabel,
                           hint: AppLocalizations.of(context)!.enterFullName,
                           controller: postAnyCardController.fullNameController,
-                          validator: Validators.required,
+                          validator: (value) => Validators.minLength(
+                            value,
+                            3,
+                            message: 'Full Name must be at least 3 characters',
+                          ),
                         ),
                         SizedBox(height: 10.h),
                         Divider(height: 1.5.h, color: Color(0xffEEEEEF)),

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/profile_controller.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/legal_page_bottom_sheet.dart';
 import '../../../config/constants/image_paths.dart';
@@ -149,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             iconColor: const Color(0xFF8B5CF6),
                             title: tr.subscription,
                             onTap: () {
-                              showUpdatePackageBottomSheet(context);
+                              Get.toNamed(AppRoutes.SUBSCRIPTION);
                             },
                           ),
                         ],

@@ -4,7 +4,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SubscriptionHelper {
-  static void showSubscriptionDialog() {
+  static void showSubscriptionDialog({
+    String? message,
+    String? title,
+    VoidCallback? onPress,
+  }) {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(
@@ -12,7 +16,7 @@ class SubscriptionHelper {
         ),
         title: Center(
           child: Text(
-            'Subscription Required',
+            title ?? 'Subscription Required',
             style: GoogleFonts.arimo(
               fontWeight: FontWeight.w700,
               fontSize: 18.sp,
@@ -20,7 +24,7 @@ class SubscriptionHelper {
           ),
         ),
         content: Text(
-          'Please subscribe to access this feature.',
+          message ?? 'Please subscribe to access this feature.',
           textAlign: TextAlign.center,
           style: GoogleFonts.arimo(fontSize: 15.sp),
         ),
@@ -28,9 +32,11 @@ class SubscriptionHelper {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                Get.back();
-              },
+              onPressed:
+                  onPress ??
+                  () {
+                    Get.back();
+                  },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF9945FF),
                 shape: RoundedRectangleBorder(

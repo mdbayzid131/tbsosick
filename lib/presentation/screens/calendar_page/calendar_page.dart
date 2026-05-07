@@ -381,7 +381,46 @@ class _CalendarPageState extends State<CalendarPage> {
       }
 
       if (_controller.events.isEmpty) {
-        return const SizedBox.shrink();
+        return Padding(
+          padding: EdgeInsets.only(top: 20.h, bottom: 20.h),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 20.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 8.r,
+                  offset: Offset(0, 2.h),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.event_busy_outlined,
+                  size: 48.sp,
+                  color: const Color(0xFFD1D5DB),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  "No events on this date.\nPlease create an event or select another date.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.arimo(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF9CA3AF),
+                    height: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       }
 
       return Column(

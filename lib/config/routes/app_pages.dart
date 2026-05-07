@@ -9,6 +9,8 @@ import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/welcome_pa
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/otp_verification_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/sign_up_screen.dart';
+import 'package:tbsosick/presentation/screens/ProfilePage/binding/subscription_binding.dart';
+import 'package:tbsosick/presentation/screens/ProfilePage/view/subscription_screen.dart';
 
 import 'package:tbsosick/presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
 import 'package:tbsosick/presentation/screens/home/binding/card_datails_binding.dart';
@@ -39,6 +41,7 @@ class AppRoutes {
   static const String NO_INTERNET = '/no-internet';
   static const String CARD_DETAILS = '/card-details';
   static const String MY_CARDS = '/my-cards';
+  static const String SUBSCRIPTION = '/subscription';
 }
 
 final Transition transition = Transition.rightToLeft;
@@ -108,5 +111,10 @@ final pages = [
     name: AppRoutes.MY_CARDS,
     page: () => MyCardsScreen(),
     bindings: [MyCardsBinding()],
+  ),
+  GetPage(
+    name: AppRoutes.SUBSCRIPTION,
+    page: () => const SubscriptionScreen(),
+    bindings: [SubscriptionBinding()],
   ),
 ];
