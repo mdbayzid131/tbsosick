@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
@@ -22,18 +23,9 @@ class LibraryScreen extends StatefulWidget {
 }
 
 class _LibraryScreenState extends State<LibraryScreen> {
-  // Search controller
-  final TextEditingController _searchController = TextEditingController();
-
   // Filter states
   String _selectedSpecialty = 'All';
   bool _verifiedOnly = false;
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
 
   // Show filter bottom sheet
   void _showFilterBottomSheet() {
@@ -115,9 +107,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
               borderRadius: BorderRadius.circular(24.r),
             ),
             child: TextField(
-              controller: _searchController,
+              controller: controller.globalSearchController,
               onChanged: (value) {
                 controller.searchController.value = value;
+              },
+              textInputAction: TextInputAction.search,
+              onSubmitted: (value) {
+                FocusScope.of(context).unfocus();
               },
               style: GoogleFonts.arimo(
                 fontSize: 15.sp,
@@ -177,7 +173,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           // Cards list
           Expanded(
             child: Obx(() {
-              if (controller.isLoading.value &&
+              if (controller.isLibraryCardsLoading.value &&
                   controller.libraryCards.isEmpty) {
                 return const Center(child: CircularProgressIndicator());
               }

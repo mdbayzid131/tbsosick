@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
+import 'package:tbsosick/presentation/screens/library/library_screen.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
@@ -158,7 +159,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       SizedBox(height: 12.h),
                       Obx(() {
-                        if (_bottomNabBarController.isLoading.value) {
+                        if (_bottomNabBarController
+                            .isFavoriteCardsLoading
+                            .value) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
@@ -407,16 +410,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(width: 10.w),
                             Expanded(
                               child: TextField(
-                                controller: TextEditingController(
-                                  text: _bottomNabBarController
-                                      .searchController
-                                      .value,
-                                ),
+                                controller: _bottomNabBarController
+                                    .globalSearchController,
                                 onChanged: (value) {
                                   _bottomNabBarController
                                           .searchController
                                           .value =
                                       value;
+                                },
+                                textInputAction: TextInputAction.search,
+                                onSubmitted: (value) {
+                                  FocusScope.of(context).unfocus();
+                                  _bottomNabBarController.changePage(1);
                                 },
                                 style: GoogleFonts.arimo(
                                   fontSize: 14.sp,
@@ -434,6 +439,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
+                            Obx(() {
+                              if (_bottomNabBarController
+                                  .searchController
+                                  .value
+                                  .isEmpty) {
+                                return const SizedBox.shrink();
+                              }
+                              return GestureDetector(
+                                onTap: () {
+                                  _bottomNabBarController.changePage(1);
+                                },
+                                child: Icon(
+                                  Icons.arrow_forward_outlined,
+                                  size: 20.sp,
+                                  color: const Color(0xff9AA1AF),
+                                ),
+                              );
+                            }),
                           ],
                         ),
                       ),
@@ -457,7 +480,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           child: _statCard(
                             onTap: () {
-                              // Get.toNamed(AppRoutes.ALL_CARDS); // Uncomment when all cards route exists
+                              _bottomNabBarController.changePage(1);  
                             },
                             icon: Icons.description_outlined,
                             count:

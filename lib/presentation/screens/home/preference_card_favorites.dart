@@ -78,7 +78,7 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                     ),
                     SizedBox(height: 12.h),
                     Obx(() {
-                      if (_bottomNabBarController.isLoading.value &&
+                      if (_bottomNabBarController.isFavoriteCardsLoading.value &&
                           _bottomNabBarController.favoriteCards.isEmpty) {
                         return const Center(child: CircularProgressIndicator());
                       }

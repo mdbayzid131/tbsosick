@@ -134,15 +134,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                           ),
                           Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
-                          _buildMenuItem(
-                            icon: Icons.notifications_outlined,
-                            iconColor: const Color(0xFF8B5CF6),
-                            title: tr.notifications,
-                            badge: 3,
-                            onTap: () {
-                              showNotificationBottomSheet(context);
-                            },
-                          ),
+                          // _buildMenuItem(
+                          //   icon: Icons.notifications_outlined,
+                          //   iconColor: const Color(0xFF8B5CF6),
+                          //   title: tr.notifications,
+                          //   badge: 3,
+                          //   onTap: () {
+                          //     showNotificationBottomSheet(context);
+                          //   },
+                          // ),
                           Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
                           _buildMenuItem(
                             icon: Icons.credit_card_outlined,

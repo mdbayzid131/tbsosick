@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
@@ -38,13 +39,17 @@ class BottomNabBarController extends GetxController {
   final RxString errorMessage = ''.obs;
 
   // loading states
-  final RxBool isLoading = false.obs;
+  final RxBool isProfileLoading = false.obs;
+  final RxBool isCardCountLoading = false.obs;
+  final RxBool isPublicCardsLoading = false.obs;
+  final RxBool isPrivateCardsLoading = false.obs;
+  final RxBool isFavoriteCardsLoading = false.obs;
+  final RxBool isLibraryCardsLoading = false.obs;
+  final RxBool isSpecialtiesLoading = false.obs;
   final RxBool isPublicMoreLoading = false.obs;
   final RxBool isPrivateMoreLoading = false.obs;
   final RxBool isFavoriteMoreLoading = false.obs;
   final RxBool isLibraryMoreLoading = false.obs;
-
-
 
   // pagination
   int _publicPage = 1;
@@ -57,6 +62,7 @@ class BottomNabBarController extends GetxController {
   final RxBool hasMoreLibrary = true.obs;
 
   // Search
+  final TextEditingController globalSearchController = TextEditingController();
   final RxString searchController = ''.obs;
 
   // Filters
@@ -66,6 +72,12 @@ class BottomNabBarController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    // Sync text editing controller to reactive string
+    globalSearchController.addListener(() {
+      searchController.value = globalSearchController.text;
+    });
+
     loadHomeData();
     debounce(searchController, (_) {
       refreshCards();
@@ -74,7 +86,6 @@ class BottomNabBarController extends GetxController {
 
   Future<void> loadHomeData() async {
     try {
-      isLoading.value = true;
       await Future.wait([
         getProfile(showLoading: false),
         getAllCardCount(showLoading: false),
@@ -82,17 +93,16 @@ class BottomNabBarController extends GetxController {
         getPublicCard(showLoading: false),
         getFavoriteCard(showLoading: false),
         getLibraryCards(showLoading: false),
-        getSpecialtiesList(),
+        getSpecialtiesList(showLoading: false),
       ]);
     } catch (e) {
       Helpers.showError(e.toString());
-    } finally {
-      isLoading.value = false;
     }
   }
 
-  Future<void> getSpecialtiesList() async {
+  Future<void> getSpecialtiesList({bool showLoading = true}) async {
     try {
+      if (showLoading) isSpecialtiesLoading.value = true;
       final response = await _userDataRepository.getSpecialties();
       if (response.data != null && response.data['success'] == true) {
         final List<dynamic> data = response.data['data'];
@@ -100,21 +110,21 @@ class BottomNabBarController extends GetxController {
       }
     } catch (e) {
       print("Error fetching specialties: $e");
+    } finally {
+      if (showLoading) isSpecialtiesLoading.value = false;
     }
   }
 
   Future<void> getPublicCard({bool showLoading = true}) async {
     try {
-      if (showLoading) isLoading.value = true;
+      if (showLoading) isPublicCardsLoading.value = true;
       _publicPage = 1;
 
       final response = await _userDataRepository.getPublicCard(
         page: _publicPage,
         search: searchController.value,
-        specialty:
-            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus:
-            verifiedOnlyFilter.value ? 'VERIFIED' : '',
+        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
       if (response.statusCode == 200) {
@@ -133,7 +143,7 @@ class BottomNabBarController extends GetxController {
     } catch (e) {
       Helpers.showDebugLog("Error loading public cards: $e");
     } finally {
-      if (showLoading) isLoading.value = false;
+      if (showLoading) isPublicCardsLoading.value = false;
     }
   }
 
@@ -147,10 +157,8 @@ class BottomNabBarController extends GetxController {
       final response = await _userDataRepository.getPublicCard(
         page: _publicPage,
         search: searchController.value,
-        specialty:
-            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus:
-            verifiedOnlyFilter.value ? 'VERIFIED' : '',
+        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
       if (response.statusCode == 200) {
@@ -175,7 +183,7 @@ class BottomNabBarController extends GetxController {
   /// 🔥 GET LIBRARY CARDS (Unified List)
   Future<void> getLibraryCards({bool showLoading = true}) async {
     try {
-      if (showLoading) isLoading.value = true;
+      if (showLoading) isLibraryCardsLoading.value = true;
       _libraryPage = 1;
 
       final response = await _userDataRepository.getLibraryCards(
@@ -188,8 +196,8 @@ class BottomNabBarController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final Map<String, dynamic> data =
             (response.data['data'] is Map<String, dynamic>)
-                ? response.data['data']
-                : response.data;
+            ? response.data['data']
+            : response.data;
 
         final result = LibraryCardsResponse.fromJson(data);
         libraryCards.assignAll(result.data);
@@ -198,7 +206,7 @@ class BottomNabBarController extends GetxController {
     } catch (e) {
       Helpers.showDebugLog("Error loading library cards: $e");
     } finally {
-      if (showLoading) isLoading.value = false;
+      if (showLoading) isLibraryCardsLoading.value = false;
     }
   }
 
@@ -219,8 +227,8 @@ class BottomNabBarController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final Map<String, dynamic> data =
             (response.data['data'] is Map<String, dynamic>)
-                ? response.data['data']
-                : response.data;
+            ? response.data['data']
+            : response.data;
         final result = LibraryCardsResponse.fromJson(data);
         libraryCards.addAll(result.data);
         hasMoreLibrary.value = _libraryPage < result.meta.totalPages;
@@ -237,7 +245,7 @@ class BottomNabBarController extends GetxController {
 
   Future<void> getProfile({bool showLoading = true}) async {
     try {
-      if (showLoading) isLoading.value = true;
+      if (showLoading) isProfileLoading.value = true;
       errorMessage.value = '';
       final response = await _userDataRepository.getProfile();
       ApiChecker.checkGetApi(response);
@@ -248,14 +256,14 @@ class BottomNabBarController extends GetxController {
     } catch (e) {
       Helpers.showDebugLog("Error loading profile: $e");
     } finally {
-      if (showLoading) isLoading.value = false;
+      if (showLoading) isProfileLoading.value = false;
     }
   }
 
   ///================================================
   Future<void> getAllCardCount({bool showLoading = true}) async {
     try {
-      if (showLoading) isLoading.value = true;
+      if (showLoading) isCardCountLoading.value = true;
       errorMessage.value = '';
       final response = await _userDataRepository.getCardCount();
       ApiChecker.checkGetApi(response);
@@ -264,25 +272,22 @@ class BottomNabBarController extends GetxController {
     } catch (e) {
       Helpers.showDebugLog("Error loading card count: $e");
     } finally {
-      if (showLoading) isLoading.value = false;
+      if (showLoading) isCardCountLoading.value = false;
     }
   }
-
 
   /// 🔥 GET PRIVATE CARDS
   Future<void> getPrivateCard({bool showLoading = true}) async {
     try {
-      if (showLoading) isLoading.value = true;
+      if (showLoading) isPrivateCardsLoading.value = true;
       _privatePage = 1;
       errorMessage.value = '';
 
       final response = await _userDataRepository.getPrivateCard(
         page: _privatePage,
         search: searchController.value,
-        specialty:
-            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus:
-            verifiedOnlyFilter.value ? 'VERIFIED' : '',
+        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
       if (response.statusCode == 200 && response.data != null) {
@@ -300,7 +305,7 @@ class BottomNabBarController extends GetxController {
     } catch (e) {
       Helpers.showDebugLog("Error loading private cards: $e");
     } finally {
-      if (showLoading) isLoading.value = false;
+      if (showLoading) isPrivateCardsLoading.value = false;
     }
   }
 
@@ -314,10 +319,8 @@ class BottomNabBarController extends GetxController {
       final response = await _userDataRepository.getPrivateCard(
         page: _privatePage,
         search: searchController.value,
-        specialty:
-            specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus:
-            verifiedOnlyFilter.value ? 'VERIFIED' : '',
+        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
+        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
       ApiChecker.checkGetApi(response);
 
@@ -337,13 +340,11 @@ class BottomNabBarController extends GetxController {
       isPrivateMoreLoading.value = false;
     }
   }
-  
-
 
   /// 🔥 GET FAVORITE CARDS
   Future<void> getFavoriteCard({bool showLoading = true}) async {
     try {
-      if (showLoading) isLoading.value = true;
+      if (showLoading) isFavoriteCardsLoading.value = true;
       _favoritePage = 1;
       errorMessage.value = '';
 
@@ -371,7 +372,7 @@ class BottomNabBarController extends GetxController {
     } catch (e) {
       Helpers.showDebugLog("Error loading favorite cards: $e");
     } finally {
-      if (showLoading) isLoading.value = false;
+      if (showLoading) isFavoriteCardsLoading.value = false;
     }
   }
 
@@ -405,12 +406,9 @@ class BottomNabBarController extends GetxController {
       _favoritePage--; // rollback
       Helpers.showDebugLog("Error loading more favorite cards: $e");
     } finally {
-      isFavoriteMoreLoading.value = false; 
+      isFavoriteMoreLoading.value = false;
     }
   }
-
-
-
 
   /// 🔄 Pull-to-refresh / manual reload
   Future<void> refreshCards() async {
