@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
 import 'add_event_bottom.dart';
-import 'event_details_bottom.dart';
 import 'procedure_details.dart';
 import 'edit_procedure.dart';
 import 'controller/clender_controller.dart';
@@ -190,18 +190,27 @@ class _CalendarPageState extends State<CalendarPage> {
                 if (opacity > 1.0) opacity = 1.0;
 
                 return Container(
-                  margin: const EdgeInsets.all(6.0),
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(opacity),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    '${day.day}',
-                    style: GoogleFonts.arimo(
-                      fontSize: 14.sp,
-                      color: const Color(0xFF1C1B1F),
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${day.day}',
+                        style: GoogleFonts.arimo(
+                          fontSize: 14.sp,
+                          color: const Color(0xFF1C1B1F),
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Container(
+                        width: 7.r,
+                        height: 7.r,
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withOpacity(opacity),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }
