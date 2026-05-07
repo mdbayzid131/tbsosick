@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/profile_controller.dart';
-import 'package:tbsosick/presentation/screens/ProfilePage/terms_of_service.dart';
+import 'package:tbsosick/presentation/screens/ProfilePage/legal_page_bottom_sheet.dart';
 import '../../../config/constants/image_paths.dart';
 import '../home/notification_bottom.dart';
 import 'Privacy & Security bottom.dart';
@@ -182,35 +182,54 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ],
                       ),
-                      child: Column(
-                        children: [
-                          _buildMenuItem(
-                            icon: Icons.lock_outline,
-                            iconColor: const Color(0xFF6B7280),
-                            title: tr.privacyAndSecurity,
-                            onTap: () {
-                              showPrivacyAndSecurityBottomSheet(context);
-                            },
-                          ),
-                          Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
-                          _buildMenuItem(
-                            icon: Icons.language_outlined,
-                            iconColor: const Color(0xFF6B7280),
-                            title: tr.languageRegion,
-                            onTap: () {
-                              showLanguageBottomSheet(context);
-                            },
-                          ),
-                          Divider(height: 1.h, color: const Color(0xFFF3F4F6)),
-                          _buildMenuItem(
-                            icon: Icons.description_outlined,
-                            iconColor: const Color(0xFF6B7280),
-                            title: tr.termsOfService,
-                            onTap: () {
-                              showTermsOfServiceBottomSheet(context);
-                            },
-                          ),
-                        ],
+                      child: Obx(
+                        () => Column(
+                          children: [
+                            _buildMenuItem(
+                              icon: Icons.lock_outline,
+                              iconColor: const Color(0xFF6B7280),
+                              title: tr.privacyAndSecurity,
+                              onTap: () {
+                                showPrivacyAndSecurityBottomSheet(context);
+                              },
+                            ),
+                            Divider(
+                              height: 1.h,
+                              color: const Color(0xFFF3F4F6),
+                            ),
+                            _buildMenuItem(
+                              icon: Icons.language_outlined,
+                              iconColor: const Color(0xFF6B7280),
+                              title: tr.languageRegion,
+                              onTap: () {
+                                showLanguageBottomSheet(context);
+                              },
+                            ),
+                            // Dynamic legal pages
+                            ...profileController.legalPages.map((page) {
+                              return Column(
+                                children: [
+                                  Divider(
+                                    height: 1.h,
+                                    color: const Color(0xFFF3F4F6),
+                                  ),
+                                  _buildMenuItem(
+                                    icon: Icons.description_outlined,
+                                    iconColor: const Color(0xFF6B7280),
+                                    title: page.title,
+                                    onTap: () {
+                                      showLegalPageBottomSheet(
+                                        context,
+                                        slug: page.slug,
+                                        title: page.title,
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            }),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 24.h),

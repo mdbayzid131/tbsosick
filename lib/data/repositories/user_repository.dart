@@ -318,4 +318,16 @@ class UserDataRepository {
       multipartBody: [MultipartBody('profilePicture', imageFile)],
     );
   }
+
+  // Get legal pages
+  Future<Response<dynamic>> getLegalPages() async {
+    return await _apiClient.getData(ApiConstants.getLegalPages);
+  }
+
+  // Get legal page details by slug
+  Future<Response<dynamic>> getLegalPageDetails({required String slug}) async {
+    return await _apiClient.getData(
+      ApiConstants.getLegalPageDetails.replaceAll('{slug}', slug),
+    );
+  }
 }

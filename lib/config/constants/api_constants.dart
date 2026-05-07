@@ -23,6 +23,8 @@ class ApiConstants {
 
   static const String profile = '/users/profile';
   static const String getSpecialties = '/specialties';
+  static const String getLegalPages = '/legal';
+  static const String getLegalPageDetails = '/legal/{slug}';
   static const String getCardCount = '/preference-cards/stats';
   static const String getAllCard = '/preference-card';
   static const String getAllCardsList = '/preference-cards';
