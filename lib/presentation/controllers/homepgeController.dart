@@ -5,6 +5,7 @@ import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/models/private_card_model.dart';
 import 'package:tbsosick/data/models/supplies_model.dart';
+import 'package:tbsosick/data/models/specialty_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
 
 class HomePageController extends GetxController {
@@ -18,6 +19,25 @@ class HomePageController extends GetxController {
 
   RxList<SuppliesModel> supplies = <SuppliesModel>[].obs;
   RxList<SuppliesModel> sutures = <SuppliesModel>[].obs;
+  RxList<Specialty> specialtiesList = <Specialty>[].obs;
+  RxBool isSpecialtiesLoading = false.obs;
+
+  Future<void> getSpecialties() async {
+    try {
+      isSpecialtiesLoading.value = true;
+      Response<dynamic> response = await _userDataRepository.getSpecialties();
+      ApiChecker.checkGetApi(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final List<dynamic> data = response.data['data'] ?? [];
+        specialtiesList.assignAll(data.map((e) => Specialty.fromJson(e)).toList());
+      }
+    } catch (e) {
+      Helpers.showDebugLog("getSpecialties error => $e");
+    } finally {
+      isSpecialtiesLoading.value = false;
+    }
+  }
 
   // Pagination for Supplies
   final RxInt _suppliesPage = 1.obs;

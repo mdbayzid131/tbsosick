@@ -42,8 +42,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
   @override
   void initState() {
     super.initState();
-    // homePageController.getSupplies();
-    // homePageController.getSutures();
+    homePageController.getSpecialties();
   }
 
   // Handle publish
@@ -254,71 +253,73 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                   ),
                                 ),
                               ),
-                              DropdownButtonFormField<String>(
-                                initialValue:
-                                    postAnyCardController
-                                        .specialitiesController
-                                        .text
-                                        .isEmpty
-                                    ? null
-                                    : postAnyCardController
+                              Obx(
+                                () => DropdownButtonFormField<String>(
+                                  value:
+                                      postAnyCardController
                                           .specialitiesController
-                                          .text,
-                                validator: (value) =>
-                                    Validators.required(value),
-                                isExpanded: true,
-                                icon: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: const Color(0xff8E8E93),
-                                  size: 24.sp,
-                                ),
-                                dropdownColor: Colors.white,
-                                elevation: 8,
-                                borderRadius: BorderRadius.circular(16.r),
-                                items: getSpecialties(context)
-                                    .map(
-                                      (item) => DropdownMenuItem<String>(
-                                        value: item.title,
-                                        child: Text(
-                                          item.title,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.arimo(
-                                            fontSize: 17.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: const Color(0xff8E8E93),
+                                          .text
+                                          .isEmpty
+                                      ? null
+                                      : postAnyCardController
+                                            .specialitiesController
+                                            .text,
+                                  validator: (value) =>
+                                      Validators.required(value),
+                                  isExpanded: true,
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: const Color(0xff8E8E93),
+                                    size: 24.sp,
+                                  ),
+                                  dropdownColor: Colors.white,
+                                  elevation: 8,
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  items: homePageController.specialtiesList
+                                      .map(
+                                        (item) => DropdownMenuItem<String>(
+                                          value: item.name,
+                                          child: Text(
+                                            item.name,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.arimo(
+                                              fontSize: 17.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: const Color(0xff8E8E93),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (value) {
-                                  postAnyCardController
-                                          .specialitiesController
-                                          .text =
-                                      value ?? '';
-                                },
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 0,
+                                      )
+                                      .toList(),
+                                  onChanged: (value) {
+                                    postAnyCardController
+                                            .specialitiesController
+                                            .text =
+                                        value ?? '';
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 0,
+                                    ),
+                                    labelStyle: GoogleFonts.arimo(
+                                      fontSize: 14.sp,
+                                      color: const Color(0xff9E9E9E),
+                                    ),
+                                    hintText: AppLocalizations.of(
+                                      context,
+                                    )!.selectSpecialty,
+                                    hintStyle: GoogleFonts.arimo(
+                                      fontSize: 17.sp,
+                                      color: const Color(0xffC6C6C8),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16.r),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: false,
+                                    fillColor: const Color(0xffF2F2F7),
                                   ),
-                                  labelStyle: GoogleFonts.arimo(
-                                    fontSize: 14.sp,
-                                    color: const Color(0xff9E9E9E),
-                                  ),
-                                  hintText: AppLocalizations.of(
-                                    context,
-                                  )!.selectSpecialty,
-                                  hintStyle: GoogleFonts.arimo(
-                                    fontSize: 17.sp,
-                                    color: const Color(0xffC6C6C8),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16.r),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  filled: false,
-                                  fillColor: const Color(0xffF2F2F7),
                                 ),
                               ),
                             ],
