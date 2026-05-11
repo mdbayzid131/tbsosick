@@ -1,998 +1,801 @@
-# Flutter Implementation Guide: Subscriptions
- 
-This guide provides the necessary technical details for the Flutter developer to integrate Apple In-App Purchases (StoreKit 2) and Google Play Billing with the backend.
- 
+# In-App Purchase (IAP) — Complete Implementation Guide
+## Project: SMRTSCRUB (tbsosick)
+**Last Updated:** 2026-05-12 | Android ✅ End-to-End Verified | iOS ⏳ Code Ready, Store Setup Pending
+
 ---
- 
-## 1. Overview
- 
-The backend uses a **server-side verification** model. The Flutter app is responsible for:
-1.  Initiating the purchase flow using the store's native UI.
-2.  Capturing the raw purchase data (JWS for Apple, Purchase Token for Google).
-3.  Sending that data to the backend for cryptographic verification and entitlement granting.
-4.  Checking the backend for the user's current subscription status.
- 
+
+## How It All Works Together
+
+```
+[User] taps "Subscribe Now"
+        ↓
+[Flutter App] calls IapService.buySubscription(product, userId)
+        ↓
+[IapService] generates a UUIDv5 Buyer Token from userId (security binding)
+        ↓
+[Google Play / App Store] shows Native Payment Sheet to the user
+        ↓
+[User] completes payment
+        ↓
+[Flutter App] receives purchase via _onPurchaseUpdate() stream listener
+        ↓
+[IapService] calls _verifyPurchase() → sends token to backend
+        ↓
+[Backend] verifies token with Google/Apple servers
+        ↓
+[Backend] returns 200 OK + Subscription object
+        ↓
+[Flutter App] calls _iap.completePurchase() to finalize
+        ↓
+[UI] updates to show Active subscription
+```
+
 ---
- 
-## 2. Base Configuration
- 
-- **Base URL:** `/api/v1/subscription`
-- **Authentication:** All client-side endpoints (except webhooks) require the standard `Authorization: Bearer <JWT>` header.
- 
+
+# PART A — GOOGLE PLAY CONSOLE (ANDROID)
+
+## A1. What Is Google Play Console?
+Google Play Console is the developer dashboard where you manage your Android app. For IAP to work, you must:
+- Upload your app at least once to an internal/closed track
+- Create and activate subscription products
+- Grant permissions to your backend service account
+
 ---
- 
-## 3. iOS Implementation (Apple StoreKit 2)
- 
-When a purchase is completed on iOS, StoreKit 2 returns a `signedTransactionInfo`. This is a JWS (JSON Web Signature) string.
- 
-### Endpoint: Verify Apple Purchase
-`POST /apple/verify`
- 
-**Request Body:**
+
+## A2. Uploading the App (Internal Testing Track)
+
+### Step 1: Build a Release Bundle
+Run this command in your Flutter project root:
+```bash
+flutter clean
+flutter pub get
+flutter build appbundle
+```
+This generates: `build/app/outputs/bundle/release/app-release.aab`
+
+> **Important:** Every time you upload, you must increment the version code in `pubspec.yaml`:
+> ```yaml
+> version: 1.0.0+1   # first upload
+> version: 1.0.0+2   # second upload
+> version: 1.0.0+3   # third upload
+> ```
+> The number after `+` is the version code. Google Play rejects duplicate version codes.
+
+### Step 2: Upload to Play Console
+1. Go to [play.google.com/console](https://play.google.com/console)
+2. Select your app → **Testing → Internal testing**
+3. Click **"Create new release"**
+4. Upload your `.aab` file
+5. Add release notes (optional)
+6. Click **Save → Review release → Publish**
+
+---
+
+## A3. Adding Internal Testers
+
+Internal testers can install and test your app before it goes public. Without this, IAP purchases will fail.
+
+1. Go to **Testing → Internal testing → Testers tab**
+2. Click **"Manage testers"**
+3. Create a new email list and add your Gmail address
+4. Copy the **"Join on web"** link that appears at the bottom
+5. Open that link in your phone's browser
+6. Click **"Accept invite"**
+7. Make sure your phone's Play Store is logged in with that same Gmail account
+
+> **Why this matters:** Google will only process real purchases from verified testers during development.
+
+---
+
+## A4. Creating Subscription Products
+
+1. Go to your app → **Monetize → Subscriptions**
+2. Click **"Create subscription"**
+3. Create the following 4 products:
+
+| Product ID | Display Name | Billing Period | Price |
+|---|---|---|---|
+| `premium_monthly` | Premium Monthly | 1 Month | Set your price |
+| `premium_yearly` | Premium Yearly | 1 Year | Set your price |
+| `enterprise_monthly` | Enterprise Monthly | 1 Month | Set your price |
+| `enterprise_yearly` | Enterprise Yearly | 1 Year | Set your price |
+
+For each product:
+- Set a **Reference name** (internal name)
+- Set **Price** for at least one country
+- Add a **Subscription period** (Monthly or Yearly)
+- Set status to **"Active"** — Draft products will NOT appear in the app
+
+> **Critical:** The Product IDs above must **exactly match** the IDs in your Flutter code (`IapService._productIds`). Any mismatch will cause products not to be found.
+
+---
+
+## A5. Setting Up License Testing (Free Test Purchases)
+
+This allows you to test purchases without spending real money.
+
+1. Go to the **main Play Console home page** (where all apps are listed)
+2. In the left sidebar, click **Settings → License testing**
+3. Add your Gmail address to the testers list
+4. Set **License response** to **"RESPOND_NORMALLY"**
+5. Click **Save**
+
+When you now make a purchase in the app, the payment sheet will show **"Test card, always approves"** — tap it to complete a free test purchase.
+
+---
+
+## A6. Granting Backend Permissions (Service Account)
+
+Your backend server needs special permission to verify purchases with Google's API. This is done by adding the backend's service account email to your Play Console.
+
+### Who can do this?
+**Only the Account Owner** of the Play Console. Admins cannot access this section.
+
+### Steps:
+1. Go to **Users and permissions** in the left sidebar
+2. Click **"Invite new users"**
+3. Enter the service account email:
+   `play-billing-service@[ PROJECT-ID ].iam.gserviceaccount.com`
+4. Click the **"Account permissions"** tab (not App permissions)
+5. Check the following boxes:
+   - ✅ **View financial data, orders, and cancellation survey responses**
+   - ✅ **Manage orders and subscriptions**
+   - ✅ **View app information and download bulk reports (read-only)**
+6. Click **"Invite user"**
+
+> **Note:** After granting permissions, it can take 5–30 minutes for Google to propagate the changes. If you still get `insufficient permissions`, wait and retry.
+
+---
+
+## A7. Linking Google Cloud Project to Play Console
+
+This connects your backend's Google Cloud project to your Play Console account so the service account can access subscription data.
+
+**Only the Account Owner can do this.**
+
+1. Go to your app in Play Console
+2. In the left sidebar, scroll down to **Setup → API access**
+3. Click **"Choose a Google Cloud project to link"**
+4. Select the project: **`[ PROJECT-ID ]`**
+5. Click **"Link project"**
+
+After linking, you should see the service account email listed under "Service accounts" on that same page.
+
+---
+
+# PART B — GOOGLE CLOUD CONSOLE
+
+## B1. What Is Google Cloud Console?
+Google Cloud Console hosts your backend infrastructure including APIs and service accounts. For IAP verification, one specific API must be enabled.
+
+---
+
+## B2. Enabling the Google Play Android Developer API
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com/)
+2. In the top dropdown, select project: **`[ PROJECT-ID ]`**
+3. In the left sidebar go to **APIs & Services → Library**
+4. In the search bar, type: **"Google Play Android Developer API"**
+5. Click on it → Click **"Enable"**
+
+> **Why this matters:** Without this API enabled, your backend cannot make any calls to Google's subscription verification endpoint, even if the service account has all the right permissions.
+
+---
+
+## B3. Generating a New Service Account JSON Key
+
+If the existing key stops working (invalid JWT signature error), generate a fresh one:
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com/)
+2. Select project: `[ PROJECT-ID ]`
+3. Left sidebar → **IAM & Admin → Service Accounts**
+4. Find: `play-billing-service@[ PROJECT-ID ].iam.gserviceaccount.com`
+5. Click on it → Go to **"Keys"** tab
+6. Click **"Add Key" → "Create new key"**
+7. Select **JSON** → Click **"Create"**
+8. A `.json` file downloads automatically — give this to your backend developer
+
+> **Security Warning:** This file gives full access to your Google Cloud project. Never commit it to GitHub or share it publicly. Only give it to your backend developer to place on the server.
+
+---
+
+# PART C — APPLE APP STORE (iOS)
+
+## C1. What Is App Store Connect?
+App Store Connect is Apple's equivalent of Google Play Console. It's where you manage your iOS app, create subscription products, and set up testing.
+
+---
+
+## C2. Creating a Subscription Group
+
+1. Go to [appstoreconnect.apple.com](https://appstoreconnect.apple.com/)
+2. Select your app
+3. Go to **Monetization → Subscriptions**
+4. Click **"Create"** to create a Subscription Group
+5. Name it something like: **"SMRTSCRUB Subscriptions"**
+
+---
+
+## C3. Adding Subscription Products
+
+Inside your Subscription Group, add the following 4 products by clicking **"+"**: 
+
+| Product ID | Reference Name | Duration |
+|---|---|---|
+| `premium_monthly` | Premium Monthly | 1 Month |
+| `premium_yearly` | Premium Yearly | 1 Year |
+| `enterprise_monthly` | Enterprise Monthly | 1 Month |
+| `enterprise_yearly` | Enterprise Yearly | 1 Year |
+
+For each product:
+1. Enter the **Product ID** (must match Flutter code exactly)
+2. Set **Subscription Duration**
+3. Add **Subscription Prices** (at least one territory)
+4. Add **Localization** → English → Add Display Name and Description
+5. Status must be: **"Ready to Submit"**
+
+---
+
+## C4. Creating a Sandbox Tester (Free Test Purchases on iOS)
+
+1. App Store Connect → **Users and Access → Sandbox → Testers**
+2. Click **"+"**
+3. Fill in any fake details (fake name, fake email like `test@example.com`, and a fake password)
+4. Click **"Save"**
+
+On your iPhone:
+1. Go to **Settings → App Store**
+2. Scroll to the bottom → **"Sandbox Account"**
+3. Sign in with the sandbox tester credentials you just created
+
+> When testing in-app purchases, always use this sandbox account, not your real Apple ID.
+
+---
+
+## C5. Uploading to TestFlight
+
+TestFlight is Apple's internal testing platform (equivalent to Play Console's Internal Testing track).
+
+```bash
+flutter build ipa
+```
+
+1. Open **Xcode** → Window → Organizer → Click **"Distribute App"**
+   OR use the **Transporter** app from the Mac App Store
+2. Upload the `.ipa` to App Store Connect
+3. Go to App Store Connect → **TestFlight** tab
+4. Add yourself as an **Internal Tester**
+5. Install the app via the TestFlight app on your iPhone
+
+---
+
+# PART D — BACKEND
+
+## D1. What the Backend Does
+
+The Flutter app sends the raw purchase token to the backend. The backend then:
+1. Verifies the token with Google/Apple's servers using the service account credentials
+2. Stores the subscription record in the database
+3. Returns a success response to Flutter
+
+This server-side verification is critical for security — it prevents users from faking purchases.
+
+---
+
+## D2. API Endpoints Used by Flutter
+
+| Endpoint | Method | Called When |
+|---|---|---|
+| `/api/v1/subscriptions/google/verify` | POST | Android purchase completes |
+| `/api/v1/subscriptions/apple/verify` | POST | iOS purchase completes |
+| `/api/v1/subscriptions/me` | GET | Checking user's current plan |
+| `/api/v1/users/profile` | GET | Getting user profile + ID |
+
+All endpoints require `Authorization: Bearer <JWT>` header.
+
+---
+
+## D3. Android Verification Request (sent by Flutter)
 ```json
+POST /api/v1/subscriptions/google/verify
 {
-  "signedTransactionInfo": "eyJhbG..."
+  "purchaseToken": "cakmjihibdn...AO-J1Oz...",
+  "productId": "enterprise_monthly"
 }
 ```
- 
-**Flutter Example (using `in_app_purchase`):**
-```dart
-import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
- 
-// Inside your purchase listener
-if (purchaseDetails is AppStorePurchaseDetails) {
-  final String signedTransactionInfo = purchaseDetails.verificationData.serverVerificationData;
- 
-  // Call Backend
-  final response = await http.post(
-    Uri.parse('$baseUrl/subscription/apple/verify'),
-    headers: {
-      'Authorization': 'Bearer $userJwt',
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({
-      'signedTransactionInfo': signedTransactionInfo,
-    }),
-  );
- 
-  if (response.statusCode == 200) {
-    // Success: Refresh local user state
-  }
-}
-```
- 
----
- 
-## 4. Android Implementation (Google Play Billing)
- 
-When a purchase is completed on Android, you get a `purchaseToken` and a `productId`.
- 
-### Endpoint: Verify Google Purchase
-`POST /google/verify`
- 
-**Request Body:**
+
+## D4. iOS Verification Request (sent by Flutter)
 ```json
+POST /api/v1/subscriptions/apple/verify
 {
-  "purchaseToken": "gplay_token_abc123...",
-  "productId": "premium_monthly"
+  "signedTransactionInfo": "eyJhbGciOiJFUzI1NiIsIng1YyI..."
 }
 ```
- 
-**Flutter Example (using `in_app_purchase`):**
-```dart
-import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
- 
-// Inside your purchase listener
-if (purchaseDetails is GooglePlayPurchaseDetails) {
-  final String purchaseToken = purchaseDetails.verificationData.serverVerificationData;
-  final String productId = purchaseDetails.productID;
- 
-  // Call Backend
-  final response = await http.post(
-    Uri.parse('$baseUrl/subscription/google/verify'),
-    headers: {
-      'Authorization': 'Bearer $userJwt',
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({
-      'purchaseToken': purchaseToken,
-      'productId': productId,
-    }),
-  );
- 
-  if (response.statusCode == 200) {
-    // Success: Refresh local user state
-  }
-}
-```
- 
----
- 
-## 5. Checking Subscription Status
- 
-The Flutter app should check the subscription status on **app launch** and after every **successful verification**.
- 
-### Endpoint: Get My Subscription
-`GET /me`
- 
-**Response Body (Success):**
+
+## D5. Successful Verification Response
 ```json
 {
   "success": true,
+  "statusCode": 200,
+  "message": "Google subscription verified successfully",
   "data": {
-    "plan": "PREMIUM", // "FREE" | "PREMIUM" | "ENTERPRISE"
-    "status": "active", // "active" | "trialing" | "past_due" | "canceled" | "inactive"
-    "platform": "apple", // "apple" | "google" | "admin"
-    "currentPeriodEnd": "2024-06-07T10:00:00.000Z",
-    "autoRenewing": true
+    "id": "6a023b81e55bc08e2fa525fc",
+    "userId": "69fa359a3fc3858c40265443",
+    "plan": "ENTERPRISE",
+    "platform": "google",
+    "productId": "enterprise_monthly",
+    "status": "active",
+    "autoRenewing": true,
+    "environment": "sandbox",
+    "googleOrderId": "GPA.3322-3688-1106-35608",
+    "startedAt": "2026-05-11T20:26:35.234Z",
+    "currentPeriodEnd": "2026-05-11T20:31:34.721Z"
   }
 }
 ```
- 
-**Logic Note:**
-- If `plan == "FREE"`, the user is not a subscriber.
-- If `plan != "FREE"` AND `status == "active"` (or `trialing`), the user is a subscriber.
- 
----
- 
-## 6. Known Product IDs
- 
-Use these IDs in your `StoreConfig` or equivalent:
- 
-- **Premium Monthly:** `premium_monthly`
-- **Premium Yearly:** `premium_yearly`
-- **Enterprise Monthly:** `enterprise_monthly`
- 
----
- 
-## 7. Best Practices for Flutter
- 
-1.  **Pending Purchases:** Always handle `PurchaseStatus.pending`. Do not call the backend until the status is `PurchaseStatus.purchased`.
-2.  **Restore Purchases:** If a user taps "Restore Purchases", iterate through the `restored` transactions and send each one to the `/verify` endpoint. The backend handles idempotency automatically.
-3.  **App Launch:** Always call `GET /me` when the app starts to ensure the local UI reflects the latest state (especially if a subscription expired or was refunded while the app was closed).
-4.  **Error Handling:**
-    - `409 Conflict`: This transaction is already linked to another account. Show a message to the user.
-    - `400 Bad Request`: Invalid transaction/token or expired.
-
-
-
-    
-# Flutter Implementation Guide — Subscriptions
-
- 
-
-This guide gives the Flutter team everything needed to integrate Apple App Store (StoreKit 2) and Google Play Billing with the backend. **Read this end-to-end before writing code** — the buyer-binding step (§4) is required for security, and `in_app_purchase` does not expose Apple's `appAccountToken` directly.
-
- 
-
-> **Cross-reference**: full backend contracts are in [`documentaction/modules/subscription/`](../../../../documentaction/modules/subscription/) (start with [`00-flows.md`](../../../../documentaction/modules/subscription/00-flows.md)). This guide is the client-side companion to those docs.
-
- 
 
 ---
 
- 
+## D6. Backend Configuration Required
 
-## 1. Overview
-
- 
-
-The backend uses **server-side verification + buyer binding**. The Flutter app must:
-
- 
-
-1. Initiate the purchase using the platform's native UI (StoreKit 2 / Play Billing).
-
-2. **Bind the purchase to the authenticated user** by setting a deterministic UUID (`appAccountToken` on iOS, `obfuscatedAccountId` on Android) — see §4. *Without this, the backend's H3 receipt-theft defense never engages.*
-
-3. Capture raw purchase data (JWS for Apple, purchase token + productId for Google).
-
-4. POST to the verify endpoint — the backend cryptographically verifies, applies fraud guards, persists state, and returns the canonical subscription document.
-
-5. Refresh local state after every verify, after restore, and on every app launch / resume.
-
- 
+The backend developer must configure:
+1. `google-service-account.json` placed in `secrets/` folder on the server
+2. Environment variable `GOOGLE_PACKAGE_NAME=com.tbsosick.smrtscrub`
+3. Apple shared secret for iOS verification
+4. The verify endpoints must use `subscriptionsv2` API (not the old `subscriptions` API)
 
 ---
 
- 
+# PART E — FLUTTER PROJECT
 
-## 2. Base Configuration
+## E1. Files Modified/Created
 
- 
-
-| | |
-
+| File | What Was Done |
 |---|---|
-
-| **Base URL** | `/api/v1/subscriptions` *(plural — all routes start here)* |
-
-| **Auth** | `Authorization: Bearer <userJwt>` on every endpoint **except** the two webhooks (server-to-server only) |
-
-| **Content-Type** | `application/json` for all `POST` bodies |
-
-| **Rate limit** | 30 req/min per user on `/apple/verify` and `/google/verify` |
-
-| **Standard envelope** | All responses wrap `data` and (when paginated) `meta` — see [response envelope docs](../../../../documentaction/README.md#standard-response-envelope) |
-
- 
+| `lib/core/services/iap_service.dart` | Main IAP service — all purchase logic |
+| `lib/core/bindings/initial_binding.dart` | Registered IapService globally |
+| `lib/config/constants/api_constants.dart` | Added subscription API URLs |
+| `lib/presentation/screens/ProfilePage/controller/subscription_controller.dart` | UI state + subscribe action |
+| `lib/presentation/screens/ProfilePage/view/subscription_screen.dart` | Dynamic pricing from store |
+| `lib/presentation/screens/ProfilePage/controller/profile_controller.dart` | Saves userId when profile loads |
+| `lib/core/services/auth_service.dart` | Added `saveUserId()` helper method |
 
 ---
 
- 
-
-## 3. Endpoint Map (client-facing)
-
- 
-
-| Method | Path | Purpose |
-
-|---|---|---|
-
-| `GET` | `/me` | Read current entitlement |
-
-| `POST` | `/apple/verify` | Verify a StoreKit 2 transaction |
-
-| `POST` | `/google/verify` | Verify a Play Billing purchase |
-
-| `POST` | `/choose/free` | User-initiated downgrade to FREE |
-
- 
-
-The Apple/Google webhooks (`/apple/webhook`, `/google/webhook`) are server-to-server only — Flutter never calls them.
-
- 
-
----
-
- 
-
-## 4. ⚠ Buyer Binding (REQUIRED — H3 receipt-theft defense)
-
- 
-
-The backend verifies that every purchase belongs to the authenticated user by comparing a deterministic UUID derived from `userId`. Both platforms support this:
-
- 
-
-- **iOS**: Apple `appAccountToken` (must be a valid UUID)
-
-- **Android**: Google `obfuscatedExternalAccountId`
-
- 
-
-### 4.1 Compute the token in Dart
-
- 
-
-The namespace is a fixed UUID — **do not change it**. Rotating it invalidates every in-flight purchase globally.
-
- 
+## E2. IapService — Full Code Reference
 
 ```dart
+class IapService extends GetxService {
+  final InAppPurchase _iap = InAppPurchase.instance;
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
 
-import 'package:uuid/uuid.dart';
+  final RxList<ProductDetails> products = <ProductDetails>[].obs;
+  final RxBool isLoading = false.obs;
 
- 
+  // Product IDs — must match exactly what's in Play Console / App Store Connect
+  static const String premiumMonthly = 'premium_monthly';
+  static const String premiumYearly = 'premium_yearly';
+  static const String enterpriseMonthly = 'enterprise_monthly';
+  static const String enterpriseYearly = 'enterprise_yearly';
 
-/// Must match `IAP_NAMESPACE` in
+  static const List<String> _productIds = [
+    premiumMonthly, premiumYearly, enterpriseMonthly, enterpriseYearly,
+  ];
 
-/// `src/app/modules/subscription/helpers/iap-account.ts` on the backend.
+  // SECURITY: Buyer Binding Namespace — NEVER change this value
+  // Changing this will break the purchase link for all existing users
+  static const String _iapNamespace = 'b9f6a4c0-1d2e-4f3a-9c8b-0e7d6c5b4a32';
 
-const String IAP_NAMESPACE = 'b9f6a4c0-1d2e-4f3a-9c8b-0e7d6c5b4a32';
+  @override
+  void onInit() {
+    super.onInit();
+    // Listen to all purchase updates (from any session)
+    _subscription = _iap.purchaseStream.listen(
+      _onPurchaseUpdate,
+      onDone: () => _subscription.cancel(),
+      onError: (error) => AppLogger.debug('IAP Error: $error'),
+    );
+    initialize();
+  }
 
- 
+  @override
+  void onClose() {
+    _subscription.cancel();
+    super.onClose();
+  }
 
-/// Deterministic UUIDv5 derivation. Same userId → same UUID, every time.
+  // Step 1: Check if store is available, then fetch products
+  Future<void> initialize() async {
+    final bool available = await _iap.isAvailable();
+    if (!available) return; // Emulators will return false here
+    await fetchProducts();
+  }
 
-String deriveIapAccountToken(String userId) {
+  // Step 2: Fetch products from the store
+  Future<void> fetchProducts() async {
+    isLoading.value = true;
+    try {
+      final ProductDetailsResponse response =
+          await _iap.queryProductDetails(_productIds.toSet());
+      // If Found: 4, Not Found: [] — all products loaded successfully
+      products.assignAll(response.productDetails);
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
-  return const Uuid().v5(IAP_NAMESPACE, userId);
+  // Step 3: Generate a deterministic UUIDv5 token from userId
+  // This cryptographically binds each purchase to a specific user
+  String deriveIapAccountToken(String userId) {
+    return const Uuid().v5(_iapNamespace, userId);
+  }
 
+  // Step 4: Initiate the purchase flow
+  Future<void> buySubscription(ProductDetails product, String userId) async {
+    final String accountToken = deriveIapAccountToken(userId);
+
+    late PurchaseParam purchaseParam;
+    if (Platform.isAndroid) {
+      purchaseParam = GooglePlayPurchaseParam(
+        productDetails: product,
+        applicationUserName: accountToken, // becomes obfuscatedAccountId
+      );
+    } else {
+      purchaseParam = PurchaseParam(
+        productDetails: product,
+        applicationUserName: accountToken,
+      );
+    }
+    await _iap.buyNonConsumable(purchaseParam: purchaseParam);
+  }
+
+  // Step 5: Handle all purchase status updates
+  void _onPurchaseUpdate(List<PurchaseDetails> purchaseDetailsList) {
+    for (var purchase in purchaseDetailsList) {
+      if (purchase.status == PurchaseStatus.pending) {
+        // Show loading UI. Do NOT call verify yet.
+      } else if (purchase.status == PurchaseStatus.error) {
+        // Always complete even on error to clear the queue
+        _iap.completePurchase(purchase);
+      } else if (purchase.status == PurchaseStatus.purchased ||
+          purchase.status == PurchaseStatus.restored) {
+        // Only verify on these two statuses
+        _verifyPurchase(purchase);
+      }
+    }
+  }
+
+  // Step 6: Send purchase data to backend for verification
+  Future<void> _verifyPurchase(PurchaseDetails purchase) async {
+    try {
+      final apiClient = Get.find<ApiClient>();
+      dynamic response;
+
+      if (Platform.isIOS) {
+        response = await apiClient.postData(
+          '${ApiConstants.subscriptionBaseUrl}/apple/verify',
+          {'signedTransactionInfo': purchase.verificationData.serverVerificationData},
+        );
+      } else if (Platform.isAndroid) {
+        response = await apiClient.postData(
+          '${ApiConstants.subscriptionBaseUrl}/google/verify',
+          {
+            'purchaseToken': purchase.verificationData.serverVerificationData,
+            'productId': purchase.productID,
+          },
+        );
+      }
+
+      if (response != null && response.statusCode == 200) {
+        // CRITICAL: Must call completePurchase() or the purchase will loop forever
+        await _iap.completePurchase(purchase);
+        // TODO: Refresh user subscription status in UI
+      }
+    } catch (e) {
+      AppLogger.debug('Error verifying purchase: $e');
+    }
+  }
+
+  // Allow restoring previous purchases (required by App Store guidelines)
+  Future<void> restorePurchases() async {
+    await _iap.restorePurchases();
+  }
 }
-
 ```
-
- 
-
-> **Soft rollout note**: today the backend logs a warning and accepts purchases without the token. Once the team flips to hard-enforce, **any client that forgets to send the token will start 409-failing on every verify**. Treat this as required, not optional.
-
- 
-
-### 4.2 Apply on iOS (StoreKit 2)
-
- 
-
-The cross-platform `in_app_purchase` package does **not** expose `appAccountToken` directly. You have two options:
-
- 
-
-**Option A (recommended) — `purchases_flutter` / direct StoreKit 2 native channel**: write a tiny method channel that calls `Product.purchase(options: [.appAccountToken(uuid)])` in Swift. Sample bridge:
-
- 
-
-```swift
-
-// ios/Runner/IAPChannel.swift
-
-import StoreKit
-
- 
-
-@available(iOS 15.0, *)
-
-func purchase(productId: String, accountToken: UUID) async throws -> String {
-
-  guard let product = try await Product.products(for: [productId]).first else {
-
-    throw NSError(domain: "IAP", code: 404)
-
-  }
-
-  let result = try await product.purchase(options: [.appAccountToken(accountToken)])
-
-  switch result {
-
-    case .success(let verification):
-
-      if case .verified(let txn) = verification { return txn.jwsRepresentation }
-
-      throw NSError(domain: "IAP", code: 401) // unverified
-
-    default: throw NSError(domain: "IAP", code: 499)
-
-  }
-
-}
-
-```
-
- 
-
-**Option B (fallback)** — pass via `applicationUserName` on `in_app_purchase`. Note: iOS hashes this string; the backend's binding check works only if the hash matches the UUIDv5. Verify behavior in your environment before relying on it; Option A is safer.
-
- 
-
-### 4.3 Apply on Android (Play Billing)
-
- 
-
-The `in_app_purchase` package's `PurchaseParam.applicationUserName` maps directly to `BillingFlowParams.setObfuscatedAccountId` on Android. No native bridge required:
-
- 
-
-```dart
-
-final String token = deriveIapAccountToken(currentUserId);
-
- 
-
-final purchaseParam = GooglePlayPurchaseParam(
-
-  productDetails: productDetails,
-
-  applicationUserName: token, // ← becomes obfuscatedAccountId
-
-);
-
- 
-
-await InAppPurchase.instance.buyNonConsumable(purchaseParam: purchaseParam);
-
-```
-
- 
 
 ---
 
- 
+## E3. SubscriptionController — Full Code Reference
 
-## 5. iOS — Verify Apple Purchase
+```dart
+class SubscriptionController extends GetxController {
+  final IapService _iapService = Get.find<IapService>();
 
- 
+  final RxInt selectedPlan = 1.obs;           // 0=Free, 1=Premium, 2=Enterprise
+  final Rx<ProductDetails?> premiumProduct = Rx<ProductDetails?>(null);
+  final Rx<ProductDetails?> enterpriseProduct = Rx<ProductDetails?>(null);
 
-`POST /api/v1/subscriptions/apple/verify`
+  @override
+  void onInit() {
+    super.onInit();
+    _mapProducts();
+  }
 
- 
+  void _mapProducts() {
+    // Map products that are already loaded
+    _updateLocalProducts(_iapService.products);
+    // Also react to future product list updates
+    ever(_iapService.products, _updateLocalProducts);
+  }
 
-### Request body
+  void _updateLocalProducts(List<ProductDetails> products) {
+    for (var product in products) {
+      if (product.id == IapService.premiumMonthly) {
+        premiumProduct.value = product;
+      } else if (product.id == IapService.enterpriseMonthly) {
+        enterpriseProduct.value = product;
+      }
+    }
+  }
 
- 
+  void selectPlan(int index) => selectedPlan.value = index;
 
+  Future<void> subscribe() async {
+    // Get userId from local storage (saved when profile loads)
+    final String userId = await StorageService.getString(StorageConstants.userId);
+    if (userId.isEmpty) {
+      Get.snackbar('Error', 'Please log in to subscribe');
+      return;
+    }
+
+    ProductDetails? product;
+    if (selectedPlan.value == 1) product = premiumProduct.value;
+    else if (selectedPlan.value == 2) product = enterpriseProduct.value;
+
+    if (product != null) {
+      await _iapService.buySubscription(product, userId);
+    } else if (selectedPlan.value != 0) {
+      Get.snackbar('Error', 'Product not available in store');
+    }
+  }
+}
+```
+
+---
+
+## E4. UserId Storage — Why and How
+
+**Problem:** When a user taps "Subscribe Now", the app needs to know who is buying. The `userId` must be stored locally so IapService can access it without an extra network call.
+
+**Solution:** When the user's profile is fetched, save their ID to local storage.
+
+```dart
+// In profile_controller.dart
+Future<void> getProfileData() async {
+  final response = await _userDataRepository.getProfile();
+  if (response.statusCode == 200) {
+    final profileData = response.data['data'];
+    user.value = UserModel.fromJson(profileData);
+
+    // Save userId for IAP buyer binding
+    if (profileData['id'] != null) {
+      Get.find<AuthService>().saveUserId(profileData['id'].toString());
+    }
+  }
+}
+
+// In auth_service.dart
+Future<void> saveUserId(String id) async {
+  await StorageService.setString(StorageConstants.userId, id);
+}
+```
+
+**API Response Structure (for reference):**
 ```json
-
-{ "signedTransactionInfo": "eyJhbGciOiJFUzI1NiIs..." }
-
-```
-
- 
-
-### Flutter (using your native bridge from §4.2)
-
- 
-
-```dart
-
-import 'package:flutter/services.dart';
-
- 
-
-const _channel = MethodChannel('app.tbsosick/iap');
-
- 
-
-Future<void> purchaseApple({
-
-  required String productId,
-
-  required String userId,
-
-  required String userJwt,
-
-}) async {
-
-  final accountToken = deriveIapAccountToken(userId);
-
- 
-
-  // 1. Native StoreKit 2 purchase with appAccountToken
-
-  final String jws = await _channel.invokeMethod('purchase', {
-
-    'productId': productId,
-
-    'accountToken': accountToken,
-
-  });
-
- 
-
-  // 2. Verify with backend
-
-  final response = await http.post(
-
-    Uri.parse('$baseUrl/api/v1/subscriptions/apple/verify'),
-
-    headers: {
-
-      'Authorization': 'Bearer $userJwt',
-
-      'Content-Type': 'application/json',
-
-    },
-
-    body: jsonEncode({ 'signedTransactionInfo': jws }),
-
-  );
-
- 
-
-  if (response.statusCode == 200) {
-
-    // refresh local cache from response.data
-
-  } else {
-
-    handleVerifyError(response);
-
-  }
-
-}
-
-```
-
- 
-
-### Errors
-
- 
-
-| Status | Trigger | Recommended UI |
-
-|---|---|---|
-
-| `400` | Invalid JWS, expired/revoked transaction, bundle ID mismatch, unknown `productId`, **`isUpgraded === true`** (re-verify the latest transaction), **sandbox transaction received in production** | "Something went wrong with this purchase" + log details |
-
-| `401` | Bearer JWT missing/expired | Force re-login |
-
-| `409` | Transaction already linked to a different account, **OR `appAccountToken` does not match the authenticated user** | "This purchase belongs to another account" |
-
-| `429` | Rate limit exceeded (30 req/min) | Backoff + retry |
-
-| `500` | Backend Apple credentials misconfigured | "Service unavailable, please retry" |
-
- 
-
----
-
- 
-
-## 6. Android — Verify Google Purchase
-
- 
-
-`POST /api/v1/subscriptions/google/verify`
-
- 
-
-### Request body
-
- 
-
-```json
-
+GET /users/profile
 {
-
-  "purchaseToken": "abc123...",
-
-  "productId": "premium_yearly"
-
+  "data": {
+    "id": "69fa359a3fc3858c40265443",   ← this is what we save
+    "name": "John Doe",
+    "email": "user@example.com"
+  }
 }
-
 ```
-
- 
-
-### Flutter (using `in_app_purchase`)
-
- 
-
-```dart
-
-import 'package:in_app_purchase/in_app_purchase.dart';
-
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-
- 
-
-Future<void> handleGooglePurchase(
-
-  GooglePlayPurchaseDetails purchase,
-
-  String userJwt,
-
-) async {
-
-  if (purchase.status != PurchaseStatus.purchased) return;
-
- 
-
-  final response = await http.post(
-
-    Uri.parse('$baseUrl/api/v1/subscriptions/google/verify'),
-
-    headers: {
-
-      'Authorization': 'Bearer $userJwt',
-
-      'Content-Type': 'application/json',
-
-    },
-
-    body: jsonEncode({
-
-      'purchaseToken': purchase.verificationData.serverVerificationData,
-
-      'productId': purchase.productID,
-
-    }),
-
-  );
-
- 
-
-  if (response.statusCode == 200) {
-
-    // ✅ Required: tell the platform we're done so Google doesn't retry
-
-    await InAppPurchase.instance.completePurchase(purchase);
-
-    // refresh local cache from response.data
-
-  } else {
-
-    handleVerifyError(response);
-
-  }
-
-}
-
-```
-
- 
-
-> **Don't skip `completePurchase()`**. Google's billing client retries delivery until the app finalizes the purchase. The backend separately calls `purchases.subscriptions.acknowledge` to satisfy the **72-hour acknowledgement window** (failure to acknowledge = auto-refund), but the local `completePurchase()` is what stops redelivery in the Flutter listener.
-
- 
-
-### Errors
-
- 
-
-| Status | Trigger | Recommended UI |
-
-|---|---|---|
-
-| `400` | Invalid token, Google API error, expired subscription, inactive `subscriptionState`, unknown `productId`, **`testPurchase: true` in production** | "Something went wrong with this purchase" |
-
-| `401` | Bearer JWT missing/expired | Force re-login |
-
-| `409` | Token already linked to another account, **OR `obfuscatedAccountId` does not match the authenticated user** | "This purchase belongs to another account" |
-
-| `429` | Rate limit exceeded | Backoff + retry |
-
-| `500` | Backend Google service-account credentials misconfigured | "Service unavailable" |
-
- 
 
 ---
 
- 
-
-## 7. Read Current Subscription
-
- 
-
-`GET /api/v1/subscriptions/me`
-
- 
-
-This endpoint is **read-only** — it never writes to the database. Free users with no subscription row get a synthetic response (slimmer shape).
-
- 
-
-### Scenario A — User has a subscription row
-
- 
-
-```json
-
-{
-
-  "success": true,
-
-  "statusCode": 200,
-
-  "message": "Subscription retrieved successfully",
-
-  "data": {
-
-    "_id": "664a1b2c3d4e5f6a7b8c9d0f",
-
-    "userId": "664a1b2c3d4e5f6a7b8c9d0e",
-
-    "plan": "PREMIUM",
-
-    "status": "active",
-
-    "platform": "apple",
-
-    "environment": "production",
-
-    "productId": "premium_monthly",
-
-    "autoRenewing": true,
-
-    "currentPeriodEnd": "2027-04-07T10:30:00.000Z",
-
-    "createdAt": "2026-04-07T10:30:00.000Z",
-
-    "updatedAt": "2026-04-07T10:30:00.000Z"
-
-  }
-
-}
-
-```
-
- 
-
-### Scenario B — User has no row yet (synthetic FREE)
-
- 
-
-```json
-
-{
-
-  "success": true,
-
-  "statusCode": 200,
-
-  "message": "Subscription retrieved successfully",
-
-  "data": {
-
-    "userId": "664a1b2c3d4e5f6a7b8c9d0e",
-
-    "plan": "FREE",
-
-    "status": "active"
-
-  }
-
-}
-
-```
-
- 
-
-> **Critical Flutter implication**: `data._id`, `data.currentPeriodEnd`, `data.autoRenewing`, `data.createdAt`, `data.updatedAt` are **only present in Scenario A**. Code that destructures them unconditionally will crash on new users. Always null-check.
-
- 
-
-### Entitlement check (recommended Dart helper)
-
- 
+## E5. API Constants
 
 ```dart
+// lib/config/constants/api_constants.dart
+static const String subscriptionBaseUrl = '$baseUrl/subscriptions';
 
-class Entitlement {
-
-  final String plan;     // 'FREE' | 'PREMIUM' | 'ENTERPRISE'
-
-  final String status;   // 'active' | 'trialing' | 'past_due' | 'canceled' | 'inactive'
-
-  final DateTime? currentPeriodEnd; // null for synthetic FREE or admin-perpetual grants
-
- 
-
-  bool get isPaidPlan => plan != 'FREE';
-
-  bool get hasAccess {
-
-    // Match the backend's ACTIVE_STATUSES set (entitlement.ts).
-
-    if (!{'active', 'trialing', 'past_due'}.contains(status)) return false;
-
-    // Temporal safety net — a missed EXPIRED webhook shouldn't grant forever.
-
-    if (currentPeriodEnd != null && currentPeriodEnd!.isBefore(DateTime.now())) return false;
-
-    return true;
-
-  }
-
-  bool get isPremium    => hasAccess && isPaidPlan;
-
-  bool get isEnterprise => hasAccess && plan == 'ENTERPRISE';
-
-}
-
+// Full URLs used in IapService:
+// Android: $subscriptionBaseUrl/google/verify
+// iOS:     $subscriptionBaseUrl/apple/verify
+// Status:  $subscriptionBaseUrl/me  (GET)
 ```
-
- 
-
-> `currentPeriodEnd` may be `null` for two valid reasons: (1) synthetic FREE response, (2) admin-granted plans (`POST /admin/grant`) which are intentionally perpetual until manually managed. Treat `null` as "no expiry to enforce client-side."
-
- 
 
 ---
 
- 
-
-## 8. Downgrade — `POST /choose/free`
-
- 
-
-User-facing button that flips the local row to FREE. **It does NOT cancel any active store-side billing** — for users with live Apple/Google subscriptions, the backend rejects this with `409` and the user must cancel via App Store / Play Store.
-
- 
-
-### Request
-
- 
+## E6. Initial Binding (Global Registration)
 
 ```dart
-
-final response = await http.post(
-
-  Uri.parse('$baseUrl/api/v1/subscriptions/choose/free'),
-
-  headers: { 'Authorization': 'Bearer $userJwt' },
-
-);
-
+// lib/core/bindings/initial_binding.dart
+Get.put(IapService(), permanent: true);
+// permanent: true — keeps the service alive for the entire app lifetime
+// This means the purchase stream listener is always active
 ```
 
- 
+---
 
-### Responses
+## E7. Build Commands
 
- 
+```bash
+# Android — Release Bundle for Play Store
+flutter clean && flutter pub get
+flutter build appbundle
+# Output: build/app/outputs/bundle/release/app-release.aab
 
-| Status | Meaning |
+# iOS — Release Archive for App Store
+flutter build ipa
+# Output: build/ios/ipa/Runner.ipa
+```
 
+---
+
+## E8. Gradle Memory Fix
+
+If you get "Gradle Daemon disappeared" during build:
+
+**android/gradle.properties:**
+```properties
+# Reduced from -Xmx8G to -Xmx4G to prevent crash on low-RAM machines
+org.gradle.jvmargs=-Xmx4G -XX:MaxMetaspaceSize=4G -XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError
+android.useAndroidX=true
+```
+
+---
+
+# PART F — TROUBLESHOOTING GUIDE
+
+## F1. Complete Error Reference
+
+### `Store not available`
+- **Cause:** App is running on an emulator or simulator
+- **Fix:** Use a real physical device. IAP never works on emulators.
+
+### `IAP: Fetch result - Found: 0, Not Found: [all 4 ids]`
+- **Cause:** Products don't exist in Play Console / App Store Connect, or they're in Draft status, or the app hasn't been uploaded yet
+- **Fix:**
+  1. Make sure products are created in the console with the exact same IDs
+  2. Make sure product status is "Active" (not Draft)
+  3. Make sure your app has been uploaded to Internal Testing at least once
+
+### `The item you were attempting to purchase could not be found`
+- **Cause:** Your test account hasn't accepted the Internal Testing invite, OR your Google Play account isn't a registered tester
+- **Fix:**
+  1. Go to the "Join on web" link in Play Console → Internal testing → Testers
+  2. Accept the invite from your test Gmail account
+
+### `IAP: Error - User ID is empty`
+- **Cause:** The userId was never saved to local storage. This happens if the user has never visited the Profile page after the code was updated, or if they never logged out and back in.
+- **Fix:**
+  1. Go to the Profile page once so `getProfileData()` runs and saves the userId
+  2. Or: Log out and log back in
+
+### `Google purchase verification failed: insufficient permissions`
+- **Cause:** The service account email doesn't have the right permissions in Play Console, OR the Google Cloud project is not linked to the Play Console
+- **Fix:**
+  1. Play Console → Users and permissions → Edit service account → Account permissions → Check "View financial data" and "Manage orders"
+  2. Play Console → Setup → API access → Link your Google Cloud project
+  3. Wait 10–30 minutes for permissions to propagate
+
+### `invalid_grant: Invalid JWT Signature`
+- **Cause:** The service account JSON key file is corrupted, outdated, or was manually edited
+- **Fix:** Generate a brand new JSON key from Google Cloud Console → IAM & Admin → Service Accounts → Keys → Add Key → Create new key → JSON
+
+### `Version code X has already been used`
+- **Cause:** You uploaded a build with the same version code as a previous upload
+- **Fix:** Increment the version code in `pubspec.yaml` before every new build
+  ```yaml
+  version: 1.0.0+3  # change the number after +
+  ```
+
+### `Gradle Daemon disappeared unexpectedly`
+- **Cause:** The build process ran out of memory (RAM)
+- **Fix:** In `android/gradle.properties`, reduce max memory:
+  ```properties
+  org.gradle.jvmargs=-Xmx4G
+  ```
+  Also close heavy applications (browsers, Android Studio) during the build.
+
+---
+
+# PART G — MASTER CHECKLIST
+
+## G1. Android — Status
+
+| Task | Status |
 |---|---|
+| Add `in_app_purchase` package | ✅ Done |
+| Create `IapService` with Buyer Binding | ✅ Done |
+| Register `IapService` in `InitialBinding` | ✅ Done |
+| Add subscription API URLs to `ApiConstants` | ✅ Done |
+| Build and upload app to Internal Testing | ✅ Done |
+| Accept Internal Testing invite on device | ✅ Done |
+| Create 4 subscription products in Play Console | ✅ Done |
+| Activate all products (not Draft) | ✅ Done |
+| Add service account to Users and permissions | ✅ Done |
+| Grant Financial Data + Manage Orders permissions | ✅ Done |
+| Enable Google Play Android Developer API in Cloud | ✅ Done |
+| Link Google Cloud project to Play Console | ✅ Done |
+| Save userId when profile loads | ✅ Done |
+| Dynamic pricing shown in Subscription UI | ✅ Done |
+| **End-to-end purchase + verification test** | ✅ **PASSED** |
 
-| `200` | Downgraded — local row is now `plan: "FREE"`, `platform: "admin"` |
+## G2. iOS — Pending Tasks
 
-| `409` | User has an active store subscription (`currentPeriodEnd > now`); show: *"You have an active store subscription. Please cancel it through the App Store or Play Store first."* |
-
-| `401` | Bearer JWT missing/expired |
-
- 
-
----
-
- 
-
-## 9. Known Product IDs
-
- 
-
-Apple and Google share the same product identifiers by convention (configure both stores with these exact strings):
-
- 
-
-| Product ID | Plan |
-
+| Task | Status |
 |---|---|
+| iOS purchase code in `IapService` (Platform.isIOS branch) | ✅ Code Ready |
+| iOS verify sends `signedTransactionInfo` to backend | ✅ Code Ready |
+| Create Subscription Group in App Store Connect | ⏳ Pending |
+| Create 4 subscription products in App Store Connect | ⏳ Pending |
+| Set all iOS product status to "Ready to Submit" | ⏳ Pending |
+| Create Sandbox Tester account | ⏳ Pending |
+| Build and upload to TestFlight | ⏳ Pending |
+| Accept TestFlight invite on iPhone | ⏳ Pending |
+| Configure backend Apple verification (shared secret) | ⏳ Pending |
+| End-to-end iOS purchase test | ⏳ Pending |
 
-| `premium_monthly` | PREMIUM, monthly billing |
+## G3. Upcoming Feature Work
 
-| `premium_yearly` | PREMIUM, yearly billing |
-
-| `enterprise_monthly` | ENTERPRISE, monthly billing |
-
-| `enterprise_yearly` | ENTERPRISE, yearly billing |
-
- 
-
-Source of truth: [`src/app/modules/subscription/helpers/plan.mapper.ts`](helpers/plan.mapper.ts). Adding a new product requires a backend change there *and* matching entries in App Store Connect / Google Play Console.
-
- 
+| Task | Priority |
+|---|---|
+| Show "Active" badge on profile after successful purchase | High |
+| Call `GET /subscriptions/me` on app launch to refresh status | High |
+| Handle `409 Conflict` — receipt already used by another account | Medium |
+| Handle `429 Too Many Requests` — rate limit on verify endpoint | Medium |
+| Add "Restore Purchases" button (required by App Store guidelines) | Medium |
+| Show subscription expiry date in profile | Low |
+| Handle subscription cancellation flow in UI | Low |
 
 ---
 
- 
-
-## 10. Restore Purchases
-
- 
-
-When the user taps "Restore Purchases", iterate every restored transaction and POST it to the same `/verify` endpoint.
-
- 
-
-```dart
-
-Future<void> restorePurchases(String userJwt) async {
-
-  await InAppPurchase.instance.restorePurchases();
-
-  // Each restored purchase comes through the existing purchaseStream listener;
-
-  // the same handleApplePurchase / handleGooglePurchase code paths apply.
-
-}
+# PART H — VERIFIED TEST RESULT
 
 ```
+Date:          2026-05-12
+Platform:      Android
+Device:        Real Physical Device (OnePlus)
+Track:         Internal Testing (Sandbox environment)
+Test Type:     License Test (no real payment)
 
- 
+Purchase:
+  Product ID:  enterprise_monthly
+  Order ID:    GPA.3322-3688-1106-35608
 
-> **Important**: if a restored receipt belongs to a different user account (e.g. the device was previously logged into someone else's app account), the backend returns `409 Conflict` (cross-account fraud guard). Show: *"This purchase is linked to a different account."* This is the **same** 409 as the buyer-binding mismatch — message can be unified.
-
- 
+Backend Response:
+  Status:      200 OK ✅
+  Message:     Google subscription verified successfully
+  Plan:        ENTERPRISE
+  Status:      active
+  AutoRenew:   true
+  Environment: sandbox
+```
 
 ---
 
- 
+## Quick Reference — Key Values
 
-## 11. App Lifecycle Hooks
-
- 
-
-Lifecycle events from Apple/Google (renewal, cancellation, refund, account hold) flow to the backend via webhooks **without any client involvement**. The Flutter app's only job is to keep its local cache fresh:
-
- 
-
-| Hook | Action |
-
+| Item | Value |
 |---|---|
-
-| App launch | `GET /me`, populate cache |
-
-| App resume from background | `GET /me`, refresh cache |
-
-| After successful `/verify` | Use response body as-is (it's the canonical `Subscription` doc) |
-
-| After successful `/choose/free` | Use response body |
-
-| Pull-to-refresh on profile screen | `GET /me` |
-
- 
-
-Do **not** poll `/me` on a timer. The webhook → DB → next-launch refresh path is the design.
-
- 
-
----
-
- 
-
-## 12. Best Practices Checklist
-
- 
-
-- ☐ Always set `appAccountToken` (iOS) / `obfuscatedAccountId` (Android) on every purchase — see §4.
-
-- ☐ Handle `PurchaseStatus.pending` — do not call `/verify` until status is `purchased`.
-
-- ☐ Call `InAppPurchase.instance.completePurchase(purchase)` after a 200 from `/google/verify` so Google stops redelivering.
-
-- ☐ Null-check `_id`, `currentPeriodEnd`, `autoRenewing` on `/me` responses (Scenario B has the slim shape).
-
-- ☐ For 409 errors, clearly tell the user the receipt is bound to another account — don't silently retry.
-
-- ☐ Refresh `/me` on app launch and on resume; trust webhooks for the rest.
-
-- ☐ Cache the JWT and refresh before calling `/verify` to avoid 401 mid-purchase.
-
- 
-
----
-
- 
-
-## 13. Where to Read Next
-
- 
-
-- [00-flows.md](../../../../documentaction/modules/subscription/00-flows.md) — end-to-end backend flow diagrams
-
-- [02-verify-apple-purchase.md](../../../../documentaction/modules/subscription/02-verify-apple-purchase.md) — Apple verify contract
-
-- [03-verify-google-purchase.md](../../../../documentaction/modules/subscription/03-verify-google-purchase.md) — Google verify contract
-
-- [04-set-free-plan.md](../../../../documentaction/modules/subscription/04-set-free-plan.md) — choose-free contract
-
-- [06-technical-architecture.md](../../../../documentaction/modules/subscription/06-technical-architecture.md) — security model, fraud guards, idempotency
-
-- [helpers/iap-account.ts](helpers/iap-account.ts) — canonical `IAP_NAMESPACE` value
-
-- [helpers/plan.mapper.ts](helpers/plan.mapper.ts) — canonical productId list
-
- 
-
-1:22 AM
-Dear goldentek, I hope you are doing well. ... by MD Bayzid Hosen
-MD Bayzid Hosen
-
-Dear goldentek,
-
-I hope you are doing well.
-
-As per your confirmation and recent feedback, we are now proceeding with the delivery. The changes and updates you previously mentioned have been successfully completed from our side.
-
-We have now completed the 1st Phase of the UI/UX Design, which is the App Design Phase for the Horse Racing project.
-
-Requirements Document:
-https://docs.google.com/document/d/1H0bZ2AFAcfKtyCINr7d-XkFAaNXohjulFFDm-dxrHFE/edit?usp=sharing
-
-Figma Design Link:
-https://www.figma.com/design/tJdZVpjjFoCFOhs89qhzws/horse?node-id=89-2&t=YYlhfHRIO9Apqtqv-1
-
-Kindly review the UI/UX deliverables and confirm acceptance of this phase on Fiverr. We would truly appreciate it if you could also share your experience with us there.
-
-If you have any feedback, suggestions, or issues related to the UI/UX, please feel free to share them directly with us. We kindly request that you do not submit a formal revision request through Fiverr, as it may negatively impact our profile. Instead, please communicate any required changes with us directly, and we will make sure to address and fix them promptly.
-
-As discussed earlier, the UI/UX phase has been divided into 2 parts:
-
-App Design Phase (Completed)
-Dashboard Design Phase (Next Phase)
-Once this UI/UX phase is accepted, we will proceed to the Dashboard Design Phase based on the finalized designs. The order request for the 2nd phase has already been sent from our side.
-
-Thank you again for your cooperation and trust. We look forward to continuing the next phase together.
-
-Best regards,
-Team Lead
-
-
-Horse Racing App – Requirements Document - Google Docs
-
-Horse Racing App – Requirements Document Project Overview The primary goal of this project is to develop a modern, data-driven horse racing platform that provides users with real-time race bulletin...
-
-docs.google.com
+| IAP Namespace (Buyer Binding) | `b9f6a4c0-1d2e-4f3a-9c8b-0e7d6c5b4a32` |
+| Android Package Name | `com.tbsosick.smrtscrub` |
+| Service Account Email | `play-billing-service@[ PROJECT-ID ].iam.gserviceaccount.com` |
+| Google Cloud Project | `[ PROJECT-ID ]` |
+| Android Verify URL | `/api/v1/subscriptions/google/verify` |
+| iOS Verify URL | `/api/v1/subscriptions/apple/verify` |
+| Subscription Status URL | `/api/v1/subscriptions/me` |
+| User Profile URL | `/api/v1/users/profile` |
