@@ -11,6 +11,7 @@ import 'package:tbsosick/presentation/controllers/forgate_password.dart';
 import 'package:tbsosick/presentation/controllers/login_controller.dart';
 import 'package:tbsosick/presentation/controllers/reset_password.dart';
 import 'package:tbsosick/presentation/controllers/sign_up_controller.dart';
+import 'package:tbsosick/core/services/iap_service.dart';
 
 class InitialBinding extends Bindings {
   @override
@@ -21,6 +22,7 @@ class InitialBinding extends Bindings {
     Get.put(AuthService(), permanent: true);
     Get.put(AuthController(), permanent: true);
     Get.put(UserDataRepository(), permanent: true);
+    Get.put(IapService(), permanent: true);
     // Global controllers
     Get.put(InternetController(), permanent: true);
 

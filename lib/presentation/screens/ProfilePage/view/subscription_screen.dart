@@ -136,7 +136,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                             child: Obx(
                               () => _planCard(
                                 title: tr.premiumPlanTitle,
-                                price: '\$5.99',
+                                price: controller.premiumProduct.value?.price ?? '\$5.99',
                                 badge: tr.popularBadge,
                                 features: [
                                   '20 preference cards',
@@ -157,7 +157,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                             child: Obx(
                               () => _planCard(
                                 title: tr.enterprisePlanTitle,
-                                price: '\$9.99',
+                                price: controller.enterpriseProduct.value?.price ?? '\$9.99',
                                 features: [
                                   'Unlimited cards',
                                   'Advanced calendar',
@@ -171,12 +171,18 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                           ),
                           SizedBox(height: 32.h),
 
-                          CustomElevatedButton(
-                            label: tr.updatePaymentMethod,
+                          Obx(() => CustomElevatedButton(
+                            label: controller.selectedPlan.value == 0 
+                                ? tr.updatePaymentMethod 
+                                : 'Subscribe Now',
                             onPressed: () {
-                              showPaymentMethodBottomSheet(context);
+                              if (controller.selectedPlan.value == 0) {
+                                showPaymentMethodBottomSheet(context);
+                              } else {
+                                controller.subscribe();
+                              }
                             },
-                          ),
+                          )),
                           SizedBox(height: 20.h),
                         ],
                       ),

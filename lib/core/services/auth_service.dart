@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart' hide Response;
@@ -8,6 +7,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
+import 'package:tbsosick/core/utils/logger.dart';
 import 'package:tbsosick/core/utils/nonce_helper.dart' hide generateNonce;
 import 'package:tbsosick/data/repositories/auth_repository.dart';
 
@@ -143,7 +143,7 @@ class AuthService extends GetxService {
             ? WebAuthenticationOptions(
                 clientId: 'com.tbsosick.smrtscrub.service',
                 redirectUri: Uri.parse(
-                    'https://www.smrtscrub.com/api/v1/auth/apple/callback'),
+                    'https://jenice-unfearing-predictively.ngrok-free.dev/api/v1/auth/apple/callback'),
               )
             : null,
       );
@@ -251,7 +251,7 @@ class AuthService extends GetxService {
         refreshToken,
       );
     }
-
+    
     final bool? isOnboardingCompleted = authData['isOnboardingCompleted'];
     if (isOnboardingCompleted != null) {
       await StorageService.setBool(
@@ -259,6 +259,12 @@ class AuthService extends GetxService {
         isOnboardingCompleted,
       );
     }
+  }
+
+  /// Manually save user ID (Useful when profile is fetched separately)
+  Future<void> saveUserId(String id) async {
+    AppLogger.debug('IAP: Manually saving User ID: $id');
+    await StorageService.setString(StorageConstants.userId, id);
   }
 
   /// Clears all local auth data

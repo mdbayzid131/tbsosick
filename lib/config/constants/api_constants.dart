@@ -52,4 +52,8 @@ class ApiConstants {
   static const String googleSignIn = '/auth/google';
   static const String appleSignIn = '/auth/apple';
   static const String socialLogin = '/auth/social-login';
+
+  // Subscription Endpoints
+  static const String subscriptionBaseUrl = '/subscriptions';
+  static const String getMySubscription = '/subscriptions/me';
 }

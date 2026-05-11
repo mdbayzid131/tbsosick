@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SubscriptionHelper {
   static void showSubscriptionDialog({
-    String? message,
     String? title,
+    String? message,
     VoidCallback? onPress,
   }) {
     Get.dialog(
@@ -16,7 +16,7 @@ class SubscriptionHelper {
         ),
         title: Center(
           child: Text(
-            title ?? 'Subscription Required',
+            title ??   '  Subscription Required',
             style: GoogleFonts.arimo(
               fontWeight: FontWeight.w700,
               fontSize: 18.sp,
@@ -32,11 +32,7 @@ class SubscriptionHelper {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed:
-                  onPress ??
-                  () {
-                    Get.back();
-                  },
+              onPressed: onPress ?? () => Get.back(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF9945FF),
                 shape: RoundedRectangleBorder(

@@ -6,6 +6,7 @@ import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/models/legal_page_model.dart';
 import 'package:tbsosick/data/models/user_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
+import 'package:tbsosick/core/services/auth_service.dart';
 
 class ProfileController extends GetxController {
   final UserDataRepository _userDataRepository = Get.find();
@@ -27,7 +28,13 @@ class ProfileController extends GetxController {
       isLoading.value = true;
       final response = await _userDataRepository.getProfile();
       if (response.statusCode == 200) {
-        user.value = UserModel.fromJson(response.data['data']);
+        final profileData = response.data['data'];
+        user.value = UserModel.fromJson(profileData);
+        
+        // Save userId for IAP
+        if (profileData['id'] != null) {
+          Get.find<AuthService>().saveUserId(profileData['id'].toString());
+        }
       }
     } catch (e) {
       Helpers.showDebugLog("getProfileData error => $e");
