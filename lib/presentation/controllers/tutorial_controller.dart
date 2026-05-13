@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -49,7 +50,7 @@ class TutorialController extends GetxController {
       Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
     } catch (e) {
       // Handle error if needed, but still allow navigation or show error
-      debugPrint("Error completing onboarding: $e");
+      Helpers.error("Error completing onboarding: $e");
       StorageService.setBool(StorageConstants.quickSetupCompleted, true);
       Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
     } finally {

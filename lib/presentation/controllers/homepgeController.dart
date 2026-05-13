@@ -33,7 +33,7 @@ class HomePageController extends GetxController {
         specialtiesList.assignAll(data.map((e) => Specialty.fromJson(e)).toList());
       }
     } catch (e) {
-      Helpers.showDebugLog("getSpecialties error => $e");
+      Helpers.error("getSpecialties error => $e");
     } finally {
       isSpecialtiesLoading.value = false;
     }
@@ -73,7 +73,7 @@ class HomePageController extends GetxController {
         }
       }
     } catch (e) {
-      Helpers.showDebugLog("getSupplies error => $e");
+      Helpers.error("getSupplies error => $e");
     } finally {
       isSuppliesLoading.value = false;
     }
@@ -105,7 +105,7 @@ class HomePageController extends GetxController {
       }
     } catch (e) {
       _suppliesPage.value--;
-      Helpers.showDebugLog("loadMoreSupplies error => $e");
+      Helpers.error("loadMoreSupplies error => $e");
     } finally {
       isSuppliesMoreLoading.value = false;
     }
@@ -134,7 +134,7 @@ class HomePageController extends GetxController {
         }
       }
     } catch (e) {
-      Helpers.showDebugLog("getSutures error => $e");
+      Helpers.error("getSutures error => $e");
     } finally {
       isSuturesLoading.value = false;
     }
@@ -165,7 +165,7 @@ class HomePageController extends GetxController {
       }
     } catch (e) {
       _suturesPage.value--;
-      Helpers.showDebugLog("loadMoreSutures error => $e");
+      Helpers.error("loadMoreSutures error => $e");
     } finally {
       isSuturesMoreLoading.value = false;
     }
@@ -181,7 +181,7 @@ class HomePageController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {}
     } catch (e) {
-      Helpers.showDebugLog("addToFavoriteList error => $e");
+      Helpers.error("addToFavoriteList error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -196,7 +196,7 @@ class HomePageController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {}
     } catch (e) {
-      Helpers.showDebugLog("removeFromFavoriteList error => $e");
+      Helpers.error("removeFromFavoriteList error => $e");
     } finally {
       isLoading.value = false;
     }

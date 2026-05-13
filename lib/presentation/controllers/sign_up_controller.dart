@@ -5,7 +5,6 @@ import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
-import 'package:tbsosick/presentation/screens/splash_screen/controller/splash_controller.dart';
 
 class SignUpController extends GetxController {
   final AuthService _authService = Get.find();
@@ -88,7 +87,7 @@ class SignUpController extends GetxController {
         );
       }
     } catch (e) {
-      Helpers.showDebugLog("signUp error => $e");
+      Helpers.error("signUp error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -112,7 +111,7 @@ class SignUpController extends GetxController {
       }
     } catch (e) {
       Helpers.showError(e.toString());
-      Helpers.showDebugLog(e.toString());
+      Helpers.error(e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -136,7 +135,7 @@ class SignUpController extends GetxController {
       }
     } catch (e) {
       Helpers.showError(e.toString());
-      Helpers.showDebugLog(e.toString());
+      Helpers.error(e.toString());
     } finally {
       isLoading.value = false;
     }

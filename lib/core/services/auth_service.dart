@@ -7,6 +7,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/logger.dart';
 import 'package:tbsosick/core/utils/nonce_helper.dart' hide generateNonce;
 import 'package:tbsosick/data/repositories/auth_repository.dart';
@@ -64,7 +65,18 @@ class AuthService extends GetxService {
     required String password,
   }) async {
     try {
-      final response = await _authRepo.login(email: email, password: password);
+      String? deviceToken;
+      try {
+        deviceToken = await FirebaseMessaging.instance.getToken();
+      } catch (e) {
+        Helpers.error('Failed to get FCM token: $e');
+      }
+
+      final response = await _authRepo.login(
+        email: email,
+        password: password,
+        deviceToken: deviceToken,
+      );
       await _handleAuthResponse(response);
       return response;
     } catch (e) {
@@ -143,7 +155,8 @@ class AuthService extends GetxService {
             ? WebAuthenticationOptions(
                 clientId: 'com.tbsosick.smrtscrub.service',
                 redirectUri: Uri.parse(
-                    'https://jenice-unfearing-predictively.ngrok-free.dev/api/v1/auth/apple/callback'),
+                  'https://jenice-unfearing-predictively.ngrok-free.dev/api/v1/auth/apple/callback',
+                ),
               )
             : null,
       );
@@ -168,12 +181,12 @@ class AuthService extends GetxService {
   }
 
   /// ===================== OTP VERIFY =====================
-  Future<Response> verifyOtp({required String email, required String otp}) async {
+  Future<Response> verifyOtp({
+    required String email,
+    required String otp,
+  }) async {
     try {
-      final response = await _authRepo.otpVerify(
-        email: email,
-        otp: otp,
-      );
+      final response = await _authRepo.otpVerify(email: email, otp: otp);
       if (response.statusCode == 200) {
         await _handleAuthResponse(response);
       }
@@ -251,7 +264,7 @@ class AuthService extends GetxService {
         refreshToken,
       );
     }
-    
+
     final bool? isOnboardingCompleted = authData['isOnboardingCompleted'];
     if (isOnboardingCompleted != null) {
       await StorageService.setBool(
@@ -263,7 +276,7 @@ class AuthService extends GetxService {
 
   /// Manually save user ID (Useful when profile is fetched separately)
   Future<void> saveUserId(String id) async {
-    AppLogger.debug('IAP: Manually saving User ID: $id');
+    Helpers.debug('IAP: Manually saving User ID: $id');
     await StorageService.setString(StorageConstants.userId, id);
   }
 

@@ -33,7 +33,7 @@ class NotificationService {
           try {
             await OpenFile.open(response.payload);
           } catch (e) {
-            Helpers.showDebugLog("Error opening file from notification: $e");
+            Helpers.error("Error opening file from notification: $e");
           }
         }
       },

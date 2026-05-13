@@ -5,7 +5,6 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
-import 'package:tbsosick/core/utils/logger.dart';
 import 'package:uuid/uuid.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 
@@ -40,7 +39,7 @@ class IapService extends GetxService {
     _subscription = purchaseUpdated.listen(
       _onPurchaseUpdate,
       onDone: () => _subscription.cancel(),
-      onError: (error) => AppLogger.debug('IAP Error: $error'),
+      onError: (error) => Helpers.debug('IAP Error: $error'),
     );
     initialize();
   }
@@ -52,39 +51,44 @@ class IapService extends GetxService {
   }
 
   Future<void> initialize() async {
-    AppLogger.debug('IAP: Initializing...');
+    Helpers.debug('IAP: Initializing...');
     final bool available = await _iap.isAvailable();
-    AppLogger.debug('IAP: Store available: $available');
+    Helpers.debug('IAP: Store available: $available');
     if (!available) {
-      AppLogger.debug('IAP: Store not available on this device');
+      Helpers.debug('IAP: Store not available on this device');
       return;
     }
     await fetchProducts();
   }
 
   Future<void> fetchProducts() async {
-    AppLogger.debug('IAP: Fetching products for IDs: $_productIds');
+    Helpers.debug('IAP: Fetching products for IDs: $_productIds');
     isLoading.value = true;
     try {
-      final ProductDetailsResponse response =
-          await _iap.queryProductDetails(_productIds.toSet());
-      
-      AppLogger.debug('IAP: Fetch result - Found: ${response.productDetails.length}, Not Found: ${response.notFoundIDs}');
-      
+      final ProductDetailsResponse response = await _iap.queryProductDetails(
+        _productIds.toSet(),
+      );
+
+      Helpers.debug(
+        'IAP: Fetch result - Found: ${response.productDetails.length}, Not Found: ${response.notFoundIDs}',
+      );
+
       if (response.error != null) {
-        AppLogger.debug('IAP: Fetch Error: ${response.error!.message}');
+        Helpers.error('IAP: Fetch Error: ${response.error!.message}');
       }
-      
+
       if (response.productDetails.isEmpty) {
-        AppLogger.debug('IAP: No products were found in the store. Check your SKUs/IDs.');
+        Helpers.warning(
+          'IAP: No products were found in the store. Check your SKUs/IDs.',
+        );
       }
 
       products.assignAll(response.productDetails);
       for (var prod in response.productDetails) {
-        AppLogger.debug('IAP: Loaded Product: ${prod.id} - ${prod.price}');
+        Helpers.debug('IAP: Loaded Product: ${prod.id} - ${prod.price}');
       }
     } catch (e) {
-      AppLogger.debug('IAP: Exception during fetch: $e');
+      Helpers.error('IAP: Exception during fetch: $e');
     } finally {
       isLoading.value = false;
     }
@@ -115,7 +119,7 @@ class IapService extends GetxService {
     try {
       await _iap.buyNonConsumable(purchaseParam: purchaseParam);
     } catch (e) {
-      AppLogger.debug('Error initiating purchase: $e');
+      Helpers.debug('Error initiating purchase: $e');
     }
   }
 
@@ -124,7 +128,7 @@ class IapService extends GetxService {
       if (purchase.status == PurchaseStatus.pending) {
         // Show loading or pending UI
       } else if (purchase.status == PurchaseStatus.error) {
-        AppLogger.debug('Purchase Error: ${purchase.error}');
+        Helpers.error('Purchase Error: ${purchase.error}');
         _iap.completePurchase(purchase);
       } else if (purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored) {
@@ -155,14 +159,14 @@ class IapService extends GetxService {
       }
 
       if (response != null && response.statusCode == 200) {
-        AppLogger.debug('Purchase verified successfully');
+        Helpers.info('Purchase verified successfully');
         await _iap.completePurchase(purchase);
         // Refresh user subscription status here
       } else {
-        AppLogger.debug('Verification failed');
+        Helpers.debug('Verification failed');
       }
     } catch (e) {
-      AppLogger.debug('Error verifying purchase: $e');
+      Helpers.error('Error verifying purchase: $e');
     }
   }
 

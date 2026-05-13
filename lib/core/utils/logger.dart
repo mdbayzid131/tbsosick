@@ -60,29 +60,7 @@ class AppLogger {
     debugPrint('');
   }
 
-  /// General debug log (only in debug mode)
-  static void debug(String message) {
-    if (!kDebugMode) return;
-    debugPrint('');
-    debugPrint('🔍🔍🔍 DEBUG: $message');
-    debugPrint('');
-  }
 
-  /// Info-level log
-  static void info(String message) {
-    if (!kDebugMode) return;
-    debugPrint('');
-    debugPrint('ℹ️ℹ️ℹ️ℹ INFO: $message');
-    debugPrint('');
-  }
-
-  /// Warning-level log
-  static void warning(String message) {
-    if (!kDebugMode) return;
-    debugPrint('');
-    debugPrint('⚠️⚠️⚠️ WARNING: $message');
-    debugPrint('');
-  }
 
   // ──────────────────── PRIVATE HELPERS ────────────────────
 

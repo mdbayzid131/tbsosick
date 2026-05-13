@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/logger.dart';
 
 /// ===================== FIREBASE NOTIFICATION SERVICE =====================
@@ -11,7 +12,7 @@ import 'package:tbsosick/core/utils/logger.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  AppLogger.debug('Background Message: ${message.messageId}');
+  Helpers.debug('Background Message: ${message.messageId}');
 }
 
 class FirebaseNotificationService {
@@ -36,34 +37,34 @@ class FirebaseNotificationService {
       badge: true,
       sound: true,
     );
-    AppLogger.debug('FCM Permission: ${settings.authorizationStatus}');
+    Helpers.debug('FCM Permission: ${settings.authorizationStatus}');
 
     // Get FCM token
     final token = await _messaging.getToken();
-    AppLogger.debug('FCM Token: $token');
+    Helpers.debug('FCM Token: $token');
 
     // Listen for token refresh
     _messaging.onTokenRefresh.listen((newToken) {
-      AppLogger.debug('FCM Token refreshed: $newToken');
+      Helpers.debug('FCM Token refreshed: $newToken');
       onTokenRefresh?.call(newToken);
     });
 
     // Foreground message listener
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      AppLogger.debug('Foreground: ${message.notification?.title}');
+      Helpers.debug('Foreground: ${message.notification?.title}');
       onForegroundMessage?.call(message);
     });
 
     // Notification tap (app in background)
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      AppLogger.debug('Notification clicked: ${message.data}');
+      Helpers.debug('Notification clicked: ${message.data}');
       onNotificationTap?.call(message);
     });
 
     // App opened from terminated state
     final initialMessage = await _messaging.getInitialMessage();
     if (initialMessage != null) {
-      AppLogger.debug('Opened from terminated: ${initialMessage.data}');
+      Helpers.debug('Opened from terminated: ${initialMessage.data}');
       onNotificationTap?.call(initialMessage);
     }
 
@@ -78,12 +79,12 @@ class FirebaseNotificationService {
   /// Subscribe to a topic
   static Future<void> subscribeToTopic(String topic) async {
     await _messaging.subscribeToTopic(topic);
-    AppLogger.debug('Subscribed to topic: $topic');
+    Helpers.debug('Subscribed to topic: $topic');
   }
 
   /// Unsubscribe from a topic
   static Future<void> unsubscribeFromTopic(String topic) async {
     await _messaging.unsubscribeFromTopic(topic);
-    AppLogger.debug('Unsubscribed from topic: $topic');
+    Helpers.debug('Unsubscribed from topic: $topic');
   }
 }

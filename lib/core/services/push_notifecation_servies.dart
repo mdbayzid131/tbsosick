@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 
 // 🔥 Background handler (must be top-level)
 @pragma('vm:entry-point')
@@ -14,14 +15,27 @@ class FirebaseNotificationService {
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   static Future<void> initialize() async {
-    // ✅ Permission (Android auto, iOS needed)
-    NotificationSettings settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    // Check current settings
+    NotificationSettings settings = await _messaging.getNotificationSettings();
+    
+    if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
+      // ✅ Request Permission (Android 13+, iOS)
+      settings = await _messaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
 
-    print('🔐 Permission: ${settings.authorizationStatus}');
+    Helpers.debug('🔐 Push Notification Permission Status: ${settings.authorizationStatus}');
+    
+    if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      Helpers.warning('🚫 Push Notification Permission Denied by user');
+    } else if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      Helpers.info('✅ Push Notification Permission Granted');
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      Helpers.warning('⚠️ Push Notification Permission Provisional (iOS)');
+    }
 
     // ✅ Get FCM Token
     try {
@@ -33,19 +47,19 @@ class FirebaseNotificationService {
           await Future.delayed(const Duration(seconds: 2));
           apnsToken = await _messaging.getAPNSToken();
           retryCount++;
-          debugPrint('⏳ Waiting for APNS Token... (Retry: $retryCount)');
+          Helpers.debug('⏳ Waiting for APNS Token... (Retry: $retryCount)');
         }
       }
 
       String? token = await _messaging.getToken();
-      debugPrint('🔑 FCM Token: $token');
+      Helpers.info('🔑 FCM Token: $token');
     } catch (e) {
-      debugPrint('❌ Error getting FCM Token: $e');
+      Helpers.error('❌ Error getting FCM Token: $e');
     }
 
     // ✅ Listen for Token Refresh
     _messaging.onTokenRefresh.listen((newToken) {
-      debugPrint('🔄 FCM Token Refreshed: $newToken');
+      Helpers.info('🔄 FCM Token Refreshed: $newToken');
     });
 
     // 👉 TODO: backend এ পাঠাতে চাইলে এখানে পাঠাও

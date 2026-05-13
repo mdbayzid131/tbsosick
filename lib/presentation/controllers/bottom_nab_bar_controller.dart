@@ -21,7 +21,7 @@ class BottomNabBarController extends GetxController {
   }
 
   // data list
-  final RxList<PublicCard> publicCards = <PublicCard>[].obs;
+  // final RxList<PublicCard> publicCards = <PublicCard>[].obs;
   // card list
   final RxList<PrivateCard> privateCards = <PrivateCard>[].obs;
   // library cards (unified list)
@@ -89,8 +89,6 @@ class BottomNabBarController extends GetxController {
       await Future.wait([
         getProfile(showLoading: false),
         getAllCardCount(showLoading: false),
-        getPrivateCard(showLoading: false),
-        getPublicCard(showLoading: false),
         getFavoriteCard(showLoading: false),
         getLibraryCards(showLoading: false),
         getSpecialtiesList(showLoading: false),
@@ -112,71 +110,6 @@ class BottomNabBarController extends GetxController {
       print("Error fetching specialties: $e");
     } finally {
       if (showLoading) isSpecialtiesLoading.value = false;
-    }
-  }
-
-  Future<void> getPublicCard({bool showLoading = true}) async {
-    try {
-      if (showLoading) isPublicCardsLoading.value = true;
-      _publicPage = 1;
-
-      final response = await _userDataRepository.getPublicCard(
-        page: _publicPage,
-        search: searchController.value,
-        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
-      );
-      ApiChecker.checkGetApi(response);
-      if (response.statusCode == 200) {
-        if (response.data != null) {
-          // API response might be nested under 'data' or flat
-          final Map<String, dynamic> data =
-              (response.data['data'] is Map<String, dynamic>)
-              ? response.data['data']
-              : response.data;
-
-          final result = PublicCardsResponse.fromJson(data);
-          publicCards.assignAll(result.data);
-          hasMorePublic.value = _publicPage < result.pagination.totalPage;
-        }
-      }
-    } catch (e) {
-      Helpers.showDebugLog("Error loading public cards: $e");
-    } finally {
-      if (showLoading) isPublicCardsLoading.value = false;
-    }
-  }
-
-  Future<void> loadMorePublic() async {
-    if (!hasMorePublic.value || isPublicMoreLoading.value) return;
-
-    try {
-      isPublicMoreLoading.value = true;
-      _publicPage++;
-
-      final response = await _userDataRepository.getPublicCard(
-        page: _publicPage,
-        search: searchController.value,
-        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
-      );
-      ApiChecker.checkGetApi(response);
-      if (response.statusCode == 200) {
-        if (response.data != null) {
-          final Map<String, dynamic> data =
-              (response.data['data'] is Map<String, dynamic>)
-              ? response.data['data']
-              : response.data;
-          final result = PublicCardsResponse.fromJson(data);
-          publicCards.addAll(result.data);
-          hasMorePublic.value = _publicPage < result.pagination.totalPage;
-        }
-      }
-    } catch (e) {
-      _publicPage--; // rollback
-      Helpers.showDebugLog("Error loading more public cards: $e");
-    } finally {
-      isPublicMoreLoading.value = false;
     }
   }
 
@@ -204,7 +137,7 @@ class BottomNabBarController extends GetxController {
         hasMoreLibrary.value = _libraryPage < result.meta.totalPages;
       }
     } catch (e) {
-      Helpers.showDebugLog("Error loading library cards: $e");
+      Helpers.error("Error loading library cards: $e");
     } finally {
       if (showLoading) isLibraryCardsLoading.value = false;
     }
@@ -235,7 +168,7 @@ class BottomNabBarController extends GetxController {
       }
     } catch (e) {
       _libraryPage--; // rollback
-      Helpers.showDebugLog("Error loading more library cards: $e");
+      Helpers.error("Error loading more library cards: $e");
     } finally {
       isLibraryMoreLoading.value = false;
     }
@@ -254,7 +187,7 @@ class BottomNabBarController extends GetxController {
         user.value = UserModel.fromJson(response.data['data']);
       }
     } catch (e) {
-      Helpers.showDebugLog("Error loading profile: $e");
+      Helpers.error("Error loading profile: $e");
     } finally {
       if (showLoading) isProfileLoading.value = false;
     }
@@ -270,76 +203,13 @@ class BottomNabBarController extends GetxController {
 
       cardCount.value = CardCountModel.fromJson(response.data['data']);
     } catch (e) {
-      Helpers.showDebugLog("Error loading card count: $e");
+      Helpers.error("Error loading card count: $e");
     } finally {
       if (showLoading) isCardCountLoading.value = false;
     }
   }
 
-  /// 🔥 GET PRIVATE CARDS
-  Future<void> getPrivateCard({bool showLoading = true}) async {
-    try {
-      if (showLoading) isPrivateCardsLoading.value = true;
-      _privatePage = 1;
-      errorMessage.value = '';
 
-      final response = await _userDataRepository.getPrivateCard(
-        page: _privatePage,
-        search: searchController.value,
-        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
-      );
-      ApiChecker.checkGetApi(response);
-      if (response.statusCode == 200 && response.data != null) {
-        // API response might be nested under 'data' or flat
-        final Map<String, dynamic> data =
-            (response.data['data'] is Map<String, dynamic>)
-            ? response.data['data']
-            : response.data;
-
-        final result = PrivateCardsResponse.fromJson(data);
-
-        privateCards.assignAll(result.data);
-        hasMorePrivate.value = _privatePage < result.pagination.totalPage;
-      }
-    } catch (e) {
-      Helpers.showDebugLog("Error loading private cards: $e");
-    } finally {
-      if (showLoading) isPrivateCardsLoading.value = false;
-    }
-  }
-
-  Future<void> loadMorePrivate() async {
-    if (!hasMorePrivate.value || isPrivateMoreLoading.value) return;
-
-    try {
-      isPrivateMoreLoading.value = true;
-      _privatePage++;
-
-      final response = await _userDataRepository.getPrivateCard(
-        page: _privatePage,
-        search: searchController.value,
-        specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
-        verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
-      );
-      ApiChecker.checkGetApi(response);
-
-      if (response.statusCode == 200 && response.data != null) {
-        final Map<String, dynamic> data =
-            (response.data['data'] is Map<String, dynamic>)
-            ? response.data['data']
-            : response.data;
-        final result = PrivateCardsResponse.fromJson(data);
-        privateCards.addAll(result.data);
-        hasMorePrivate.value = _privatePage < result.pagination.totalPage;
-      }
-    } catch (e) {
-      _privatePage--; // rollback
-      Helpers.showDebugLog("Error loading more private cards: $e");
-    } finally {
-      isPrivateMoreLoading.value = false;
-    }
-  }
 
   /// 🔥 GET FAVORITE CARDS
   Future<void> getFavoriteCard({bool showLoading = true}) async {
@@ -370,7 +240,7 @@ class BottomNabBarController extends GetxController {
         hasMoreFavorite.value = _favoritePage < result.pagination.totalPage;
       }
     } catch (e) {
-      Helpers.showDebugLog("Error loading favorite cards: $e");
+      Helpers.error("Error loading favorite cards: $e");
     } finally {
       if (showLoading) isFavoriteCardsLoading.value = false;
     }
@@ -404,7 +274,7 @@ class BottomNabBarController extends GetxController {
       }
     } catch (e) {
       _favoritePage--; // rollback
-      Helpers.showDebugLog("Error loading more favorite cards: $e");
+      Helpers.error("Error loading more favorite cards: $e");
     } finally {
       isFavoriteMoreLoading.value = false;
     }

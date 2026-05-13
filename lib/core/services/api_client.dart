@@ -11,6 +11,7 @@ import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/controllers/internet_controller.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/logger.dart';
 
 /// ===================== API CLIENT =====================
@@ -341,7 +342,7 @@ class ApiClient extends GetxService {
         return true;
       }
     } catch (e) {
-      AppLogger.debug('Error refreshing token: $e');
+      Helpers.debug('Error refreshing token: $e');
     }
     return false;
   }

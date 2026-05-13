@@ -55,47 +55,7 @@ class UserDataRepository {
     return await _apiClient.getData(ApiConstants.getAllCardsList, query: query);
   }
 
-  // Get all public preference card
-  Future<Response<dynamic>> getPublicCard({
-    int page = 1,
-    String search = '',
-    String specialty = '',
-    String verificationStatus = '',
-  }) async {
-    final query = <String, dynamic>{
-      'page': page,
-      'limit': 10,
-      'searchTerm': search,
-    };
-    if (specialty.isNotEmpty) {
-      query['specialty'] = specialty;
-    }
-    if (verificationStatus.isNotEmpty) {
-      query['verificationStatus'] = verificationStatus;
-    }
-    return await _apiClient.getData(ApiConstants.getPublicCard, query: query);
-  }
 
-  // Get all private preference card
-  Future<Response<dynamic>> getPrivateCard({
-    int page = 1,
-    String search = '',
-    String specialty = '',
-    String verificationStatus = '',
-  }) async {
-    final query = <String, dynamic>{
-      'page': page,
-      'limit': 10,
-      'searchTerm': search,
-    };
-    if (specialty.isNotEmpty) {
-      query['specialty'] = specialty;
-    }
-    if (verificationStatus.isNotEmpty) {
-      query['verificationStatus'] = verificationStatus;
-    }
-    return await _apiClient.getData(ApiConstants.getPrivateCard, query: query);
-  }
 
   // Get my preference cards
   Future<Response<dynamic>> getMyCards({

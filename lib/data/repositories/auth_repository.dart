@@ -48,11 +48,16 @@ class AuthRepo {
   Future<Response> login({
     required String email,
     required String password,
+    String? deviceToken,
   }) async {
-    return await apiClient.postData(ApiConstants.login, {
+    final body = {
       "email": email,
       "password": password,
-    });
+    };
+    if (deviceToken != null) {
+      body["deviceToken"] = deviceToken;
+    }
+    return await apiClient.postData(ApiConstants.login, body);
   }
 
   /// ===================== FORGOT PASSWORD =====================

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tbsosick/app.dart';
 import 'package:tbsosick/core/services/notification_service.dart';
 import 'package:tbsosick/core/services/push_notifecation_servies.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/firebase_options.dart';
 
 void main() async {
@@ -13,9 +14,9 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    debugPrint("Firebase initialized: ${Firebase.apps.length} apps");
+    Helpers.info("Firebase initialized: ${Firebase.apps.length} apps");
   } catch (e) {
-    debugPrint("Firebase initialization failed: $e");
+    Helpers.error("Firebase initialization failed: $e");
   }
   await FirebaseNotificationService.initialize();
 

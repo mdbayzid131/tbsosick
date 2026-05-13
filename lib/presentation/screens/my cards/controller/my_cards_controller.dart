@@ -59,7 +59,7 @@ class MyCardsController extends GetxController {
       }
     } catch (e) {
       errorMessage.value = e.toString();
-      Helpers.showDebugLog("Error loading my cards: $e");
+      Helpers.error("Error loading my cards: $e");
     } finally {
       if (showLoading) isLoading.value = false;
     }
@@ -91,7 +91,7 @@ class MyCardsController extends GetxController {
       }
     } catch (e) {
       _page--; // rollback
-      Helpers.showDebugLog("Error loading more my cards: $e");
+      Helpers.error("Error loading more my cards: $e");
     } finally {
       isMoreLoading.value = false;
     }

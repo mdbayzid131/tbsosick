@@ -79,7 +79,7 @@ class LoginController extends GetxController {
         Helpers.showError(response.data['message']);
       }
     } catch (e) {
-      Helpers.showDebugLog("login error => $e");
+      Helpers.error("login error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -131,7 +131,7 @@ class LoginController extends GetxController {
     }
     } catch (e) {
       Helpers.showError(e.toString());
-      Helpers.showDebugLog(e.toString());
+      Helpers.error(e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -155,7 +155,7 @@ class LoginController extends GetxController {
       }
     } catch (e) {
       Helpers.showError(e.toString());
-      Helpers.showDebugLog(e.toString());
+      Helpers.error(e.toString());
     } finally {
       isLoading.value = false;
     }

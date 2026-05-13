@@ -3,6 +3,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/logger.dart';
 
 /// ===================== SOCKET SERVICE =====================
@@ -43,13 +44,13 @@ class SocketService extends GetxService {
     final userId = await StorageService.getString(StorageConstants.userId);
 
     if (token.isEmpty) {
-      AppLogger.warning('Socket initialization skipped: No auth token');
+      Helpers.warning('Socket initialization skipped: No auth token');
       return;
     }
 
     // Extract base URL (remove /api/v1 suffix)
     final baseUrl = ApiConstants.baseUrl.replaceAll('/api/v1', '');
-    AppLogger.debug('Socket connecting to: $baseUrl');
+    Helpers.debug('Socket connecting to: $baseUrl');
 
     _socket = IO.io(
       baseUrl,
@@ -66,34 +67,34 @@ class SocketService extends GetxService {
 
   void _setupListeners(String userId) {
     _socket?.onConnect((_) {
-      AppLogger.info('Socket connected');
+      Helpers.info('Socket connected');
       isConnected.value = true;
       if (userId.isNotEmpty) registerUser(userId);
     });
 
     _socket?.onDisconnect((_) {
-      AppLogger.info('Socket disconnected');
+      Helpers.info('Socket disconnected');
       isConnected.value = false;
     });
 
     _socket?.onConnectError((err) {
-      AppLogger.debug('Socket connect error: $err');
+      Helpers.error('Socket connect error: $err');
       isConnected.value = false;
     });
 
     _socket?.onError((err) {
-      AppLogger.debug('Socket error: $err');
+      Helpers.error('Socket error: $err');
     });
 
     // Default notification handler
     _socket?.on('new-notification', (data) {
-      AppLogger.debug('New notification: $data');
+      Helpers.debug('New notification: $data');
       onNotificationReceived?.call(data);
     });
 
     // Default message handler
     _socket?.on('new-message', (data) {
-      AppLogger.debug('New message: $data');
+      Helpers.debug('New message: $data');
       onMessageReceived?.call(data);
     });
   }
@@ -105,7 +106,7 @@ class SocketService extends GetxService {
     if (_socket == null) {
       _initSocket();
     } else if (!_socket!.connected) {
-      AppLogger.debug('Manually reconnecting socket...');
+      Helpers.debug('Manually reconnecting socket...');
       _socket?.connect();
     }
   }
@@ -122,28 +123,28 @@ class SocketService extends GetxService {
   void registerUser(String userId) {
     if (_socket?.connected ?? false) {
       _socket?.emit('register', userId);
-      AppLogger.debug('User registered with socket: $userId');
+      Helpers.debug('User registered with socket: $userId');
     } else {
-      AppLogger.warning('Cannot register: Socket not connected');
+      Helpers.warning('Cannot register: Socket not connected');
     }
   }
 
   /// Join a chat/notification room
   void joinRoom(String roomId) {
     _socket?.emit('join-room', roomId);
-    AppLogger.debug('Joined room: $roomId');
-  }
+    Helpers.debug('Joined room: $roomId')   ;
+  } 
 
   /// Leave a room
   void leaveRoom(String roomId) {
     _socket?.emit('leave-room', roomId);
-    AppLogger.debug('Left room: $roomId');
+    Helpers.debug('Left room: $roomId');
   }
 
   /// Send a message to a room
   void sendMessage(String roomId, String senderId, String content) {
     if (!(_socket?.connected ?? false)) {
-      AppLogger.warning('Cannot send message: Socket not connected');
+      Helpers.warning('Cannot send message: Socket not connected');
       return;
     }
 
@@ -154,7 +155,7 @@ class SocketService extends GetxService {
     };
 
     _socket?.emit('send-message', payload);
-    AppLogger.debug('Message sent: $payload');
+    Helpers.debug('Message sent: $payload');
   }
 
   /// Listen to a custom event

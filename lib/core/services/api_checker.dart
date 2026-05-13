@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:get/get.dart' hide Response;
 import 'package:tbsosick/core/utils/helpers.dart';
-import 'package:tbsosick/core/utils/logger.dart';
 
 /// ===================== API CHECKER =====================
 /// Utility to inspect API responses and surface errors appropriately.
@@ -17,7 +15,7 @@ class ApiChecker {
 
     if (statusCode < 200 || statusCode >= 300) {
       final message = _extractMessage(response, fallback: 'Request failed');
-      AppLogger.debug('GET API ERROR => $message');
+      Helpers.debug('GET API ERROR => $message');
     }
   }
 

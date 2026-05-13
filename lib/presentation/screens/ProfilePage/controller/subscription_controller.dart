@@ -3,6 +3,7 @@ import 'package:tbsosick/core/services/iap_service.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/logger.dart';
 
 class SubscriptionController extends GetxController {
@@ -32,10 +33,10 @@ class SubscriptionController extends GetxController {
     for (var product in products) {
       if (product.id == IapService.premiumMonthly) {
         premiumProduct.value = product;
-        AppLogger.debug('IAP: Controller mapped Premium product: ${product.price}');
+        Helpers.debug('IAP: Controller mapped Premium product: ${product.price}');
       } else if (product.id == IapService.enterpriseMonthly) {
         enterpriseProduct.value = product;
-        AppLogger.debug('IAP: Controller mapped Enterprise product: ${product.price}');
+        Helpers.debug('IAP: Controller mapped Enterprise product: ${product.price}');
       }
     }
   }
@@ -45,10 +46,10 @@ class SubscriptionController extends GetxController {
   }
 
   Future<void> subscribe() async {
-    AppLogger.debug('IAP: Subscribe called for plan index: ${selectedPlan.value}');
+    Helpers.debug('IAP: Subscribe called for plan index: ${selectedPlan.value}');
     final String userId = await StorageService.getString(StorageConstants.userId);
     if (userId.isEmpty) {
-      AppLogger.debug('IAP: Error - User ID is empty');
+      Helpers.error('IAP: Error - User ID is empty');
       Get.snackbar('Error', 'User not logged in');
       return;
     }
@@ -60,13 +61,13 @@ class SubscriptionController extends GetxController {
       product = enterpriseProduct.value;
     }
 
-    AppLogger.debug('IAP: Selected product: ${product?.id ?? 'NULL'}');
+    Helpers.debug('IAP: Selected product: ${product?.id ?? 'NULL'}');
 
     if (product != null) {
-      AppLogger.debug('IAP: Initiating buySubscription for ${product.id}');
+      Helpers.info('IAP: Initiating buySubscription for ${product.id}');
       await _iapService.buySubscription(product, userId);
     } else if (selectedPlan.value != 0) {
-      AppLogger.debug('IAP: Error - Product not found in store for selected plan');
+      Helpers.error('IAP: Error - Product not found in store for selected plan');
       Get.snackbar('Error', 'Product not available in store');
     }
   }

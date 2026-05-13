@@ -30,7 +30,7 @@ class CalendarController extends GetxController {
             data.map((key, value) => MapEntry(key, value as int));
       }
     } catch (e) {
-      Helpers.showDebugLog("getCalendarHighlights error => $e");
+      Helpers.error("getCalendarHighlights error => $e");
     }
   }
 
@@ -112,7 +112,7 @@ class CalendarController extends GetxController {
         await getEvents();
       }
     } catch (e) {
-      Helpers.showDebugLog("postEvent error => $e");
+      Helpers.error("postEvent error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -172,7 +172,7 @@ class CalendarController extends GetxController {
         eventDetails.value = event.data;
       }
     } catch (e) {
-      Helpers.showDebugLog("getEventDetailById error => $e");
+      Helpers.error("getEventDetailById error => $e");
     } finally {
       isLoading.value = false;
     }

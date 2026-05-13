@@ -28,7 +28,7 @@ class SpecialtyController extends GetxController {
         specialties.assignAll(data.map((e) => Specialty.fromJson(e)).toList());
       }
     } catch (e) {
-      Helpers.showDebugLog("Error fetching specialties: $e");
+      Helpers.error("Error fetching specialties: $e");
     } finally {
       isLoading.value = false;
     }

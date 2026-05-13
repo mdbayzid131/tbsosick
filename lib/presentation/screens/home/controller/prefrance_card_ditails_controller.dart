@@ -36,7 +36,7 @@ class PrefranceCardDetailsController extends GetxController {
         cardDetails.value = data.data;
       }
     } catch (e) {
-      Helpers.showDebugLog("getCardDetails error => $e");
+      Helpers.error("getCardDetails error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -88,7 +88,7 @@ class PrefranceCardDetailsController extends GetxController {
         }
       }
     } catch (e) {
-      Helpers.showDebugLog("downloadCard error => $e");
+      Helpers.error("downloadCard error => $e");
     } finally {
       isDownloading.value = false;
     }
@@ -108,7 +108,7 @@ class PrefranceCardDetailsController extends GetxController {
         );
       }
     } catch (e) {
-      Helpers.showDebugLog("shareCard error => $e");
+      Helpers.error("shareCard error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -120,7 +120,7 @@ Future<void> copyCardId({required String cardId}) async {
   try {
     await Clipboard.setData(ClipboardData(text: cardId));
   } catch (e) {
-    Helpers.showDebugLog("copyCardId error => $e");
+    Helpers.error("copyCardId error => $e");
   }
 }
 

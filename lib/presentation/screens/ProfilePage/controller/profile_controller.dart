@@ -37,7 +37,7 @@ class ProfileController extends GetxController {
         }
       }
     } catch (e) {
-      Helpers.showDebugLog("getProfileData error => $e");
+      Helpers.error("getProfileData error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -84,7 +84,7 @@ class ProfileController extends GetxController {
         await getProfileData(); // Refresh data
       }
     } catch (e) {
-      Helpers.showDebugLog("updateProfileImage error => $e");
+      Helpers.error("updateProfileImage error => $e");
     } finally {
       isLoading.value = false;
     }
@@ -99,7 +99,7 @@ class ProfileController extends GetxController {
         legalPages.value = data.map((e) => LegalPage.fromJson(e)).toList();
       }
     } catch (e) {
-      Helpers.showDebugLog("fetchLegalPages error => $e");
+      Helpers.error("fetchLegalPages error => $e");
     } finally {
       isLegalPagesLoading.value = false;
     }
@@ -113,7 +113,7 @@ class ProfileController extends GetxController {
       }
       return null;
     } catch (e) {
-      Helpers.showDebugLog("fetchLegalPageDetails error => $e");
+      Helpers.error("fetchLegalPageDetails error => $e");
       return null;
     }
   }

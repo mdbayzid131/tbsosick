@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -27,9 +28,39 @@ class Helpers {
     return '$hours:$mins:$secs';
   }
 
-  //show bebug log
-  static void showDebugLog(String message) {
-    debugPrint("❌❌❌❌\n❌❌❌❌DEBUG LOG: $message\n❌❌❌❌");
+  // ──────────────────── LOGGING ────────────────────
+
+
+  /// General debug log (only in debug mode)
+  static void debug(String message) {
+    if (!kDebugMode) return;
+    debugPrint('');
+    debugPrint('🔍🔍🔍 DEBUG: $message');
+    debugPrint('');
+  }
+
+  /// Info-level log
+  static void info(String message) {
+    if (!kDebugMode) return;
+    debugPrint('');
+    debugPrint('ℹ️ℹ️ℹ️ℹ INFO: $message');
+    debugPrint('');
+  }
+
+  /// Warning-level log
+  static void warning(String message) {
+    if (!kDebugMode) return;
+    debugPrint('');
+    debugPrint('⚠️⚠️⚠️ WARNING: $message');
+    debugPrint('');
+  }
+
+  /// Error-level log
+  static void error(String message) {
+    if (!kDebugMode) return;
+    debugPrint('');
+    debugPrint('❌❌❌❌ ERROR: $message');
+    debugPrint('');
   }
 
   // ──────────────────── LOADING DIALOG ────────────────────
