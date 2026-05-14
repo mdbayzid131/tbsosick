@@ -1,170 +1,69 @@
-# 04. Create Preference Card
-
+# 01. Get My Subscription
+ 
 ```http
-POST /preference-cards
-Content-Type: multipart/form-data
-Auth: Bearer {{accessToken}} (USER)
+GET /subscriptions/me
+Auth: Bearer {{accessToken}}
 ```
-
-> use case: User Creates a new preference card.
-
+ 
+> Current user-er active subscription plan ebong status fetch kore. Free user-er jonno o sobshomoy ekta plan object return hoy — 404 return hoy na.
+ 
 ## Implementation
-- **Route**: `src/app/modules/preference-card/preference-card.route.ts`
-- **Controller**: `src/app/modules/preference-card/preference-card.controller.ts` — `createCard`
-- **Service**: `src/app/modules/preference-card/preference-card.service.ts` — `createPreferenceCardInDB`
-
-### Business Logic (`createPreferenceCardInDB`)
-- **Draft Support**: Long-form fields are optional at the schema level, allowing incomplete cards to be saved as `PRIVATE` drafts.
-- **Publish Validation**: If `visibility: 'PUBLIC'` is sent, the system verifies whether required fields like `medication`, `instruments`, `workflow`, etc., are filled.
-- **Verification Status**: New cards default to `UNVERIFIED` and can only be verified by an admin.
-- **Auto-Cataloging**: If new names are found in the Supplies and Sutures fields, the backend automatically inserts them into their respective catalogs.
-- **Ownership**: The current user's ID is set in the `createdBy` field.
-
-**Middleware chain**: `auth(USER) → fileHandler(photoLibrary max 5) → parseBody → validateRequest`
-
-## Request Body (Multipart Form-Data)
-
-In Postman, select the **form-data** body type. All fields below must be added as separate keys in the form-data table.
-
-| Key | Value Type | Description |
-| :--- | :--- | :--- |
-| `cardTitle` | `text` | e.g., "Knee Arthroscopy" |
-| `surgeon` | `text (JSON string)` | e.g., `{"fullName": "Dr. Smith", "handPreference": "Right", "specialty": "Orthopedics", "contactNumber": "+1234567890", "musicPreference": "Classical"}` |
-| `medication` | `text` | e.g., "Lidocaine with Epinephrine" |
-| `supplies` | `text (JSON string)` | e.g., `[{"name": "Sterile Gauze", "quantity": 10}, {"name": "Surgical Drape", "quantity": 2}]` |
-| `sutures` | `text (JSON string)` | e.g., `[{"name": "3-0 Vicryl", "quantity": 1}]` |
-| `instruments` | `text` | e.g., "Standard arthroscopy set" |
-| `positioningEquipment` | `text` | e.g., "Leg holder" |
-| `prepping` | `text` | e.g., "Betadine" |
-| `workflow` | `text` | e.g., "Incision, portal placement, joint inspection..." |
-| `keyNotes` | `text` | e.g., "Be careful with the ACL" |
-| `visibility` | `text` | "PRIVATE" or "PUBLIC" |
-| `photoLibrary` | `file` | Select binary image files (max 5) |
-
-> **Note for Postman**: Since the request uses `multipart/form-data`, you cannot use a raw JSON body. Ensure all fields (including nested objects like `surgeon` and arrays like `supplies`) are passed as **text** keys with their values formatted as JSON strings.
-
+- **Route**: [subscription.route.ts](file:///src/app/modules/subscription/subscription.route.ts)
+- **Controller**: [subscription.controller.ts](file:///src/app/modules/subscription/subscription.controller.ts) — `getMySubscriptionController`
+- **Service**: [subscription.service.ts](file:///src/app/modules/subscription/subscription.service.ts) — `getMySubscription`
+ 
+### Business Logic (`getMySubscription`)
+- Prothome User-er `userId` diye existing subscription document fetch kora hoy (`metadata` field excluded — server-internal).
+- Jodi database-e kono record na thake, tobe **read-only** synthetic FREE entitlement object return kora hoy — kono row insert hoy na. Industry rule: GET handlers never mutate state.
+- Subscription row lazy-ly create hoy first paid action-er somoy (`/apple/verify`, `/google/verify`, ba `/choose/free`) — `getMySubscription` ekhon purely read-only.
+- Client-side e sobshomoy ekta valid plan object pawa nishchit kora hoy (never returns 404).
+ 
 ## Responses
-
-### Scenario: Success (201)
+ 
+### Scenario A: Existing subscription (200)
+For users with a materialized subscription row, the full document is returned (`metadata` field excluded — server-internal):
+ 
 ```json
 {
   "success": true,
-  "statusCode": 201,
-  "message": "Preference card created",
+  "statusCode": 200,
+  "message": "Subscription fetched successfully",
   "data": {
-    "createdBy": "69fa332f3fc3858c40265420",
-    "cardTitle": "Knee Arthroscopy",
-    "surgeon": {
-      "fullName": "Dr. Smith",
-      "handPreference": "Right",
-      "specialty": "Orthopedics",
-      "contactNumber": "+1234567890",
-      "musicPreference": "Classical"
-    },
-    "supplies": [
-      {
-        "name": "Sterile Gauze",
-        "quantity": 10
-      },
-      {
-        "name": "Surgical Drape",
-        "quantity": 2
-      }
-    ],
-    "sutures": [
-      {
-        "name": "3-0 Vicryl",
-        "quantity": 1
-      }
-    ],
-    "medication": "Lidocaine with Epinephrine",
-    "instruments": "Standard arthroscopy set",
-    "positioningEquipment": "Leg holder",
-    "prepping": "Betadine",
-    "workflow": "Incision, portal placement, joint inspection...",
-    "keyNotes": "Be careful with the ACL",
-    "photoLibrary": [
-      "http://localhost:5001/uploads/images/1778011654291-unzavs.png"
-    ],
-    "downloadCount": 0,
-    "published": false,
-    "visibility": "PRIVATE",
-    "verificationStatus": "UNVERIFIED",
-    "isDeleted": false,
-    "id": "69fa4e06276f92747b080301",
-    "createdAt": "2026-05-05T20:07:34.544Z",
-    "updatedAt": "2026-05-05T20:07:34.544Z",
-    "_v": 0
+    "_id": "664a1b2c3d4e5f6a7b8c9d0f",
+    "userId": "664a1b2c3d4e5f6a7b8c9d0e",
+    "plan": "PREMIUM",
+    "status": "ACTIVE",
+    "platform": "APPLE",
+    "environment": "production",
+    "productId": "premium_monthly",
+    "autoRenewing": true,
+    "currentPeriodEnd": "2027-04-07T10:30:00.000Z",
+    "createdAt": "2026-04-07T10:30:00.000Z",
+    "updatedAt": "2026-04-07T10:30:00.000Z"
   }
 }
 ```
-
-### Scenario: Publish without required fields (400)
+ 
+### Scenario B: Free user with no row yet (200)
+For users who have never made a paid purchase or chosen the free plan, **no row is created** — a synthetic FREE entitlement is returned. Note the slimmer shape (no `_id`, `createdAt`, `updatedAt`):
+ 
 ```json
 {
-  "success": false,
-  "statusCode": 400,
-  "message": "Cannot publish — missing required fields: medication, instruments, supplies"
+  "success": true,
+  "statusCode": 200,
+  "message": "Subscription fetched successfully",
+  "data": {
+    "userId": "664a1b2c3d4e5f6a7b8c9d0e",
+    "plan": "FREE",
+    "status": "ACTIVE"
+  }
 }
 ```
-
-
-
- Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 16.h,
-                        ),
-                        decoration: BoxDecoration(
-                          // ignore: deprecated_member_use
-                          color: Colors.white.withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(24.r),
-                          border: Border.all(
-                            // ignore: deprecated_member_use
-                            color: Colors.white.withOpacity(0.2),
-                            width: 1.w,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(12.w),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(16.r),
-                              ),
-                              child: Icon(
-                                Icons.medical_information_outlined,
-                                color: Colors.white,
-                                size: 28.sp,
-                              ),
-                            ),
-                            SizedBox(width: 16.w),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Streamline Your Surgery",
-                                    style: GoogleFonts.arimo(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    "Keep your preference cards perfectly organized.",
-                                    style: GoogleFonts.arimo(
-                                      fontSize: 13.sp,
-                                      color: Colors.white.withOpacity(0.85),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                     
+ 
+> **Client implication**: do NOT rely on `data._id`, `data.createdAt`, or `data.updatedAt` from this endpoint — those are only present once the user has materialized a real subscription row (via `/apple/verify`, `/google/verify`, or `/choose/free`). Use `data.plan` + `data.status` as the source of truth for entitlement display.
+ 
+> [!NOTE]
+> **Feature Gating**: User-er access permission (Premium features) determine korar jonno backend application level-e [`subscriptionGate`](file:///src/app/middlewares/subscriptionGate.ts) middleware use kora hoy, ja ei current state-er upor bhitti kore access allow ba block kore.
+ 
+> **Edge case (Free user):** `GET /subscriptions/me` always returns a plan object — for free users it returns `plan: "FREE"` instead of 404.
+ 

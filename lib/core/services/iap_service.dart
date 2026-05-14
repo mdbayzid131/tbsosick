@@ -3,10 +3,14 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
+import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:uuid/uuid.dart';
 import 'package:tbsosick/core/services/api_client.dart';
+import 'package:tbsosick/core/utils/subscription_helper.dart';
+import 'package:tbsosick/data/models/subscription_model.dart';
 
 class IapService extends GetxService {
   final InAppPurchase _iap = InAppPurchase.instance;
@@ -15,19 +19,37 @@ class IapService extends GetxService {
   // Observables
   final RxList<ProductDetails> products = <ProductDetails>[].obs;
   final RxBool isLoading = false.obs;
+  final Rx<SubscriptionModel?> currentSubscription = Rx<SubscriptionModel?>(
+    null,
+  );
 
-  // Product IDs from Guide
-  static const String premiumMonthly = 'premium_monthly';
-  static const String premiumYearly = 'premium_yearly';
-  static const String enterpriseMonthly = 'enterprise_monthly';
-  static const String enterpriseYearly = 'enterprise_yearly';
+  // Product IDs (Android Base Plans)
+  static const String premiumMonthly = 'premium-monthly';
+  static const String premiumYearly = 'premium-yearly';
+  static const String enterpriseMonthly = 'enterprise-monthly';
+  static const String enterpriseYearly = 'enterprise-yearly';
 
-  static const List<String> _productIds = [
-    premiumMonthly,
-    premiumYearly,
-    enterpriseMonthly,
-    enterpriseYearly,
-  ];
+  // Product IDs (iOS App Store Connect)
+  // Apple sometimes blocks hyphens or requires unique naming.
+  static const String iosPremiumMonthly = 'com.tbsosick.premium_monthly';
+  static const String iosPremiumYearly = 'com.tbsosick.premium_yearly';
+  static const String iosEnterpriseMonthly = 'com.tbsosick.enterprise_monthly';
+  static const String iosEnterpriseYearly = 'com.tbsosick.enterprise_yearly';
+
+  List<String> get _productIds {
+    if (Platform.isAndroid) {
+      // Query the main subscription container. Google Play will return multiple
+      // ProductDetails (one for each base plan), all with the same ID.
+      return ['smrtscrub_subscription'];
+    } else {
+      return [
+        iosPremiumMonthly,
+        iosPremiumYearly,
+        iosEnterpriseMonthly,
+        iosEnterpriseYearly,
+      ];
+    }
+  }
 
   // Buyer Binding Namespace from Guide
   static const String _iapNamespace = 'b9f6a4c0-1d2e-4f3a-9c8b-0e7d6c5b4a32';
@@ -59,6 +81,53 @@ class IapService extends GetxService {
       return;
     }
     await fetchProducts();
+    await syncSubscriptionWithBackend();
+  }
+
+  Future<void> syncSubscriptionWithBackend() async {
+    try {
+      final apiClient = Get.find<ApiClient>();
+      final response = await apiClient.getData(ApiConstants.getMySubscription);
+
+      if (response.statusCode == 200 && response.data['data'] != null) {
+        currentSubscription.value = SubscriptionModel.fromJson(
+          response.data['data'],
+        );
+        Helpers.info('IAP: Current Plan: ${currentSubscription.value?.plan}');
+      }
+    } catch (e) {
+      Helpers.error('IAP: Error syncing subscription: $e');
+    }
+  }
+
+  Future<void> chooseFreePlan() async {
+    try {
+      final apiClient = Get.find<ApiClient>();
+      final response = await apiClient.postData(
+        ApiConstants.chooseFreePlan,
+        {},
+      );
+
+      if (response.statusCode == 200) {
+        await syncSubscriptionWithBackend();
+        Helpers.showSuccess('Free plan selected');
+      } else if (response.statusCode == 409) {
+        final message =
+            response.data['message'] ??
+            'You have an active store subscription.';
+        SubscriptionHelper.showSubscriptionDialog(
+          title: 'Active Subscription Found',
+          message: message,
+          onPress: () {
+            Get.back();
+            //
+          },
+          buttonText: 'Back',
+        );
+      }
+    } catch (e) {
+      Helpers.error('IAP: Error selecting free plan: $e');
+    }
   }
 
   Future<void> fetchProducts() async {
@@ -85,7 +154,46 @@ class IapService extends GetxService {
 
       products.assignAll(response.productDetails);
       for (var prod in response.productDetails) {
-        Helpers.debug('IAP: Loaded Product: ${prod.id} - ${prod.price}');
+        String androidInfo = '';
+        if (Platform.isAndroid && prod is GooglePlayProductDetails) {
+          final offers = prod.productDetails.subscriptionOfferDetails;
+          final allBasePlans = offers?.map((e) => e.basePlanId).toList();
+          final offerIds = offers?.map((e) => e.offerId).toList();
+          final offerIdsToken = offers?.map((e) => e.offerIdToken).toList();
+          final offerTags = offers?.map((e) => e.offerTags).toList();
+          final offerId = offers?.map((e) => e.installmentPlanDetails).toList();
+          final pricingPhases = offers?.map((e) => e.pricingPhases).toList();
+          final priceCurrencyCode = offers?.map((e) => e.pricingPhases.map((e) => e.priceCurrencyCode)).toList();
+
+          
+
+          // Let's try to see if there's a specific offer index or token in the product details wrapper
+          androidInfo = ' | All Base Plans in Wrapper: $allBasePlans';
+          
+          print(
+            "offerIds: $offerIds",
+          );
+          print(
+            "offerIdsToken: $offerIdsToken",
+          );
+          print(
+            "offerTags: $offerTags",
+          );
+          print(
+            "offerId: $offerId",
+          );
+          print(
+            "pricingPhases: $pricingPhases",
+          );
+          print(
+            "priceCurrencyCode: $priceCurrencyCode",
+          );
+        }
+        Helpers.debug(
+          'IAP: Loaded Product: ID: ${prod.id}, Price: ${prod.price}$androidInfo',
+        
+        );
+        
       }
     } catch (e) {
       Helpers.error('IAP: Exception during fetch: $e');
@@ -99,8 +207,14 @@ class IapService extends GetxService {
     return const Uuid().v5(_iapNamespace, userId);
   }
 
-  Future<void> buySubscription(ProductDetails product, String userId) async {
+  Future<void> buySubscription(ProductDetails product, String userId,
+      [String? expectedBasePlanId]) async {
     final String accountToken = deriveIapAccountToken(userId);
+
+    if (expectedBasePlanId != null) {
+      await StorageService.setString(
+          'pending_purchase_id', expectedBasePlanId);
+    }
 
     late PurchaseParam purchaseParam;
     if (Platform.isAndroid) {
@@ -123,17 +237,38 @@ class IapService extends GetxService {
     }
   }
 
-  void _onPurchaseUpdate(List<PurchaseDetails> purchaseDetailsList) {
-    for (var purchase in purchaseDetailsList) {
-      if (purchase.status == PurchaseStatus.pending) {
-        // Show loading or pending UI
-      } else if (purchase.status == PurchaseStatus.error) {
-        Helpers.error('Purchase Error: ${purchase.error}');
-        _iap.completePurchase(purchase);
-      } else if (purchase.status == PurchaseStatus.purchased ||
-          purchase.status == PurchaseStatus.restored) {
-        _verifyPurchase(purchase);
+  Future<void> _onPurchaseUpdate(List<PurchaseDetails> purchaseDetailsList) async {
+    try {
+      for (var purchase in purchaseDetailsList) {
+        if (purchase.status == PurchaseStatus.pending) {
+          // Show loading or pending UI
+        } else if (purchase.status == PurchaseStatus.error) {
+          final errorMsg = purchase.error?.message ?? '';
+          if (errorMsg.contains('itemAlreadyOwned') ||
+              errorMsg.contains('BillingResponse.itemAlreadyOwned')) {
+            Helpers.showWarning(
+              'Item already owned. Please use the Restore button to sync your plan.',
+            );
+          } else {
+            Helpers.error('Purchase Error: ${purchase.error}');
+          }
+          
+          try {
+            if (Platform.isAndroid && purchase.runtimeType.toString().contains('GooglePlay')) {
+              await _iap.completePurchase(purchase);
+            } else if (Platform.isIOS && purchase.runtimeType.toString().contains('AppStore')) {
+              await _iap.completePurchase(purchase);
+            }
+          } catch (e) {
+            Helpers.debug('IAP: completePurchase error (expected if not platform-specific): $e');
+          }
+        } else if (purchase.status == PurchaseStatus.purchased ||
+            purchase.status == PurchaseStatus.restored) {
+          await _verifyPurchase(purchase);
+        }
       }
+    } catch (e) {
+      Helpers.error('IAP: Exception in _onPurchaseUpdate: $e');
     }
   }
 
@@ -146,22 +281,38 @@ class IapService extends GetxService {
         // iOS: Send signedTransactionInfo (JWS)
         response = await apiClient
             .postData('${ApiConstants.subscriptionBaseUrl}/apple/verify', {
+              'platform': 'ios',
               'signedTransactionInfo':
                   purchase.verificationData.serverVerificationData,
             });
       } else if (Platform.isAndroid) {
-        // Android: Send purchaseToken and productId
+        String basePlanId = '';
+        // If Android returns the generic subscription ID, we fetch the specific base plan ID we cached.
+        if (purchase.productID == 'smrtscrub_subscription') {
+          final pendingId = await StorageService.getString('pending_purchase_id');
+          if (pendingId.isNotEmpty) {
+            basePlanId = pendingId;
+          }
+        }
+
+        // Android: Send purchaseToken, generic productId, and selectedBasePlanId
         response = await apiClient
             .postData('${ApiConstants.subscriptionBaseUrl}/google/verify', {
-              'purchaseToken': purchase.verificationData.serverVerificationData,
+              'platform': 'android',
               'productId': purchase.productID,
+              'selectedBasePlanId': basePlanId,
+              'purchaseToken': purchase.verificationData.serverVerificationData,
             });
       }
 
       if (response != null && response.statusCode == 200) {
         Helpers.info('Purchase verified successfully');
-        await _iap.completePurchase(purchase);
-        // Refresh user subscription status here
+        if (Platform.isAndroid && purchase is GooglePlayPurchaseDetails) {
+          await _iap.completePurchase(purchase);
+        } else if (Platform.isIOS && purchase is AppStorePurchaseDetails) {
+          await _iap.completePurchase(purchase);
+        }
+        await syncSubscriptionWithBackend();
       } else {
         Helpers.debug('Verification failed');
       }
@@ -172,5 +323,6 @@ class IapService extends GetxService {
 
   Future<void> restorePurchases() async {
     await _iap.restorePurchases();
+    await syncSubscriptionWithBackend();
   }
 }

@@ -8,10 +8,17 @@ import 'package:tbsosick/data/models/user_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 
+import 'package:tbsosick/core/services/iap_service.dart';
+import 'package:tbsosick/data/models/subscription_model.dart';
+
 class ProfileController extends GetxController {
   final UserDataRepository _userDataRepository = Get.find();
+  final IapService _iapService = Get.find();
+
   final Rx<UserModel> user = UserModel().obs;
   final Rx<bool> isLoading = false.obs;
+
+  SubscriptionModel? get currentSubscription => _iapService.currentSubscription.value;
 
   final RxList<LegalPage> legalPages = <LegalPage>[].obs;
   final RxBool isLegalPagesLoading = false.obs;

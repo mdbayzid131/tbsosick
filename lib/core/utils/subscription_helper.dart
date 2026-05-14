@@ -8,6 +8,7 @@ class SubscriptionHelper {
     String? title,
     String? message,
     VoidCallback? onPress,
+    String? buttonText,
   }) {
     Get.dialog(
       AlertDialog(
@@ -41,7 +42,7 @@ class SubscriptionHelper {
                 padding: EdgeInsets.symmetric(vertical: 12.h),
               ),
               child: Text(
-                'Upgrade Now',
+                buttonText ?? 'Upgrade Now',
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,

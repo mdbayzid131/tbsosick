@@ -1,44 +1,82 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tbsosick/core/services/iap_service.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
-import 'package:tbsosick/core/utils/logger.dart';
+import 'package:tbsosick/data/models/subscription_model.dart';
 
-class SubscriptionController extends GetxController {
+class SubscriptionController extends GetxController with GetSingleTickerProviderStateMixin {
   final IapService _iapService = Get.find<IapService>();
   
-  final RxInt selectedPlan = 1.obs;
-  final Rx<ProductDetails?> premiumProduct = Rx<ProductDetails?>(null);
-  final Rx<ProductDetails?> enterpriseProduct = Rx<ProductDetails?>(null);
+  late TabController tabController;
+  
+  final RxInt selectedPlan = 1.obs; // 0: Free, 1: Premium, 2: Enterprise
+  
+  final RxList<ProductDetails> monthlyProducts = <ProductDetails>[].obs;
+  final RxList<ProductDetails> yearlyProducts = <ProductDetails>[].obs;
 
   @override
   void onInit() {
     super.onInit();
+    tabController = TabController(length: 2, vsync: this);
     _mapProducts();
   }
 
+  @override
+  void onClose() {
+    tabController.dispose();
+    super.onClose();
+  }
+
   void _mapProducts() {
-    // ১. প্রথমে বর্তমানে থাকা ডাটা ম্যাপ করি
     _updateLocalProducts(_iapService.products);
     
-    // ২. পরবর্তীতে কোনো চেঞ্জ হলে সেটিও ম্যাপ করি
     ever(_iapService.products, (List<ProductDetails> products) {
       _updateLocalProducts(products);
     });
   }
 
   void _updateLocalProducts(List<ProductDetails> products) {
-    for (var product in products) {
-      if (product.id == IapService.premiumMonthly) {
-        premiumProduct.value = product;
-        Helpers.debug('IAP: Controller mapped Premium product: ${product.price}');
-      } else if (product.id == IapService.enterpriseMonthly) {
-        enterpriseProduct.value = product;
-        Helpers.debug('IAP: Controller mapped Enterprise product: ${product.price}');
+    if (products.isEmpty) return;
+
+    if (Platform.isAndroid &&
+        products.every((p) => p.id == 'smrtscrub_subscription')) {
+      // Android workaround: The plugin returns 4 products with identical IDs but different prices.
+      // We map them by sorting their raw price:
+      // Assumed Pricing: Premium Monthly < Enterprise Monthly < Premium Yearly < Enterprise Yearly
+      final sortedProducts = List<ProductDetails>.from(products);
+      sortedProducts.sort((a, b) => a.rawPrice.compareTo(b.rawPrice));
+
+      if (sortedProducts.length >= 4) {
+        monthlyProducts.assignAll([sortedProducts[0], sortedProducts[1]]);
+        yearlyProducts.assignAll([sortedProducts[2], sortedProducts[3]]);
       }
+    } else {
+      // Original logic for iOS or distinct IDs
+      final List<ProductDetails> monthly = [];
+      final List<ProductDetails> yearly = [];
+
+      for (var product in products) {
+        if (product.id.contains('monthly')) {
+          monthly.add(product);
+        } else if (product.id.contains('yearly')) {
+          yearly.add(product);
+        }
+      }
+
+      monthly.sort((a, b) => a.id.contains('premium') ? -1 : 1);
+      yearly.sort((a, b) => a.id.contains('premium') ? -1 : 1);
+
+      monthlyProducts.assignAll(monthly);
+      yearlyProducts.assignAll(yearly);
     }
+
+    Helpers.debug(
+        'IAP: Controller mapped ${monthlyProducts.length} monthly and ${yearlyProducts.length} yearly products');
   }
 
   void selectPlan(int index) {
@@ -46,6 +84,11 @@ class SubscriptionController extends GetxController {
   }
 
   Future<void> subscribe() async {
+    if (selectedPlan.value == 0) {
+      await _iapService.chooseFreePlan();
+      return;
+    }
+
     Helpers.debug('IAP: Subscribe called for plan index: ${selectedPlan.value}');
     final String userId = await StorageService.getString(StorageConstants.userId);
     if (userId.isEmpty) {
@@ -55,24 +98,67 @@ class SubscriptionController extends GetxController {
     }
 
     ProductDetails? product;
-    if (selectedPlan.value == 1) {
-      product = premiumProduct.value;
-    } else if (selectedPlan.value == 2) {
-      product = enterpriseProduct.value;
+    final currentList = tabController.index == 0 ? monthlyProducts : yearlyProducts;
+    
+    // selectedPlan 1 -> Premium, 2 -> Enterprise
+    // Since we mapped them securely, index 0 is always Premium, index 1 is Enterprise
+    if (selectedPlan.value == 1 && currentList.isNotEmpty) {
+      product = currentList[0];
+    } else if (selectedPlan.value == 2 && currentList.length > 1) {
+      product = currentList[1];
     }
 
     Helpers.debug('IAP: Selected product: ${product?.id ?? 'NULL'}');
 
     if (product != null) {
+      if (_iapService.currentSubscription.value?.productId == product.id) {
+        Helpers.showWarning('You are already subscribed to this plan.');
+        return;
+      }
       Helpers.info('IAP: Initiating buySubscription for ${product.id}');
       await _iapService.buySubscription(product, userId);
-    } else if (selectedPlan.value != 0) {
+    } else {
       Helpers.error('IAP: Error - Product not found in store for selected plan');
       Get.snackbar('Error', 'Product not available in store');
     }
   }
 
-  void updatePaymentMethod() {
-    // IAP handles payment methods automatically via OS settings
+  Future<void> restorePurchases() async {
+    await _iapService.restorePurchases();
   }
+
+  bool get isSelectedPlanCurrent {
+    final sub = _iapService.currentSubscription.value;
+    if (sub == null) return false;
+
+    if (selectedPlan.value == 0) return sub.plan == 'FREE';
+
+    final currentList =
+        tabController.index == 0 ? monthlyProducts : yearlyProducts;
+
+    ProductDetails? product;
+    if (selectedPlan.value == 1 && currentList.isNotEmpty) {
+      product = currentList[0];
+    } else if (selectedPlan.value == 2 && currentList.length > 1) {
+      product = currentList[1];
+    }
+
+    if (product != null) {
+      if (sub.productId == null) return false;
+      // On Android, all products might have 'smrtscrub_subscription' as ID locally.
+      // So checking sub.productId == product.id will wrongly return true for ALL plans.
+      // Instead, we check the plan tier AND the interval (monthly/yearly) if available.
+      if (Platform.isAndroid && product.id == 'smrtscrub_subscription') {
+        final isPlanMatch = selectedPlan.value == 1 ? sub.plan.toUpperCase() == 'PREMIUM' : sub.plan.toUpperCase() == 'ENTERPRISE';
+        final isIntervalMatch = sub.productId?.contains(tabController.index == 0 ? 'monthly' : 'yearly') ?? true;
+        return isPlanMatch && isIntervalMatch;
+      }
+      return sub.productId == product.id || product.id.endsWith(sub.productId!);
+    }
+    return false;
+  }
+
+  SubscriptionModel? get currentSubscription =>
+      _iapService.currentSubscription.value;
+  bool get isLoading => _iapService.isLoading.value;
 }

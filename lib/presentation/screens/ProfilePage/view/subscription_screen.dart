@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/subscription_controller.dart';
 import '../../../../config/constants/image_paths.dart';
@@ -38,156 +40,124 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: controller.restorePurchases,
+            child: Text(
+              'Restore',
+              style: GoogleFonts.arimo(
+                color: AppTheme.primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
+            // Header with Gradient
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 24.h),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFf9945FF), Color(0xFF7B2FD4)],
+                ),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    height: 56.w,
+                    width: 56.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(.20),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text('🚀', style: TextStyle(fontSize: 24.sp)),
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    tr.unlockSmrtscrub,
+                    style: GoogleFonts.arimo(
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    tr.chooseWorksForYou,
+                    style: GoogleFonts.arimo(
+                      fontSize: 13.sp,
+                      color: Colors.white.withOpacity(.9),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // TabBar for Monthly/Yearly
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+              height: 45.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(25.r),
+              ),
+              child: TabBar(
+                controller: controller.tabController,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25.r),
+                  color: AppTheme.primaryColor,
+                ),
+                labelColor: Colors.white,
+                dividerColor: Colors.transparent,
+                unselectedLabelColor: Colors.grey[600],
+                labelStyle: GoogleFonts.arimo(fontWeight: FontWeight.w700),
+                tabs: const [
+                  Tab(text: 'Monthly'),
+                  Tab(text: 'Yearly'),
+                ],
+              ),
+            ),
+
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 32.h),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Color(0xFf9945FF), Color(0xFF7B2FD4)],
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 64.w,
-                            width: 64.w,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(.20),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Text(
-                                '⭐️',
-                                style: GoogleFonts.arimo(
-                                  fontSize: 28.sp,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            tr.unlockSmrtscrub,
-                            style: GoogleFonts.arimo(
-                              fontSize: 24.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            tr.chooseWorksForYou,
-                            style: GoogleFonts.arimo(
-                              fontSize: 14.sp,
-                              color: Colors.white.withOpacity(.9),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            tr.choosePlanTitle,
-                            style: GoogleFonts.arimo(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
+              child: TabBarView(
+                controller: controller.tabController,
+                children: [
+                  _buildPlanList(
+                    context,
+                    controller.monthlyProducts,
+                    isYearly: false,
+                  ),
+                  _buildPlanList(
+                    context,
+                    controller.yearlyProducts,
+                    isYearly: true,
+                  ),
+                ],
+              ),
+            ),
 
-                          // Free
-                          GestureDetector(
-                            onTap: () => controller.selectPlan(0),
-                            child: Obx(
-                              () => _planCard(
-                                title: tr.freePlanTitle,
-                                price: '\$0 ',
-                                features: [
-                                  '2 basic preference cards',
-                                  'No library access',
-                                  'No calendar',
-                                  'Email support',
-                                ],
-                                isSelected: controller.selectedPlan.value == 0,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-
-                          // Premium
-                          GestureDetector(
-                            onTap: () => controller.selectPlan(1),
-                            child: Obx(
-                              () => _planCard(
-                                title: tr.premiumPlanTitle,
-                                price: controller.premiumProduct.value?.price ?? '\$5.99',
-                                badge: tr.popularBadge,
-                                features: [
-                                  '20 preference cards',
-                                  'Basic calendar',
-                                  'Access to public library (upload & download)',
-                                  'No team collaboration',
-                                  'No verified card',
-                                ],
-                                isSelected: controller.selectedPlan.value == 1,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-
-                          // Enterprise
-                          GestureDetector(
-                            onTap: () => controller.selectPlan(2),
-                            child: Obx(
-                              () => _planCard(
-                                title: tr.enterprisePlanTitle,
-                                price: controller.enterpriseProduct.value?.price ?? '\$9.99',
-                                features: [
-                                  'Unlimited cards',
-                                  'Advanced calendar',
-                                  'Access to public library (upload & download)',
-                                  'Team collaboration',
-                                  'Verified preference cards',
-                                ],
-                                isSelected: controller.selectedPlan.value == 2,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 32.h),
-
-                          Obx(() => CustomElevatedButton(
-                            label: controller.selectedPlan.value == 0 
-                                ? tr.updatePaymentMethod 
-                                : 'Subscribe Now',
-                            onPressed: () {
-                              if (controller.selectedPlan.value == 0) {
-                                showPaymentMethodBottomSheet(context);
-                              } else {
-                                controller.subscribe();
-                              }
-                            },
-                          )),
-                          SizedBox(height: 20.h),
-                        ],
-                      ),
-                    ),
-                  ],
+            // Bottom Button
+            Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Obx(
+                () => CustomElevatedButton(
+                  isLoading: controller.isLoading,
+                  label: controller.isSelectedPlanCurrent
+                      ? 'Current Plan'
+                      : (controller.selectedPlan.value == 0
+                          ? 'Select Free Plan'
+                          : 'Subscribe Now'),
+                  onPressed:
+                      controller.isSelectedPlanCurrent ? null : controller.subscribe,
                 ),
               ),
             ),
@@ -197,11 +167,97 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
     );
   }
 
+  Widget _buildPlanList(
+    BuildContext context,
+    RxList<ProductDetails> products, {
+    required bool isYearly,
+  }) {
+    final tr = AppLocalizations.of(context)!;
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Column(
+        children: [
+          // Free Plan - Always shown first
+          GestureDetector(
+            onTap: () => controller.selectPlan(0),
+            child: Obx(
+              () => _planCard(
+                title: tr.freePlanTitle,
+                price: '\$0',
+                period: '',
+                features: [
+                  
+                  '2 basic preference cards',
+                  'No library access',
+                  'Email support',
+                ],
+                isSelected: controller.selectedPlan.value == 0,
+                currentPlan: controller.currentSubscription?.plan == 'FREE',
+              ),
+            ),
+          ),
+          SizedBox(height: 16.h),
+
+          // Paid Plans
+          Obx(() {
+            if (products.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return Column(
+              children: products.asMap().entries.map((entry) {
+                final index = entry.key;
+                final product = entry.value;
+
+                // Index 0 is ALWAYS Premium, Index 1 is ALWAYS Enterprise due to our price mapping
+                final isPremium = index == 0;
+                final planIndex = isPremium ? 1 : 2;
+
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 16.h),
+                  child: GestureDetector(
+                    onTap: () => controller.selectPlan(planIndex),
+                    child: _planCard(
+                      title: isPremium
+                          ? tr.premiumPlanTitle
+                          : tr.enterprisePlanTitle,
+                      price: product.price,
+                      period: isYearly ? '/year' : '/month',
+                      badge: isPremium ? tr.popularBadge : null,
+                      features: isPremium
+                          ? [
+                              '20 preference cards',
+                              'Basic calendar',
+                              'Access to public library',
+                            ]
+                          : [
+                              'Unlimited cards',
+                              'Advanced calendar',
+                              'Team collaboration',
+                              'Verified cards',
+                            ],
+                      isSelected: controller.selectedPlan.value == planIndex,
+                      currentPlan: (isPremium 
+                          ? controller.currentSubscription?.plan == 'PREMIUM'
+                          : controller.currentSubscription?.plan == 'ENTERPRISE') &&
+                          (controller.currentSubscription?.productId?.contains(isYearly ? 'yearly' : 'monthly') ?? true),
+                    ),
+                  ),
+                );
+              }).toList(),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
   Widget _planCard({
     required String title,
     required String price,
+    required String period,
     required List<String> features,
     bool isSelected = false,
+    bool currentPlan = false,
     String? badge,
   }) {
     return Container(
@@ -247,7 +303,23 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 ),
               ],
               const Spacer(),
-              if (isSelected)
+              if (currentPlan)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Text(
+                    'Current Plan',
+                    style: GoogleFonts.arimo(
+                      fontSize: 11.sp,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              else if (isSelected)
                 Icon(
                   Icons.check_circle,
                   color: const Color(0xff9945FF),
@@ -265,15 +337,17 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(width: 4.w),
-              Text(
-                '/month',
-                style: GoogleFonts.arimo(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xff8E8E93),
+              if (period.isNotEmpty) ...[
+                SizedBox(width: 4.w),
+                Text(
+                  period,
+                  style: GoogleFonts.arimo(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xff8E8E93),
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
           SizedBox(height: 12.h),
@@ -282,11 +356,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
               padding: EdgeInsets.only(bottom: 6.h),
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                    ImagePaths.chosePlanIcon,
-                    width: 16.w,
-                    height: 16.w,
-                  ),
+                  Icon(Icons.check, color: AppTheme.primaryColor, size: 16.sp),
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(

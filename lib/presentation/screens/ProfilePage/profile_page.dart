@@ -8,9 +8,7 @@ import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/profile_controller.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/legal_page_bottom_sheet.dart';
 import '../../../config/constants/image_paths.dart';
-import '../home/notification_bottom.dart';
 import 'Privacy & Security bottom.dart';
-import 'UpdatePaymentMethodBottom.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import 'edit_profile_bottom.dart';
 import 'language_bottom_sheet.dart';
@@ -96,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(height: 20.h),
                     _buildProfileCard(),
                     SizedBox(height: 16.h),
-                    _buildPremiumPlanCard(),
+                    Obx(() => _buildPremiumPlanCard()),
                     SizedBox(height: 24.h),
                     Text(
                       tr.account,
@@ -489,15 +487,28 @@ class _ProfilePageState extends State<ProfilePage> {
   // Premium Plan card
   Widget _buildPremiumPlanCard() {
     final tr = AppLocalizations.of(context)!;
+    final sub = profileController.currentSubscription;
+    final planName = sub?.plan ?? 'FREE';
+    final isFree = planName == 'FREE';
+
+    String expiryText = '';
+    if (sub?.currentPeriodEnd != null) {
+      final date = sub!.currentPeriodEnd!;
+      expiryText = 'Active until ${date.day}/${date.month}/${date.year}';
+    } else {
+      expiryText = isFree ? 'Basic features enabled' : 'Lifetime Access';
+    }
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
+          colors: isFree
+              ? [const Color(0xFF9CA3AF), const Color(0xFF4B5563)]
+              : [const Color(0xFF9945FF), const Color(0xFF271E3E)],
         ),
-
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
@@ -511,20 +522,23 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header row with crown icon and checkmark
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   Icon(
-                    Icons.workspace_premium,
+                    isFree ? Icons.person : Icons.workspace_premium,
                     color: Colors.white,
                     size: 24.sp,
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    tr.premiumPlanTitle,
+                    isFree
+                        ? 'Free Plan'
+                        : (planName == 'ENTERPRISE'
+                            ? tr.enterprisePlanTitle
+                            : tr.premiumPlanTitle),
                     style: GoogleFonts.arimo(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.w700,
@@ -533,41 +547,53 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              Container(
-                width: 28.w,
-                height: 28.w,
-                decoration: BoxDecoration(shape: BoxShape.circle),
-                child: SvgPicture.asset(
-                  ImagePaths.chosePlanIcon,
-                  color: Colors.white,
+              if (!isFree)
+                Container(
+                  width: 28.w,
+                  height: 28.w,
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
+                  child: SvgPicture.asset(
+                    ImagePaths.chosePlanIcon,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
             ],
           ),
           SizedBox(height: 8.h),
-          // Active until text
           Text(
-            'Active until Jan 2027',
+            expiryText,
             style: GoogleFonts.arimo(
               fontSize: 14.sp,
               color: Colors.white.withOpacity(0.9),
             ),
           ),
           SizedBox(height: 16.h),
-          // Features list
-          _buildFeatureItem('Unlimited cards'),
-          SizedBox(height: 8.h),
-          _buildFeatureItem('Advanced analytics'),
-          SizedBox(height: 8.h),
-          _buildFeatureItem('Priority support'),
+          if (isFree) ...[
+            _buildFeatureItem('2 basic preference cards'),
+            SizedBox(height: 8.h),
+            _buildFeatureItem('No library access'),
+            SizedBox(height: 8.h),
+            _buildFeatureItem('Email support'),
+          ] else if (planName == 'PREMIUM') ...[
+            _buildFeatureItem('20 preference cards'),
+            SizedBox(height: 8.h),
+            _buildFeatureItem('Basic calendar'),
+            SizedBox(height: 8.h),
+            _buildFeatureItem('Access to public library'),
+          ] else ...[
+            _buildFeatureItem('Unlimited cards'),
+            SizedBox(height: 8.h),
+            _buildFeatureItem('Advanced calendar'),
+            SizedBox(height: 8.h),
+            _buildFeatureItem('Team collaboration'),
+            SizedBox(height: 8.h),
+            _buildFeatureItem('Verified cards'),
+          ],
           SizedBox(height: 20.h),
-          // Manage Subscription button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                // TODO: Manage subscription
-              },
+              onPressed: () => Get.toNamed(AppRoutes.SUBSCRIPTION),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -581,7 +607,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF6750A4),
+                  color: isFree ? const Color(0xFF4B5563) : const Color(0xFF6750A4),
                 ),
               ),
             ),

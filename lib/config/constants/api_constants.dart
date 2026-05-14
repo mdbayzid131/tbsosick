@@ -55,4 +55,7 @@ class ApiConstants {
   // Subscription Endpoints
   static const String subscriptionBaseUrl = '/subscriptions';
   static const String getMySubscription = '/subscriptions/me';
+  static const String verifyApplePurchase = '/subscriptions/apple/verify';
+  static const String verifyGooglePurchase = '/subscriptions/google/verify';
+  static const String chooseFreePlan = '/subscriptions/choose/free';
 }
