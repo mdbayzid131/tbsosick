@@ -34,7 +34,9 @@ class AppLogger {
 
     debugPrint('');
     debugPrint('┌ ✅✅✅✅ RESPONSE $_divider ✅✅✅✅');
-    debugPrint('│ [${response.statusCode}] ${response.requestOptions.uri}');
+    debugPrint(
+      '│ [ ${response.requestOptions.method} ${response.statusCode}] ${response.requestOptions.uri}',
+    );
     debugPrint(
       '│ Data: ${_truncate(response.data?.toString(), showAll: true)}',
     );
@@ -49,7 +51,7 @@ class AppLogger {
     debugPrint('');
     debugPrint('┌ ❌❌❌❌ ERROR $_divider ❌❌❌❌ ');
     debugPrint('│ ${e.type.name}: ${e.message}');
-    debugPrint('│ URL: ${e.requestOptions.uri}');
+    debugPrint('│  ${e.requestOptions.method} : ${e.requestOptions.uri}');
     if (e.response != null) {
       debugPrint('│ Status: ${e.response?.statusCode}');
       debugPrint(
@@ -59,8 +61,6 @@ class AppLogger {
     debugPrint('└ ❌❌❌❌ ERROR $_divider ❌❌❌❌ ');
     debugPrint('');
   }
-
-
 
   // ──────────────────── PRIVATE HELPERS ────────────────────
 

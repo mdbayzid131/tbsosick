@@ -58,4 +58,10 @@ class ApiConstants {
   static const String verifyApplePurchase = '/subscriptions/apple/verify';
   static const String verifyGooglePurchase = '/subscriptions/google/verify';
   static const String chooseFreePlan = '/subscriptions/choose/free';
+
+  // Notification Endpoints
+  static const String notifications = '/notifications';
+  static const String readNotification = '/notifications/{id}/read';
+  static const String readAllNotifications = '/notifications/read-all';
+  static const String deleteNotification = '/notifications/{id}';
 }

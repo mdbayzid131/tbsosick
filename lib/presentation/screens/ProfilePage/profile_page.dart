@@ -277,11 +277,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 24.h),
                     Center(
-                      child: Text(
-                        'SMRTSCRUB ${tr.version} 1.0.0',
-                        style: GoogleFonts.arimo(
-                          fontSize: 12.sp,
-                          color: const Color(0xFF9CA3AF),
+                      child: Obx(
+                        () => Text(
+                          'SMRTSCRUB ${tr.version} ${profileController.appVersion.value}',
+                          style: GoogleFonts.arimo(
+                            fontSize: 12.sp,
+                            color: const Color(0xFF9CA3AF),
+                          ),
                         ),
                       ),
                     ),

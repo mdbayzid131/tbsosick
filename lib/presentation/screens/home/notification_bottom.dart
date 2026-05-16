@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
+import 'package:tbsosick/core/utils/helpers.dart';
+import 'package:tbsosick/data/models/notification_model.dart';
+import 'package:tbsosick/presentation/controllers/notification_controller.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 
 import '../../../config/constants/image_paths.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
 void showNotificationBottomSheet(BuildContext context) {
+  final controller = Get.find<NotificationController>();
+  controller.fetchNotifications(isRefresh: true);
+
   showModalBottomSheet(
-    isDismissible: false,
     context: context,
+    isDismissible: false,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
@@ -41,7 +49,7 @@ void showNotificationBottomSheet(BuildContext context) {
                     ),
                     const Spacer(),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () => controller.markAllAsRead(),
                       child: Text(
                         tr.markAllRead,
                         style: GoogleFonts.arimo(
@@ -58,73 +66,52 @@ void showNotificationBottomSheet(BuildContext context) {
                       icon: Container(
                         height: 32.w,
                         width: 32.w,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Color(0xffF2F2F7),
                           shape: BoxShape.circle,
                         ),
-
                         child: const Icon(Icons.close),
                       ),
                     ),
                   ],
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Header
-                        SizedBox(height: 16.h),
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                        // Notification card 1
-                        _notificationCard(
-                          icon: Icons.assignment_outlined,
-                          title: tr.newCardAdded,
-                          subtitle:
-                              'Dr. Sarah Johnson — Total\nKnee Replacement',
-                          actionText: tr.viewCard,
-                          time: '16m ago',
+                    if (controller.notifications.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No notifications',
+                          style: GoogleFonts.arimo(
+                            fontSize: 16.sp,
+                            color: const Color(0xff8E8E93),
+                          ),
                         ),
+                      );
+                    }
 
-                        SizedBox(height: 12.h),
-
-                        // Notification card 2
-                        _notificationCard(
-                          icon: Icons.calendar_today_outlined,
-                          title: tr.eventScheduled,
-                          subtitle:
-                              'Total Knee Replacement on\n2026-01-08 at 08:00',
-                          actionText: tr.viewEvent,
-                          time: '16m ago',
-                        ),
-                        SizedBox(height: 12.h),
-
-                        // Notification card 2
-                        _notificationCard(
-                          icon: Icons.calendar_today_outlined,
-                          title: tr.eventScheduled,
-                          subtitle:
-                              'Total Knee Replacement on\n2026-01-08 at 08:00',
-                          actionText: tr.viewEvent,
-                          time: '16m ago',
-                        ),
-                        SizedBox(height: 12.h),
-
-                        // Notification card 2
-                        _notificationCard(
-                          icon: Icons.calendar_today_outlined,
-                          title: tr.eventScheduled,
-                          subtitle:
-                              'Total Knee Replacement on\n2026-01-08 at 08:00',
-                          actionText: tr.viewEvent,
-                          time: '16m ago',
-                        ),
-                      ],
-                    ),
-                  ),
+                    return ListView.separated(
+                      padding: EdgeInsets.only(top: 16.h, bottom: 20.h),
+                      itemCount: controller.notifications.length,
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 12.h),
+                      itemBuilder: (context, index) {
+                        final notification = controller.notifications[index];
+                        return _notificationCard(
+                          context,
+                          notification: notification,
+                          onReadTap: () =>
+                              controller.markAsRead(notification.id),
+                          onDeleteTap: () =>
+                              controller.deleteNotification(notification.id),
+                        );
+                      },
+                    );
+                  }),
                 ),
-                SizedBox(height: 16.h),
               ],
             ),
           ),
@@ -134,98 +121,155 @@ void showNotificationBottomSheet(BuildContext context) {
   );
 }
 
-Widget _notificationCard({
-  required IconData icon,
-  required String title,
-  required String subtitle,
-  required String actionText,
-  required String time,
+Widget _notificationCard(
+  BuildContext context, {
+  required NotificationModel notification,
+  required VoidCallback onReadTap,
+  required VoidCallback onDeleteTap,
 }) {
-  return Container(
-    padding: EdgeInsets.all(16.w),
-    decoration: BoxDecoration(
-      color: const Color(0xffF4EEFF),
-      borderRadius: BorderRadius.circular(16.r),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 40.w,
-              width: 40.w,
-              decoration: BoxDecoration(
-                color: Color(0xffE8DEF8),
-                borderRadius: BorderRadius.circular(10.r),
+  final tr = AppLocalizations.of(context)!;
+
+  IconData iconData;
+  switch (notification.icon) {
+    case 'card':
+      iconData = Icons.assignment_outlined;
+      break;
+    case 'event':
+      iconData = Icons.calendar_today_outlined;
+      break;
+    default:
+      iconData = Icons.notifications_none_rounded;
+  }
+
+  return InkWell(
+    onTap: notification.isRead ? null : onReadTap,
+    child: Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: notification.isRead ? Colors.grey.shade50 : const Color(0xffF4EEFF),
+        borderRadius: BorderRadius.circular(16.r),
+        border: notification.isRead 
+            ? Border.all(color: Colors.grey.shade200) 
+            : null,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 40.w,
+                width: 40.w,
+                decoration: BoxDecoration(
+                  color: notification.isRead ? Colors.grey.shade200 : const Color(0xffE8DEF8),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Icon(iconData, 
+                  color: notification.isRead ? Colors.grey : const Color(0xff6750A4), 
+                  size: 20.sp),
               ),
-              child: Icon(icon, color: Color(0xff6750A4), size: 20.sp),
-            ),
-
-            SizedBox(width: 12.w),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.arimo(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      notification.title,
+                      style: GoogleFonts.arimo(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w700,
+                        color: notification.isRead ? Colors.grey.shade700 : Colors.black,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.arimo(
-                      fontSize: 15.sp,
-                      color: const Color(0xff8E8E93),
+                    SizedBox(height: 4.h),
+                    Text(
+                      notification.subtitle,
+                      style: GoogleFonts.arimo(
+                        fontSize: 15.sp,
+                        color: const Color(0xff8E8E93),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            Text(
-              time,
-              style: GoogleFonts.arimo(
-                fontSize: 13.sp,
-                color: const Color(0xff8E8E93),
-              ),
-            ),
-          ],
-        ),
-
-        SizedBox(height: 12.h),
-
-        Row(
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                actionText,
-                style: GoogleFonts.arimo(
-                  fontSize: 15.sp,
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.bold,
+                  ],
                 ),
               ),
-            ),
-            const Spacer(),
-            IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset(
-                ImagePaths.deleteIcon,
-                width: 20.w,
-                height: 20.w,
+              Text(
+                Helpers.timeAgo(notification.createdAt),
+                style: GoogleFonts.arimo(
+                  fontSize: 13.sp,
+                  color: const Color(0xff8E8E93),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () {
+                  if (!notification.isRead) {
+                    onReadTap();
+                  }
+                  
+                  if (notification.resourceType == 'PreferenceCard') {
+                    Get.toNamed(AppRoutes.CARD_DETAILS, arguments: {
+                      'cardId': notification.resourceId,
+                    });
+                  } else if (notification.resourceType == 'Event') {
+                    // Navigate to event details if route exists
+                    // Get.toNamed(AppRoutes.EVENT_DETAILS, arguments: notification.resourceId);
+                  }
+                },
+                child: Text(
+                  notification.link?.label ?? (notification.resourceType == 'PreferenceCard' ? tr.viewCard : tr.viewEvent),
+                  style: GoogleFonts.arimo(
+                    fontSize: 15.sp,
+                    color: notification.isRead ? Colors.grey : AppTheme.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: () => _showDeleteConfirmation(context, onDeleteTap),
+                icon: SvgPicture.asset(
+                  ImagePaths.deleteIcon,
+                  width: 20.w,
+                  height: 20.w,
+                  colorFilter: notification.isRead 
+                      ? const ColorFilter.mode(Colors.grey, BlendMode.srcIn)
+                      : null,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+void _showDeleteConfirmation(BuildContext context, VoidCallback onDelete) {
+  final tr = AppLocalizations.of(context)!;
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(tr.delete),
+      content: const Text('Are you sure you want to delete this notification?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(tr.cancel),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            onDelete();
+          },
+          child: Text(tr.delete, style: const TextStyle(color: Colors.red)),
         ),
       ],
     ),
   );
 }
+

@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/core/services/storage_service.dart';
 
-import '../../../config/constants/image_paths.dart';
+import 'widgets/onboarding_illustration_2.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
@@ -23,6 +25,7 @@ class OnboardingPage2 extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: () {
+              StorageService.setBool(StorageConstants.onboardingSeen, true);
               Get.offAllNamed(AppRoutes.LOGIN);
             },
             child: Row(
@@ -42,7 +45,7 @@ class OnboardingPage2 extends StatelessWidget {
         Spacer(),
 
         ///<================= MAIN ILLUSTRATION =========================>///
-        Image.asset(ImagePaths.onboardingImage2, height: 450.h),
+        const OnboardingIllustration2(),
 
         SizedBox(height: 10.h),
 

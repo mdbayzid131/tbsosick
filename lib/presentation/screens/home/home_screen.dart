@@ -18,6 +18,7 @@ import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dar
 
 import 'package:tbsosick/core/services/iap_service.dart';
 import 'notification_bottom.dart';
+import 'package:tbsosick/presentation/controllers/notification_controller.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -362,40 +363,59 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                          Stack(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  showNotificationBottomSheet(context);
-                                },
-                                child: Container(
-                                  height: 40.w,
-                                  width: 40.w,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xff7965AF),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.notifications_none_rounded,
-                                    color: Colors.white,
-                                    size: 20.sp,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                right: 6.w,
-                                top: 6.h,
-                                child: Container(
-                                  height: 8.w,
-                                  width: 8.w,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
+                          Obx(() {
+                            final notificationController =
+                                Get.find<NotificationController>();
+                            final count = notificationController.unreadCount.value;
+                            return Stack(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    showNotificationBottomSheet(context);
+                                  },
+                                  child: Container(
+                                    height: 40.w,
+                                    width: 40.w,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xff7965AF),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.notifications_none_rounded,
+                                      color: Colors.white,
+                                      size: 20.sp,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                                if (count > 0)
+                                  Positioned(
+                                    right: 2.w,
+                                    top: 2.h,
+                                    child: Container(
+                                      padding: EdgeInsets.all(2.w),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      constraints: BoxConstraints(
+                                        minWidth: 14.w,
+                                        minHeight: 14.w,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          count > 9 ? '9+' : count.toString(),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 8.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          }),
                         ],
                       ),
                       SizedBox(height: 20.h),

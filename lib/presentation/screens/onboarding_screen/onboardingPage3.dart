@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:tbsosick/core/services/storage_service.dart';
 
-import '../../../config/constants/image_paths.dart';
+import 'widgets/onboarding_illustration_3.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
@@ -16,14 +18,15 @@ class OnboardingPage3 extends StatelessWidget {
   Widget build(BuildContext context) {
     final tr = AppLocalizations.of(context)!;
     return Column(
-      mainAxisAlignment: .center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ///<================= SKIP BUTTON =========================>///
         Align(
           alignment: Alignment.topRight,
           child: TextButton(
             onPressed: () {
-              Get.offAllNamed(AppRoutes.LOGIN);
+              StorageService.setBool(StorageConstants.onboardingSeen, true);  
+                Get.offAllNamed(AppRoutes.LOGIN);
             },
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -42,7 +45,7 @@ class OnboardingPage3 extends StatelessWidget {
         Spacer(),
 
         ///<================= MAIN ILLUSTRATION =========================>///
-        Image.asset(ImagePaths.onboardingImage3, height: 450.h),
+        const OnboardingIllustration3(),
 
         SizedBox(height: 10.h),
 

@@ -10,6 +10,7 @@ import 'package:tbsosick/core/services/auth_service.dart';
 
 import 'package:tbsosick/core/services/iap_service.dart';
 import 'package:tbsosick/data/models/subscription_model.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ProfileController extends GetxController {
   final UserDataRepository _userDataRepository = Get.find();
@@ -17,6 +18,7 @@ class ProfileController extends GetxController {
 
   final Rx<UserModel> user = UserModel().obs;
   final Rx<bool> isLoading = false.obs;
+  final RxString appVersion = '1.0.0'.obs;
 
   SubscriptionModel? get currentSubscription => _iapService.currentSubscription.value;
 
@@ -28,6 +30,16 @@ class ProfileController extends GetxController {
     super.onInit();
     getProfileData();
     fetchLegalPages();
+    _getAppVersion();
+  }
+
+  Future<void> _getAppVersion() async {
+    try {
+      final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      appVersion.value = packageInfo.version;
+    } catch (e) {
+      Helpers.error("Error getting app version: $e");
+    }
   }
 
   Future<void> getProfileData() async {

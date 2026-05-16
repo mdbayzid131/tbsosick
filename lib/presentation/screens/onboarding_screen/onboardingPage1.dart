@@ -8,18 +8,17 @@ import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
-import '../../../config/constants/image_paths.dart';
+import 'widgets/onboarding_illustration_1.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 
 class OnboardingPage1 extends StatelessWidget {
   const OnboardingPage1({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
-        final tr = AppLocalizations.of(context)!;
+    final tr = AppLocalizations.of(context)!;
     return Column(
-      mainAxisAlignment: .center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ///<================= SKIP BUTTON =========================>///
         Align(
@@ -41,7 +40,7 @@ class OnboardingPage1 extends StatelessWidget {
         Spacer(),
 
         ///<================= MAIN ILLUSTRATION =========================>///
-        Image.asset(ImagePaths.onboardingImage1, height: 450.h),
+        const OnboardingIllustration1(),
 
         SizedBox(height: 10.h),
 

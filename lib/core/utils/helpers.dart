@@ -20,6 +20,24 @@ class Helpers {
     return '$minutes:$secs';
   }
 
+  /// Format DateTime to "time ago" string (e.g., "5m ago")
+  static String timeAgo(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays >= 365) {
+      return '${(difference.inDays / 365).floor()}y ago';
+    } else if (difference.inDays >= 30) {
+      return '${(difference.inDays / 30).floor()}mo ago';
+    } else if (difference.inDays >= 1) {
+      return '${difference.inDays}d ago';
+    } else if (difference.inHours >= 1) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inMinutes >= 1) {
+      return '${difference.inMinutes}m ago';
+    } else {
+      return 'just now';
+    }
+  }
+
   /// Format seconds to "HH:mm:ss" (e.g., 3661 → "01:01:01")
   static String formatDuration(int seconds) {
     final hours = (seconds ~/ 3600).toString().padLeft(2, '0');
