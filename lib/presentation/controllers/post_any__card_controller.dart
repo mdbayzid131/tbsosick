@@ -121,7 +121,7 @@ class PostAnyCardController extends GetxController {
         visibility: isprivate ? 'PRIVATE' : 'PUBLIC',
         photos: selectedImages, // List<File>
       );
-      if (response.statusCode == 403) {
+      if (response.statusCode == 403 || response.statusCode == 402) {
         SubscriptionHelper.showSubscriptionDialog(
           title: 'Subscription Required',
           message: response.data?['message'] ?? '',

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:tbsosick/core/services/iap_service.dart';
 import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
@@ -31,6 +32,8 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isPaidUser = Get.find<IapService>().isPremiumUser;
+
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 100.w,
@@ -107,7 +110,6 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           SizedBox(width: 16.w),
           InkWell(
             onTap: () {
-              bool isPaidUser = false; // Simulating non-paid user for testing
               if (isPaidUser) {
                 controller.downloadCard(cardId: cardId);
               } else {
@@ -180,8 +182,8 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                   _buildKeyNotesCard(),
                   SizedBox(height: 20.h),
                   _buildPhotoLibrary(
-                    false,
-                  ), // Pass false to test blurry images and popup
+                    isPaidUser,
+                  ), // Pass isPaidUser to handle blurry images and popup
                   SizedBox(height: 30.h),
                 ],
               ),

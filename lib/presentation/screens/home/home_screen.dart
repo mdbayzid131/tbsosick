@@ -16,6 +16,7 @@ import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart
 import 'package:tbsosick/presentation/screens/home/Preference%20card/new_preference_card.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_favorites.dart';
 
+import 'package:tbsosick/core/services/iap_service.dart';
 import 'notification_bottom.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
@@ -189,7 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Padding(
                               padding: EdgeInsets.only(bottom: 10.h),
                               child: ProcedureCard(
-                                isPaidUser: false, // Testing download popup
+                                isPaidUser:
+                                    Get.find<IapService>().isPremiumUser,
                                 onDownloadTap: () {
                                   _prefranceCardDetailsController.downloadCard(
                                     cardId: card.id,

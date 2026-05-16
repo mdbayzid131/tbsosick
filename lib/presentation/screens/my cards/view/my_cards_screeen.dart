@@ -7,9 +7,9 @@ import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/my_procedure_card.dart';
-import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/screens/my%20cards/controller/my_cards_controller.dart';
+import 'package:tbsosick/core/services/iap_service.dart';
 
 class MyCardsScreen extends StatefulWidget {
   const MyCardsScreen({super.key});
@@ -41,45 +41,60 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
         statusBarBrightness: Brightness.dark,
       ),
       child: Scaffold(
-        body: RefreshIndicator(
-          onRefresh: () async {
-            await controller.refreshCards();
-          },
-          child: Column(
+        body: Obx(
+          () => Stack(
             children: [
-              _buildHeader(),
-              SizedBox(height: 12.h),
+              RefreshIndicator(
+                onRefresh: () async {
+                  await controller.refreshCards();
+                },
+                child: Column(
+                  children: [
+                    _buildHeader(),
+                    SizedBox(height: 12.h),
 
-              // Tabs for Public and Private
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Obx(
-                  () => Row(
-                    children: [
-                      Expanded(
-                        child: _buildTab(
-                          title: 'Public',
-                          isSelected:
-                              controller.selectedVisibility.value == 'public',
-                          onTap: () => controller.changeVisibility('public'),
-                        ),
+                    // Tabs for Public and Private
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildTab(
+                              title: 'Public',
+                              isSelected:
+                                  controller.selectedVisibility.value ==
+                                  'public',
+                              onTap: () =>
+                                  controller.changeVisibility('public'),
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: _buildTab(
+                              title: 'Private',
+                              isSelected:
+                                  controller.selectedVisibility.value ==
+                                  'private',
+                              onTap: () =>
+                                  controller.changeVisibility('private'),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: _buildTab(
-                          title: 'Private',
-                          isSelected:
-                              controller.selectedVisibility.value == 'private',
-                          onTap: () => controller.changeVisibility('private'),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 10.h),
+
+                    Expanded(child: _buildLibraryCardsList()),
+                  ],
                 ),
               ),
-              SizedBox(height: 10.h),
-
-              Expanded(child: _buildLibraryCardsList()),
+              if (controller.isLoading.value)
+                Container(
+                  color: Colors.black.withOpacity(0.1),
+                  child: const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF6C36B2)),
+                  ),
+                ),
             ],
           ),
         ),
@@ -190,23 +205,18 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(
-            () => Text(
-              '${controller.myCards.length} Cards',
-              style: GoogleFonts.arimo(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF6B7280),
-              ),
+          Text(
+            '${controller.myCards.length} Cards',
+            style: GoogleFonts.arimo(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF6B7280),
             ),
           ),
           SizedBox(height: 12.h),
           // Added divider
           Expanded(
-            child: Obx(() {
-              if (controller.isLoading.value && controller.myCards.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
-              }
+            child: () {
               if (controller.errorMessage.isNotEmpty) {
                 return Center(child: Text(controller.errorMessage.value));
               }
@@ -230,6 +240,7 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
                   return Column(
                     children: [
                       MyProcedureCard(
+                        isPaidUser: Get.find<IapService>().isPremiumUser,
                         onDownloadTap: () => _prefranceCardDetailsController
                             .downloadCard(cardId: card.id),
                         cardId: card.id,
@@ -243,10 +254,6 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
                         isFavorite: card.isFavorited,
                         isPrivateCard:
                             controller.selectedVisibility.value == 'private',
-                        onEditTap: () {
-                          // TODO: Navigate to edit screen
-                          Helpers.showSuccess('Edit screen coming soon');
-                        },
                         onDeleteTap: () {
                           _showDeleteConfirmation(context, card.id);
                         },
@@ -267,7 +274,7 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
                   );
                 },
               );
-            }),
+            }(),
           ),
         ],
       ),

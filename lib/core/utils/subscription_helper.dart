@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:tbsosick/config/routes/app_pages.dart';
+
 class SubscriptionHelper {
   static void showSubscriptionDialog({
     String? title,
@@ -33,7 +35,11 @@ class SubscriptionHelper {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: onPress ?? () => Get.back(),
+              onPressed: onPress ??
+                  () {
+                    Get.back();
+                    Get.toNamed(AppRoutes.SUBSCRIPTION);
+                  },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF9945FF),
                 shape: RoundedRectangleBorder(

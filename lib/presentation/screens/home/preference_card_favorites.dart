@@ -10,6 +10,7 @@ import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
+import 'package:tbsosick/core/services/iap_service.dart';
 
 class PreferenceCardFavorites extends StatefulWidget {
   const PreferenceCardFavorites({super.key});
@@ -104,6 +105,7 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                           return Padding(
                             padding: EdgeInsets.only(bottom: 10.h),
                             child: ProcedureCard(
+                              isPaidUser: Get.find<IapService>().isPremiumUser,
                               onDownloadTap: () {
                                 _prefranceCardDetailsController.downloadCard(
                                   cardId: card.id,

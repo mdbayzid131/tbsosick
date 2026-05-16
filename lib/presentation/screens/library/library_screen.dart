@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
+import 'package:tbsosick/core/services/iap_service.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
@@ -200,6 +197,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   return Column(
                     children: [
                       ProcedureCard(
+                        isPaidUser: Get.find<IapService>().isPremiumUser,
                         onDownloadTap: () => _prefranceCardDetailsController
                             .downloadCard(cardId: card.id),
                         cardId: card.id,

@@ -17,7 +17,6 @@ class MyProcedureCard extends StatefulWidget {
   final bool isFavorite;
   final Future<void> Function()? onFavoriteToggle;
   final VoidCallback? onDownloadTap;
-  final VoidCallback? onEditTap;
   final VoidCallback? onDeleteTap;
   final bool isPaidUser;
 
@@ -34,7 +33,6 @@ class MyProcedureCard extends StatefulWidget {
     required this.isFavorite,
     required this.onFavoriteToggle,
     required this.onDownloadTap,
-    this.onEditTap,
     this.onDeleteTap,
     this.isPaidUser = false,
   });
@@ -226,8 +224,6 @@ class _MyProcedureCardState extends State<MyProcedureCard> {
                       } else {
                         SubscriptionHelper.showSubscriptionDialog();
                       }
-                    } else if (value == 'edit') {
-                      widget.onEditTap?.call();
                     } else if (value == 'delete') {
                       widget.onDeleteTap?.call();
                     }
@@ -244,18 +240,6 @@ class _MyProcedureCardState extends State<MyProcedureCard> {
                         ],
                       ),
                     ),
-                    if (widget.onEditTap != null)
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit_outlined,
-                                size: 20.sp, color: const Color(0xFF1C1B1F)),
-                            SizedBox(width: 8.w),
-                            const Text('Edit'),
-                          ],
-                        ),
-                      ),
                     if (widget.onDeleteTap != null)
                       PopupMenuItem(
                         value: 'delete',

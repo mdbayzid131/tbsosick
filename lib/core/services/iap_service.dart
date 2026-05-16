@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/data/models/subscription_model.dart';
+import 'package:tbsosick/core/services/auth_service.dart';
 
 class IapService extends GetxService {
   final InAppPurchase _iap = InAppPurchase.instance;
@@ -22,6 +23,8 @@ class IapService extends GetxService {
   final Rx<SubscriptionModel?> currentSubscription = Rx<SubscriptionModel?>(
     null,
   );
+
+  bool get isPremiumUser => currentSubscription.value?.isPremium ?? false;
 
   // Product IDs (Android Base Plans)
   static const String premiumMonthly = 'premium-monthly';
@@ -63,6 +66,16 @@ class IapService extends GetxService {
       onDone: () => _subscription.cancel(),
       onError: (error) => Helpers.debug('IAP Error: $error'),
     );
+
+    // Watch login state to sync/clear subscription
+    ever(Get.find<AuthService>().isLoggedIn, (bool loggedIn) {
+      if (loggedIn) {
+        syncSubscriptionWithBackend();
+      } else {
+        currentSubscription.value = null;
+      }
+    });
+
     initialize();
   }
 
@@ -81,7 +94,11 @@ class IapService extends GetxService {
       return;
     }
     await fetchProducts();
-    await syncSubscriptionWithBackend();
+
+    // Only sync with backend if user is already logged in
+    if (Get.find<AuthService>().isAuthenticated) {
+      await syncSubscriptionWithBackend();
+    }
   }
 
   Future<void> syncSubscriptionWithBackend() async {
@@ -163,37 +180,23 @@ class IapService extends GetxService {
           final offerTags = offers?.map((e) => e.offerTags).toList();
           final offerId = offers?.map((e) => e.installmentPlanDetails).toList();
           final pricingPhases = offers?.map((e) => e.pricingPhases).toList();
-          final priceCurrencyCode = offers?.map((e) => e.pricingPhases.map((e) => e.priceCurrencyCode)).toList();
-
-          
+          final priceCurrencyCode = offers
+              ?.map((e) => e.pricingPhases.map((e) => e.priceCurrencyCode))
+              .toList();
 
           // Let's try to see if there's a specific offer index or token in the product details wrapper
           androidInfo = ' | All Base Plans in Wrapper: $allBasePlans';
-          
-          print(
-            "offerIds: $offerIds",
-          );
-          print(
-            "offerIdsToken: $offerIdsToken",
-          );
-          print(
-            "offerTags: $offerTags",
-          );
-          print(
-            "offerId: $offerId",
-          );
-          print(
-            "pricingPhases: $pricingPhases",
-          );
-          print(
-            "priceCurrencyCode: $priceCurrencyCode",
-          );
+
+          print("offerIds: $offerIds");
+          print("offerIdsToken: $offerIdsToken");
+          print("offerTags: $offerTags");
+          print("offerId: $offerId");
+          print("pricingPhases: $pricingPhases");
+          print("priceCurrencyCode: $priceCurrencyCode");
         }
         Helpers.debug(
           'IAP: Loaded Product: ID: ${prod.id}, Price: ${prod.price}$androidInfo',
-        
         );
-        
       }
     } catch (e) {
       Helpers.error('IAP: Exception during fetch: $e');
@@ -207,13 +210,15 @@ class IapService extends GetxService {
     return const Uuid().v5(_iapNamespace, userId);
   }
 
-  Future<void> buySubscription(ProductDetails product, String userId,
-      [String? expectedBasePlanId]) async {
+  Future<void> buySubscription(
+    ProductDetails product,
+    String userId, [
+    String? expectedBasePlanId,
+  ]) async {
     final String accountToken = deriveIapAccountToken(userId);
 
     if (expectedBasePlanId != null) {
-      await StorageService.setString(
-          'pending_purchase_id', expectedBasePlanId);
+      await StorageService.setString('pending_purchase_id', expectedBasePlanId);
     }
 
     late PurchaseParam purchaseParam;
@@ -237,7 +242,9 @@ class IapService extends GetxService {
     }
   }
 
-  Future<void> _onPurchaseUpdate(List<PurchaseDetails> purchaseDetailsList) async {
+  Future<void> _onPurchaseUpdate(
+    List<PurchaseDetails> purchaseDetailsList,
+  ) async {
     try {
       for (var purchase in purchaseDetailsList) {
         if (purchase.status == PurchaseStatus.pending) {
@@ -252,15 +259,19 @@ class IapService extends GetxService {
           } else {
             Helpers.error('Purchase Error: ${purchase.error}');
           }
-          
+
           try {
-            if (Platform.isAndroid && purchase.runtimeType.toString().contains('GooglePlay')) {
+            if (Platform.isAndroid &&
+                purchase.runtimeType.toString().contains('GooglePlay')) {
               await _iap.completePurchase(purchase);
-            } else if (Platform.isIOS && purchase.runtimeType.toString().contains('AppStore')) {
+            } else if (Platform.isIOS &&
+                purchase.runtimeType.toString().contains('AppStore')) {
               await _iap.completePurchase(purchase);
             }
           } catch (e) {
-            Helpers.debug('IAP: completePurchase error (expected if not platform-specific): $e');
+            Helpers.debug(
+              'IAP: completePurchase error (expected if not platform-specific): $e',
+            );
           }
         } else if (purchase.status == PurchaseStatus.purchased ||
             purchase.status == PurchaseStatus.restored) {
@@ -289,7 +300,9 @@ class IapService extends GetxService {
         String basePlanId = '';
         // If Android returns the generic subscription ID, we fetch the specific base plan ID we cached.
         if (purchase.productID == 'smrtscrub_subscription') {
-          final pendingId = await StorageService.getString('pending_purchase_id');
+          final pendingId = await StorageService.getString(
+            'pending_purchase_id',
+          );
           if (pendingId.isNotEmpty) {
             basePlanId = pendingId;
           }

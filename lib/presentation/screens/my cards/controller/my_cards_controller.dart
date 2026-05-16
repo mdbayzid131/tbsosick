@@ -50,9 +50,9 @@ class MyCardsController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final Map<String, dynamic> data =
             (response.data['data'] is Map<String, dynamic>)
-                ? response.data['data']
-                : response.data;
-        
+            ? response.data['data']
+            : response.data;
+
         final result = LibraryCardsResponse.fromJson(data);
         myCards.assignAll(result.data);
         hasMoreCards.value = _page < result.meta.totalPages;
@@ -82,9 +82,9 @@ class MyCardsController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final Map<String, dynamic> data =
             (response.data['data'] is Map<String, dynamic>)
-                ? response.data['data']
-                : response.data;
-                
+            ? response.data['data']
+            : response.data;
+
         final result = LibraryCardsResponse.fromJson(data);
         myCards.addAll(result.data);
         hasMoreCards.value = _page < result.meta.totalPages;

@@ -31,7 +31,7 @@ class ApiConstants {
 
   static const String getMyCards = '/preference-cards/my-cards';
   static const String getCardDetails = '/preference-cards/{id}';
-  static const String downloadCard = '/preference-card/{id}/download';
+  static const String downloadCard = '/preference-cards/{id}/download';
   static const String addToFavoriteList =
       '/preference-cards/favorites/cards/{id}';
   static const String removeFromFavoriteList =
