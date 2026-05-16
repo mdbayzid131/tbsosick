@@ -261,11 +261,9 @@ class IapService extends GetxService {
           }
 
           try {
-            if (Platform.isAndroid &&
-                purchase.runtimeType.toString().contains('GooglePlay')) {
+            if (purchase is GooglePlayPurchaseDetails) {
               await _iap.completePurchase(purchase);
-            } else if (Platform.isIOS &&
-                purchase.runtimeType.toString().contains('AppStore')) {
+            } else if (purchase is AppStorePurchaseDetails) {
               await _iap.completePurchase(purchase);
             }
           } catch (e) {
@@ -327,7 +325,21 @@ class IapService extends GetxService {
         }
         await syncSubscriptionWithBackend();
       } else {
-        Helpers.debug('Verification failed');
+        // If the transaction was superseded by an upgrade, we should still complete it
+        // so the store stops sending it to us.
+        final errorMessage = response?.data?['message']?.toString() ?? '';
+        if (errorMessage.contains('superseded by an upgrade') ||
+            errorMessage.contains('already expired')) {
+          Helpers.warning(
+            'Transaction $errorMessage. Completing to stop retries.',
+          );
+          if (Platform.isIOS && purchase is AppStorePurchaseDetails) {
+            await _iap.completePurchase(purchase);
+          }
+          await syncSubscriptionWithBackend();
+        } else {
+          Helpers.debug('Verification failed: $errorMessage');
+        }
       }
     } catch (e) {
       Helpers.error('Error verifying purchase: $e');
@@ -335,7 +347,18 @@ class IapService extends GetxService {
   }
 
   Future<void> restorePurchases() async {
-    await _iap.restorePurchases();
-    await syncSubscriptionWithBackend();
+    try {
+      isLoading.value = true;
+      await _iap.restorePurchases();
+      // Sync with backend to get the latest status after restoration
+      await syncSubscriptionWithBackend();
+      Helpers.showSuccess(
+        'Subscription restore initiated. Please wait a moment.',
+      );
+    } catch (e) {
+      Helpers.error('Error restoring purchases: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }
