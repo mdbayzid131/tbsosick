@@ -108,6 +108,20 @@ class UserDataRepository {
     );
   }
 
+  Future<File> downloadCardPdf({required String cardId, required String savePath}) async {
+    final response = await _apiClient.dio.post(
+      ApiConstants.downloadCard.replaceAll('{id}', cardId),
+      data: {},
+      options: Options(
+        responseType: ResponseType.bytes,
+      ),
+    );
+
+    File file = File(savePath);
+    await file.writeAsBytes(response.data);
+    return file;
+  }
+
   Future<Response<dynamic>> getSupplies({
     String search = '',
     int page = 1,

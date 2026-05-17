@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
@@ -72,20 +74,22 @@ class PrefranceCardDetailsController extends GetxController {
       }
 
       if (storageGranted) {
-        // Track download on server
-        final response = await _userRepository.downloadCard(cardId: cardId);
-        ApiChecker.checkWriteApi(response);
+        final dir = Platform.isAndroid
+            ? await getExternalStorageDirectory()
+            : await getApplicationDocumentsDirectory();
 
-        if (cardDetails.value != null) {
-          final file = await _pdfService.generatePreferenceCardPdf(
-            cardDetails.value!,
-          );
+        final filePath = '${dir!.path}/PreferenceCard_$cardId.pdf';
 
-          await _notificationService.showDownloadNotification(
-            filePath: file.path,
-            fileName: file.path.split('/').last,
-          );
-        }
+        // Download directly from API
+        final file = await _userRepository.downloadCardPdf(
+          cardId: cardId,
+          savePath: filePath,
+        );
+
+        await _notificationService.showDownloadNotification(
+          filePath: file.path,
+          fileName: 'PreferenceCard_$cardId.pdf',
+        );
       }
     } catch (e) {
       Helpers.error("downloadCard error => $e");
@@ -114,15 +118,11 @@ class PrefranceCardDetailsController extends GetxController {
     }
   }
 
-
-
-Future<void> copyCardId({required String cardId}) async {
-  try {
-    await Clipboard.setData(ClipboardData(text: cardId));
-  } catch (e) {
-    Helpers.error("copyCardId error => $e");
+  Future<void> copyCardId({required String cardId}) async {
+    try {
+      await Clipboard.setData(ClipboardData(text: cardId));
+    } catch (e) {
+      Helpers.error("copyCardId error => $e");
+    }
   }
-}
-
-
 }

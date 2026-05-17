@@ -11,7 +11,6 @@ import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
-import 'package:tbsosick/presentation/screens/splash_screen/controller/splash_controller.dart';
 
 class LoginController extends GetxController {
   final AuthService _authService = Get.find();
@@ -20,7 +19,7 @@ class LoginController extends GetxController {
   final passwordController = TextEditingController();
 
   final emailError = RxnString();
-  final passwordError = RxnString();
+  final passwordError = RxnString(); 
 
   final isLoading = false.obs;
   final isPasswordVisible = false.obs;
@@ -30,6 +29,13 @@ class LoginController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
+  }
+
+  void clearControllers() {
+    emailController.clear();
+    passwordController.clear();
+    emailError.value = null;
+    passwordError.value = null;
   }
 
   void togglePasswordVisibility() {
@@ -57,10 +63,11 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200) {
         Helpers.showSuccess('Login successful');
-        
+
         final data = response.data;
         final authData = data['data'] is Map ? data['data'] : data;
-        final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
+        final bool isOnboardingCompleted =
+            authData['isOnboardingCompleted'] ?? true;
 
         if (!isOnboardingCompleted) {
           Get.offAllNamed(AppRoutes.WELCOME_PAGE);
@@ -86,6 +93,7 @@ class LoginController extends GetxController {
   }
 
   void goToRegister() {
+    clearControllers();
     Get.toNamed(AppRoutes.REGISTER);
   }
 
@@ -104,6 +112,7 @@ class LoginController extends GetxController {
       // print('==================================================');
       // if (response.statusCode == 200) {
       Helpers.showSuccess('Logout successful');
+      clearControllers();
       Get.offAllNamed(AppRoutes.LOGIN);
       // }
     } catch (e) {
@@ -116,19 +125,20 @@ class LoginController extends GetxController {
   Future<void> signInWithGoogle() async {
     try {
       isLoading.value = true;
-     final response = await _authService.signInWithGoogle();
-     if(response?.statusCode == 200){ 
-      final data = response?.data;
-      final authData = data['data'] is Map ? data['data'] : data;
-      final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
-      if(!isOnboardingCompleted){
-        Get.offAllNamed(AppRoutes.WELCOME_PAGE);
-      }else{
-        Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+      final response = await _authService.signInWithGoogle();
+      if (response?.statusCode == 200) {
+        final data = response?.data;
+        final authData = data['data'] is Map ? data['data'] : data;
+        final bool isOnboardingCompleted =
+            authData['isOnboardingCompleted'] ?? true;
+        if (!isOnboardingCompleted) {
+          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+        } else {
+          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+        }
+      } else {
+        Helpers.showError(response?.data['message']);
       }
-    }else{
-      Helpers.showError(response?.data['message']);
-    }
     } catch (e) {
       Helpers.showError(e.toString());
       Helpers.error(e.toString());
@@ -141,16 +151,17 @@ class LoginController extends GetxController {
     try {
       isLoading.value = true;
       final response = await _authService.signInWithApple();
-      if(response?.statusCode == 200){
+      if (response?.statusCode == 200) {
         final data = response?.data;
         final authData = data['data'] is Map ? data['data'] : data;
-        final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
-        if(!isOnboardingCompleted){
+        final bool isOnboardingCompleted =
+            authData['isOnboardingCompleted'] ?? true;
+        if (!isOnboardingCompleted) {
           Get.offAllNamed(AppRoutes.WELCOME_PAGE);
-        }else{
+        } else {
           Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
         }
-      }else{
+      } else {
         Helpers.showError(response?.data['message']);
       }
     } catch (e) {

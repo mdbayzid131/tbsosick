@@ -73,14 +73,11 @@ class BottomNabBarController extends GetxController {
   void onInit() {
     super.onInit();
 
-    // Sync text editing controller to reactive string
-    globalSearchController.addListener(() {
-      searchController.value = globalSearchController.text;
-    });
+    // Replaced addListener with direct onChanged binding in the UI to prevent double firing
 
     loadHomeData();
     debounce(searchController, (_) {
-      refreshCards();
+      getLibraryCards(showLoading: true);
     }, time: const Duration(milliseconds: 500));
   }
 
@@ -208,8 +205,6 @@ class BottomNabBarController extends GetxController {
       if (showLoading) isCardCountLoading.value = false;
     }
   }
-
-
 
   /// 🔥 GET FAVORITE CARDS
   Future<void> getFavoriteCard({bool showLoading = true}) async {

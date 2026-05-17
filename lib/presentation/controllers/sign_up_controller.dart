@@ -5,6 +5,7 @@ import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/validators.dart';
+import 'package:tbsosick/presentation/controllers/login_controller.dart';
 
 class SignUpController extends GetxController {
   final AuthService _authService = Get.find();
@@ -36,6 +37,32 @@ class SignUpController extends GetxController {
     phoneController.dispose();
     countryController.dispose();
     super.onClose();
+  }
+
+  void clearControllers() {
+    nameController.clear();
+    emailController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    phoneController.clear();
+    selectedCountry.value = "";
+
+    nameError.value = null;
+    emailError.value = null;
+    phoneError.value = null;
+    passwordError.value = null;
+    confirmPasswordError.value = null;
+    countryError.value = null;
+  }
+
+  void goToLogin() {
+    clearControllers();
+    try {
+      Get.find<LoginController>().clearControllers();
+    } catch (e) {
+      // LoginController might not be initialized yet, though unlikely in this flow
+    }
+    Get.back();
   }
 
   Future<void> signUp() async {
@@ -97,16 +124,17 @@ class SignUpController extends GetxController {
     try {
       isLoading.value = true;
       final response = await _authService.signInWithGoogle();
-      if(response?.statusCode == 200){
+      if (response?.statusCode == 200) {
         final data = response?.data;
         final authData = data['data'] is Map ? data['data'] : data;
-        final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
-        if(!isOnboardingCompleted){
+        final bool isOnboardingCompleted =
+            authData['isOnboardingCompleted'] ?? true;
+        if (!isOnboardingCompleted) {
           Get.offAllNamed(AppRoutes.WELCOME_PAGE);
-        }else{
+        } else {
           Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
         }
-      }else{
+      } else {
         Helpers.showError(response?.data['message']);
       }
     } catch (e) {
@@ -121,16 +149,17 @@ class SignUpController extends GetxController {
     try {
       isLoading.value = true;
       final response = await _authService.signInWithApple();
-      if(response?.statusCode == 200){
+      if (response?.statusCode == 200) {
         final data = response?.data;
         final authData = data['data'] is Map ? data['data'] : data;
-        final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
-        if(!isOnboardingCompleted){
+        final bool isOnboardingCompleted =
+            authData['isOnboardingCompleted'] ?? true;
+        if (!isOnboardingCompleted) {
           Get.offAllNamed(AppRoutes.WELCOME_PAGE);
-        }else{
+        } else {
           Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
         }
-      }else{
+      } else {
         Helpers.showError(response?.data['message']);
       }
     } catch (e) {

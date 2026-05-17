@@ -50,7 +50,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async {
-            await controller.refreshCards();
+            await controller.getLibraryCards(showLoading: false);
           },
           child: Column(
             children: [
@@ -386,7 +386,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       onPressed: () {
                         controller.specialtyFilter.value = _selectedSpecialty;
                         controller.verifiedOnlyFilter.value = _verifiedOnly;
-                        controller.refreshCards();
+                        controller.getLibraryCards();
                         Navigator.pop(context);
                       },
                       label: AppLocalizations.of(context)!.applyFilters,

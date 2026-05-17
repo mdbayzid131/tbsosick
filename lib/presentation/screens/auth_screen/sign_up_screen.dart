@@ -313,7 +313,7 @@ class SignUpScreen extends GetView<SignUpController> {
                         ),
                         InkWell(
                           onTap: () {
-                            Get.back();
+                            controller.goToLogin();
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 4.w),
