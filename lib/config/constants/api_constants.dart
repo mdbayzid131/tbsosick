@@ -60,7 +60,7 @@ class ApiConstants {
   static const String chooseFreePlan = '/subscriptions/choose/free';
 
   // Notification Endpoints
-  static const String notifications = '/notifications';
+  static const String notifications = '/notifications/me';
   static const String readNotification = '/notifications/{id}/read';
   static const String readAllNotifications = '/notifications/read-all';
   static const String deleteNotification = '/notifications/{id}';

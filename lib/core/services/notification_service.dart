@@ -22,9 +22,10 @@ class NotificationService {
           requestSoundPermission: true,
         );
     final InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid, iOS: iosSettings);
-
-
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: iosSettings,
+        );
 
     await flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
@@ -64,6 +65,45 @@ class NotificationService {
       body: '$fileName has been downloaded.',
       notificationDetails: platformChannelSpecifics,
       payload: filePath,
+    );
+  }
+
+  Future<void> showPushNotification({
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          'push_channel',
+          'Push Notifications',
+          channelDescription: 'Notifications for push messages',
+          importance: Importance.max,
+          priority: Priority.high,
+          showWhen: true,
+          playSound: true,
+        );
+
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
+
+    final int id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+    await flutterLocalNotificationsPlugin.show(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: platformChannelSpecifics,
+      payload: payload,
     );
   }
 }

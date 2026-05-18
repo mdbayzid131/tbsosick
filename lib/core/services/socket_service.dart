@@ -5,6 +5,8 @@ import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/logger.dart';
+import 'package:tbsosick/data/models/notification_model.dart';
+import 'package:tbsosick/presentation/controllers/notification_controller.dart';
 
 /// ===================== SOCKET SERVICE =====================
 /// Manages real-time Socket.IO connection lifecycle.
@@ -69,7 +71,12 @@ class SocketService extends GetxService {
     _socket?.onConnect((_) {
       Helpers.info('Socket connected');
       isConnected.value = true;
-      if (userId.isNotEmpty) registerUser(userId);
+      if (userId.isNotEmpty) {
+        registerUser(userId);
+        joinRoom(
+          'user::$userId',
+        ); // Join the user's private room user::{userId}
+      }
     });
 
     _socket?.onDisconnect((_) {
@@ -86,10 +93,15 @@ class SocketService extends GetxService {
       Helpers.error('Socket error: $err');
     });
 
-    // Default notification handler
+    // Default notification handlers
+    _socket?.on('notification:new', (data) {
+      Helpers.debug('New notification (notification:new): $data');
+      _handleIncomingNotification(data);
+    });
+
     _socket?.on('new-notification', (data) {
-      Helpers.debug('New notification: $data');
-      onNotificationReceived?.call(data);
+      Helpers.debug('New notification (new-notification): $data');
+      _handleIncomingNotification(data);
     });
 
     // Default message handler
@@ -97,6 +109,32 @@ class SocketService extends GetxService {
       Helpers.debug('New message: $data');
       onMessageReceived?.call(data);
     });
+  }
+
+  void _handleIncomingNotification(dynamic data) {
+    try {
+      if (data == null) return;
+
+      // Parse notification if data is a map
+      if (data is Map) {
+        final Map<String, dynamic> jsonMap = Map<String, dynamic>.from(data);
+        Helpers.info('🔔 Real-time notification received: ${jsonMap['title']}');
+      }
+
+      // Check if NotificationController is registered in GetX
+      if (Get.isRegistered<NotificationController>()) {
+        final notificationController = Get.find<NotificationController>();
+        // Robust sync: Fetch the latest list of notifications from /notifications/me
+        // This automatically updates the list and updates unreadCount.value
+        notificationController.fetchNotifications(isRefresh: true);
+        Helpers.info('🔄 Refreshed notifications from /notifications/me API');
+      }
+
+      // Trigger callback if registered
+      onNotificationReceived?.call(data);
+    } catch (e) {
+      Helpers.error('Error handling incoming socket notification: $e');
+    }
   }
 
   // ──────────────────── PUBLIC METHODS ────────────────────
@@ -132,8 +170,8 @@ class SocketService extends GetxService {
   /// Join a chat/notification room
   void joinRoom(String roomId) {
     _socket?.emit('join-room', roomId);
-    Helpers.debug('Joined room: $roomId')   ;
-  } 
+    Helpers.debug('Joined room: $roomId');
+  }
 
   /// Leave a room
   void leaveRoom(String roomId) {
