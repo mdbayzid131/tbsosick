@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
-import 'package:tbsosick/core/services/notification_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/presentation/controllers/notification_controller.dart';
 
