@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 
 class ProcedureCard extends StatefulWidget {
@@ -215,11 +214,7 @@ class _ProcedureCardState extends State<ProcedureCard> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    if (widget.isPaidUser) {
-                      widget.onDownloadTap?.call();
-                    } else {
-                      SubscriptionHelper.showSubscriptionDialog();
-                    }
+                    widget.onDownloadTap?.call();
                   },
                   child: Container(
                     width: 36.w,

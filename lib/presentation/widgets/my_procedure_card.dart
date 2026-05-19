@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:get/get.dart';
 
@@ -150,8 +149,11 @@ class _MyProcedureCardState extends State<MyProcedureCard> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.check_circle,
-                            color: const Color(0xFF10B981), size: 14.sp),
+                        Icon(
+                          Icons.check_circle,
+                          color: const Color(0xFF10B981),
+                          size: 14.sp,
+                        ),
                         SizedBox(width: 4.w),
                         Text(
                           'Verified',
@@ -182,8 +184,11 @@ class _MyProcedureCardState extends State<MyProcedureCard> {
             Row(
               children: [
                 if (!widget.isPrivateCard)
-                  Icon(Icons.file_download_outlined,
-                      color: const Color(0xFF6B7280), size: 20.sp),
+                  Icon(
+                    Icons.file_download_outlined,
+                    color: const Color(0xFF6B7280),
+                    size: 20.sp,
+                  ),
                 SizedBox(width: 4.w),
                 if (!widget.isPrivateCard)
                   Text(
@@ -219,11 +224,7 @@ class _MyProcedureCardState extends State<MyProcedureCard> {
                   color: Colors.white,
                   onSelected: (value) {
                     if (value == 'download') {
-                      if (widget.isPaidUser) {
-                        widget.onDownloadTap?.call();
-                      } else {
-                        SubscriptionHelper.showSubscriptionDialog();
-                      }
+                      widget.onDownloadTap?.call();
                     } else if (value == 'delete') {
                       widget.onDeleteTap?.call();
                     }
@@ -233,8 +234,11 @@ class _MyProcedureCardState extends State<MyProcedureCard> {
                       value: 'download',
                       child: Row(
                         children: [
-                          Icon(Icons.file_download_outlined,
-                              size: 20.sp, color: const Color(0xFF1C1B1F)),
+                          Icon(
+                            Icons.file_download_outlined,
+                            size: 20.sp,
+                            color: const Color(0xFF1C1B1F),
+                          ),
                           SizedBox(width: 8.w),
                           const Text('Download'),
                         ],
@@ -245,11 +249,16 @@ class _MyProcedureCardState extends State<MyProcedureCard> {
                         value: 'delete',
                         child: Row(
                           children: [
-                            Icon(Icons.delete_outline,
-                                size: 20.sp, color: Colors.red),
+                            Icon(
+                              Icons.delete_outline,
+                              size: 20.sp,
+                              color: Colors.red,
+                            ),
                             SizedBox(width: 8.w),
-                            const Text('Delete',
-                                style: TextStyle(color: Colors.red)),
+                            const Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ],
                         ),
                       ),

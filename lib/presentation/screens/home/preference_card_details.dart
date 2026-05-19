@@ -1,10 +1,7 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
-import 'package:tbsosick/core/services/iap_service.dart';
-import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
@@ -32,8 +29,6 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isPaidUser = Get.find<IapService>().isPremiumUser;
-
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 100.w,
@@ -86,7 +81,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           ),
           SizedBox(width: 16.w),
           Obx(
-            () => controller.cardDetails.value?.published == true
+            () => controller.cardDetails.value != null
                 ? InkWell(
                     onTap: () {
                       controller.shareCard();
@@ -110,11 +105,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           SizedBox(width: 16.w),
           InkWell(
             onTap: () {
-              if (isPaidUser) {
-                controller.downloadCard(cardId: cardId);
-              } else {
-                SubscriptionHelper.showSubscriptionDialog();
-              }
+              controller.downloadCard(cardId: cardId);
             },
             child: Container(
               width: 40.w,
@@ -181,9 +172,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                   SizedBox(height: 16.h),
                   _buildKeyNotesCard(),
                   SizedBox(height: 20.h),
-                  _buildPhotoLibrary(
-                    isPaidUser,
-                  ), // Pass isPaidUser to handle blurry images and popup
+                  _buildPhotoLibrary(),
                   SizedBox(height: 30.h),
                 ],
               ),
@@ -354,7 +343,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           SizedBox(height: 4.h),
           Row(
             children: [
-              Text('👈', style: TextStyle(fontSize: 17.sp)),
+              Text('✋', style: TextStyle(fontSize: 17.sp)),
               SizedBox(width: 6.w),
               Text(
                 controller.cardDetails.value?.surgeon.handPreference ?? '',
@@ -806,7 +795,7 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
   }
 
   // Photo Library Section
-  Widget _buildPhotoLibrary(bool isPaidUser) {
+  Widget _buildPhotoLibrary() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -849,67 +838,33 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
               final photo = controller.cardDetails.value?.photoLibrary[index];
               return Padding(
                 padding: EdgeInsets.only(bottom: 30.h),
-                child: InkWell(
-                  onTap: () {
-                    if (!isPaidUser) {
-                      SubscriptionHelper.showSubscriptionDialog();
-                    }
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.r),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        ImageFiltered(
-                          imageFilter: ImageFilter.blur(
-                            sigmaX: isPaidUser ? 0 : 10,
-                            sigmaY: isPaidUser ? 0 : 10,
-                          ),
-                          child: Image.network(
-                            photo ?? '',
-                            width: double.infinity,
-                            height: 250.h,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                width: double.infinity,
-                                height: 250.h,
-                                color: Colors.grey[200],
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                width: double.infinity,
-                                height: 250.h,
-                                color: Colors.grey[200],
-                                child: const Icon(
-                                  Icons.error_outline,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            },
-                          ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.r),
+                  child: Image.network(
+                    photo ?? '',
+                    width: double.infinity,
+                    height: 250.h,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: double.infinity,
+                        height: 250.h,
+                        color: Colors.grey[200],
+                        child: const Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: double.infinity,
+                        height: 250.h,
+                        color: Colors.grey[200],
+                        child: const Icon(
+                          Icons.error_outline,
+                          color: Colors.grey,
                         ),
-                        if (!isPaidUser)
-                          Container(
-                            width: 60.w,
-                            height: 60.w,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.lock_outline,
-                              color: const Color(0xFF9945FF),
-                              size: 30.sp,
-                            ),
-                          ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               );

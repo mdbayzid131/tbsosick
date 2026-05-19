@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return RefreshIndicator(
       onRefresh: () async {
         final result = await Connectivity().checkConnectivity();
-        if (result == ConnectivityResult.none) {
+        if (result.contains(ConnectivityResult.none)) {
           Helpers.showError('No internet connection');
           return;
         }
@@ -75,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           // ── Main scrollable content ──
           SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
                 _headerSection(context),
@@ -366,7 +367,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           Obx(() {
                             final notificationController =
                                 Get.find<NotificationController>();
-                            final count = notificationController.unreadCount.value;
+                            final count =
+                                notificationController.unreadCount.value;
                             return Stack(
                               children: [
                                 InkWell(

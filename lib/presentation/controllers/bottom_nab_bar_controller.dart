@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
+import 'package:tbsosick/core/services/iap_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
+import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/data/models/card_count_model.dart';
 import 'package:tbsosick/data/models/favorite_Card_model.dart';
 import 'package:tbsosick/data/models/private_card_model.dart';
@@ -18,6 +20,12 @@ class BottomNabBarController extends GetxController {
 
   void changePage(int index) {
     currentIndex.value = index;
+    if (index == 1) {
+      final isPaidUser = Get.find<IapService>().isPremiumUser;
+      if (!isPaidUser) {
+        SubscriptionHelper.showSubscriptionDialog();
+      }
+    }
   }
 
   // data list

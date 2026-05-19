@@ -37,7 +37,6 @@ dependencies:
   get: ^4.7.3
   flutter_svg: ^2.2.3
   flutter_screenutil: ^5.9.3
-  pinput: ^6.0.1
   dio: ^5.9.0
   shared_preferences: ^2.5.4
   intl:
@@ -51,7 +50,6 @@ dependencies:
   # firebase_storage: ^13.0.5
   # firebase_messaging: ^16.1.0//
   table_calendar: ^3.0.9
-  flutter_calendar_carousel: ^2.0.6
   image_picker: ^1.0.7
   uuid: ^4.5.2
   pdf: ^3.11.3
@@ -60,13 +58,11 @@ dependencies:
   open_file: ^3.5.11
   flutter_local_notifications: ^20.1.0
   permission_handler: ^12.0.1
-  device_info_plus: ^12.3.0
   firebase_core: ^4.4.0
   firebase_auth: ^6.1.4
   google_sign_in: ^6.2.1
   sign_in_with_apple: ^6.1.1
   crypto: ^3.0.3
-  http: ^1.2.0
   in_app_purchase: ^3.1.13
   flutter_localizations:
     sdk: flutter
@@ -75,8 +71,6 @@ dependencies:
   in_app_purchase_storekit: ^0.4.8+1
   in_app_purchase_android: ^0.4.0+10
   package_info_plus: ^8.1.2
-  
-
 
 dev_dependencies:
   flutter_test:

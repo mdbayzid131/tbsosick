@@ -6,7 +6,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/notification_service.dart';
-import 'package:tbsosick/core/services/pdf_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/models/card_details_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
@@ -18,7 +17,6 @@ class PrefranceCardDetailsController extends GetxController {
   final UserDataRepository _userRepository = UserDataRepository();
   final Rx<PreferenceCardDetailsModel?> cardDetails =
       Rx<PreferenceCardDetailsModel?>(null);
-  final PdfService _pdfService = PdfService();
 
   final NotificationService _notificationService = NotificationService();
 
@@ -102,9 +100,18 @@ class PrefranceCardDetailsController extends GetxController {
     try {
       if (cardDetails.value != null) {
         isSharing.value = true;
-        final file = await _pdfService.generatePreferenceCardPdf(
-          cardDetails.value!,
+        Helpers.showSuccess("Preparing card for sharing...");
+
+        final tempDir = await getTemporaryDirectory();
+        final filePath =
+            '${tempDir.path}/PreferenceCard_${cardDetails.value!.id}.pdf';
+
+        // Download the exact same PDF from the API
+        final file = await _userRepository.downloadCardPdf(
+          cardId: cardDetails.value!.id,
+          savePath: filePath,
         );
+
         await Share.shareXFiles(
           [XFile(file.path)],
           text:
@@ -114,7 +121,7 @@ class PrefranceCardDetailsController extends GetxController {
     } catch (e) {
       Helpers.error("shareCard error => $e");
     } finally {
-      isLoading.value = false;
+      isSharing.value = false;
     }
   }
 

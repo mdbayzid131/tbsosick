@@ -3,13 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/my_procedure_card.dart';
 import 'package:tbsosick/presentation/controllers/homepgeController.dart';
 import 'package:tbsosick/presentation/screens/my%20cards/controller/my_cards_controller.dart';
-import 'package:tbsosick/core/services/iap_service.dart';
 
 class MyCardsScreen extends StatefulWidget {
   const MyCardsScreen({super.key});
@@ -240,7 +238,7 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
                   return Column(
                     children: [
                       MyProcedureCard(
-                        isPaidUser: Get.find<IapService>().isPremiumUser,
+                        isPaidUser: true,
                         onDownloadTap: () => _prefranceCardDetailsController
                             .downloadCard(cardId: card.id),
                         cardId: card.id,
