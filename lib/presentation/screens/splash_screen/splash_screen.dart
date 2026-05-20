@@ -1,6 +1,6 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:tbsosick/config/constants/image_paths.dart';
 import 'package:tbsosick/presentation/screens/splash_screen/controller/splash_controller.dart';
 

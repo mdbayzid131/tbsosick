@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:tbsosick/core/widgets/screens/no_internet_screen.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/login_screen.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/Interactive_tutorial_screen.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/interactive_tutorial_binding.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/interactive_tutorial/interactive_tutorial_screen.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/interactive_tutorial/interactive_tutorial_binding.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/preferred_note_method.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/welcome_page.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
@@ -22,98 +22,98 @@ import 'package:tbsosick/presentation/screens/splash_screen/binding/splash_bindi
 import 'package:tbsosick/presentation/screens/splash_screen/splash_screen.dart';
 
 class AppRoutes {
-  static const String SPLASH = '/splash';
-  static const String ONBOARDING = '/onboarding';
-  static const String LOGIN = '/login';
-  static const String REGISTER = '/register';
-  static const String FORGOT_PASSWORD = '/forgot-password';
-  static const String HOME = '/home';
-  static const String PROFILE = '/profile';
-  static const String BOTTOM_NAV_BAR = '/bottom-nav-bar';
-  static const String SEARCH = '/search';
-  static const String SETTINGS = '/settings';
-  static const String WELCOME_PAGE = '/welcome-page';
-  static const String WHAT_YOUR_SPECIALITY = '/what-your-speciality';
-  static const String PREFERRED_NOTE_METHOD = '/preferred-note-method';
-  static const String INTERACTIVE_TUTORIAL = '/interactive-tutorial';
-  static const String VERIFY_EMAIL = '/verify-email';
-  static const String OTP_VERIFICATION = '/otp-verification';
-  static const String NO_INTERNET = '/no-internet';
-  static const String CARD_DETAILS = '/card-details';
-  static const String MY_CARDS = '/my-cards';
-  static const String SUBSCRIPTION = '/subscription';
+  static const String splash = '/splash';
+  static const String onboarding = '/onboarding';
+  static const String login = '/login';
+  static const String register = '/register';
+  static const String forgotPassword = '/forgot-password';
+  static const String home = '/home';
+  static const String profile = '/profile';
+  static const String bottomNavBar = '/bottom-nav-bar';
+  static const String search = '/search';
+  static const String settings = '/settings';
+  static const String welcomePage = '/welcome-page';
+  static const String whatYourSpeciality = '/what-your-speciality';
+  static const String preferredNoteMethod = '/preferred-note-method';
+  static const String interactiveTutorial = '/interactive-tutorial';
+  static const String verifyEmail = '/verify-email';
+  static const String otpVerification = '/otp-verification';
+  static const String noInternet = '/no-internet';
+  static const String cardDetails = '/card-details';
+  static const String myCards = '/my-cards';
+  static const String subscription = '/subscription';
 }
 
 final Transition transition = Transition.rightToLeft;
 
 final pages = [
   GetPage(
-    name: AppRoutes.SPLASH,
+    name: AppRoutes.splash,
     page: () => const SplashScreen(),
     bindings: [SplashBinding()],
   ),
   GetPage(
-    name: AppRoutes.ONBOARDING,
+    name: AppRoutes.onboarding,
     page: () => const OnboardingScreen(),
     bindings: [],
   ),
   GetPage(
-    name: AppRoutes.LOGIN,
+    name: AppRoutes.login,
     page: () => LoginScreen(),
     bindings: [],
   ),
   GetPage(
-    name: AppRoutes.REGISTER,
+    name: AppRoutes.register,
     page: () => SignUpScreen(),
     bindings: [],
   ),
   GetPage(
-    name: AppRoutes.WELCOME_PAGE,
+    name: AppRoutes.welcomePage,
     page: () => WelcomePage(),
     bindings: [],
   ),
   GetPage(
-    name: AppRoutes.WHAT_YOUR_SPECIALITY,
+    name: AppRoutes.whatYourSpeciality,
     page: () => WhatYourSpeciality(),
     bindings: [],
   ),
   GetPage(
-    name: AppRoutes.PREFERRED_NOTE_METHOD,
+    name: AppRoutes.preferredNoteMethod,
     page: () => PreferredNoteMethod(),
     bindings: [],
   ),
   GetPage(
-    name: AppRoutes.INTERACTIVE_TUTORIAL,
+    name: AppRoutes.interactiveTutorial,
     page: () => InteractiveTutorialScreen(),
     bindings: [InteractiveTutorialBinding()],
   ),
   GetPage(
-    name: AppRoutes.BOTTOM_NAV_BAR,
+    name: AppRoutes.bottomNavBar,
     page: () => BottomNabBarScreen(),
     bindings: [BottomNabBarBinding()],
   ),
   GetPage(
-    name: AppRoutes.NO_INTERNET,
+    name: AppRoutes.noInternet,
     page: () => NoInternetScreen(),
     bindings: [],
   ),
   GetPage(
-    name: AppRoutes.OTP_VERIFICATION,
+    name: AppRoutes.otpVerification,
     page: () => OtpVerificationScreen(),
     bindings: [],
   ),
   GetPage(
-    name: AppRoutes.CARD_DETAILS,
+    name: AppRoutes.cardDetails,
     page: () => PreferenceCardDetails(),
     bindings: [CardDetailsBinding()],
   ),
   GetPage(
-    name: AppRoutes.MY_CARDS,
+    name: AppRoutes.myCards,
     page: () => MyCardsScreen(),
     bindings: [MyCardsBinding()],
   ),
   GetPage(
-    name: AppRoutes.SUBSCRIPTION,
+    name: AppRoutes.subscription,
     page: () => const SubscriptionScreen(),
     bindings: [SubscriptionBinding()],
   ),

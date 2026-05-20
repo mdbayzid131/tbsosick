@@ -1,6 +1,6 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:tbsosick/config/routes/app_pages.dart';
@@ -38,7 +38,7 @@ class SubscriptionHelper {
               onPressed: onPress ??
                   () {
                     Get.back();
-                    Get.toNamed(AppRoutes.SUBSCRIPTION);
+                    Get.toNamed(AppRoutes.subscription);
                   },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF9945FF),

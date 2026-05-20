@@ -1,13 +1,12 @@
+import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/state_manager.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
-import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/controllers/homepage_controller.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/procedure_card.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
@@ -269,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 12.r,
               offset: Offset(0, 6.h),
             ),
@@ -283,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 40.w,
               width: 40.w,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.20),
+                color: Colors.white.withValues(alpha: 0.20),
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: Icon(
@@ -525,7 +524,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           child: _statCard(
                             onTap: () {
-                              Get.toNamed(AppRoutes.MY_CARDS);
+                              Get.toNamed(AppRoutes.myCards);
                             },
                             icon: Icons.person_outline,
                             count:
@@ -562,7 +561,7 @@ class _HomeScreenState extends State<HomeScreen> {
           border: Border.all(color: const Color(0xffE7E0EC), width: 1.w),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.08),
+              color: Colors.black.withValues(alpha: .08),
               blurRadius: 12.r,
               offset: Offset(0, 6.h),
             ),

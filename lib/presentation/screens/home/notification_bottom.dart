@@ -1,7 +1,7 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
@@ -212,7 +212,7 @@ Widget _notificationCard(
                   }
                   
                   if (notification.resourceType == 'PreferenceCard') {
-                    Get.toNamed(AppRoutes.CARD_DETAILS, arguments: {
+                    Get.toNamed(AppRoutes.cardDetails, arguments: {
                       'cardId': notification.resourceId,
                     });
                   } else if (notification.resourceType == 'Event') {

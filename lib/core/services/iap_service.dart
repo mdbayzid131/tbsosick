@@ -1,6 +1,6 @@
+import 'package:get/get.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
@@ -187,12 +187,12 @@ class IapService extends GetxService {
           // Let's try to see if there's a specific offer index or token in the product details wrapper
           androidInfo = ' | All Base Plans in Wrapper: $allBasePlans';
 
-          print("offerIds: $offerIds");
-          print("offerIdsToken: $offerIdsToken");
-          print("offerTags: $offerTags");
-          print("offerId: $offerId");
-          print("pricingPhases: $pricingPhases");
-          print("priceCurrencyCode: $priceCurrencyCode");
+          Helpers.debug("offerIds: $offerIds");
+          Helpers.debug("offerIdsToken: $offerIdsToken");
+          Helpers.debug("offerTags: $offerTags");
+          Helpers.debug("offerId: $offerId");
+          Helpers.debug("pricingPhases: $pricingPhases");
+          Helpers.debug("priceCurrencyCode: $priceCurrencyCode");
         }
         Helpers.debug(
           'IAP: Loaded Product: ID: ${prod.id}, Price: ${prod.price}$androidInfo',

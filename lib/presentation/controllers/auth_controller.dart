@@ -1,8 +1,8 @@
+import 'package:get/get.dart' hide Response;
 // import 'dart:async';
 //
 // import 'package:dio/dio.dart';
 // import 'package:flutter/material.dart';
-// import 'package:get/get.dart' hide Response;
 //
 // import '../../core/utils/app_constants.dart';
 // import '../../core/utils/app_dialog.dart';
@@ -15,7 +15,7 @@
 // import '../screens/auth_screen/verify_email.dart';
 //
 //
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+
 
 class AuthController extends GetxController {
   //   final AuthRepo authRepo;

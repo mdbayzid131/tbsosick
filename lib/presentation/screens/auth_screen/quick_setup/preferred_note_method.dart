@@ -1,7 +1,8 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
@@ -50,7 +51,7 @@ class PreferredNoteMethod extends StatelessWidget {
                   title: tr.voiceToText,
                   subtitle: tr.voiceToTextDesc,
                   onTap: () {
-                    Get.toNamed(AppRoutes.INTERACTIVE_TUTORIAL);
+                    Get.toNamed(AppRoutes.interactiveTutorial);
                   },
                 ),
 
@@ -62,7 +63,7 @@ class PreferredNoteMethod extends StatelessWidget {
                   title: tr.rapidChecklist,
                   subtitle: tr.rapidChecklistDesc,
                   onTap: () {
-                    Get.toNamed(AppRoutes.INTERACTIVE_TUTORIAL);
+                    Get.toNamed(AppRoutes.interactiveTutorial);
                   },
                 ),
 
@@ -74,7 +75,7 @@ class PreferredNoteMethod extends StatelessWidget {
                   title: tr.freehandEntry,
                   subtitle: tr.freehandEntryDesc,
                   onTap: () {
-                    Get.toNamed(AppRoutes.INTERACTIVE_TUTORIAL);
+                    Get.toNamed(AppRoutes.interactiveTutorial);
                   },
                 ),
               ],

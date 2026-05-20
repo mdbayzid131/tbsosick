@@ -1,7 +1,7 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
@@ -160,7 +160,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                   height: 36.w,
                   width: 36.w,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.close, color: Colors.white, size: 20.sp),
@@ -175,7 +175,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -205,7 +205,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                         vertical: 6.h,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
@@ -267,7 +267,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -321,7 +321,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -376,7 +376,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -495,7 +495,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -643,7 +643,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -707,7 +707,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                 final d = _controller.eventDetails.value;
                 final cardId = d!.preferenceCard?.id ?? '';
                 Get.toNamed(
-                  AppRoutes.CARD_DETAILS,
+                  AppRoutes.cardDetails,
                   arguments: {'cardId': cardId},
                 );
               },
@@ -746,7 +746,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -792,7 +792,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -890,7 +890,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10.r,
             offset: Offset(0, -2.h),
           ),

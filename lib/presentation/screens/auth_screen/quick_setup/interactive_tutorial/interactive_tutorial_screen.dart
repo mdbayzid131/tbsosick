@@ -1,16 +1,17 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
+
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/step_create_card3.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/Interactive%20Tutorial/step_create_card4.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/interactive_tutorial/step_create_card3.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/interactive_tutorial/step_create_card4.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import '../../../../controllers/tutorial_controller.dart';
-import 'StepCreateCard1.dart';
-import 'StepCreateCard2.dart';
+import 'step_create_card1.dart';
+import 'step_create_card2.dart';
 
 class InteractiveTutorialScreen extends StatelessWidget {
   InteractiveTutorialScreen({super.key});

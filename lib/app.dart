@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:tbsosick/config/routes/app_pages.dart';
+import 'package:get/get.dart';
 
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/bindings/initial_binding.dart';
 import 'package:tbsosick/core/controllers/language_controller.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
@@ -41,7 +38,7 @@ class MyApp extends StatelessWidget {
               // ),
               scaffoldBackgroundColor: Color(0xffF9FAFB),
             ),
-            initialRoute: AppRoutes.SPLASH,
+            initialRoute: AppRoutes.splash,
             getPages: pages,
             initialBinding: InitialBinding(),
           ),

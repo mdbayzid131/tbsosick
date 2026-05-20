@@ -1,7 +1,8 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
+
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 
@@ -10,6 +11,8 @@ import '../../../../widgets/custom_elevated_button.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
 class StepCreateCard2 extends StatelessWidget {
+  const StepCreateCard2({super.key});
+
   @override
   Widget build(BuildContext context) {
     final tr = AppLocalizations.of(context)!;
@@ -65,7 +68,7 @@ class StepCreateCard2 extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -153,7 +156,7 @@ class StepCreateCard2 extends StatelessWidget {
                                     tr.nextStep,
                                     style: GoogleFonts.arimo(
                                       fontSize: 12.sp,
-                                      color: Colors.white.withOpacity(0.9),
+                                      color: Colors.white.withValues(alpha: 0.9),
                                     ),
                                   ),
                                   SizedBox(height: 4.h),
@@ -174,7 +177,7 @@ class StepCreateCard2 extends StatelessWidget {
                               height: 32.w,
                               width: 32.w,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.25),
+                                color: Colors.white.withValues(alpha: 0.25),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(

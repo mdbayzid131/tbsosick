@@ -1,9 +1,10 @@
+import 'package:get/get.dart' hide Response;
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
+
+
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/data/models/create_event_request_model.dart';

@@ -1,11 +1,8 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 
@@ -102,9 +99,12 @@ class CustomBottomBar extends StatelessWidget {
           svgPath,
           width: 26.w,
           height: 26.w,
-          color: nav.currentIndex.value == index
-              ? AppTheme.primaryColor
-              : const Color(0xff99A1AF),
+          colorFilter: ColorFilter.mode(
+            nav.currentIndex.value == index
+                ? AppTheme.primaryColor
+                : const Color(0xff99A1AF),
+            BlendMode.srcIn,
+          ),
         ),
       ),
     );

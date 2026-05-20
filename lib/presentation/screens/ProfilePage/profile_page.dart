@@ -1,14 +1,14 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/profile_controller.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/legal_page_bottom_sheet.dart';
 import '../../../config/constants/image_paths.dart';
-import 'Privacy & Security bottom.dart';
+import 'privacy_security_bottom.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import 'edit_profile_bottom.dart';
 import 'language_bottom_sheet.dart';
@@ -116,7 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 8.r,
                             offset: Offset(0, 2.h),
                           ),
@@ -148,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             iconColor: const Color(0xFF8B5CF6),
                             title: tr.subscription,
                             onTap: () {
-                              Get.toNamed(AppRoutes.SUBSCRIPTION);
+                              Get.toNamed(AppRoutes.subscription);
                             },
                           ),
                         ],
@@ -175,7 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 8.r,
                             offset: Offset(0, 2.h),
                           ),
@@ -248,7 +248,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
+                              color: Colors.black.withValues(alpha: 0.04),
                               blurRadius: 8.r,
                               offset: Offset(0, 2.h),
                             ),
@@ -298,39 +298,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // Header with gradient background
-  Widget _buildHeader() {
-    final tr = AppLocalizations.of(context)!;
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(
-        left: 20.w,
-        right: 20.w,
-        top: 50.h,
-        bottom: 24.h,
-      ),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF9945FF), Color(0xFF271E3E)],
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(24.r),
-          bottomRight: Radius.circular(24.r),
-        ),
-      ),
-      child: Text(
-        tr.profile,
-        style: GoogleFonts.arimo(
-          fontSize: 24.sp,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
   // Profile card with avatar and stats
   Widget _buildProfileCard() {
     final tr = AppLocalizations.of(context)!;
@@ -344,7 +311,7 @@ class _ProfilePageState extends State<ProfilePage> {
           border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 8.r,
               offset: Offset(0, 2.h),
             ),
@@ -515,7 +482,7 @@ class _ProfilePageState extends State<ProfilePage> {
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -556,7 +523,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   decoration: const BoxDecoration(shape: BoxShape.circle),
                   child: SvgPicture.asset(
                     ImagePaths.chosePlanIcon,
-                    color: Colors.white,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
             ],
@@ -566,7 +536,7 @@ class _ProfilePageState extends State<ProfilePage> {
             expiryText,
             style: GoogleFonts.arimo(
               fontSize: 14.sp,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
           SizedBox(height: 16.h),
@@ -595,7 +565,7 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => Get.toNamed(AppRoutes.SUBSCRIPTION),
+              onPressed: () => Get.toNamed(AppRoutes.subscription),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(

@@ -1,7 +1,7 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -138,7 +138,7 @@ class _CalendarPageState extends State<CalendarPage> {
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -206,7 +206,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         width: 7.r,
                         height: 7.r,
                         decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withOpacity(opacity),
+                          color: AppTheme.primaryColor.withValues(alpha: opacity),
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -219,7 +219,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           calendarStyle: CalendarStyle(
             todayDecoration: BoxDecoration(
-              color: const Color(0xFF8B5CF6).withOpacity(0.3),
+              color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
               shape: BoxShape.circle,
             ),
             selectedDecoration: const BoxDecoration(
@@ -392,7 +392,7 @@ class _CalendarPageState extends State<CalendarPage> {
               border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 8.r,
                   offset: Offset(0, 2.h),
                 ),
@@ -694,7 +694,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _showDeleteDialog(BuildContext context, String id) {
     showDialog(
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,

@@ -1,6 +1,6 @@
+import 'package:get/get.dart';
 import 'dart:io';
 
-import 'package:get/get.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/models/legal_page_model.dart';

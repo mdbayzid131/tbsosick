@@ -1,7 +1,8 @@
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
+
+
+
+
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
@@ -26,12 +27,12 @@ class SplashController extends GetxController {
     final token = await StorageService.getString(StorageConstants.bearerToken);
 
     if (!onboardingSeen) {
-      Get.offAllNamed(AppRoutes.ONBOARDING);
+      Get.offAllNamed(AppRoutes.onboarding);
       return;
     }
 
     if (token.isEmpty) {
-      Get.offAllNamed(AppRoutes.LOGIN);
+      Get.offAllNamed(AppRoutes.login);
       return;
     }
 
@@ -40,9 +41,9 @@ class SplashController extends GetxController {
         false;
 
     if (quickSetupCompleted) {
-      Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+      Get.offAllNamed(AppRoutes.bottomNavBar);
     } else {
-      Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+      Get.offAllNamed(AppRoutes.welcomePage);
     }
   }
 }

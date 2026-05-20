@@ -1,11 +1,10 @@
 /*
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:get/get.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import '../../core/utils/custom_snackbar.dart';
-import '../../presentation/controllers/homepgeController.dart';
+import '../../presentation/controllers/homepage_controller.dart';
 
 class NetworkController extends GetxController {
   StreamSubscription<List<ConnectivityResult>>? _subscription;
@@ -80,7 +79,7 @@ class NetworkController extends GetxController {
     final homeController = Get.find<HomePageController>();
     await homeController.loadData();
 
-    print("🔄 Internet restored → APIs refreshed");
+    debugPrint("🔄 Internet restored → APIs refreshed");
   }
 
 

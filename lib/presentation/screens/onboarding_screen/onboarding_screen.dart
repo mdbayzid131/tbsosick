@@ -1,6 +1,6 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
@@ -8,9 +8,9 @@ import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
 import '../../widgets/custom_elevated_button.dart';
-import 'onboardingPage1.dart';
-import 'onboardingPage2.dart';
-import 'onboardingPage3.dart';
+import 'onboarding_page1.dart';
+import 'onboarding_page2.dart';
+import 'onboarding_page3.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -101,7 +101,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           true,
                         );
 
-                        Get.offAllNamed(AppRoutes.LOGIN);
+                        Get.offAllNamed(AppRoutes.login);
                       }
                     },
                   ),

@@ -1,9 +1,9 @@
+import 'package:get/get.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import 'controller/profile_controller.dart';

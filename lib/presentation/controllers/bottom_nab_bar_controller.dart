@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/iap_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/data/models/card_count_model.dart';
-import 'package:tbsosick/data/models/favorite_Card_model.dart';
+import 'package:tbsosick/data/models/favorite_card_model.dart';
 import 'package:tbsosick/data/models/private_card_model.dart';
 import 'package:tbsosick/data/models/library_card_model.dart';
-import 'package:tbsosick/data/models/public_card_model.dart';
 import 'package:tbsosick/data/models/user_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
 import 'package:tbsosick/data/models/specialty_model.dart';
@@ -60,8 +59,6 @@ class BottomNabBarController extends GetxController {
   final RxBool isLibraryMoreLoading = false.obs;
 
   // pagination
-  int _publicPage = 1;
-  int _privatePage = 1;
   int _favoritePage = 1;
   int _libraryPage = 1;
   final RxBool hasMoreFavorite = true.obs;
@@ -112,7 +109,7 @@ class BottomNabBarController extends GetxController {
         specialtiesList.value = data.map((e) => Specialty.fromJson(e)).toList();
       }
     } catch (e) {
-      print("Error fetching specialties: $e");
+      Helpers.error("Error fetching specialties: $e");
     } finally {
       if (showLoading) isSpecialtiesLoading.value = false;
     }

@@ -1,15 +1,11 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
-import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/subscription_controller.dart';
-import '../../../../config/constants/image_paths.dart';
-import '../Payment Method bottom.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
 class SubscriptionScreen extends GetView<SubscriptionController> {
@@ -73,7 +69,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                     height: 56.w,
                     width: 56.w,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(.20),
+                      color: Colors.white.withValues(alpha: .20),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -94,7 +90,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                     tr.chooseWorksForYou,
                     style: GoogleFonts.arimo(
                       fontSize: 13.sp,
-                      color: Colors.white.withOpacity(.9),
+                      color: Colors.white.withValues(alpha: .9),
                     ),
                   ),
                 ],
@@ -264,7 +260,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: isSelected
-            ? AppTheme.primaryColor.withOpacity(0.05)
+            ? AppTheme.primaryColor.withValues(alpha: 0.05)
             : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(

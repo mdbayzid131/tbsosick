@@ -1,7 +1,7 @@
-
-import 'package:dio/src/response.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
+
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
@@ -50,9 +50,9 @@ class OtpController extends GetxController {
         final bool isOnboardingCompleted = authData['isOnboardingCompleted'] ?? true;
 
         if (!isOnboardingCompleted) {
-          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+          Get.offAllNamed(AppRoutes.welcomePage);
         } else {
-          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+          Get.offAllNamed(AppRoutes.bottomNavBar);
         }
       }
     } catch (e) {

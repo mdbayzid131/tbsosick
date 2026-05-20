@@ -1,14 +1,14 @@
+import 'package:get/get.dart';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/subscription_helper.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
-import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/controllers/homepage_controller.dart';
 
 class PostAnyCardController extends GetxController {
   final UserDataRepository userDataRepository = UserDataRepository();
@@ -127,7 +127,7 @@ class PostAnyCardController extends GetxController {
           message: response.data?['message'] ?? '',
           onPress: () {
             Get.back();
-            Get.toNamed(AppRoutes.SUBSCRIPTION);
+            Get.toNamed(AppRoutes.subscription);
           },
         );
       } else {

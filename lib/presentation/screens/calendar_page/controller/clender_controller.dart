@@ -1,5 +1,5 @@
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
@@ -47,7 +47,7 @@ class CalendarController extends GetxController {
         events.addAll(result.data);
       }
     } catch (e) {
-      print(e);
+      Helpers.error(e.toString());
     } finally {
       isLoading.value = false;
     }

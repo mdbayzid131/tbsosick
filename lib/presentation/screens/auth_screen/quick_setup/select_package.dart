@@ -1,10 +1,11 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
+
+
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
@@ -95,7 +96,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
                                 height: 56.w,
                                 width: 56.w,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(.20),
+                                  color: Colors.white.withValues(alpha: .20),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Center(
@@ -127,7 +128,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
                                 tr.chooseWorksForYou,
                                 style: GoogleFonts.arimo(
                                   fontSize: 14.sp,
-                                  color: Colors.white.withOpacity(.9),
+                                  color: Colors.white.withValues(alpha: .9),
                                 ),
                               ),
                             ],
@@ -228,7 +229,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
                                       ? tr.continueWithPremium
                                       : tr.continueWithEnterprise,
                                   onPressed: () {
-                                    Get.toNamed(AppRoutes.WHAT_YOUR_SPECIALITY);
+                                    Get.toNamed(AppRoutes.whatYourSpeciality);
                                   },
                                 ),
                               ),

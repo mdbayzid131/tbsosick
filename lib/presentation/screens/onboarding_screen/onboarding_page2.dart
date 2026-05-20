@@ -1,18 +1,19 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 
-import 'widgets/onboarding_illustration_3.dart';
+import 'widgets/onboarding_illustration_2.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
-class OnboardingPage3 extends StatelessWidget {
-  const OnboardingPage3({super.key});
+class OnboardingPage2 extends StatelessWidget {
+  const OnboardingPage2({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +23,11 @@ class OnboardingPage3 extends StatelessWidget {
       children: [
         ///<================= SKIP BUTTON =========================>///
         Align(
-          alignment: Alignment.topRight,
+          alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: () {
-              StorageService.setBool(StorageConstants.onboardingSeen, true);  
-                Get.offAllNamed(AppRoutes.LOGIN);
+              StorageService.setBool(StorageConstants.onboardingSeen, true);
+              Get.offAllNamed(AppRoutes.login);
             },
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -45,7 +46,7 @@ class OnboardingPage3 extends StatelessWidget {
         Spacer(),
 
         ///<================= MAIN ILLUSTRATION =========================>///
-        const OnboardingIllustration3(),
+        const OnboardingIllustration2(),
 
         SizedBox(height: 10.h),
 
@@ -53,7 +54,7 @@ class OnboardingPage3 extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
-            tr.secureTitle,
+            tr.scrubPocketsTitle,
             textAlign: TextAlign.center,
             style: GoogleFonts.arimo(
               fontSize: 28.sp,
@@ -66,7 +67,7 @@ class OnboardingPage3 extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
-            tr.secureDesc,
+            tr.scrubPocketsDesc,
             textAlign: TextAlign.center,
             style: GoogleFonts.arimo(
               fontSize: 15.sp,

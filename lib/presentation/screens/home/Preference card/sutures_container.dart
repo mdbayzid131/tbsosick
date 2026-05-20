@@ -1,11 +1,11 @@
+import 'package:get/get.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import 'package:tbsosick/data/models/supplies_model.dart';
-import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/controllers/homepage_controller.dart';
 import 'package:tbsosick/presentation/controllers/post_any__card_controller.dart';
 
 class SuturesContainer extends StatefulWidget {
@@ -116,21 +116,21 @@ class _SuturesContainerState extends State<SuturesContainer> {
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
               color: _searchFocusNode.hasFocus
-                  ? const Color(0xff9945FF).withOpacity(0.5)
+                  ? const Color(0xff9945FF).withValues(alpha: 0.5)
                   : const Color(0xffE5E7EB),
               width: 1.5.w,
             ),
             boxShadow: _searchFocusNode.hasFocus
                 ? [
                     BoxShadow(
-                      color: const Color(0xff9945FF).withOpacity(0.1),
+                      color: const Color(0xff9945FF).withValues(alpha: 0.1),
                       blurRadius: 10.r,
                       offset: Offset(0, 4.h),
                     ),
                   ]
                 : [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
+                      color: Colors.black.withValues(alpha: 0.02),
                       blurRadius: 4.r,
                       offset: Offset(0, 2.h),
                     ),
@@ -209,7 +209,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 15.r,
                         offset: Offset(0, 5.h),
                       ),
@@ -242,7 +242,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                               ),
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? const Color(0xff9945FF).withOpacity(0.04)
+                                    ? const Color(0xff9945FF).withValues(alpha: 0.04)
                                     : null,
                                 border: Border(
                                   bottom: BorderSide(
@@ -309,7 +309,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                               ),
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? const Color(0xff9945FF).withOpacity(0.04)
+                                    ? const Color(0xff9945FF).withValues(alpha: 0.04)
                                     : null,
                               ),
                               child: Row(
@@ -449,7 +449,7 @@ class _SuturesContainerState extends State<SuturesContainer> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.03),
+                            color: Colors.black.withValues(alpha: 0.03),
                             blurRadius: 4.r,
                             offset: Offset(0, 2.h),
                           ),

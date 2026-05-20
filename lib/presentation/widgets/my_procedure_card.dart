@@ -1,8 +1,8 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
-import 'package:get/get.dart';
 
 class MyProcedureCard extends StatefulWidget {
   final bool isPrivateCard;
@@ -62,7 +62,7 @@ class _MyProcedureCardState extends State<MyProcedureCard> {
     return GestureDetector(
       onTap: () {
         Get.toNamed(
-          AppRoutes.CARD_DETAILS,
+          AppRoutes.cardDetails,
           arguments: {'cardId': widget.cardId},
         );
       },

@@ -1,6 +1,6 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:tbsosick/core/controllers/internet_controller.dart';
 
 /// ===================== SAFE NETWORK IMAGE =====================
@@ -44,7 +44,7 @@ class SafeNetworkImage extends StatelessWidget {
         if (loadingProgress == null) return child;
         return placeholder ?? _buildLoadingIndicator(loadingProgress);
       },
-      errorBuilder: (_, __, ___) => errorWidget ?? _buildFallback(),
+      errorBuilder: (context, error, stackTrace) => errorWidget ?? _buildFallback(),
     );
 
     if (borderRadius != null) {

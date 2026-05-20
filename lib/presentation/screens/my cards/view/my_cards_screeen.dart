@@ -1,12 +1,12 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/presentation/widgets/my_procedure_card.dart';
-import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/controllers/homepage_controller.dart';
 import 'package:tbsosick/presentation/screens/my%20cards/controller/my_cards_controller.dart';
 
 class MyCardsScreen extends StatefulWidget {
@@ -88,7 +88,7 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
               ),
               if (controller.isLoading.value)
                 Container(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   child: const Center(
                     child: CircularProgressIndicator(color: Color(0xFF6C36B2)),
                   ),

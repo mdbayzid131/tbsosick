@@ -1,11 +1,12 @@
+import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+
+
+
+
+
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
@@ -70,9 +71,9 @@ class LoginController extends GetxController {
             authData['isOnboardingCompleted'] ?? true;
 
         if (!isOnboardingCompleted) {
-          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+          Get.offAllNamed(AppRoutes.welcomePage);
         } else {
-          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+          Get.offAllNamed(AppRoutes.bottomNavBar);
         }
       } else if ((response.data is Map &&
           response.data['message'] != null &&
@@ -81,7 +82,7 @@ class LoginController extends GetxController {
           ))) {
         // If unverified, resend OTP and go to verification screen
         await _authService.resendOtp(email);
-        Get.toNamed(AppRoutes.OTP_VERIFICATION, arguments: email);
+        Get.toNamed(AppRoutes.otpVerification, arguments: email);
       } else {
         Helpers.showError(response.data['message']);
       }
@@ -94,11 +95,11 @@ class LoginController extends GetxController {
 
   void goToRegister() {
     clearControllers();
-    Get.toNamed(AppRoutes.REGISTER);
+    Get.toNamed(AppRoutes.register);
   }
 
   void goToForgotPassword() {
-    Get.toNamed(AppRoutes.FORGOT_PASSWORD);
+    Get.toNamed(AppRoutes.forgotPassword);
   }
 
   Future<void> logout() async {
@@ -113,7 +114,7 @@ class LoginController extends GetxController {
       // if (response.statusCode == 200) {
       Helpers.showSuccess('Logout successful');
       clearControllers();
-      Get.offAllNamed(AppRoutes.LOGIN);
+      Get.offAllNamed(AppRoutes.login);
       // }
     } catch (e) {
       Helpers.showError(e.toString());
@@ -132,9 +133,9 @@ class LoginController extends GetxController {
         final bool isOnboardingCompleted =
             authData['isOnboardingCompleted'] ?? true;
         if (!isOnboardingCompleted) {
-          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+          Get.offAllNamed(AppRoutes.welcomePage);
         } else {
-          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+          Get.offAllNamed(AppRoutes.bottomNavBar);
         }
       } else {
         Helpers.showError(response?.data['message']);
@@ -157,9 +158,9 @@ class LoginController extends GetxController {
         final bool isOnboardingCompleted =
             authData['isOnboardingCompleted'] ?? true;
         if (!isOnboardingCompleted) {
-          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+          Get.offAllNamed(AppRoutes.welcomePage);
         } else {
-          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+          Get.offAllNamed(AppRoutes.bottomNavBar);
         }
       } else {
         Helpers.showError(response?.data['message']);

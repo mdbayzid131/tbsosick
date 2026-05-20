@@ -1,14 +1,13 @@
+import 'package:get/get.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/core/utils/validators.dart';
-import 'package:tbsosick/presentation/controllers/homepgeController.dart';
+import 'package:tbsosick/presentation/controllers/homepage_controller.dart';
 import 'package:tbsosick/presentation/controllers/post_any__card_controller.dart';
-import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
 import 'package:tbsosick/presentation/screens/home/Preference%20card/sutures_container.dart';
-import 'package:tbsosick/presentation/widgets/CustomContainer.dart';
+import 'package:tbsosick/presentation/widgets/custom_container.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'medical_supplies_container.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
@@ -178,7 +177,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withValues(alpha: 0.04),
                           blurRadius: 8.r,
                           offset: Offset(0, 2.h),
                         ),
@@ -255,7 +254,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                               ),
                               Obx(
                                 () => DropdownButtonFormField<String>(
-                                  value:
+                                  initialValue:
                                       postAnyCardController
                                           .specialitiesController
                                           .text
@@ -853,7 +852,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
+                                          color: Colors.black.withValues(alpha: 0.1),
                                           blurRadius: 4.r,
                                           offset: Offset(0, 2.h),
                                         ),
@@ -871,7 +870,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                                       child: Container(
                                         padding: EdgeInsets.all(4.w),
                                         decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.6),
+                                          color: Colors.black.withValues(alpha: 0.6),
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
@@ -905,7 +904,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10.r,
                       offset: Offset(0, -2.h),
                     ),

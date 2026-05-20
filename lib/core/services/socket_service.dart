@@ -1,11 +1,9 @@
 import 'package:get/get.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
-import 'package:tbsosick/core/utils/logger.dart';
-import 'package:tbsosick/data/models/notification_model.dart';
 import 'package:tbsosick/presentation/controllers/notification_controller.dart';
 
 /// ===================== SOCKET SERVICE =====================
@@ -13,10 +11,10 @@ import 'package:tbsosick/presentation/controllers/notification_controller.dart';
 /// Handles: connection, registration, rooms, messaging, and reconnection.
 /// Requires: socket_io_client
 class SocketService extends GetxService {
-  IO.Socket? _socket;
+  socket_io.Socket? _socket;
 
   /// Expose socket for direct event listening in controllers
-  IO.Socket? get socket => _socket;
+  socket_io.Socket? get socket => _socket;
 
   /// Observable connection state
   final isConnected = false.obs;
@@ -54,9 +52,9 @@ class SocketService extends GetxService {
     final baseUrl = ApiConstants.baseUrl.replaceAll('/api/v1', '');
     Helpers.debug('Socket connecting to: $baseUrl');
 
-    _socket = IO.io(
+    _socket = socket_io.io(
       baseUrl,
-      IO.OptionBuilder()
+      socket_io.OptionBuilder()
           .setTransports(['websocket'])
           .setAuth({'token': token})
           .enableAutoConnect()

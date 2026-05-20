@@ -44,7 +44,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
   @override
   Widget build(BuildContext context) {
     final primaryColor = widget.color ?? Theme.of(context).primaryColor;
-    final secondaryColor = primaryColor.withOpacity(0.2);
+    final secondaryColor = primaryColor.withValues(alpha: 0.2);
 
     return Center(
       child: Column(
@@ -108,7 +108,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
                 //     decoration: BoxDecoration(
                 //       shape: BoxShape.circle,
                 //       gradient: RadialGradient(
-                //         colors: [primary.withOpacity(0.15), Colors.transparent],
+                //         colors: [primary.withValues(alpha: 0.15), Colors.transparent],
                 //       ),
                 //     ),
                 //   ),
@@ -131,7 +131,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
-            color: primary.withOpacity(0.1),
+            color: primary.withValues(alpha: 0.1),
             blurRadius: 10,
             spreadRadius: 2,
           ),
@@ -152,9 +152,9 @@ class _LoadingWidgetState extends State<LoadingWidget>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          primary.withOpacity(.005),
+                          primary.withValues(alpha: .005),
                           primary,
-                          primary.withOpacity(.005),
+                          primary.withValues(alpha: .005),
                         ],
                       ),
                     ),

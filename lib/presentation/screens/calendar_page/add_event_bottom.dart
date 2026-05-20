@@ -1,9 +1,9 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:get/get.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
 import '../../../config/constants/image_paths.dart';
@@ -61,7 +61,7 @@ void showAddEventBottomSheet(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 20.r,
                     offset: Offset(0, -5.h),
                   ),
@@ -428,7 +428,7 @@ Widget _buildPersonnelCard({
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF9945FF).withOpacity(0.3),
+                      color: const Color(0xFF9945FF).withValues(alpha: 0.3),
                       blurRadius: 8.r,
                       offset: Offset(0, 4.h),
                     ),
@@ -477,7 +477,7 @@ Widget _buildCard({
       border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.04),
+          color: Colors.black.withValues(alpha: 0.04),
           blurRadius: 8.r,
           offset: Offset(0, 2.h),
         ),

@@ -1,8 +1,8 @@
+import 'package:get/get.dart';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 enum SnackBarType { success, error, info, warning, secondary }
 
@@ -138,10 +138,10 @@ class Helpers {
           child: Container(
             height: 64.h,
             decoration: BoxDecoration(
-              color: (config['bg'] as Color).withOpacity(0.7), // Transparent BG
+              color: (config['bg'] as Color).withValues(alpha: 0.7), // Transparent BG
               borderRadius: BorderRadius.circular(16.r),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -152,7 +152,7 @@ class Helpers {
                   width: 56.w,
                   height: double.infinity,
                   decoration: BoxDecoration(
-                    color: (config['iconBg'] as Color).withOpacity(0.8),
+                    color: (config['iconBg'] as Color).withValues(alpha: 0.8),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(16.r),
                       bottomLeft: Radius.circular(16.r),
@@ -182,7 +182,7 @@ class Helpers {
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                         ),
                       ),
                     ],
@@ -193,7 +193,7 @@ class Helpers {
                   onPressed: () => Get.back(),
                   icon: Icon(
                     Icons.close_rounded,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     size: 20.sp,
                   ),
                 ),

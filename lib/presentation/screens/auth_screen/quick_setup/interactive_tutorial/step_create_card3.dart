@@ -1,7 +1,8 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
+
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 
@@ -9,8 +10,8 @@ import '../../../../controllers/tutorial_controller.dart';
 import '../../../../widgets/custom_elevated_button.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
-class StepCreateCard1 extends StatelessWidget {
-  const StepCreateCard1({super.key});
+class StepCreateCard3 extends StatelessWidget {
+  const StepCreateCard3({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +19,18 @@ class StepCreateCard1 extends StatelessWidget {
     final controller = Get.find<TutorialController>();
 
     return Padding(
-      // 🔹 Horizontal padding responsive
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          /// 🔹 Top spacing
           SizedBox(height: 20.h),
 
-          /// 🔹 Title
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              tr.createFirstCard,
+              tr.addVoiceNotesTitle,
               style: GoogleFonts.arimo(
-                fontSize: 24.sp, // responsive font
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w700,
                 color: Colors.black,
               ),
@@ -41,11 +39,10 @@ class StepCreateCard1 extends StatelessWidget {
 
           SizedBox(height: 6.h),
 
-          /// 🔹 Subtitle
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              tr.tutorialFollow,
+              tr.dictateHandsFree,
               style: GoogleFonts.arimo(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w400,
@@ -56,7 +53,6 @@ class StepCreateCard1 extends StatelessWidget {
 
           SizedBox(height: 20.h),
 
-          /// 🔹 Main card section (takes remaining space safely)
           Expanded(
             child: Center(
               child: Container(
@@ -67,38 +63,37 @@ class StepCreateCard1 extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
                   ],
                 ),
                 child: SingleChildScrollView(
-                  // 🔹 Prevents overflow on small screens
-                  physics: const BouncingScrollPhysics(),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      /// 🔹 Play icon
+                      // Mic icon
                       Container(
-                        height: 80.w,
-                        width: 80.w,
+                        width: 100.w,
+                        height: 100.w,
                         decoration: const BoxDecoration(
-                          color: AppTheme.primaryColor,
                           shape: BoxShape.circle,
+                          color: Color(0xff8A3AEA),
                         ),
-                        child: Icon(
-                          Icons.play_arrow_rounded,
-                          color: Colors.white,
-                          size: 48.sp,
+                        child: Center(
+                          child: Icon(
+                            Icons.mic_none_rounded,
+                            color: Colors.white,
+                            size: 55.sp,
+                          ),
                         ),
                       ),
 
                       SizedBox(height: 14.h),
 
-                      /// 🔹 Card title
                       Text(
-                        tr.quickStartGuide,
+                        tr.voiceNote,
                         style: GoogleFonts.arimo(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w700,
@@ -106,11 +101,10 @@ class StepCreateCard1 extends StatelessWidget {
                         ),
                       ),
 
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 8.h),
 
-                      /// 🔹 Description
                       Text(
-                        tr.quickStartDesc,
+                        tr.holdToRecordDesc,
                         style: GoogleFonts.arimo(
                           fontSize: 14.sp,
                           color: const Color(0xff4A5565),
@@ -118,16 +112,13 @@ class StepCreateCard1 extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
 
-                      SizedBox(height: 18.h),
+                      SizedBox(height: 24.h),
 
-                      /// 🔹 Step list
-                      _stepItem('1', tr.startProcedure),
-                      SizedBox(height: 10.h),
-                      _stepItem('2', tr.logKeyMoments),
-                      SizedBox(height: 10.h),
-                      _stepItem('3', tr.addVoiceNotes),
-                      SizedBox(height: 10.h),
-                      _stepItem('4', tr.finalizeCard),
+                      _bulletText(tr.worksWithGloves),
+                      SizedBox(height: 8.h),
+                      _bulletText(tr.autoSave),
+                      SizedBox(height: 8.h),
+                      _bulletText(tr.hipaaCompliant),
                     ],
                   ),
                 ),
@@ -137,20 +128,17 @@ class StepCreateCard1 extends StatelessWidget {
 
           SizedBox(height: 16.h),
 
-          /// 🔹 Instruction text
           Text(
-            tr.tapStartProcedure,
+            tr.holdPreference,
             style: GoogleFonts.arimo(
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,
               color: const Color(0xff364153),
             ),
-            textAlign: TextAlign.center,
           ),
 
           SizedBox(height: 20.h),
 
-          /// 🔹 CTA button
           CustomElevatedButton(
             onPressed: controller.next,
             style: ElevatedButton.styleFrom(
@@ -160,7 +148,21 @@ class StepCreateCard1 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.r),
               ),
             ),
-            label: tr.startProcedure,
+            label: tr.holdToRecord,
+          ),
+
+          SizedBox(height: 20.h),
+
+          GestureDetector(
+            onTap: controller.skip,
+            child: Text(
+              tr.skipTutorial,
+              style: GoogleFonts.arimo(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xff364153),
+              ),
+            ),
           ),
         ],
       ),
@@ -168,46 +170,21 @@ class StepCreateCard1 extends StatelessWidget {
   }
 }
 
-Widget _stepItem(String number, String text) {
-  return Container(
-    width: double.infinity,
-    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-    decoration: BoxDecoration(
-      color: const Color(0xffF7F7FB),
-      borderRadius: BorderRadius.circular(12.r),
-    ),
+// Reusable bullet row
+Widget _bulletText(String text) {
+  return Align(
+    alignment: Alignment.centerLeft,
     child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        /// 🔹 Step number circle
-        Container(
-          height: 32.w,
-          width: 32.w,
-          decoration: BoxDecoration(
-            // ignore: deprecated_member_use
-            color: AppTheme.primaryColor.withOpacity(0.10),
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text(
-              number,
-              style: GoogleFonts.arimo(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.primaryColor,
-              ),
-            ),
-          ),
-        ),
-
-        SizedBox(width: 10.w),
-
-        /// 🔹 Step text
+        Icon(Icons.circle, size: 6.sp, color: Colors.grey),
+        SizedBox(width: 8.w),
         Expanded(
           child: Text(
             text,
             style: GoogleFonts.arimo(
-              fontSize: 14.sp,
-              color: const Color(0xff364153),
+              fontSize: 12.sp,
+              color: const Color(0xff4A5565),
             ),
           ),
         ),

@@ -1,10 +1,6 @@
+import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_navigation/src/snackbar/snackbar.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
@@ -95,7 +91,7 @@ class ApiClient extends GetxService {
         );
       } else if (!internet.isShowingNoInternet.value) {
         internet.setOffline();
-        Get.toNamed(AppRoutes.NO_INTERNET);
+        Get.toNamed(AppRoutes.noInternet);
       }
       return handler.next(e);
     }
@@ -368,7 +364,7 @@ class ApiClient extends GetxService {
   /// Force logout when refresh fails
   void _forceLogout() {
     StorageService.clearAll();
-    Get.offAllNamed(AppRoutes.LOGIN);
+    Get.offAllNamed(AppRoutes.login);
     Get.snackbar(
       'Session Expired',
       'Please login again.',

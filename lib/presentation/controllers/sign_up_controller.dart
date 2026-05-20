@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
@@ -109,7 +109,7 @@ class SignUpController extends GetxController {
         Helpers.showSuccess('Registration successful. Plz verify your email');
         // Navigate to VerifyEmail screen and pass the email
         Get.toNamed(
-          AppRoutes.OTP_VERIFICATION,
+          AppRoutes.otpVerification,
           arguments: emailController.text.trim(),
         );
       }
@@ -130,9 +130,9 @@ class SignUpController extends GetxController {
         final bool isOnboardingCompleted =
             authData['isOnboardingCompleted'] ?? true;
         if (!isOnboardingCompleted) {
-          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+          Get.offAllNamed(AppRoutes.welcomePage);
         } else {
-          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+          Get.offAllNamed(AppRoutes.bottomNavBar);
         }
       } else {
         Helpers.showError(response?.data['message']);
@@ -155,9 +155,9 @@ class SignUpController extends GetxController {
         final bool isOnboardingCompleted =
             authData['isOnboardingCompleted'] ?? true;
         if (!isOnboardingCompleted) {
-          Get.offAllNamed(AppRoutes.WELCOME_PAGE);
+          Get.offAllNamed(AppRoutes.welcomePage);
         } else {
-          Get.offAllNamed(AppRoutes.BOTTOM_NAV_BAR);
+          Get.offAllNamed(AppRoutes.bottomNavBar);
         }
       } else {
         Helpers.showError(response?.data['message']);

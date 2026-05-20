@@ -1,14 +1,11 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+
+
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tbsosick/config/constants/storage_constants.dart';
-import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
-import 'package:tbsosick/core/services/storage_service.dart';
 
 import '../../../../../config/constants/image_paths.dart';
 import '../../../../controllers/tutorial_controller.dart';
@@ -16,6 +13,8 @@ import '../../../../widgets/custom_elevated_button.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
 class StepCreateCard4 extends StatelessWidget {
+  const StepCreateCard4({super.key});
+
   @override
   Widget build(BuildContext context) {
     final tr = AppLocalizations.of(context)!;
@@ -69,7 +68,7 @@ class StepCreateCard4 extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),

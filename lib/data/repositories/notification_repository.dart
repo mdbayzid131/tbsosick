@@ -1,7 +1,7 @@
+import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
-import 'package:get/get.dart' hide Response;
 
 class NotificationRepository {
   final ApiClient apiClient = Get.find<ApiClient>();

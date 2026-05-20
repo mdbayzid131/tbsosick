@@ -1,5 +1,5 @@
 /*
-import 'package:dio/src/response.dart';
+import 'package:dio/dio.dart';
 
 import '../../core/constants/api_endpoints.dart';
 import '../services/api_client.dart';

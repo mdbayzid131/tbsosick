@@ -1,6 +1,6 @@
+import 'package:get/get.dart' hide Response;
 import 'dart:io' show Platform;
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -8,7 +8,6 @@ import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/core/services/api_client.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
-import 'package:tbsosick/core/utils/logger.dart';
 import 'package:tbsosick/core/utils/nonce_helper.dart' hide generateNonce;
 import 'package:tbsosick/data/repositories/auth_repository.dart';
 

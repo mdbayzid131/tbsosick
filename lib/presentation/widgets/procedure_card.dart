@@ -1,6 +1,6 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 
@@ -67,7 +67,7 @@ class _ProcedureCardState extends State<ProcedureCard> {
     return GestureDetector(
       onTap: () {
         Get.toNamed(
-          AppRoutes.CARD_DETAILS,
+          AppRoutes.cardDetails,
           arguments: {'cardId': widget.cardId},
         );
       },
