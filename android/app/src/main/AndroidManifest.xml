@@ -8,9 +8,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="com.android.vending.BILLING" />
     <application
-        android:label="tbsosick"
+        android:label="SMRTSCRUB"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:supportsRtl="true">
         <activity
             android:name=".MainActivity"

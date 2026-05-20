@@ -1,0 +1,13 @@
+flutter_native_splash:
+  # White background - লোগোতে transparent bg আছে তাই white বেস্ট দেখাবে
+  color: "#FFFFFF"
+  image: "assets/images/native_splash.png"
+
+  android: true
+  ios: true
+  web: false
+
+  # অ্যান্ড্রয়েড ১২+ এর জন্য
+  android_12:
+    image: "assets/images/native_splash.png"
+    color: "#FFFFFF"

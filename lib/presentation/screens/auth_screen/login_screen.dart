@@ -36,7 +36,7 @@ class LoginScreen extends GetView<LoginController> {
 
                 ///================= App Logo =========================///
                 Image.asset(
-                  ImagePaths.appLOgo,
+                  ImagePaths.appLogo,
                   height: 80.h,
                   fit: BoxFit.contain,
                 ),

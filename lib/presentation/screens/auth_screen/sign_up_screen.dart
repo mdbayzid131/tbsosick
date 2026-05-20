@@ -35,7 +35,7 @@ class SignUpScreen extends GetView<SignUpController> {
 
                 ///================= App Logo =========================///
                 Image.asset(
-                  ImagePaths.appLOgo,
+                  ImagePaths.appLogo,
                   height: 80.h,
                   fit: BoxFit.contain,
                 ),
