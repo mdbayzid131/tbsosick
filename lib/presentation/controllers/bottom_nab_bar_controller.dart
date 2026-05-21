@@ -132,15 +132,16 @@ class BottomNabBarController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final Map<String, dynamic> data =
             (response.data['data'] is Map<String, dynamic>)
-                ? response.data['data']
-                : response.data;
+            ? response.data['data']
+            : response.data;
 
         final result = LibraryCardsResponse.fromJson(data);
         libraryCards.assignAll(result.data);
         hasMoreLibrary.value = _libraryPage < result.meta.totalPages;
       }
     } catch (e) {
-      if (e is DioException && e.response?.statusCode == 402) {
+      if (e is DioException &&
+          (e.response?.statusCode == 402 || e.response?.statusCode == 403)) {
         isLibrarySubscriptionInactive.value = true;
       } else {
         Helpers.error("Error loading library cards: $e");
