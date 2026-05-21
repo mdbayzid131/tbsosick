@@ -2,6 +2,8 @@ import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
 
 
+import 'package:tbsosick/core/services/auth_service.dart';
+import 'package:tbsosick/core/services/push_notification_service.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/models/private_card_model.dart';
@@ -11,6 +13,21 @@ import 'package:tbsosick/data/repositories/user_repository.dart';
 
 class HomePageController extends GetxController {
   final UserDataRepository _userDataRepository = UserDataRepository();
+
+  @override
+  void onReady() {
+    super.onReady();
+    _requestNotificationPermission();
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    // Home screen এ আসার পর permission চাওয়া
+    final token = await FirebaseNotificationService.requestPermissionAndGetToken();
+    if (token != null) {
+      // Permission allow হলে FCM token backend এ update করা
+      await Get.find<AuthService>().syncDeviceToken(token);
+    }
+  }
 
   RxBool isFavorite = false.obs;
   RxBool isLoading = false.obs;

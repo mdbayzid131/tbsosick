@@ -60,6 +60,11 @@ class AuthRepo {
     return await apiClient.postData(ApiConstants.login, body);
   }
 
+  /// ===================== SYNC DEVICE TOKEN =====================
+  Future<Response> syncDeviceToken(String token) async {
+    return await apiClient.patchData(ApiConstants.profile, {"deviceToken": token});
+  }
+
   /// ===================== FORGOT PASSWORD =====================
   Future<Response> forgotPassword({required String email}) async {
     return await apiClient.postData(ApiConstants.forgotPassword, {

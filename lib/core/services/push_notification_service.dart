@@ -31,48 +31,8 @@ class FirebaseNotificationService {
   /// Callback for FCM token refresh
   static void Function(String)? onTokenRefresh;
 
-  /// Initialize FCM: permissions, token, listeners, background handler
-  static Future<String?> initialize() async {
-    // Request permission (Android auto-grants, iOS requires this)
-    final settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-    Helpers.debug(
-      '🔐 Push Notification Permission Status: ${settings.authorizationStatus}',
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      Helpers.warning('🚫 Push Notification Permission Denied by user');
-    } else if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      Helpers.info('✅ Push Notification Permission Granted');
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      Helpers.warning('⚠️ Push Notification Permission Provisional (iOS)');
-    }
-
-    // Get FCM token
-    String? token;
-    try {
-      if (Platform.isIOS) {
-        // iOS-এ APNS token পেতে সময় লাগতে পারে, তাই কিছুটা অপেক্ষা করা ভালো
-        String? apnsToken = await _messaging.getAPNSToken();
-        int retryCount = 0;
-        while (apnsToken == null && retryCount < 3) {
-          await Future.delayed(const Duration(seconds: 2));
-          apnsToken = await _messaging.getAPNSToken();
-          retryCount++;
-          Helpers.debug('⏳ Waiting for APNS Token... (Retry: $retryCount)');
-        }
-      }
-
-      token = await _messaging.getToken();
-      Helpers.info('🔑 FCM Token: $token');
-    } catch (e) {
-      Helpers.error('❌ Error getting FCM Token: $e');
-    }
-
+  /// Setup FCM listeners and background handlers (Does NOT request permission)
+  static Future<void> setupInterceptors() async {
     // Listen for token refresh
     _messaging.onTokenRefresh.listen((newToken) {
       Helpers.info('🔄 FCM Token refreshed: $newToken');
@@ -82,16 +42,6 @@ class FirebaseNotificationService {
     // Foreground message listener
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       Helpers.info('📨 Foreground Message: ${message.notification?.title}');
-
-      // Trigger a local notification banner in the foreground
-      // final notification = message.notification;
-      // if (notification != null) {
-      //   NotificationService().showPushNotification(
-      //     title: notification.title ?? '',
-      //     body: notification.body ?? '',
-      //     payload: message.data.toString(),
-      //   );
-      // }
 
       // Sync and update the UI unread notification count
       if (Get.isRegistered<NotificationController>()) {
@@ -118,8 +68,52 @@ class FirebaseNotificationService {
 
     // Register background handler
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  /// Request permission and get FCM token
+  static Future<String?> requestPermissionAndGetToken() async {
+    // Request permission (Android auto-grants, iOS requires this)
+    final settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    Helpers.debug(
+      '🔐 Push Notification Permission Status: ${settings.authorizationStatus}',
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      Helpers.warning('🚫 Push Notification Permission Denied by user');
+      return null;
+    }
+
+    // Get FCM token
+    String? token;
+    try {
+      if (Platform.isIOS) {
+        String? apnsToken = await _messaging.getAPNSToken();
+        int retryCount = 0;
+        while (apnsToken == null && retryCount < 3) {
+          await Future.delayed(const Duration(seconds: 2));
+          apnsToken = await _messaging.getAPNSToken();
+          retryCount++;
+          Helpers.debug('⏳ Waiting for APNS Token... (Retry: $retryCount)');
+        }
+      }
+
+      token = await _messaging.getToken();
+      Helpers.info('🔑 FCM Token: $token');
+    } catch (e) {
+      Helpers.error('❌ Error getting FCM Token: $e');
+    }
 
     return token;
+  }
+
+  /// Initialize FCM (Legacy - now split into setupInterceptors and requestPermissionAndGetToken)
+  static Future<String?> initialize() async {
+    await setupInterceptors();
+    return await requestPermissionAndGetToken();
   }
 
   /// Subscribe to a topic

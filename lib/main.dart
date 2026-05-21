@@ -18,7 +18,7 @@ void main() async {
   } catch (e) {
     Helpers.error("Firebase initialization failed: $e");
   }
-  await FirebaseNotificationService.initialize();
+  await FirebaseNotificationService.setupInterceptors();
 
   runApp(MyApp());
 }

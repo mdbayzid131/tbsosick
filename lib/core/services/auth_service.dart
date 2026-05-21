@@ -83,6 +83,16 @@ class AuthService extends GetxService {
     }
   }
 
+  /// ===================== SYNC DEVICE TOKEN =====================
+  Future<void> syncDeviceToken(String token) async {
+    try {
+      await _authRepo.syncDeviceToken(token);
+      Helpers.info('🔄 Device token synced with backend');
+    } catch (e) {
+      Helpers.error('❌ Failed to sync device token: $e');
+    }
+  }
+
   /// ===================== LOGOUT =====================
   Future<void> logout() async {
     try {
