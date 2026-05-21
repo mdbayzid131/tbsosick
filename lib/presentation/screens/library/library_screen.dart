@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/screens/home/controller/prefrance_card_ditails_controller.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
@@ -156,17 +157,22 @@ class _LibraryScreenState extends State<LibraryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Card count
-          Obx(
-            () => Text(
+          Obx(() {
+            if (controller.isLibrarySubscriptionInactive.value) {
+              return const SizedBox.shrink();
+            }
+            return Text(
               '${controller.libraryCards.length} Cards',
               style: GoogleFonts.arimo(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF6B7280),
               ),
-            ),
-          ),
-          SizedBox(height: 12.h),
+            );
+          }),
+          Obx(() => controller.isLibrarySubscriptionInactive.value
+              ? const SizedBox.shrink()
+              : SizedBox(height: 12.h)),
           // Cards list
           Expanded(
             child: Obx(() {
@@ -174,6 +180,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   controller.libraryCards.isEmpty) {
                 return const Center(child: CircularProgressIndicator());
               }
+
+              if (controller.isLibrarySubscriptionInactive.value) {
+                return _buildSubscriptionRequiredUI();
+              }
+
               if (controller.errorMessage.isNotEmpty) {
                 return Center(child: Text(controller.errorMessage.value));
               }
@@ -398,6 +409,62 @@ class _LibraryScreenState extends State<LibraryScreen> {
           ),
         );
       },
+    );
+  }
+
+  // UI shown when subscription is required
+  Widget _buildSubscriptionRequiredUI() {
+    final tr = AppLocalizations.of(context)!;
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(20.r),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F3FF),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.lock_outline_rounded,
+                size: 60.sp,
+                color: const Color(0xFF8B5CF6),
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Subscription Required',
+              style: GoogleFonts.arimo(
+                fontSize: 22.sp,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF1C1B1F),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              'Your subscription is inactive. Please subscribe to access the full Preference Library.',
+              style: GoogleFonts.arimo(
+                fontSize: 15.sp,
+                color: const Color(0xFF6B7280),
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            SizedBox(
+              width: double.infinity,
+              height: 52.h,
+              child: CustomElevatedButton(
+                onPressed: () => Get.toNamed(AppRoutes.subscription),
+                label: tr.choosePlanTitle,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

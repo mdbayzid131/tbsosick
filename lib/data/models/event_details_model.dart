@@ -26,8 +26,8 @@ class PreferenceCardModel {
 
   factory PreferenceCardModel.fromJson(Map<String, dynamic> json) {
     return PreferenceCardModel(
-      id: json['_id'] ?? '',
-      cardTitle: json['cardTitle'] ?? '',
+      id: json['id'] ?? json['_id'] ?? '',
+      cardTitle: json['cardTitle'] ?? json['title'] ?? '',
     );
   }
 
@@ -81,9 +81,13 @@ class EventDetailsModel {
       durationHours: json['durationInHours'] ?? json['durationHours'] ?? 0,
       eventType: json['eventType'] ?? '',
       location: json['location'] ?? '',
-      preferenceCard: (json['linkedPreferenceCard'] != null)
+      preferenceCard: (json['linkedPreferenceCard'] != null && 
+                       json['linkedPreferenceCard'] is Map && 
+                       (json['linkedPreferenceCard'] as Map).isNotEmpty)
           ? PreferenceCardModel.fromJson(json['linkedPreferenceCard'])
-          : (json['preferenceCard'] != null)
+          : (json['preferenceCard'] != null && 
+             json['preferenceCard'] is Map && 
+             (json['preferenceCard'] as Map).isNotEmpty)
           ? PreferenceCardModel.fromJson(json['preferenceCard'])
           : null,
       notes: json['keyNotes'] ?? json['notes'],

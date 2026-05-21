@@ -15,6 +15,7 @@ import 'package:tbsosick/presentation/screens/ProfilePage/view/subscription_scre
 import 'package:tbsosick/presentation/screens/buttomNabBar_screen/bottom_nab_bar_screen.dart';
 import 'package:tbsosick/presentation/screens/home/binding/card_datails_binding.dart';
 import 'package:tbsosick/presentation/screens/home/preference_card_details.dart';
+import 'package:tbsosick/presentation/screens/calendar_page/procedure_details.dart';
 import 'package:tbsosick/presentation/screens/my%20cards/binding/my_cards_binding.dart';
 import 'package:tbsosick/presentation/screens/my%20cards/view/my_cards_screeen.dart';
 import 'package:tbsosick/presentation/screens/onboarding_screen/onboarding_screen.dart';
@@ -42,6 +43,7 @@ class AppRoutes {
   static const String cardDetails = '/card-details';
   static const String myCards = '/my-cards';
   static const String subscription = '/subscription';
+  static const String eventDetails = '/event-details';
 }
 
 final Transition transition = Transition.rightToLeft;
@@ -116,5 +118,9 @@ final pages = [
     name: AppRoutes.subscription,
     page: () => const SubscriptionScreen(),
     bindings: [SubscriptionBinding()],
+  ),
+  GetPage(
+    name: AppRoutes.eventDetails,
+    page: () => ProcedureDetailsScreen(id: Get.arguments as String),
   ),
 ];

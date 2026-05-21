@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
@@ -19,12 +20,6 @@ class BottomNabBarController extends GetxController {
 
   void changePage(int index) {
     currentIndex.value = index;
-    if (index == 1) {
-      final isPaidUser = Get.find<IapService>().isPremiumUser;
-      if (!isPaidUser) {
-        SubscriptionHelper.showSubscriptionDialog();
-      }
-    }
   }
 
   // data list
@@ -57,6 +52,7 @@ class BottomNabBarController extends GetxController {
   final RxBool isPrivateMoreLoading = false.obs;
   final RxBool isFavoriteMoreLoading = false.obs;
   final RxBool isLibraryMoreLoading = false.obs;
+  final RxBool isLibrarySubscriptionInactive = false.obs;
 
   // pagination
   int _favoritePage = 1;
@@ -119,6 +115,7 @@ class BottomNabBarController extends GetxController {
   Future<void> getLibraryCards({bool showLoading = true}) async {
     try {
       if (showLoading) isLibraryCardsLoading.value = true;
+      isLibrarySubscriptionInactive.value = false;
       _libraryPage = 1;
 
       final response = await _userDataRepository.getLibraryCards(
@@ -127,19 +124,29 @@ class BottomNabBarController extends GetxController {
         specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
         verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
+
+      if (response.statusCode == 402) {
+        isLibrarySubscriptionInactive.value = true;
+        return;
+      }
+
       ApiChecker.checkGetApi(response);
       if (response.statusCode == 200 && response.data != null) {
         final Map<String, dynamic> data =
             (response.data['data'] is Map<String, dynamic>)
-            ? response.data['data']
-            : response.data;
+                ? response.data['data']
+                : response.data;
 
         final result = LibraryCardsResponse.fromJson(data);
         libraryCards.assignAll(result.data);
         hasMoreLibrary.value = _libraryPage < result.meta.totalPages;
       }
     } catch (e) {
-      Helpers.error("Error loading library cards: $e");
+      if (e is DioException && e.response?.statusCode == 402) {
+        isLibrarySubscriptionInactive.value = true;
+      } else {
+        Helpers.error("Error loading library cards: $e");
+      }
     } finally {
       if (showLoading) isLibraryCardsLoading.value = false;
     }
@@ -158,6 +165,12 @@ class BottomNabBarController extends GetxController {
         specialty: specialtyFilter.value == 'All' ? '' : specialtyFilter.value,
         verificationStatus: verifiedOnlyFilter.value ? 'VERIFIED' : '',
       );
+
+      if (response.statusCode == 402) {
+        isLibrarySubscriptionInactive.value = true;
+        return;
+      }
+
       ApiChecker.checkGetApi(response);
       if (response.statusCode == 200 && response.data != null) {
         final Map<String, dynamic> data =

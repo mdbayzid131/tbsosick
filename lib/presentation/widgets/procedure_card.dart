@@ -188,21 +188,19 @@ class _ProcedureCardState extends State<ProcedureCard> {
             SizedBox(height: 12.h),
             Row(
               children: [
-                if (!widget.isPrivateCard)
-                  Icon(
-                    Icons.file_download_outlined,
-                    color: const Color(0xFF6B7280),
-                    size: 20.sp,
-                  ),
+                Icon(
+                  Icons.file_download_outlined,
+                  color: const Color(0xFF6B7280),
+                  size: 20.sp,
+                ),
                 SizedBox(width: 4.w),
-                if (!widget.isPrivateCard)
-                  Text(
-                    widget.downloads.toString(),
-                    style: GoogleFonts.arimo(
-                      fontSize: 13.sp,
-                      color: const Color(0xFF6B7280),
-                    ),
+                Text(
+                  widget.downloads.toString(),
+                  style: GoogleFonts.arimo(
+                    fontSize: 13.sp,
+                    color: const Color(0xFF6B7280),
                   ),
+                ),
                 SizedBox(width: 16.w),
                 Text(
                   "updated: ${widget.updatedTime.day}/${widget.updatedTime.month}/${widget.updatedTime.year}",

@@ -16,6 +16,15 @@ void showNotificationBottomSheet(BuildContext context) {
   final controller = Get.find<NotificationController>();
   controller.fetchNotifications(isRefresh: true);
 
+  final ScrollController scrollController = ScrollController();
+
+  scrollController.addListener(() {
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 200) {
+      controller.fetchNotifications();
+    }
+  });
+
   showModalBottomSheet(
     context: context,
     isDismissible: false,
@@ -77,7 +86,8 @@ void showNotificationBottomSheet(BuildContext context) {
                 ),
                 Expanded(
                   child: Obx(() {
-                    if (controller.isLoading.value) {
+                    if (controller.isLoading.value &&
+                        controller.notifications.isEmpty) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
@@ -94,11 +104,21 @@ void showNotificationBottomSheet(BuildContext context) {
                     }
 
                     return ListView.separated(
+                      controller: scrollController,
                       padding: EdgeInsets.only(top: 16.h, bottom: 20.h),
-                      itemCount: controller.notifications.length,
+                      itemCount: controller.notifications.length +
+                          (controller.isMoreLoading.value ? 1 : 0),
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 12.h),
                       itemBuilder: (context, index) {
+                        if (index == controller.notifications.length) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
                         final notification = controller.notifications[index];
                         return _notificationCard(
                           context,
@@ -216,8 +236,7 @@ Widget _notificationCard(
                       'cardId': notification.resourceId,
                     });
                   } else if (notification.resourceType == 'Event') {
-                    // Navigate to event details if route exists
-                    // Get.toNamed(AppRoutes.EVENT_DETAILS, arguments: notification.resourceId);
+                    Get.toNamed(AppRoutes.eventDetails, arguments: notification.resourceId);
                   }
                 },
                 child: Text(
@@ -230,17 +249,17 @@ Widget _notificationCard(
                 ),
               ),
               const Spacer(),
-              IconButton(
-                onPressed: () => _showDeleteConfirmation(context, onDeleteTap),
-                icon: SvgPicture.asset(
-                  ImagePaths.deleteIcon,
-                  width: 20.w,
-                  height: 20.w,
-                  colorFilter: notification.isRead 
-                      ? const ColorFilter.mode(Colors.grey, BlendMode.srcIn)
-                      : null,
-                ),
-              ),
+              // IconButton(
+              //   onPressed: () => _showDeleteConfirmation(context, onDeleteTap),
+              //   icon: SvgPicture.asset(
+              //     ImagePaths.deleteIcon,
+              //     width: 20.w,
+              //     height: 20.w,
+              //     colorFilter: notification.isRead 
+              //         ? const ColorFilter.mode(Colors.grey, BlendMode.srcIn)
+              //         : null,
+              //   ),
+              // ),
             ],
           ),
         ],

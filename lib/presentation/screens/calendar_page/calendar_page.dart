@@ -24,7 +24,7 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  final CalendarController _controller = Get.put(CalendarController());
+  final CalendarController _controller = Get.find();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
@@ -128,19 +128,24 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  Widget _buildCard({required Widget child, EdgeInsets? padding}) {
+  Widget _buildCard({
+    required Widget child,
+    EdgeInsets? padding,
+    Color? backgroundColor,
+    Border? border,
+  }) {
     return Container(
       width: double.infinity,
       padding: padding ?? EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+        color: backgroundColor ?? Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        border: border ?? Border.all(color: const Color(0xFFF2F2F7), width: 1.w),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 15.r,
+            offset: Offset(0, 8.h),
           ),
         ],
       ),
@@ -466,176 +471,202 @@ class _CalendarPageState extends State<CalendarPage> {
     required String location,
     String? patient,
   }) {
+    final bool isSurgery = type.toUpperCase() == 'SURGERY';
+    final Color cardBgColor =
+        isSurgery ? const Color(0xFFF9F5FF) : const Color(0xFFFFFBEB);
+    final Color accentColor = isSurgery ? typeColor : const Color(0xFFD97706);
+
     return _buildCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.arimo(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFF1C1B1F),
+      backgroundColor: Colors.white,
+      padding: EdgeInsets.zero,
+      border: Border.all(color: accentColor.withValues(alpha: 0.1), width: 1.w),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Side indicator bar
+            Container(
+              width: 6.w,
+              decoration: BoxDecoration(
+                color: accentColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.r),
+                  bottomLeft: Radius.circular(20.r),
                 ),
               ),
-              const Spacer(),
-              SizedBox(
-                height: 24.sp,
-                width: 24.sp,
-                child: PopupMenuButton<String>(
-                  color: Colors.white,
-                  padding: EdgeInsets.zero,
-                  onSelected: (value) {
-                    if (value == 'edit') {
-                      Get.to(() => EditProcedureScreen(id: id));
-                    } else if (value == 'delete') {
-                      _showDeleteDialog(context, id);
-                    }
-                  },
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.edit_outlined,
-                            size: 20.sp,
-                            color: const Color(0xFF1C1B1F),
-                          ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            AppLocalizations.of(context)!.edit,
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            title,
                             style: GoogleFonts.arimo(
-                              fontSize: 14.sp,
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w700,
                               color: const Color(0xFF1C1B1F),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.delete_outline,
-                            size: 20.sp,
-                            color: Colors.red,
-                          ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            AppLocalizations.of(context)!.delete,
-                            style: GoogleFonts.arimo(
-                              fontSize: 14.sp,
-                              color: Colors.red,
+                        ),
+                        SizedBox(
+                          height: 24.sp,
+                          width: 24.sp,
+                          child: PopupMenuButton<String>(
+                            color: Colors.white,
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r)),
+                            padding: EdgeInsets.zero,
+                            onSelected: (value) {
+                              if (value == 'edit') {
+                                Get.to(() => EditProcedureScreen(id: id));
+                              } else if (value == 'delete') {
+                                _showDeleteDialog(context, id);
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'edit',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.edit_outlined,
+                                        size: 18.sp,
+                                        color: const Color(0xFF1C1B1F)),
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      AppLocalizations.of(context)!.edit,
+                                      style: GoogleFonts.arimo(
+                                          fontSize: 14.sp,
+                                          color: const Color(0xFF1C1B1F)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 'delete',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.delete_outline,
+                                        size: 18.sp, color: Colors.red),
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      AppLocalizations.of(context)!.delete,
+                                      style: GoogleFonts.arimo(
+                                          fontSize: 14.sp, color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            child: Icon(
+                              Icons.more_vert_rounded,
+                              size: 20.sp,
+                              color: const Color(0xff9CA3AF),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                    SizedBox(height: 8.h),
+                    _buildTypeChip(type, accentColor),
+                    SizedBox(height: 16.h),
+                    _buildIconInfo(Icons.access_time_filled_rounded, time,
+                        accentColor.withValues(alpha: 0.1), accentColor),
+                    SizedBox(height: 8.h),
+                    _buildIconInfo(Icons.location_on_rounded, location,
+                        const Color(0xFFF3F4F6), const Color(0xFF6B7280)),
+                    if (patient != null && patient.isNotEmpty) ...[
+                      SizedBox(height: 8.h),
+                      _buildIconInfo(Icons.person_rounded, patient,
+                          const Color(0xFFF3F4F6), const Color(0xFF6B7280)),
+                    ],
+                    SizedBox(height: 20.h),
+                    _buildEventActions(id, accentColor),
                   ],
-                  child: Icon(
-                    Icons.more_vert_rounded,
-                    size: 20.sp,
-                    color: const Color(0xff79747E),
-                  ),
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 8.h),
-          Row(children: [_buildTypeChip(type, typeColor)]),
-          SizedBox(height: 12.h),
-          _buildIconInfo(Icons.access_time, time),
-          SizedBox(height: 6.h),
-          _buildIconInfo(Icons.location_on_outlined, location),
-          if (patient != null) ...[
-            SizedBox(height: 6.h),
-            _buildIconInfo(Icons.person_outline, patient),
+            ),
           ],
-          SizedBox(height: 16.h),
-          _buildEventActions(id),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildTypeChip(String type, Color color) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(12.r),
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(30.r),
       ),
       child: Text(
-        type,
+        type.toUpperCase(),
         style: GoogleFonts.arimo(
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
+          fontSize: 11.sp,
+          fontWeight: FontWeight.w800,
+          color: color,
+          letterSpacing: 0.5,
         ),
       ),
     );
   }
 
-  Widget _buildIconInfo(IconData icon, String text) {
+  Widget _buildIconInfo(
+      IconData icon, String text, Color bgColor, Color iconColor) {
     return Row(
       children: [
-        Icon(icon, size: 16.sp, color: const Color(0xff79747E)),
-        SizedBox(width: 6.w),
-        Text(
-          text,
-          style: GoogleFonts.arimo(
-            fontSize: 13.sp,
-            color: const Color(0xff79747E),
+        Container(
+          padding: EdgeInsets.all(6.r),
+          decoration: BoxDecoration(
+            color: bgColor,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, size: 14.sp, color: iconColor),
+        ),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.arimo(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF4B5563),
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildEventActions(String id) {
-    return Row(
-      children: [
-        // Expanded(
-        //   child: OutlinedButton(
-        //     onPressed: () => showEventDetailsBottomSheet(context: context, id: id),
-        //     style: OutlinedButton.styleFrom(
-        //       side: const BorderSide(color: Color(0xFF9945FF), width: 1.5),
-        //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-        //       padding: EdgeInsets.symmetric(vertical: 10.h),
-        //     ),
-        //     child: Text(
-        //       AppLocalizations.of(context)!.viewDetails,
-        //       style: GoogleFonts.arimo(fontSize: 14.sp, fontWeight: FontWeight.w600, color: const Color(0xFF9945FF)),
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(width: 8.w),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () => Get.to(ProcedureDetailsScreen(id: id)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF9945FF),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              padding: EdgeInsets.symmetric(vertical: 10.h),
-              elevation: 0,
-            ),
-            child: Text(
-              AppLocalizations.of(context)!.viewDetails,
-              style: GoogleFonts.arimo(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
+  Widget _buildEventActions(String id, Color primaryColor) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () => Get.to(ProcedureDetailsScreen(id: id)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 12.h),
+        ),
+        child: Text(
+          AppLocalizations.of(context)!.viewDetails,
+          style: GoogleFonts.arimo(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w700,
           ),
         ),
-      ],
+      ),
     );
   }
 

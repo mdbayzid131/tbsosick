@@ -680,19 +680,20 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                       ),
                     ),
                     SizedBox(height: 4.h),
-                    Text(
-                      _controller
-                              .eventDetails
-                              .value
-                              ?.preferenceCard
-                              ?.cardTitle ??
-                          '',
-                      style: GoogleFonts.arimo(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xff1C1B1F),
-                      ),
-                    ),
+                    Obx(() {
+                      final card = _controller.eventDetails.value?.preferenceCard;
+                      final title = (card?.cardTitle != null && card!.cardTitle.isNotEmpty)
+                          ? card.cardTitle
+                          : 'No preference card linked';
+                      return Text(
+                        title,
+                        style: GoogleFonts.arimo(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xff1C1B1F),
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -700,36 +701,39 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
           ),
           SizedBox(height: 16.h),
           // View Card Details button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                final d = _controller.eventDetails.value;
-                final cardId = d!.preferenceCard?.id ?? '';
-                Get.toNamed(
-                  AppRoutes.cardDetails,
-                  arguments: {'cardId': cardId},
-                );
-              },
-
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8B5CF6),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.r),
+          Obx(() {
+            final card = _controller.eventDetails.value?.preferenceCard;
+            if (card == null || card.id.isEmpty) {
+              return const SizedBox.shrink();
+            }
+            return SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Get.toNamed(
+                    AppRoutes.cardDetails,
+                    arguments: {'cardId': card.id},
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B5CF6),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  elevation: 0,
                 ),
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                elevation: 0,
-              ),
-              child: Text(
-                l10n.viewCardDetails,
-                style: GoogleFonts.arimo(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                child: Text(
+                  l10n.viewCardDetails,
+                  style: GoogleFonts.arimo(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );
