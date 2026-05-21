@@ -128,7 +128,7 @@ class StepCreateCard4 extends StatelessWidget {
                             ),
                             SizedBox(width: 10.w),
                             Text(
-                              'Time Out  •  08:00 AM',
+                              '${tr.timeOut}  •  08:00 AM',
                               style: GoogleFonts.arimo(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,

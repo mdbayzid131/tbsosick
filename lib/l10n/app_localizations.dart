@@ -964,7 +964,7 @@ abstract class AppLocalizations {
   /// No description provided for @john.
   ///
   /// In en, this message translates to:
-  /// **'John'**
+  /// **'Jon'**
   String get john;
 
   /// No description provided for @doe.
@@ -2136,6 +2136,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saving...'**
   String get saving;
+
+  /// No description provided for @otpVerificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'OTP Verification'**
+  String get otpVerificationTitle;
+
+  /// No description provided for @enterVerificationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Verification Code'**
+  String get enterVerificationCode;
+
+  /// No description provided for @verificationCodeSentEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'We have sent a verification code to {email}. Please check your inbox.'**
+  String verificationCodeSentEmail(String email);
+
+  /// No description provided for @otpCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'OTP Code'**
+  String get otpCodeLabel;
+
+  /// No description provided for @verifyOtpButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify OTP'**
+  String get verifyOtpButton;
+
+  /// No description provided for @didNotReceiveCodeResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive code? Resend'**
+  String get didNotReceiveCodeResend;
+
+  /// No description provided for @enterNewPasswordBelow.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your new password below.'**
+  String get enterNewPasswordBelow;
+
+  /// No description provided for @newPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPasswordHint;
+
+  /// No description provided for @confirmNewPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm New Password'**
+  String get confirmNewPasswordHint;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success!'**
+  String get success;
+
+  /// No description provided for @passwordResetSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset successful!'**
+  String get passwordResetSuccessful;
+
+  /// No description provided for @loginWithNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'You can now log in using your new password.'**
+  String get loginWithNewPassword;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @noEventsOnDate.
+  ///
+  /// In en, this message translates to:
+  /// **'No events on this date.\nPlease create an event or select another date.'**
+  String get noEventsOnDate;
+
+  /// No description provided for @deleteEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Event'**
+  String get deleteEvent;
+
+  /// No description provided for @deleteEventConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this event?'**
+  String get deleteEventConfirm;
+
+  /// No description provided for @egTwoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 2'**
+  String get egTwoHint;
+
+  /// No description provided for @generalAnesthesia.
+  ///
+  /// In en, this message translates to:
+  /// **'General Anesthesia'**
+  String get generalAnesthesia;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

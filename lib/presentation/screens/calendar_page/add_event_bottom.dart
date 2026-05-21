@@ -157,7 +157,7 @@ void showAddEventBottomSheet(
                                   child: CustomTextField(
                                     controller: durationController,
                                     label: '${l10n.durationHours} *',
-                                    hintText: 'e.g., 2',
+                                    hintText: l10n.egTwoHint,
                                     keyboardType: TextInputType.number,
                                     validator: (v) {
                                       if (v == null || v.trim().isEmpty) {

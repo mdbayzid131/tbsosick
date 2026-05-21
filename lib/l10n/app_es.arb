@@ -367,5 +367,32 @@
   "anesthesiaType": "Tipo de anestesia",
   "procedureNotes": "Notas del procedimiento",
   "addNotesHint": "Añadir notas o requisitos especiales...",
-  "saving": "Guardando..."
+  "saving": "Guardando...",
+  "otpVerificationTitle": "Verificación OTP",
+  "enterVerificationCode": "Ingrese el código de verificación",
+  "verificationCodeSentEmail": "Hemos enviado un código de verificación a {email}. Por favor, revise su bandeja de entrada.",
+  "@verificationCodeSentEmail": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "otpCodeLabel": "Código OTP",
+  "verifyOtpButton": "Verificar OTP",
+  "didNotReceiveCodeResend": "¿No recibió el código? Reenviar",
+  "enterNewPasswordBelow": "Ingrese su nueva contraseña a continuación.",
+  "newPasswordHint": "Nueva contraseña",
+  "confirmNewPasswordHint": "Confirmar nueva contraseña",
+  "success": "¡Éxito!",
+  "passwordResetSuccessful": "¡Restablecimiento de contraseña exitoso!",
+  "loginWithNewPassword": "Ahora puede iniciar sesión con su nueva contraseña.",
+  "done": "Hecho",
+  "noEventsOnDate": "No hay eventos en esta fecha.\nCree un evento o seleccione otra fecha.",
+  "deleteEvent": "Eliminar evento",
+  "deleteEventConfirm": "¿Está seguro de que desea eliminar este evento?",
+  "egTwoHint": "ej., 2",
+  "generalAnesthesia": "Anestesia general",
+  "john": "Jon",
+  "doe": "Doe"
 }

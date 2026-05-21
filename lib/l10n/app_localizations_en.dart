@@ -441,7 +441,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manageSubscription => 'Manage Subscription';
 
   @override
-  String get john => 'John';
+  String get john => 'Jon';
 
   @override
   String get doe => 'Doe';
@@ -1035,4 +1035,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saving => 'Saving...';
+
+  @override
+  String get otpVerificationTitle => 'OTP Verification';
+
+  @override
+  String get enterVerificationCode => 'Enter Verification Code';
+
+  @override
+  String verificationCodeSentEmail(String email) {
+    return 'We have sent a verification code to $email. Please check your inbox.';
+  }
+
+  @override
+  String get otpCodeLabel => 'OTP Code';
+
+  @override
+  String get verifyOtpButton => 'Verify OTP';
+
+  @override
+  String get didNotReceiveCodeResend => 'Didn\'t receive code? Resend';
+
+  @override
+  String get enterNewPasswordBelow => 'Enter your new password below.';
+
+  @override
+  String get newPasswordHint => 'New Password';
+
+  @override
+  String get confirmNewPasswordHint => 'Confirm New Password';
+
+  @override
+  String get success => 'Success!';
+
+  @override
+  String get passwordResetSuccessful => 'Password reset successful!';
+
+  @override
+  String get loginWithNewPassword => 'You can now log in using your new password.';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get noEventsOnDate => 'No events on this date.\nPlease create an event or select another date.';
+
+  @override
+  String get deleteEvent => 'Delete Event';
+
+  @override
+  String get deleteEventConfirm => 'Are you sure you want to delete this event?';
+
+  @override
+  String get egTwoHint => 'e.g., 2';
+
+  @override
+  String get generalAnesthesia => 'General Anesthesia';
 }

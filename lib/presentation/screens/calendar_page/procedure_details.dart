@@ -468,7 +468,7 @@ class _ProcedureDetailsScreenState extends State<ProcedureDetailsScreen> {
                   ),
                   SizedBox(height: 2.h),
                   Text(
-                    'General',
+                    l10n.generalAnesthesia,
                     style: GoogleFonts.arimo(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w600,

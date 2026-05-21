@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
@@ -9,7 +8,6 @@ import 'package:tbsosick/data/models/notification_model.dart';
 import 'package:tbsosick/presentation/controllers/notification_controller.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 
-import '../../../config/constants/image_paths.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 
 void showNotificationBottomSheet(BuildContext context) {

@@ -441,10 +441,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get manageSubscription => 'Abonnement verwalten';
 
   @override
-  String get john => 'Jan';
+  String get john => 'Jon';
 
   @override
-  String get doe => 'Müller';
+  String get doe => 'Doe';
 
   @override
   String get specialty => 'Fachgebiet';
@@ -1035,4 +1035,60 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get saving => 'Speichern...';
+
+  @override
+  String get otpVerificationTitle => 'OTP-Verifizierung';
+
+  @override
+  String get enterVerificationCode => 'Verifizierungscode eingeben';
+
+  @override
+  String verificationCodeSentEmail(String email) {
+    return 'Wir haben einen Verifizierungscode an $email gesendet. Bitte überprüfen Sie Ihren Posteingang.';
+  }
+
+  @override
+  String get otpCodeLabel => 'OTP-Code';
+
+  @override
+  String get verifyOtpButton => 'OTP verifizieren';
+
+  @override
+  String get didNotReceiveCodeResend => 'Kein Code erhalten? Erneut senden';
+
+  @override
+  String get enterNewPasswordBelow => 'Geben Sie unten Ihr neues Passwort ein.';
+
+  @override
+  String get newPasswordHint => 'Neues Passwort';
+
+  @override
+  String get confirmNewPasswordHint => 'Neues Passwort bestätigen';
+
+  @override
+  String get success => 'Erfolgreich!';
+
+  @override
+  String get passwordResetSuccessful => 'Passwort erfolgreich zurückgesetzt!';
+
+  @override
+  String get loginWithNewPassword => 'Sie können sich jetzt mit Ihrem neuen Passwort anmelden.';
+
+  @override
+  String get done => 'Fertig';
+
+  @override
+  String get noEventsOnDate => 'Keine Ereignisse an diesem Datum.\nBitte erstellen Sie ein Ereignis oder wählen Sie ein anderes Datum.';
+
+  @override
+  String get deleteEvent => 'Ereignis löschen';
+
+  @override
+  String get deleteEventConfirm => 'Sind Sie sicher, dass Sie dieses Ereignis löschen möchten?';
+
+  @override
+  String get egTwoHint => 'z. B. 2';
+
+  @override
+  String get generalAnesthesia => 'Allgemeinanästhesie';
 }

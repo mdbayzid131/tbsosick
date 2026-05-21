@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../widgets/custom_elevated_button.dart';
 
+import 'package:tbsosick/l10n/app_localizations.dart';
+
 void showResetPasswordSuccessBottomSheet(BuildContext context) {
   showModalBottomSheet(
     isDismissible: false,
@@ -11,6 +13,7 @@ void showResetPasswordSuccessBottomSheet(BuildContext context) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
+      final tr = AppLocalizations.of(context)!;
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -32,7 +35,7 @@ void showResetPasswordSuccessBottomSheet(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Success!',
+                        tr.success,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -70,7 +73,7 @@ void showResetPasswordSuccessBottomSheet(BuildContext context) {
                         SizedBox(width: 8.w),
                         Expanded(
                           child: Text(
-                            'Password reset successful!',
+                            tr.passwordResetSuccessful,
                             style: GoogleFonts.arimo(
                               fontSize: 14.sp,
                               color: Colors.green,
@@ -84,7 +87,7 @@ void showResetPasswordSuccessBottomSheet(BuildContext context) {
                   SizedBox(height: 12.h),
 
                   Text(
-                    "You can now log in using your new password.",
+                    tr.loginWithNewPassword,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       color: const Color(0xff8E8E93),
@@ -94,7 +97,7 @@ void showResetPasswordSuccessBottomSheet(BuildContext context) {
                   SizedBox(height: 24.h),
 
                   CustomElevatedButton(
-                    label: 'Done',
+                    label: tr.done,
                     onPressed: () {
                       Get.back(); // close success sheet
                       // Optional: Navigate to login

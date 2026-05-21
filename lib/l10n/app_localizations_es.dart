@@ -441,10 +441,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get manageSubscription => 'Administrar suscripción';
 
   @override
-  String get john => 'Juan';
+  String get john => 'Jon';
 
   @override
-  String get doe => 'Pérez';
+  String get doe => 'Doe';
 
   @override
   String get specialty => 'Especialidad';
@@ -1035,4 +1035,60 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get saving => 'Guardando...';
+
+  @override
+  String get otpVerificationTitle => 'Verificación OTP';
+
+  @override
+  String get enterVerificationCode => 'Ingrese el código de verificación';
+
+  @override
+  String verificationCodeSentEmail(String email) {
+    return 'Hemos enviado un código de verificación a $email. Por favor, revise su bandeja de entrada.';
+  }
+
+  @override
+  String get otpCodeLabel => 'Código OTP';
+
+  @override
+  String get verifyOtpButton => 'Verificar OTP';
+
+  @override
+  String get didNotReceiveCodeResend => '¿No recibió el código? Reenviar';
+
+  @override
+  String get enterNewPasswordBelow => 'Ingrese su nueva contraseña a continuación.';
+
+  @override
+  String get newPasswordHint => 'Nueva contraseña';
+
+  @override
+  String get confirmNewPasswordHint => 'Confirmar nueva contraseña';
+
+  @override
+  String get success => '¡Éxito!';
+
+  @override
+  String get passwordResetSuccessful => '¡Restablecimiento de contraseña exitoso!';
+
+  @override
+  String get loginWithNewPassword => 'Ahora puede iniciar sesión con su nueva contraseña.';
+
+  @override
+  String get done => 'Hecho';
+
+  @override
+  String get noEventsOnDate => 'No hay eventos en esta fecha.\nCree un evento o seleccione otra fecha.';
+
+  @override
+  String get deleteEvent => 'Eliminar evento';
+
+  @override
+  String get deleteEventConfirm => '¿Está seguro de que desea eliminar este evento?';
+
+  @override
+  String get egTwoHint => 'ej., 2';
+
+  @override
+  String get generalAnesthesia => 'Anestesia general';
 }

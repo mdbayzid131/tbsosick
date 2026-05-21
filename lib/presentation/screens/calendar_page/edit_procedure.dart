@@ -264,7 +264,7 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
                 child: _buildTextField(
                   label: AppLocalizations.of(context)!.durationHours,
                   controller: _durationController,
-                  hint: '2',
+                  hint: AppLocalizations.of(context)!.egTwoHint,
                 ),
               ),
               SizedBox(width: 12.w),

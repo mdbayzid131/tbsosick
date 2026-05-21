@@ -7,6 +7,8 @@ import 'package:tbsosick/presentation/controllers/otp_controller.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/presentation/widgets/custom_text_field.dart';
 
+import 'package:tbsosick/l10n/app_localizations.dart';
+
 class OtpVerificationScreen extends StatelessWidget {
   OtpVerificationScreen({super.key});
 
@@ -14,6 +16,7 @@ class OtpVerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -24,7 +27,7 @@ class OtpVerificationScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'OTP Verification',
+          tr.otpVerificationTitle,
           style: GoogleFonts.arimo(
             color: Colors.black,
             fontSize: 20.sp,
@@ -40,7 +43,7 @@ class OtpVerificationScreen extends StatelessWidget {
             children: [
               SizedBox(height: 40.h),
               Text(
-                'Enter Verification Code',
+                tr.enterVerificationCode,
                 style: GoogleFonts.arimo(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
@@ -49,7 +52,7 @@ class OtpVerificationScreen extends StatelessWidget {
               ),
               SizedBox(height: 12.h),
               Text(
-                'We have sent a verification code to ${controller.email}',
+                tr.verificationCodeSentEmail(controller.email),
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   color: const Color(0xff8E8E93),
@@ -66,7 +69,7 @@ class OtpVerificationScreen extends StatelessWidget {
                       size: 20.sp,
                     ),
                     errorText: controller.otpError.value,
-                    label: 'OTP Code',
+                    label: tr.otpCodeLabel,
                     keyboardType: TextInputType.number,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
@@ -75,7 +78,7 @@ class OtpVerificationScreen extends StatelessWidget {
                   )),
               SizedBox(height: 32.h),
               Obx(() => CustomElevatedButton(
-                    label: 'Verify OTP',
+                    label: tr.verifyOtpButton,
                     onPressed: controller.verifyOtp,
                     isLoading: controller.isLoading.value,
                   )),
@@ -84,7 +87,7 @@ class OtpVerificationScreen extends StatelessWidget {
                 child: TextButton(
                   onPressed: controller.isLoading.value ? null : controller.resendOtp,
                   child: Text(
-                    "Didn't receive code? Resend",
+                    tr.didNotReceiveCodeResend,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,

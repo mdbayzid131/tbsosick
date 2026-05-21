@@ -413,7 +413,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  "No events on this date.\nPlease create an event or select another date.",
+                  AppLocalizations.of(context)!.noEventsOnDate,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.arimo(
                     fontSize: 14.sp,
@@ -472,8 +472,6 @@ class _CalendarPageState extends State<CalendarPage> {
     String? patient,
   }) {
     final bool isSurgery = type.toUpperCase() == 'SURGERY';
-    final Color cardBgColor =
-        isSurgery ? const Color(0xFFF9F5FF) : const Color(0xFFFFFBEB);
     final Color accentColor = isSurgery ? typeColor : const Color(0xFFD97706);
 
     return _buildCard(
@@ -733,7 +731,7 @@ class _CalendarPageState extends State<CalendarPage> {
         // title: Text(AppLocalizations.of(context)!.deleteEvent),
         // content: Text(AppLocalizations.of(context)!.deleteEventConfirmation),
         title: Text(
-          "Delete Event",
+          AppLocalizations.of(context)!.deleteEvent,
           style: GoogleFonts.arimo(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
@@ -741,7 +739,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
         content: Text(
-          "Are you sure you want to delete this event?",
+          AppLocalizations.of(context)!.deleteEventConfirm,
           style: GoogleFonts.arimo(
             fontSize: 14.sp,
             color: const Color(0xff79747E),

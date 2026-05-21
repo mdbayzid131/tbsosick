@@ -89,7 +89,7 @@ void showForgotPasswordSuccessBottomSheet(BuildContext context, String email) {
                   SizedBox(height: 12.h),
 
                   Text(
-                    "We have sent a verification code to $email. Please check your inbox.",
+                    tr.verificationCodeSentEmail(email),
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       color: const Color(0xff8E8E93),

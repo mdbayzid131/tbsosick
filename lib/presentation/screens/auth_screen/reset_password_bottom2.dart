@@ -16,6 +16,8 @@ import 'package:tbsosick/presentation/screens/auth_screen/reset_password_success
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_field.dart';
 
+import 'package:tbsosick/l10n/app_localizations.dart';
+
 void showResetPasswordBottomSheet2(BuildContext context, String token) {
   final obscureText = true.obs;
   final confirmObscureText = true.obs;
@@ -70,6 +72,7 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
+      final tr = AppLocalizations.of(context)!;
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -91,7 +94,7 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Reset Password',
+                        tr.resetPasswordTitle,
                         style: GoogleFonts.arimo(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w700,
@@ -117,7 +120,7 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
                   SizedBox(height: 16.h),
 
                   Text(
-                    "Enter your new password below.",
+                    tr.enterNewPasswordBelow,
                     style: GoogleFonts.arimo(
                       fontSize: 16.sp,
                       color: Color(0xff8E8E93),
@@ -132,7 +135,7 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
                       readOnly: false,
                       isLabelVisible: false,
                       controller: newPasswordController,
-                      hintText: 'New Password',
+                      hintText: tr.newPasswordHint,
                       errorText: passwordError.value,
                       obscureText: obscureText.value,
                       prefixIcon: GestureDetector(
@@ -159,7 +162,7 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
                       readOnly: false,
                       isLabelVisible: false,
                       controller: confirmPasswordController,
-                      hintText: 'Confirm New Password',
+                      hintText: tr.confirmNewPasswordHint,
                       errorText: confirmPasswordError.value,
                       obscureText: confirmObscureText.value,
                       prefixIcon: GestureDetector(
@@ -183,7 +186,7 @@ void showResetPasswordBottomSheet2(BuildContext context, String token) {
                   // Submit Button
                   Obx(
                     () => CustomElevatedButton(
-                      label: 'Reset Password',
+                      label: tr.resetPasswordTitle,
                       onPressed: resetPassword,
                       isLoading: isLoading.value,
                     ),

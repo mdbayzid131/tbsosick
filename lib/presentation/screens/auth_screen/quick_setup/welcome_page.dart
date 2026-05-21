@@ -51,7 +51,7 @@ class WelcomePage extends StatelessWidget {
                 children: [
                   SizedBox(height: 20.h),
                   CustomTextField(
-                    hintText: 'Jon',
+                    hintText: tr.john,
                     label: tr.firstName,
                     fillColior: Colors.white,
                     controller: firstNameController,
@@ -59,7 +59,7 @@ class WelcomePage extends StatelessWidget {
                   ),
                   SizedBox(height: 20.h),
                   CustomTextField(
-                    hintText: 'Doe',
+                    hintText: tr.doe,
                     label: tr.lastName,
                     fillColior: Colors.white,
                     controller: lastNameController,

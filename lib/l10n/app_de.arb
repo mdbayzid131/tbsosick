@@ -365,5 +365,32 @@
   },
   "at": "um",
   "selectDate": "Datum auswählen",
-  "selectTime": "Zeit auswählen"
+  "selectTime": "Zeit auswählen",
+  "otpVerificationTitle": "OTP-Verifizierung",
+  "enterVerificationCode": "Verifizierungscode eingeben",
+  "verificationCodeSentEmail": "Wir haben einen Verifizierungscode an {email} gesendet. Bitte überprüfen Sie Ihren Posteingang.",
+  "@verificationCodeSentEmail": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "otpCodeLabel": "OTP-Code",
+  "verifyOtpButton": "OTP verifizieren",
+  "didNotReceiveCodeResend": "Kein Code erhalten? Erneut senden",
+  "enterNewPasswordBelow": "Geben Sie unten Ihr neues Passwort ein.",
+  "newPasswordHint": "Neues Passwort",
+  "confirmNewPasswordHint": "Neues Passwort bestätigen",
+  "success": "Erfolgreich!",
+  "passwordResetSuccessful": "Passwort erfolgreich zurückgesetzt!",
+  "loginWithNewPassword": "Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+  "done": "Fertig",
+  "noEventsOnDate": "Keine Ereignisse an diesem Datum.\nBitte erstellen Sie ein Ereignis oder wählen Sie ein anderes Datum.",
+  "deleteEvent": "Ereignis löschen",
+  "deleteEventConfirm": "Sind Sie sicher, dass Sie dieses Ereignis löschen möchten?",
+  "egTwoHint": "z. B. 2",
+  "generalAnesthesia": "Allgemeinanästhesie",
+  "john": "Jon",
+  "doe": "Doe"
 }

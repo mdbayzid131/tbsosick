@@ -221,7 +221,7 @@ class StepCreateCard2 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.r),
               ),
             ),
-            label: tr.startProcedure,
+            label: tr.timeOut,
           ),
 
           SizedBox(height: 20.h),
