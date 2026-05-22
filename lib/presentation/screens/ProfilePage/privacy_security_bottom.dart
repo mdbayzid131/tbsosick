@@ -119,100 +119,100 @@ class _PrivacyAndSecurityPageState extends State<PrivacyAndSecurityPage> {
 
               SizedBox(height: 28.h),
 
-              // Preferences settings section
-              Text(
-                tr.preferences.toUpperCase(),
-                style: GoogleFonts.arimo(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF9CA3AF),
-                  letterSpacing: 0.5,
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(
-                    color: const Color(0xFFE5E7EB),
-                    width: 1.w,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 8.r,
-                      offset: Offset(0, 2.h),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 20.h,
-                  ),
-                  child: Column(
-                    children: [
-                      // Share Data option
-                      Obx(
-                        () => _buildSettingItem(
-                          icon: Icons.lock_outline,
-                          title: tr.shareData,
-                          description: tr.shareDataDesc,
-                          value: controller.shareData.value,
-                          onChanged: (value) {
-                            controller.shareData.value = value;
-                          },
-                        ),
-                      ),
+              // // Preferences settings section
+              // Text(
+              //   tr.preferences.toUpperCase(),
+              //   style: GoogleFonts.arimo(
+              //     fontSize: 12.sp,
+              //     fontWeight: FontWeight.w600,
+              //     color: const Color(0xFF9CA3AF),
+              //     letterSpacing: 0.5,
+              //   ),
+              // ),
+              // SizedBox(height: 12.h),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(16.r),
+              //     border: Border.all(
+              //       color: const Color(0xFFE5E7EB),
+              //       width: 1.w,
+              //     ),
+              //     boxShadow: [
+              //       BoxShadow(
+              //         color: Colors.black.withValues(alpha: 0.04),
+              //         blurRadius: 8.r,
+              //         offset: Offset(0, 2.h),
+              //       ),
+              //     ],
+              //   ),
+              //   child: Padding(
+              //     padding: EdgeInsets.symmetric(
+              //       horizontal: 16.w,
+              //       vertical: 20.h,
+              //     ),
+              //     child: Column(
+              //       children: [
+              //         // Share Data option
+              //         // Obx(
+              //         //   () => _buildSettingItem(
+              //         //     icon: Icons.lock_outline,
+              //         //     title: tr.shareData,
+              //         //     description: tr.shareDataDesc,
+              //         //     value: controller.shareData.value,
+              //         //     onChanged: (value) {
+              //         //       controller.shareData.value = value;
+              //         //     },
+              //         //   ),
+              //         // ),
 
-                      Divider(height: 32.h, color: const Color(0xFFF3F4F6)),
+              //         // Divider(height: 32.h, color: const Color(0xFFF3F4F6)),
 
-                      // Email Notifications option
-                      Obx(
-                        () => _buildSettingItem(
-                          icon: Icons.notifications_outlined,
-                          title: tr.emailNotifications,
-                          description: tr.emailNotificationsDesc,
-                          value: controller.emailNotifications.value,
-                          onChanged: (value) {
-                            controller.emailNotifications.value = value;
-                          },
-                        ),
-                      ),
+              //         // // Email Notifications option
+              //         // Obx(
+              //         //   () => _buildSettingItem(
+              //         //     icon: Icons.notifications_outlined,
+              //         //     title: tr.emailNotifications,
+              //         //     description: tr.emailNotificationsDesc,
+              //         //     value: controller.emailNotifications.value,
+              //         //     onChanged: (value) {
+              //         //       controller.emailNotifications.value = value;
+              //         //     },
+              //         //   ),
+              //         // ),
 
-                      Divider(height: 32.h, color: const Color(0xFFF3F4F6)),
+              //         // Divider(height: 32.h, color: const Color(0xFFF3F4F6)),
 
-                      // Push Notifications option
-                      Obx(
-                        () => _buildSettingItem(
-                          icon: Icons.notifications_outlined,
-                          title: tr.pushNotifications,
-                          description: tr.pushNotificationsDesc,
-                          value: controller.pushNotifications.value,
-                          onChanged: (value) {
-                            controller.pushNotifications.value = value;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              //         // // Push Notifications option
+              //         // Obx(
+              //         //   () => _buildSettingItem(
+              //         //     icon: Icons.notifications_outlined,
+              //         //     title: tr.pushNotifications,
+              //         //     description: tr.pushNotificationsDesc,
+              //         //     value: controller.pushNotifications.value,
+              //         //     onChanged: (value) {
+              //         //       controller.pushNotifications.value = value;
+              //         //     },
+              //         //   ),
+              //         // ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
 
-              SizedBox(height: 36.h),
+              // SizedBox(height: 36.h),
 
-              // Save button
-              SizedBox(
-                width: double.infinity,
-                child: CustomElevatedButton(
-                  onPressed: () {
-                    Helpers.showSuccess("Settings saved successfully!");
-                    Get.back();
-                  },
-                  label: tr.saveChanges,
-                ),
-              ),
+              // // Save button
+              // SizedBox(
+              //   width: double.infinity,
+              //   child: CustomElevatedButton(
+              //     onPressed: () {
+              //       Helpers.showSuccess("Settings saved successfully!");
+              //       Get.back();
+              //     },
+              //     label: tr.saveChanges,
+              //   ),
+              // ),
             ],
           ),
         ),
