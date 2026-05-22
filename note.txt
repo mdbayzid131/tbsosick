@@ -18,3 +18,7 @@
 
 
   localization baki
+
+  
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  

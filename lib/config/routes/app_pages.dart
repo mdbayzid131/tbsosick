@@ -121,6 +121,6 @@ final pages = [
   ),
   GetPage(
     name: AppRoutes.eventDetails,
-    page: () => ProcedureDetailsScreen(id: Get.arguments as String),
+    page: () => ProcedureDetailsScreen(id: (Get.arguments as String?) ?? ''),
   ),
 ];

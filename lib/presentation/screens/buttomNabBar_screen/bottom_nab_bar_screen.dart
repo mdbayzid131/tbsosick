@@ -13,6 +13,7 @@ import '../calendar_page/calendar_page.dart';
 import '../home/Preference card/new_preference_card.dart';
 import '../home/home_screen.dart';
 import '../library/library_screen.dart';
+import 'package:tbsosick/core/widgets/safe_network_image.dart';
 
 class BottomNabBarScreen extends StatelessWidget {
   BottomNabBarScreen({super.key});
@@ -131,29 +132,27 @@ class CustomBottomBar extends StatelessWidget {
           child: Builder(
             builder: (context) {
               final profileUrl = nav.user.value?.profilePicture;
+              final fallback = Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFF8E3DF6),
+                  shape: BoxShape.circle,
+                ),
+                child: const Center(
+                  child: Icon(Icons.person, size: 18, color: Colors.white),
+                ),
+              );
+
               if (profileUrl != null && profileUrl.isNotEmpty) {
-                return Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(profileUrl),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                return SafeNetworkImage(
+                  imageUrl: profileUrl,
+                  width: 35.w,
+                  height: 35.w,
+                  fit: BoxFit.cover,
+                  borderRadius: BorderRadius.circular(100.r),
+                  errorWidget: fallback,
                 );
               } else {
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF8E3DF6),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.person,
-                      size: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                );
+                return fallback;
               }
             },
           ),

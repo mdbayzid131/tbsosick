@@ -1,10 +1,11 @@
 class ApiConstants {
   // Base URLs
-  static const String baseUrl = 'http://10.10.7.47:5001/api/v1';
+  static const String baseUrl = 'https://api.smrtscrub.app/api/v1';
   // static const String baseUrl = 'https://nayem5001.binarybards.online/api/v1';
   // static const String apiVersion = '';
   //
   // Auth Endpoints
+    static const String changePassword = '/auth/change-password';
   static const String login = '/auth/login';
   static const String signup = '/users';
   static const String logout = '/auth/logout';

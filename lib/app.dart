@@ -10,7 +10,7 @@ import 'package:tbsosick/l10n/app_localizations.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-  final LanguageController languageController = Get.put(LanguageController());
+  final LanguageController languageController = Get.put(LanguageController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {

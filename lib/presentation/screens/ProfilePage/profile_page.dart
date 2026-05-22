@@ -189,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               iconColor: const Color(0xFF6B7280),
                               title: tr.privacyAndSecurity,
                               onTap: () {
-                                showPrivacyAndSecurityBottomSheet(context);
+                                Get.to(() => const PrivacyAndSecurityPage());
                               },
                             ),
                             Divider(

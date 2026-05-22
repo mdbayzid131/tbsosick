@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
@@ -139,11 +139,11 @@ class BottomNabBarController extends GetxController {
         libraryCards.assignAll(result.data);
         hasMoreLibrary.value = _libraryPage < result.meta.totalPages;
       }
+      if(response.statusCode == 402 || response.statusCode == 403){
+            isLibrarySubscriptionInactive.value = true;
+      }
     } catch (e) {
-      if (e is DioException &&
-          (e.response?.statusCode == 402 || e.response?.statusCode == 403)) {
-        isLibrarySubscriptionInactive.value = true;
-      } else {
+       {
         Helpers.error("Error loading library cards: $e");
       }
     } finally {

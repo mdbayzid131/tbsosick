@@ -276,6 +276,8 @@ class Helpers {
 
   // ──────────────────── DEBOUNCE ────────────────────
 
+  static final Map<String, bool> _debounceTimers = {};
+
   /// Debounce a function call (useful for search inputs)
   static void debounce(
     String tag,
@@ -283,8 +285,14 @@ class Helpers {
     Duration duration = const Duration(milliseconds: 500),
   }) {
     if (GetUtils.isNull(tag)) return;
-    // Cancel previous timer if exists
-    Get.log('Debounce: $tag');
-    Future.delayed(duration, callback);
+
+    // If already waiting, skip
+    if (_debounceTimers[tag] == true) return;
+
+    _debounceTimers[tag] = true;
+    Future.delayed(duration, () {
+      _debounceTimers.remove(tag);
+      callback();
+    });
   }
 }

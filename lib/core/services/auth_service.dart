@@ -20,8 +20,8 @@ class AuthService extends GetxService {
   @override
   void onInit() {
     super.onInit();
-    // Explicitly find ApiClient to ensure it's initialized before AuthRepo
-    _authRepo = AuthRepo(apiClient: Get.put(ApiClient()));
+    // Find the already-registered ApiClient from InitialBinding
+    _authRepo = AuthRepo(apiClient: Get.find<ApiClient>());
 
     // Check initial login state
     _checkLoginStatus();
@@ -240,7 +240,6 @@ class AuthService extends GetxService {
       await _authRepo.changePassword(
         currentPassword: currentPassword,
         newPassword: newPassword,
-        confirmPassword: confirmPassword,
       );
     } catch (e) {
       rethrow;
