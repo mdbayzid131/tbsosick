@@ -47,7 +47,7 @@ class Helpers {
   }
 
   // ──────────────────── LOGGING ────────────────────
-
+  
 
   /// General debug log (only in debug mode)
   static void debug(String message) {
@@ -119,97 +119,148 @@ class Helpers {
     }
   }
 
-  // ──────────────────── SNACKBAR (IPHONE BLUR + IMAGE STYLE) ────────────────────
+  // ──────────────────── SNACKBAR (DUAL MODE) ────────────────────
 
-  /// Show a premium blurred snackbar matching the image layout
+  /// Show a snackbar.
+  /// [useGetxSnackbar] = true (default) → uses Get.snackbar with type-specific colors.
+  /// [useGetxSnackbar] = false → uses the premium blurred iPhone-style snackbar.
   static void showCustomSnackBar(
     String message, {
     String? title,
     SnackBarType type = SnackBarType.info,
     Duration duration = const Duration(seconds: 3),
+    bool useGetxSnackbar = true,
   }) {
     final Map<String, dynamic> config = _getSnackBarConfig(type);
 
-    Get.rawSnackbar(
-      messageText: ClipRRect(
-        borderRadius: BorderRadius.circular(16.r),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // iPhone Blur
-          child: Container(
-            height: 64.h,
-            decoration: BoxDecoration(
-              color: (config['bg'] as Color).withValues(alpha: 0.7), // Transparent BG
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1,
+    if (useGetxSnackbar) {
+      // ── GetX Snackbar (default) ──────────────────────────────
+      Get.snackbar(
+        title ?? config['defaultTitle'] as String,
+        message,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: (config['bg'] as Color).withValues(alpha: 0.92),
+        colorText: Colors.white,
+        icon: Icon(
+          config['icon'] as IconData,
+          color: Colors.white,
+          size: 26.sp,
+        ),
+        duration: duration,
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.easeOutCubic,
+        reverseAnimationCurve: Curves.easeInCubic,
+        animationDuration: const Duration(milliseconds: 450),
+        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        borderRadius: 14.r,
+        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+        titleText: Text(
+          title ?? config['defaultTitle'] as String,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
+        messageText: Text(
+          message,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w400,
+            color: Colors.white.withValues(alpha: 0.9),
+          ),
+        ),
+      );
+    } else {
+      // ── Custom Blur / Glassmorphism Snackbar ─────────────────
+      Get.rawSnackbar(
+        messageText: ClipRRect(
+          borderRadius: BorderRadius.circular(16.r),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              height: 64.h,
+              decoration: BoxDecoration(
+                color: (config['bg'] as Color).withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  width: 1,
+                ),
               ),
-            ),
-            child: Row(
-              children: [
-                // Left Icon Area
-                Container(
-                  width: 56.w,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    color: (config['iconBg'] as Color).withValues(alpha: 0.8),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.r),
-                      bottomLeft: Radius.circular(16.r),
+              child: Row(
+                children: [
+                  // Left Icon Area
+                  Container(
+                    width: 56.w,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      color: (config['iconBg'] as Color).withValues(alpha: 0.8),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16.r),
+                        bottomLeft: Radius.circular(16.r),
+                      ),
+                    ),
+                    child: Icon(
+                      config['icon'],
+                      color: Colors.white,
+                      size: 28.sp,
                     ),
                   ),
-                  child: Icon(config['icon'], color: Colors.white, size: 28.sp),
-                ),
-                SizedBox(width: 16.w),
-                // Text Content
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title ?? config['defaultTitle'],
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                  SizedBox(width: 16.w),
+                  // Text Content
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title ?? config['defaultTitle'],
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      Text(
-                        message,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white.withValues(alpha: 0.9),
+                        Text(
+                          message,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white.withValues(alpha: 0.9),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                // Close Button
-                IconButton(
-                  onPressed: () => Get.back(),
-                  icon: Icon(
-                    Icons.close_rounded,
-                    color: Colors.white.withValues(alpha: 0.5),
-                    size: 20.sp,
+                  // Close Button
+                  IconButton(
+                    onPressed: () => Get.back(),
+                    icon: Icon(
+                      Icons.close_rounded,
+                      color: Colors.white.withValues(alpha: 0.5),
+                      size: 20.sp,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      backgroundColor: Colors.transparent,
-      snackPosition: SnackPosition.TOP,
-      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      duration: duration,
-      isDismissible: true,
-      animationDuration: const Duration(milliseconds: 500),
-      snackStyle: SnackStyle.FLOATING,
-    );
+        backgroundColor: Colors.transparent,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        duration: duration,
+        isDismissible: true,
+        animationDuration: const Duration(milliseconds: 500),
+        snackStyle: SnackStyle.FLOATING,
+      );
+    }
   }
 
   static Map<String, dynamic> _getSnackBarConfig(SnackBarType type) {
