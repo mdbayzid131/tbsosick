@@ -93,7 +93,7 @@ class SubscriptionController extends GetxController with GetSingleTickerProvider
     final String userId = await StorageService.getString(StorageConstants.userId);
     if (userId.isEmpty) {
       Helpers.error('IAP: Error - User ID is empty');
-      Get.snackbar('Error', 'User not logged in');
+      Helpers.showError('User not logged in');
       return;
     }
 
@@ -119,7 +119,7 @@ class SubscriptionController extends GetxController with GetSingleTickerProvider
       await _iapService.buySubscription(product, userId);
     } else {
       Helpers.error('IAP: Error - Product not found in store for selected plan');
-      Get.snackbar('Error', 'Product not available in store');
+      Helpers.showError('Product not available in store');
     }
   }
 

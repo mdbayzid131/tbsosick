@@ -36,6 +36,6 @@ class ApiChecker {
     if (data is Map && data['message'] != null) {
       return data['message'].toString();
     }
-    return fallback;
+    return response.statusMessage ?? fallback;
   }
 }

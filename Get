@@ -1,0 +1,360 @@
+Launching lib\main.dart on RMX3930 in debug mode...
+√ Built build\app\outputs\flutter-apk\app-debug.apk
+D/FlutterJNI(14072): Beginning load of flutter...
+D/FlutterJNI(14072): flutter (null) was loaded normally!
+I/flutter (14072): [IMPORTANT:flutter/shell/platform/android/android_context_vk_impeller.cc(62)] Using the Impeller rendering backend (Vulkan).
+D/FlutterRenderer(14072): Width is zero. 0,0
+D/FlutterRenderer(14072): Width is zero. 0,0
+D/FlutterJNI(14072): Sending viewport metrics to the engine.
+D/FlutterJNI(14072): Sending viewport metrics to the engine.
+Connecting to VM Service at ws://127.0.0.1:65477/zliXs_Url6k=/ws
+Connected to the VM Service.
+I/flutter (14072):
+I/flutter (14072): ℹ️ℹ️ℹ️ℹ INFO: Firebase initialized: 1 apps
+I/flutter (14072):
+[GETX] Instance "LanguageController" has been created
+[GETX] Instance "LanguageController" has been initialized
+[GETX] Instance "StorageService" has been created
+[GETX] Instance "StorageService" has been initialized
+[GETX] Instance "ApiClient" has been created
+[GETX] Instance "ApiClient" has been initialized
+[GETX] Instance "AuthService" has been created
+[GETX] Instance "AuthService" has been initialized
+[GETX] Instance "AuthController" has been created
+[GETX] Instance "AuthController" has been initialized
+[GETX] Instance "UserDataRepository" has been created
+[GETX] Instance "IapService" has been created
+I/flutter (14072):
+I/flutter (14072): 🔍🔍🔍 DEBUG: IAP: Initializing...
+I/flutter (14072):
+[GETX] Instance "IapService" has been initialized
+[GETX] Instance "InternetController" has been created
+[GETX] Instance "InternetController" has been initialized
+[GETX] Instance "LoginController" has been created
+[GETX] Instance "LoginController" has been initialized
+[GETX] Instance "ForgatePasswordController" has been created
+[GETX] Instance "ForgatePasswordController" has been initialized
+[GETX] Instance "ResetPasswordController" has been created
+[GETX] Instance "ResetPasswordController" has been initialized
+[GETX] Instance "SignUpController" has been created
+[GETX] Instance "SignUpController" has been initialized
+[GETX] Instance "GetMaterialController" has been created
+[GETX] Instance "GetMaterialController" has been initialized
+[GETX] GOING TO ROUTE /splash
+[GETX] Instance "SplashController" has been created
+[GETX] Instance "SplashController" has been initialized
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=0/1 time=33726410347260 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+I/Choreographer(14072): Skipped 124 frames!  The application may be doing too much work on its main thread.
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/subscriptions/me
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072):
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=1/2 time=33726620616760 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/ProfileInstaller(14072): Installing profile for com.tbsosick.smrtscrub
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=2/3 time=33726768741875 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/FlutterJNI(14072): Sending viewport metrics to the engine.
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=3/4 time=33726811762913 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [VRI[MainActivity]#0(BLAST Consumer)0](id:36f800000000,api:1,p:14072,c:14072) dequeueBuffer: allocating a new buffer for slot 0
+D/mali_gralloc(14072): register: id=262000013d2, handle=0xb400007340fe5c70, importpid=14072
+D/BufferQueueProducer(14072): [VRI[MainActivity]#0(BLAST Consumer)0](id:36f800000000,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [VRI[MainActivity]#0(BLAST Consumer)0](id:36f800000000,api:1,p:14072,c:14072) requestBuffer: slot 0
+D/BufferQueueProducer(14072): [VRI[MainActivity]#0(BLAST Consumer)0](id:36f800000000,api:1,p:14072,c:14072) queueBuffer: slot=0/1 time=33726823886952 dataSpace=0 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=FREEZE
+D/BufferQueueProducer(14072): [VRI[MainActivity]#0(BLAST Consumer)0](id:36f800000000,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+I/FLTFireBGExecutor(14072): Creating background FlutterEngine instance, with args: [--start-paused, --enable-dart-profiling]
+D/FLTFireContextHolder(14072): received application context.
+I/flutter (14072): [IMPORTANT:flutter/shell/platform/android/android_context_vk_impeller.cc(62)] Using the Impeller rendering backend (Vulkan).
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=4/5 time=33727551137298 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=0/6 time=33727626264182 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+I/flutter (14072):
+I/flutter (14072): 🔍🔍🔍 DEBUG: IAP: Store available: true
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): 🔍🔍🔍 DEBUG: IAP: Fetching products for IDs: [smrtscrub_subscription]
+I/flutter (14072):
+I/SurfaceControl(14072): SurfaceControl hide: sc Surface(name=Surface(name=f662389 InputMethod#96)/@0xb046f45 - animation-leash of insets_animation#8092)/@0xc0f4fa7 tx=60438779789352 ,layerId= 8092 caller = android.view.InsetsSourceConsumer.applyRequestedVisibilityToControl:474 android.view.InsetsSourceConsumer.setControl:197 android.view.ImeInsetsSourceConsumer.setControl:222 android.view.InsetsController.onControlsChanged:998 android.view.ViewRootImpl.handleInsetsControlChanged:2446 android.view.ViewRootImpl.-$$Nest$mhandleInsetsControlChanged:0 android.view.ViewRootImpl$W.insetsControlChanged:12157 android.app.servertransaction.WindowStateInsetsControlChangeItem.execute:52 android.app.servertransaction.WindowStateTransactionItem.execute:59 android.app.servertransaction.TransactionExecutor.executeNonLifecycleItem:174
+W/BillingClient(14072): getSkuDetails() failed for queryProductDetailsAsync. Response code: 2
+W/BillingClient(14072): getSkuDetails() failed for queryProductDetailsAsync. Response code: 2
+I/flutter (14072):
+I/flutter (14072): 🔍🔍🔍 DEBUG: IAP: Fetch result - Found: 0, Not Found: [smrtscrub_subscription]
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): !!! WARNING: IAP: No products were found in the store. Check your SKUs/IDs.
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/subscriptions/me
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072):
+I/FLTFireMsgService(14072): FlutterFirebaseMessagingBackgroundService started!
+I/flutter (14072):
+I/flutter (14072): ┌ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): │ [ GET 200] https://api.smrtscrub.app/api/v1/subscriptions/me
+I/flutter (14072): │ Data: {success: true, statusCode: 200, message: Subscription retrieved successfully, data: {userId: 6a10aaf9e4a28588138e21be, plan: FREE, status: active}}
+I/flutter (14072): └ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ℹ️ℹ️ℹ️ℹ INFO: IAP: Current Plan: FREE
+I/flutter (14072):
+[GETX] GOING TO ROUTE /bottom-nav-bar
+[GETX] REMOVING ROUTE /splash
+[GETX] Instance "HomePageController" has been created
+[GETX] Instance "HomePageController" has been initialized
+[GETX] Instance "PrefranceCardDetailsController" has been created
+[GETX] Instance "PrefranceCardDetailsController" has been initialized
+[GETX] Instance "NotificationController" has been created
+[GETX] Instance "NotificationController" has been initialized
+[GETX] Instance "CalendarController" has been created
+[GETX] Instance "CalendarController" has been initialized
+[GETX] Instance "BottomNabBarController" has been created
+[GETX] Instance "BottomNabBarController" has been initialized
+[GETX] Instance "ProfileController" has been created
+[GETX] Instance "ProfileController" has been initialized
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=1/7 time=33730903581141 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+I/flutter (14072): Error: google_fonts was unable to load font Arimo-Medium because the following exception occurred:
+I/flutter (14072): Exception: GoogleFonts.config.allowRuntimeFetching is false but font Arimo-Medium was not found in the application assets. Ensure Arimo-Medium.ttf exists in a folder that is included in your pubspec's assets.
+I/flutter (14072): See https://docs.flutter.dev/development/data-and-backend/networking#platform-notes.
+I/flutter (14072): If troubleshooting doesn't solve the problem, please file an issue at https://github.com/flutter/flutter/issues/new/choose.
+E/flutter (14072): [ERROR:flutter/runtime/dart_vm_initializer.cc(40)] Unhandled Exception: Exception: GoogleFonts.config.allowRuntimeFetching is false but font Arimo-Medium was not found in the application assets. Ensure Arimo-Medium.ttf exists in a folder that is included in your pubspec's assets.
+E/flutter (14072): #0      loadFontIfNecessary (package:google_fonts/src/google_fonts_base.dart:179:7)
+E/flutter (14072): <asynchronous suspension>
+E/flutter (14072): #1      googleFontsTextStyle.<anonymous closure> (package:google_fonts/src/google_fonts_base.dart:112:22)
+E/flutter (14072): <asynchronous suspension>
+E/flutter (14072):
+I/flutter (14072): Error: google_fonts was unable to load font Arimo-SemiBold because the following exception occurred:
+I/flutter (14072): Exception: GoogleFonts.config.allowRuntimeFetching is false but font Arimo-SemiBold was not found in the application assets. Ensure Arimo-SemiBold.ttf exists in a folder that is included in your pubspec's assets.
+I/flutter (14072): See https://docs.flutter.dev/development/data-and-backend/networking#platform-notes.
+I/flutter (14072): If troubleshooting doesn't solve the problem, please file an issue at https://github.com/flutter/flutter/issues/new/choose.
+W/osick.smrtscrub(14072): userfaultfd: MOVE ioctl seems unsupported: Connection timed out
+E/flutter (14072): [ERROR:flutter/runtime/dart_vm_initializer.cc(40)] Unhandled Exception: Exception: GoogleFonts.config.allowRuntimeFetching is false but font Arimo-SemiBold was not found in the application assets. Ensure Arimo-SemiBold.ttf exists in a folder that is included in your pubspec's assets.
+E/flutter (14072): #0      loadFontIfNecessary (package:google_fonts/src/google_fonts_base.dart:179:7)
+E/flutter (14072): <asynchronous suspension>
+E/flutter (14072): #1      googleFontsTextStyle.<anonymous closure> (package:google_fonts/src/google_fonts_base.dart:112:22)
+E/flutter (14072): <asynchronous suspension>
+E/flutter (14072):
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/notifications/me
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/users/profile
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/preference-cards/stats
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/users/me/favorites?page=1&limit=10
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): │ Query: {page: 1, limit: 10}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/preference-cards?page=1&limit=10
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): │ Query: {page: 1, limit: 10}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/specialties?limit=100
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): │ Query: {limit: 100}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/events/calendar-highlights?from=2026-06-01&to=2026-06-30
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): │ Query: {from: 2026-06-01, to: 2026-06-30}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/events?date=2026-06-02
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): │ Query: {date: 2026-06-02}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/users/profile
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ GET https://api.smrtscrub.app/api/v1/legal
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072):
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=2/8 time=33747209810822 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+[GETX] "SplashController" onDelete() called
+[GETX] "SplashController" deleted from memory
+I/flutter (14072):
+I/flutter (14072): ┌ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): │ [ GET 200] https://api.smrtscrub.app/api/v1/subscriptions/me
+I/flutter (14072): │ Data: {success: true, statusCode: 200, message: Subscription retrieved successfully, data: {userId: 6a10aaf9e4a28588138e21be, plan: FREE, status: active}}
+I/flutter (14072): └ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ℹ️ℹ️ℹ️ℹ INFO: IAP: Current Plan: FREE
+I/flutter (14072):
+W/WindowOnBackDispatcher(14072): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher(14072): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+D/FlutterJNI(14072): Sending viewport metrics to the engine.
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=3/9 time=33747355615514 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+I/flutter (14072): Error: google_fonts was unable to load font Arimo-SemiBold because the following exception occurred:
+I/flutter (14072): Exception: GoogleFonts.config.allowRuntimeFetching is false but font Arimo-SemiBold was not found in the application assets. Ensure Arimo-SemiBold.ttf exists in a folder that is included in your pubspec's assets.
+I/flutter (14072): See https://docs.flutter.dev/development/data-and-backend/networking#platform-notes.
+I/flutter (14072): If troubleshooting doesn't solve the problem, please file an issue at https://github.com/flutter/flutter/issues/new/choose.
+E/flutter (14072): [ERROR:flutter/runtime/dart_vm_initializer.cc(40)] Unhandled Exception: Exception: GoogleFonts.config.allowRuntimeFetching is false but font Arimo-SemiBold was not found in the application assets. Ensure Arimo-SemiBold.ttf exists in a folder that is included in your pubspec's assets.
+E/flutter (14072): #0      loadFontIfNecessary (package:google_fonts/src/google_fonts_base.dart:179:7)
+E/flutter (14072): <asynchronous suspension>
+E/flutter (14072): #1      googleFontsTextStyle.<anonymous closure> (package:google_fonts/src/google_fonts_base.dart:112:22)
+E/flutter (14072): <asynchronous suspension>
+E/flutter (14072):
+I/flutter (14072):
+I/flutter (14072): 🔍🔍🔍 DEBUG: 🔐 Push Notification Permission Status: AuthorizationStatus.authorized
+I/flutter (14072):
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=4/10 time=33770116851921 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+I/flutter (14072):
+I/flutter (14072): ┌ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): │ [ GET 200] https://api.smrtscrub.app/api/v1/events/calendar-highlights?from=2026-06-01&to=2026-06-30
+I/flutter (14072): │ Data: {success: true, statusCode: 200, message: Calendar highlights fetched successfully, data: {}}
+I/flutter (14072): └ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ℹ️ℹ️ℹ️ℹ INFO: 🔑 FCM Token: cgDYAiAdToWqBlWoYh3fcw:APA91bHx2SLcGrI8Z-8ONGUHabdKghNXjijLiuq8W4rqgW2ooPTxtIyfHbdlq0tUI1fG4IdnU-pKMgmYOZ0tFuSrzHULt3WwlylKwwiZsOCx9ByYXR4onnQ
+I/flutter (14072):
+I/flutter (14072): Error: google_fonts was unable to load font Arimo-SemiBold because the following exception occurred:
+I/flutter (14072): Exception: GoogleFonts.config.allowRuntimeFetching is false but font Arimo-SemiBold was not found in the application assets. Ensure Arimo-SemiBold.ttf exists in a folder that is included in your pubspec's assets.
+I/flutter (14072): See https://docs.flutter.dev/development/data-and-backend/networking#platform-notes.
+I/flutter (14072): If troubleshooting doesn't solve the problem, please file an issue at https://github.com/flutter/flutter/issues/new/choose.
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=0/11 time=33770286244421 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+E/flutter (14072): [ERROR:flutter/runtime/dart_vm_initializer.cc(40)] Unhandled Exception: Exception: GoogleFonts.config.allowRuntimeFetching is false but font Arimo-SemiBold was not found in the application assets. Ensure Arimo-SemiBold.ttf exists in a folder that is included in your pubspec's assets.
+E/flutter (14072): #0      loadFontIfNecessary (package:google_fonts/src/google_fonts_base.dart:179:7)
+E/flutter (14072): <asynchronous suspension>
+E/flutter (14072): #1      googleFontsTextStyle.<anonymous closure> (package:google_fonts/src/google_fonts_base.dart:112:22)
+E/flutter (14072): <asynchronous suspension>
+E/flutter (14072):
+I/flutter (14072):
+I/flutter (14072): ┌ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072): │ PATCH https://api.smrtscrub.app/api/v1/users/profile
+I/flutter (14072): │ Headers: {Content-Type: application/json, Authorization: ***}
+I/flutter (14072): │ Body: {deviceToken: cgDYAiAdToWqBlWoYh3fcw:APA91bHx2SLcGrI8Z-8ONGUHabdKghNXjijLiuq8W4rqgW2ooPTxtIyfHbdlq0tUI1fG4IdnU-pKMgmYOZ0tFuSrzHULt3WwlylKwwiZsOCx9ByYXR4onnQ}
+I/flutter (14072): └ ➡️➡️➡️➡️ REQUEST ══════════════════════════════════════ ➡️➡️➡️➡️
+I/flutter (14072):
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=1/12 time=33773656847034 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+I/flutter (14072):
+I/flutter (14072): ┌ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): │ [ GET 200] https://api.smrtscrub.app/api/v1/preference-cards/stats
+I/flutter (14072): │ Data: {success: true, statusCode: 200, message: Card statistics retrieved successfully, data: {publicCards: 5, myCards: 0}}
+I/flutter (14072): └ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): │ [ GET 200] https://api.smrtscrub.app/api/v1/notifications/me
+I/flutter (14072): │ Data: {success: true, statusCode: 200, message: OK, meta: {limit: 20, nextCursor: null, hasMore: false, unreadCount: 5}, data: [{id: 6a19fd6f480a44cbfe01723f, userId: 6a10aaf9e4a28588138e21be, type: PREFERENCE_CARD_CREATED, title: New Card Added, subtitle: bzzb — ysbs, resourceType: PreferenceCard, resourceId: 6a19fd6f480a44cbfe017237, isRead: true, readAt: 2026-05-30T09:19:46.956Z, deletedAt: null, expiresAt: 2026-06-28T20:56:15.775Z, _v: 0, createdAt: 2026-05-29T20:56:15.777Z, updatedAt: 2026-05-30T09:19:46.956Z}, {id: 6a178dd0480a44cbfe015b22, userId: 6a10aaf9e4a28588138e21be, type: PREFERENCE_CARD_CREATED, title: New Card Added, subtitle: bbbn — gov, resourceType: PreferenceCard, resourceId: 6a178dd0480a44cbfe015b1a, isRead: true, readAt: 2026-05-30T09:20:06.008Z, deletedAt: null, expiresAt: 2026-06-27T00:35:28.717Z, _v: 0, createdAt: 2026-05-28T00:35:28.719Z, updatedAt: 2026-05-30T09:20:06.008Z}, {id: 6a15e7c5480a44cbfe0148f2, userId: 6a10aaf9e4a28588138e21be, type: PREFERENCE_CARD_CREATED, titl
+I/flutter (14072): └ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): │ [ GET 200] https://api.smrtscrub.app/api/v1/users/profile
+I/flutter (14072): │ Data: {success: true, statusCode: 200, message: Profile data retrieved successfully, data: {id: 6a10aaf9e4a28588138e21be, name: MD Bayzid, role: USER, email: mdbayazid131@gmail.com, country: Bangladesh, phone: 01648467348, profilePicture: https://i.ibb.co/z5YHLV9/profile.png, isOnboardingCompleted: true, status: ACTIVE, verified: true, deviceTokens: [{token: c1c2hFH4o02xve2OMEFXRB:APA91bGLcdeIIyrvhVlkKJWZI-Ml1svO31w9cyAB5dJ4X0ZumgZyW95U0BVJ-fhGv0eCXGDYA2r6bagCGSwyieQQQUyq2LHyonp_1b47Hbjkcg-_FgUoqwI, lastSeenAt: 2026-05-23T20:30:40.152Z}, {token: cAI_9DhcS6mJNVe3KZ3XWn:APA91bGMJmikQ61pCj8A0Rqyjm7DoMpf7QIIP-scdRM_Fq-r5XHuzbWltUURVfZEIe6BtBdXOhOspyU2lmveKdUXUVZuS0J2xBxOINxHup_IaURDPAyPyfw, lastSeenAt: 2026-05-30T09:19:38.778Z}, {token: eMdR_j9DRgq3bG-lETU5hN:APA91bFQHdv1Fgkdhez0RKzQOkXJY2Vg2cggnyzWJT-X3HfuGWzmxlCvma6iswAMRpxa5_VluePqpve20asoutpsrw2U7iaGQCmL2RWsBAnfLUeaOFsX7t8, lastSeenAt: 2026-05-24T22:11:49.258Z}, {token: d1qS5K07RkyIGPm3Kk7_tI:APA91bFnWx2Z6GQXfEwTN1G00eZ3ofkH6B4BQ0CltKOSy5hP2gvb600OhS6323
+I/flutter (14072): └ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072):
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=2/13 time=33773797115534 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=3/14 time=33773807507649 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=4/15 time=33773823066303 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=0/16 time=33773840244572 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=1/17 time=33773862486457 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=2/18 time=33773873352687 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=3/19 time=33773893842918 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=4/20 time=33773911509303 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=0/21 time=33773952860034 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=1/22 time=33774014278072 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=2/23 time=33774025488572 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=3/24 time=33774041196880 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=4/25 time=33774110813303 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=0/26 time=33774124388495 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=1/27 time=33774141899457 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=2/28 time=33774158825803 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=3/29 time=33774174715957 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=4/30 time=33774192464110 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=0/31 time=33774209366033 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=1/32 time=33774225757110 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=2/33 time=33774242455495 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=3/34 time=33774258911880 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=4/35 time=33774280678033 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=0/36 time=33774312140956 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+I/flutter (14072):
+I/flutter (14072): ┌ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): │ [ GET 200] https://api.smrtscrub.app/api/v1/users/profile
+I/flutter (14072): │ Data: {success: true, statusCode: 200, message: Profile data retrieved successfully, data: {id: 6a10aaf9e4a28588138e21be, name: MD Bayzid, role: USER, email: mdbayazid131@gmail.com, country: Bangladesh, phone: 01648467348, profilePicture: https://i.ibb.co/z5YHLV9/profile.png, isOnboardingCompleted: true, status: ACTIVE, verified: true, deviceTokens: [{token: c1c2hFH4o02xve2OMEFXRB:APA91bGLcdeIIyrvhVlkKJWZI-Ml1svO31w9cyAB5dJ4X0ZumgZyW95U0BVJ-fhGv0eCXGDYA2r6bagCGSwyieQQQUyq2LHyonp_1b47Hbjkcg-_FgUoqwI, lastSeenAt: 2026-05-23T20:30:40.152Z}, {token: cAI_9DhcS6mJNVe3KZ3XWn:APA91bGMJmikQ61pCj8A0Rqyjm7DoMpf7QIIP-scdRM_Fq-r5XHuzbWltUURVfZEIe6BtBdXOhOspyU2lmveKdUXUVZuS0J2xBxOINxHup_IaURDPAyPyfw, lastSeenAt: 2026-05-30T09:19:38.778Z}, {token: eMdR_j9DRgq3bG-lETU5hN:APA91bFQHdv1Fgkdhez0RKzQOkXJY2Vg2cggnyzWJT-X3HfuGWzmxlCvma6iswAMRpxa5_VluePqpve20asoutpsrw2U7iaGQCmL2RWsBAnfLUeaOFsX7t8, lastSeenAt: 2026-05-24T22:11:49.258Z}, {token: d1qS5K07RkyIGPm3Kk7_tI:APA91bFnWx2Z6GQXfEwTN1G00eZ3ofkH6B4BQ0CltKOSy5hP2gvb600OhS6323
+I/flutter (14072): └ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): 🔍🔍🔍 DEBUG: IAP: Manually saving User ID: 6a10aaf9e4a28588138e21be
+I/flutter (14072): 
+I/flutter (14072):
+I/flutter (14072): ┌ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072): │ [ GET 200] https://api.smrtscrub.app/api/v1/events?date=2026-06-02
+I/flutter (14072): │ Data: {success: true, statusCode: 200, message: Events fetched successfully, data: []}
+I/flutter (14072): └ ✅✅✅✅ RESPONSE ══════════════════════════════════════ ✅✅✅✅
+I/flutter (14072):
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=1/37 time=33774429861033 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) queueBuffer: slot=2/38 time=33774457725956 dataSpace=142671872 validHdrMetadataTypes=0x0 crop=[0,0,0,0] transform=0 scale=SCALE_TO_WINDOW
+D/BufferQueueProducer(14072): [SurfaceView[com.tbsosick.smrtscrub/com.tbsosick.smrtscrub.MainActivity]#1(BLAST Consumer)1](id:36f800000001,api:1,p:14072,c:14072) addAndGetFrameTimestamps
+I/flutter (14072): Error: google_fonts was unable to load font Arimo-Medium because the following exception occurred:
+I/flutter (14072): Exception: GoogleFonts.config.allowRuntimeFetching is false but font Arimo-Medium was not found in the application assets. Ensure Arimo-Medium.ttf exists in a folder that is included in your pubspec's assets.
+I/flutter (14072): See https://docs.flutter.dev/development/data-and-backend/networking#platform-notes.
+I/flutter (14072): If troubleshooting doesn't solve the problem, please file an issue at https://github.com/flutter/flutter/issues/new/choose.

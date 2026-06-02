@@ -7,8 +7,13 @@ import 'package:tbsosick/core/services/push_notification_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/firebase_options.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Disable runtime fetching of Google Fonts to prevent network/SocketException crashes when offline
+  GoogleFonts.config.allowRuntimeFetching = false;
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await NotificationService().init();

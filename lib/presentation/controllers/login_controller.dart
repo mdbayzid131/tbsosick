@@ -83,8 +83,6 @@ class LoginController extends GetxController {
         // If unverified, resend OTP and go to verification screen
         await _authService.resendOtp(email);
         Get.toNamed(AppRoutes.otpVerification, arguments: email);
-      } else {
-        Helpers.showError(response.data['message']);
       }
     } catch (e) {
       Helpers.error("login error => $e");
@@ -95,7 +93,7 @@ class LoginController extends GetxController {
 
   void goToRegister() {
     clearControllers();
-    Get.toNamed(AppRoutes.register);
+    Get.toNamed(AppRoutes.register);      
   }
 
   void goToForgotPassword() {

@@ -1,11 +1,10 @@
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'dart:io';
+import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tbsosick/config/constants/api_constants.dart';
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
-import 'package:tbsosick/core/controllers/internet_controller.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/core/utils/logger.dart';
@@ -21,13 +20,11 @@ import 'package:tbsosick/core/utils/logger.dart';
 class ApiClient extends GetxService {
   static late Dio _dio;
   static String _bearerToken = '';
+  static Future<bool>? _refreshFuture;
 
   static const String _fallbackMessage =
       'Something went wrong, please try again';
   static const int _timeoutSeconds = 30;
-  static const Duration _errorThrottleDuration = Duration(seconds: 3);
-
-  static DateTime? _lastErrorTime;
 
   /// Expose dio only for edge-case direct usage (avoid if possible).
   Dio get dio => _dio;
@@ -79,20 +76,14 @@ class ApiClient extends GetxService {
   }
 
   Future<void> _onError(DioException e, ErrorInterceptorHandler handler) async {
-    final internet = Get.find<InternetController>();
+    // 1️⃣ Connection Error → pass connection error down to response builder
+    final isConnectionError =
+        e.type == DioExceptionType.connectionError ||
+        (e.type == DioExceptionType.unknown && e.error is SocketException) ||
+        e.message?.contains('SocketException') == true ||
+        e.error?.toString().contains('SocketException') == true;
 
-    // 1️⃣ Connection Error
-    if (e.type == DioExceptionType.connectionError) {
-      final hasInternet = await InternetConnection().hasInternetAccess;
-
-      if (hasInternet) {
-        _showThrottledError(
-          'Unable to connect to server. Please try again later.',
-        );
-      } else if (!internet.isShowingNoInternet.value) {
-        internet.setOffline();
-        Get.toNamed(AppRoutes.noInternet);
-      }
+    if (isConnectionError) {
       return handler.next(e);
     }
 
@@ -101,6 +92,14 @@ class ApiClient extends GetxService {
         !e.requestOptions.path.contains(ApiConstants.refreshToken) &&
         !e.requestOptions.path.contains(ApiConstants.login) &&
         !e.requestOptions.path.contains(ApiConstants.signup)) {
+      final refreshToken = await StorageService.getString(
+        StorageConstants.refreshToken,
+      );
+      if (refreshToken.isEmpty) {
+        _forceLogout();
+        return handler.next(e);
+      }
+
       final refreshed = await _refreshToken();
 
       if (refreshed) {
@@ -110,12 +109,6 @@ class ApiClient extends GetxService {
         _forceLogout();
         return handler.next(e);
       }
-    }
-
-    // 3️⃣ Timeout
-    if (e.type == DioExceptionType.connectionTimeout ||
-        e.type == DioExceptionType.receiveTimeout) {
-      _showThrottledError('Request timeout. Please try again.');
     }
 
     AppLogger.error(e);
@@ -129,12 +122,14 @@ class ApiClient extends GetxService {
     String uri, {
     Map<String, dynamic>? query,
     CancelToken? cancelToken,
+    Map<String, dynamic>? extraHeaders,
   }) async {
     try {
       return await _dio.get(
         uri,
         queryParameters: query,
         cancelToken: cancelToken,
+        options: extraHeaders != null ? Options(headers: extraHeaders) : null,
       );
     } on DioException catch (e) {
       return _buildErrorResponse(e);
@@ -165,9 +160,15 @@ class ApiClient extends GetxService {
     String uri,
     dynamic body, {
     CancelToken? cancelToken,
+    Map<String, dynamic>? extraHeaders,
   }) async {
     try {
-      return await _dio.put(uri, data: body, cancelToken: cancelToken);
+      return await _dio.put(
+        uri,
+        data: body,
+        cancelToken: cancelToken,
+        options: extraHeaders != null ? Options(headers: extraHeaders) : null,
+      );
     } on DioException catch (e) {
       return _buildErrorResponse(e);
     }
@@ -178,9 +179,15 @@ class ApiClient extends GetxService {
     String uri,
     dynamic body, {
     CancelToken? cancelToken,
+    Map<String, dynamic>? extraHeaders,
   }) async {
     try {
-      return await _dio.patch(uri, data: body, cancelToken: cancelToken);
+      return await _dio.patch(
+        uri,
+        data: body,
+        cancelToken: cancelToken,
+        options: extraHeaders != null ? Options(headers: extraHeaders) : null,
+      );
     } on DioException catch (e) {
       return _buildErrorResponse(e);
     }
@@ -191,9 +198,15 @@ class ApiClient extends GetxService {
     String uri, {
     dynamic body,
     CancelToken? cancelToken,
+    Map<String, dynamic>? extraHeaders,
   }) async {
     try {
-      return await _dio.delete(uri, data: body, cancelToken: cancelToken);
+      return await _dio.delete(
+        uri,
+        data: body,
+        cancelToken: cancelToken,
+        options: extraHeaders != null ? Options(headers: extraHeaders) : null,
+      );
     } on DioException catch (e) {
       return _buildErrorResponse(e);
     }
@@ -279,21 +292,37 @@ class ApiClient extends GetxService {
   /// Create a fallback Response from a DioException
   Response _buildErrorResponse(DioException e) {
     final String message;
-    switch (e.type) {
-      case DioExceptionType.connectionTimeout:
-        message = 'Connection timed out';
-        break;
-      case DioExceptionType.receiveTimeout:
-        message = 'Server took too long to respond';
-        break;
-      case DioExceptionType.badResponse:
-        message = 'Bad response: ${e.response?.statusMessage ?? 'Unknown'}';
-        break;
-      case DioExceptionType.cancel:
-        message = 'Request cancelled';
-        break;
-      default:
-        message = _fallbackMessage;
+    final isConnectionError =
+        e.type == DioExceptionType.connectionError ||
+        (e.type == DioExceptionType.unknown && e.error is SocketException) ||
+        e.message?.contains('SocketException') == true ||
+        e.error?.toString().contains('SocketException') == true;
+
+    if (isConnectionError) {
+      message =
+          'Unable to connect to server. Please check your internet connection.';
+    } else {
+      switch (e.type) {
+        case DioExceptionType.connectionTimeout:
+          message = 'Connection timed out';
+          break;
+        case DioExceptionType.receiveTimeout:
+          message = 'Server took too long to respond';
+          break;
+        case DioExceptionType.badResponse:
+          final data = e.response?.data;
+          if (data is Map && data['message'] != null) {
+            message = data['message'].toString();
+          } else {
+            message = 'Bad response: ${e.response?.statusMessage ?? 'Unknown'}';
+          }
+          break;
+        case DioExceptionType.cancel:
+          message = 'Request cancelled';
+          break;
+        default:
+          message = _fallbackMessage;
+      }
     }
 
     return Response(
@@ -304,21 +333,33 @@ class ApiClient extends GetxService {
     );
   }
 
-  /// Refresh the access token using stored refresh token
+  /// Refresh the access token using stored refresh token with strict locking
   Future<bool> _refreshToken() async {
+    if (_refreshFuture != null) {
+      return _refreshFuture!;
+    }
+
+    final completer = Completer<bool>();
+    _refreshFuture = completer.future;
+
     try {
       final refreshTokenValue = await StorageService.getString(
         StorageConstants.refreshToken,
       );
-      if (refreshTokenValue.isEmpty) return false;
+      if (refreshTokenValue.isEmpty) {
+        completer.complete(false);
+        return false;
+      }
 
-      final response = await _dio.post(
+      // Separate clean Dio instance to completely bypass our main client's interceptor chain
+      final refreshDio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
+      final response = await refreshDio.post(
         ApiConstants.refreshToken,
         data: {'refreshToken': refreshTokenValue},
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final authData = response.data['data'] ?? response.data;
         final newAccessToken = authData['accessToken'] ?? authData['token'];
         final newRefreshToken = authData['refreshToken'];
@@ -335,11 +376,16 @@ class ApiClient extends GetxService {
             newRefreshToken,
           );
         }
+        completer.complete(true);
         return true;
       }
     } catch (e) {
       Helpers.debug('Error refreshing token: $e');
+    } finally {
+      _refreshFuture = null; // Always unlock after completion/error
     }
+
+    completer.complete(false);
     return false;
   }
 
@@ -350,36 +396,14 @@ class ApiClient extends GetxService {
     );
     requestOptions.headers['Authorization'] = 'Bearer $newToken';
 
-    return await _dio.request(
-      requestOptions.path,
-      data: requestOptions.data,
-      queryParameters: requestOptions.queryParameters,
-      options: Options(
-        method: requestOptions.method,
-        headers: requestOptions.headers,
-      ),
-    );
+    return await _dio.fetch(requestOptions);
   }
 
   /// Force logout when refresh fails
   void _forceLogout() {
     StorageService.clearAll();
     Get.offAllNamed(AppRoutes.login);
-    Get.snackbar(
-      'Session Expired',
-      'Please login again.',
-      snackPosition: SnackPosition.BOTTOM,
-    );
-  }
-
-  /// Show error snackbar throttled to avoid spamming
-  void _showThrottledError(String message) {
-    final now = DateTime.now();
-    if (_lastErrorTime == null ||
-        now.difference(_lastErrorTime!) > _errorThrottleDuration) {
-      _lastErrorTime = now;
-      Get.snackbar('Error', message, snackPosition: SnackPosition.BOTTOM);
-    }
+    Helpers.showError('Please login again.', title: 'Session Expired');
   }
 }
 

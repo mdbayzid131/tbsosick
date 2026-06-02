@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:tbsosick/core/widgets/screens/no_internet_screen.dart';
 import 'package:tbsosick/presentation/binding/bottom_nab_bar_binding.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/login_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/interactive_tutorial/interactive_tutorial_screen.dart';
@@ -39,7 +38,6 @@ class AppRoutes {
   static const String interactiveTutorial = '/interactive-tutorial';
   static const String verifyEmail = '/verify-email';
   static const String otpVerification = '/otp-verification';
-  static const String noInternet = '/no-internet';
   static const String cardDetails = '/card-details';
   static const String myCards = '/my-cards';
   static const String subscription = '/subscription';
@@ -93,11 +91,6 @@ final pages = [
     name: AppRoutes.bottomNavBar,
     page: () => BottomNabBarScreen(),
     bindings: [BottomNabBarBinding()],
-  ),
-  GetPage(
-    name: AppRoutes.noInternet,
-    page: () => NoInternetScreen(),
-    bindings: [],
   ),
   GetPage(
     name: AppRoutes.otpVerification,

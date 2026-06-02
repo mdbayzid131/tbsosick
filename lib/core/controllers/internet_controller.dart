@@ -6,7 +6,6 @@ class InternetController extends GetxController {
 
   void setOffline() {
     hasInternet.value = false;
-    isShowingNoInternet.value = true;
   }
 
   void setOnline() {
