@@ -88,9 +88,14 @@ class PrefranceCardDetailsController extends GetxController {
           filePath: file.path,
           fileName: 'PreferenceCard_$cardId.pdf',
         );
+      } else {
+        Helpers.showError(
+          "Storage permission is required to download the card.",
+        );
       }
     } catch (e) {
       Helpers.error("downloadCard error => $e");
+      Helpers.showError("Download failed. Please try again later.");
     } finally {
       isDownloading.value = false;
     }
@@ -120,6 +125,7 @@ class PrefranceCardDetailsController extends GetxController {
       }
     } catch (e) {
       Helpers.error("shareCard error => $e");
+      Helpers.showError("Failed to prepare card for sharing.");
     } finally {
       isSharing.value = false;
     }

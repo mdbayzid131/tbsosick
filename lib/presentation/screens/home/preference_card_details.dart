@@ -170,6 +170,8 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
                   SizedBox(height: 16.h),
                   _buildPreppingCard(),
                   SizedBox(height: 16.h),
+                  _buildWorkflowCard(),
+                  SizedBox(height: 16.h),
                   _buildKeyNotesCard(),
                   SizedBox(height: 20.h),
                   _buildPhotoLibrary(),
@@ -693,6 +695,50 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
           // Prepping details
           Text(
             controller.cardDetails.value?.prepping ?? '',
+            style: GoogleFonts.arimo(
+              fontSize: 17.sp,
+              height: 1.6,
+              color: const Color(0xFF000000),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Operative Workflow Card
+  Widget _buildWorkflowCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.w),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section title
+          Text(
+            AppLocalizations.of(context)!.operativeWorkflow,
+            style: GoogleFonts.arimo(
+              fontSize: 17.sp,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF000000),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          // Workflow details
+          Text(
+            controller.cardDetails.value?.workflow ?? '',
             style: GoogleFonts.arimo(
               fontSize: 17.sp,
               height: 1.6,

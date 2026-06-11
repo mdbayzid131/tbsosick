@@ -335,7 +335,7 @@ class _NewPreferenceCardState extends State<NewPreferenceCard> {
                           )!.contactNumberLabel,
                           hint: AppLocalizations.of(context)!.phonePlaceholder,
                           controller: postAnyCardController.contactController,
-                          validator: Validators.phoneNumber,
+                          validator: (value) => Validators.phoneNumber(value, isRequired: true),
                         ),
                         SizedBox(height: 10.h),
                         Divider(height: 1.5.h, color: Color(0xffEEEEEF)),
