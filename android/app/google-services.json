@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "344458357764-jkp38ili2phh3g87lccut3qje0ks0ori.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tbsosick.smrtscrub",
+            "certificate_hash": "40509783caf312cda891876d649cff681672d6a6"
+          }
+        },
+        {
           "client_id": "344458357764-nb044aiepibnbg2r50g2r6113lf32vob.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.tbsosick.smrtscrub",
             "certificate_hash": "e191d16c7258696c73ba6c130da46faf3c42e15d"
+          }
+        },
+        {
+          "client_id": "344458357764-rg0b0qk942labta8jau1digqkr5tv9ea.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tbsosick.smrtscrub",
+            "certificate_hash": "27064d1daee912f1fcba8cdea7579e98b8fade05"
           }
         },
         {
