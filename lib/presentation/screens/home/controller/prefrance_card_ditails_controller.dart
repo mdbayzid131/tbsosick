@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/notification_service.dart';
@@ -100,10 +101,18 @@ class PrefranceCardDetailsController extends GetxController {
           filePath,
         );
 
-        await _notificationService.showDownloadNotification(
-          filePath: file.path,
-          fileName: 'PreferenceCard_$cardId.pdf',
-        );
+        if (Platform.isAndroid) {
+          await _notificationService.showDownloadNotification(
+            filePath: file.path,
+            fileName: 'PreferenceCard_$cardId.pdf',
+          );
+          Helpers.showSuccess(
+            "PDF downloaded successfully! Tap the notification to view.",
+          );
+        } else if (Platform.isIOS) {
+          await OpenFile.open(file.path);
+          Helpers.showSuccess("PDF generated successfully!");
+        }
       } else {
         Helpers.showError(
           "Storage permission is required to download the card.",
@@ -128,8 +137,7 @@ class PrefranceCardDetailsController extends GetxController {
         await _userRepository.downloadCard(cardId: card.id);
 
         final tempDir = await getTemporaryDirectory();
-        final filePath =
-            '${tempDir.path}/PreferenceCard_${card.id}.pdf';
+        final filePath = '${tempDir.path}/PreferenceCard_${card.id}.pdf';
 
         // Generate PDF locally
         final file = await PdfService().generatePreferenceCardPdf(
@@ -137,11 +145,9 @@ class PrefranceCardDetailsController extends GetxController {
           filePath,
         );
 
-        await Share.shareXFiles(
-          [XFile(file.path)],
-          text:
-              'Check out this preference card: ${card.cardTitle}',
-        );
+        await Share.shareXFiles([
+          XFile(file.path),
+        ], text: 'Check out this preference card: ${card.cardTitle}');
       }
     } catch (e) {
       Helpers.error("shareCard error => $e");
