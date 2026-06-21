@@ -21,6 +21,7 @@ class ApiClient extends GetxService {
   static late Dio _dio;
   static String _bearerToken = '';
   static Future<bool>? _refreshFuture;
+  static bool _isLoggingOut = false;
 
   static const String _fallbackMessage =
       'Something went wrong, please try again';
@@ -401,9 +402,14 @@ class ApiClient extends GetxService {
 
   /// Force logout when refresh fails
   void _forceLogout() {
+    if (_isLoggingOut || Get.currentRoute == AppRoutes.login) return;
+    _isLoggingOut = true;
     StorageService.clearAll();
     Get.offAllNamed(AppRoutes.login);
     Helpers.showError('Please login again.', title: 'Session Expired');
+    Future.delayed(const Duration(seconds: 3), () {
+      _isLoggingOut = false;
+    });
   }
 }
 
