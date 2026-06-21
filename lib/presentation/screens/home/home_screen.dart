@@ -315,6 +315,13 @@ class _HomeScreenState extends State<HomeScreen> {
         Stack(
           clipBehavior: Clip.none,
           children: [
+            Positioned(
+              top: -600.h,
+              left: 0,
+              right: 0,
+              height: 600.h,
+              child: Container(color: const Color(0xFF6C36B2)),
+            ),
             Column(
               children: [
                 Container(
