@@ -9,6 +9,7 @@ import 'package:tbsosick/core/services/notification_service.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
 import 'package:tbsosick/data/models/card_details_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
+import 'package:tbsosick/core/services/pdf_service.dart';
 
 class PrefranceCardDetailsController extends GetxController {
   RxBool isLoading = false.obs;
@@ -47,6 +48,18 @@ class PrefranceCardDetailsController extends GetxController {
       isDownloading.value = true;
       Helpers.showSuccess("Download started...");
 
+      // Fetch card details if missing or different
+      PreferenceCardDetailsModel? card = cardDetails.value;
+      if (card == null || card.id != cardId) {
+        final response = await _userRepository.getCardDetails(cardId: cardId);
+        if (response.statusCode == 200) {
+          final data = PreferenceCardDetailsResponse.fromJson(response.data);
+          card = data.data;
+        } else {
+          throw Exception("Failed to fetch card details");
+        }
+      }
+
       // Request notification permission (Android 13+)
       if (await Permission.notification.isDenied) {
         await Permission.notification.request();
@@ -72,16 +85,19 @@ class PrefranceCardDetailsController extends GetxController {
       }
 
       if (storageGranted) {
+        // Count download via API
+        await _userRepository.downloadCard(cardId: cardId);
+
         final dir = Platform.isAndroid
             ? await getExternalStorageDirectory()
             : await getApplicationDocumentsDirectory();
 
         final filePath = '${dir!.path}/PreferenceCard_$cardId.pdf';
 
-        // Download directly from API
-        final file = await _userRepository.downloadCardPdf(
-          cardId: cardId,
-          savePath: filePath,
+        // Generate PDF locally
+        final file = await PdfService().generatePreferenceCardPdf(
+          card,
+          filePath,
         );
 
         await _notificationService.showDownloadNotification(
@@ -95,7 +111,7 @@ class PrefranceCardDetailsController extends GetxController {
       }
     } catch (e) {
       Helpers.error("downloadCard error => $e");
-      Helpers.showError("Download failed. Please try again later.");
+      Helpers.showError("Download failed: $e");
     } finally {
       isDownloading.value = false;
     }
@@ -103,24 +119,28 @@ class PrefranceCardDetailsController extends GetxController {
 
   Future<void> shareCard() async {
     try {
-      if (cardDetails.value != null) {
+      final card = cardDetails.value;
+      if (card != null) {
         isSharing.value = true;
         Helpers.showSuccess("Preparing card for sharing...");
 
+        // Count download via API
+        await _userRepository.downloadCard(cardId: card.id);
+
         final tempDir = await getTemporaryDirectory();
         final filePath =
-            '${tempDir.path}/PreferenceCard_${cardDetails.value!.id}.pdf';
+            '${tempDir.path}/PreferenceCard_${card.id}.pdf';
 
-        // Download the exact same PDF from the API
-        final file = await _userRepository.downloadCardPdf(
-          cardId: cardDetails.value!.id,
-          savePath: filePath,
+        // Generate PDF locally
+        final file = await PdfService().generatePreferenceCardPdf(
+          card,
+          filePath,
         );
 
         await Share.shareXFiles(
           [XFile(file.path)],
           text:
-              'Check out this preference card: ${cardDetails.value!.cardTitle}',
+              'Check out this preference card: ${card.cardTitle}',
         );
       }
     } catch (e) {
