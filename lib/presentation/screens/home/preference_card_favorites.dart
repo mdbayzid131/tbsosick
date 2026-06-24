@@ -30,138 +30,125 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
   Widget build(BuildContext context) {
     final tr = AppLocalizations.of(context)!;
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await _bottomNabBarController.getFavoriteCard();
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.only(
-                  left: 20.w,
-                  right: 20.w,
-                  top: 50.h,
-                  bottom: 20.h,
-                ),
-                decoration: BoxDecoration(
-                  color: Color(0xFF6C36B2),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(24.r),
-                    bottomRight: Radius.circular(24.r),
+      body: Column(
+        children: [
+          _buildHeader(tr),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await _bottomNabBarController.getFavoriteCard();
+              },
+              color: const Color(0xFF6C36B2),
+              child: Obx(() {
+                if (_bottomNabBarController.isFavoriteCardsLoading.value &&
+                    _bottomNabBarController.favoriteCards.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (_bottomNabBarController.favoriteCards.isEmpty) {
+                  return SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: SizedBox(
+                      height: 400.h,
+                      child: Center(child: Text(tr.noFavoriteItem)),
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 12.h,
                   ),
-                ),
-                child: Row(
-                  children: [
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      onPressed: () => Get.back(),
-                    ),
-                    SizedBox(width: 10.w),
-                    Expanded(
-                      child: Text(
-                        tr.preferenceCardFavorites,
-                        style: GoogleFonts.arimo(
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20.h),
-                    Text(
-                      tr.preferenceCardFavorites,
-                      style: GoogleFonts.roboto(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xff1C1B1F),
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    Obx(() {
-                      if (_bottomNabBarController
-                              .isFavoriteCardsLoading
-                              .value &&
-                          _bottomNabBarController.favoriteCards.isEmpty) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (_bottomNabBarController.favoriteCards.isEmpty) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20.h),
-                          child: Center(child: Text(tr.noFavoriteItem)),
-                        );
-                      }
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        itemCount:
-                            _bottomNabBarController.favoriteCards.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index ==
-                              _bottomNabBarController.favoriteCards.length) {
-                            return _buildLoadMoreButton();
-                          }
-                          final card =
-                              _bottomNabBarController.favoriteCards[index];
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: 10.h),
-                            child: ProcedureCard(
-                              isPaidUser: Get.find<IapService>().isPremiumUser,
-                              onDownloadTap: () {
-                                _prefranceCardDetailsController.downloadCard(
-                                  cardId: card.id,
-                                );
-                              },
-                              isPrivateCard: false,
-                              cardId: card.id,
-                              title: card.cardTitle,
-                              specialty: card.surgeonSpecialty,
-                              isVerified: card.isVerified,
-                              doctor: card.surgeonName,
-                              downloads: card.totalDownloads,
-                              updatedTime: card.updatedAt,
-                              isFavorite: card.isFavorite,
-                              onFavoriteToggle: () async {
-                                if (card.isFavorite) {
-                                  await _homePageController
-                                      .removeFromFavoriteList(cardId: card.id);
-                                } else {
-                                  await _homePageController.addToFavoriteList(
-                                    cardId: card.id,
-                                  );
-                                }
-                                await _bottomNabBarController.getFavoriteCard(
-                                  showLoading: false,
-                                );
-                              },
-                            ),
+                  itemCount: _bottomNabBarController.favoriteCards.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == _bottomNabBarController.favoriteCards.length) {
+                      return _buildLoadMoreButton();
+                    }
+                    final card = _bottomNabBarController.favoriteCards[index];
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 10.h),
+                      child: ProcedureCard(
+                        isPaidUser: Get.find<IapService>().isPremiumUser,
+                        onDownloadTap: () {
+                          _prefranceCardDetailsController.downloadCard(
+                            cardId: card.id,
                           );
                         },
-                      );
-                    }),
-                  ],
-                ),
-              ),
-            ],
+                        isPrivateCard: false,
+                        cardId: card.id,
+                        title: card.cardTitle,
+                        specialty: card.surgeonSpecialty,
+                        isVerified: card.isVerified,
+                        doctor: card.surgeonName,
+                        downloads: card.totalDownloads,
+                        updatedTime: card.updatedAt,
+                        isFavorite: card.isFavorite,
+                        onFavoriteToggle: () async {
+                          if (card.isFavorite) {
+                            await _homePageController.removeFromFavoriteList(
+                              cardId: card.id,
+                            );
+                          } else {
+                            await _homePageController.addToFavoriteList(
+                              cardId: card.id,
+                            );
+                          }
+                          await _bottomNabBarController.getFavoriteCard(
+                            showLoading: false,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              }),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(AppLocalizations tr) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.only(
+        left: 20.w,
+        right: 20.w,
+        top: 50.h,
+        bottom: 20.h,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF6C36B2),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(24.r),
+          bottomRight: Radius.circular(24.r),
         ),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+              size: 20,
+            ),
+            onPressed: () => Get.back(),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Text(
+              tr.preferenceCardFavorites,
+              style: GoogleFonts.arimo(
+                fontSize: 22.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

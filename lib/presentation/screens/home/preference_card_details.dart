@@ -31,32 +31,13 @@ class _PreferenceCardDetailsState extends State<PreferenceCardDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 100.w,
-        leading: Center(
-          child: InkWell(
-            onTap: () {
-              Get.back();
-            },
-            child: Row(
-              children: [
-                SizedBox(width: 10.w),
-                Icon(
-                  Icons.arrow_back_ios_new_outlined,
-                  size: 17.sp,
-                  color: Color(0xff9945FF),
-                ),
-                SizedBox(width: 6.w),
-                Text(
-                  AppLocalizations.of(context)!.back,
-                  style: GoogleFonts.arimo(
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xff9945FF),
-                  ),
-                ),
-              ],
-            ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: const Color(0xff9945FF),
+            size: 20.sp,
           ),
+          onPressed: () => Get.back(),
         ),
 
         backgroundColor: const Color(0xffffffff),

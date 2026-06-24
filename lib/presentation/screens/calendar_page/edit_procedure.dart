@@ -138,26 +138,24 @@ class _EditProcedureScreenState extends State<EditProcedureScreen> {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          IconButton(
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+              size: 20,
+            ),
+            onPressed: () => Get.back(),
+          ),
+          SizedBox(width: 10.w),
           Text(
             AppLocalizations.of(context)!.editEvent,
             style: GoogleFonts.arimo(
               fontSize: 20.sp,
               fontWeight: FontWeight.w600,
               color: Colors.white,
-            ),
-          ),
-          GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              height: 36.w,
-              width: 36.w,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.close, color: Colors.white, size: 20.sp),
             ),
           ),
         ],

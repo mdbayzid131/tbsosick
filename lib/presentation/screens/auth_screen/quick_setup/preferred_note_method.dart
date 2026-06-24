@@ -20,7 +20,18 @@ class PreferredNoteMethod extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 65.h),
+            SizedBox(height: 40.h),
+            IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              icon: const Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.black,
+                size: 20,
+              ),
+              onPressed: () => Get.back(),
+            ),
+            SizedBox(height: 15.h),
 
             Text(
               tr.noteMethodQuestion,

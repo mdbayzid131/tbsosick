@@ -31,8 +31,21 @@ class SignUpScreen extends GetView<SignUpController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 80.h),
-
+                SizedBox(height: 40.h),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                    onPressed: () => Get.back(),
+                  ),
+                ),
+                SizedBox(height: 20.h),
                 ///================= App Logo =========================///
                 Image.asset(
                   ImagePaths.appLogo,

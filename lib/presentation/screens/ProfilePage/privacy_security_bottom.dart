@@ -54,7 +54,11 @@ class _PrivacyAndSecurityPageState extends State<PrivacyAndSecurityPage> {
         backgroundColor: const Color(0xFF6C36B2),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 20,
+          ),
           onPressed: () => Get.back(),
         ),
         title: Text(
@@ -457,7 +461,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         backgroundColor: const Color(0xFF6C36B2),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 20,
+          ),
           onPressed: () => Get.back(),
         ),
         title: Text(
