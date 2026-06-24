@@ -2,8 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
-
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:tbsosick/presentation/controllers/bottom_nab_bar_controller.dart';
@@ -55,13 +53,30 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                     bottomRight: Radius.circular(24.r),
                   ),
                 ),
-                child: Text(
-                  tr.preferenceCardFavorites,
-                  style: GoogleFonts.arimo(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      onPressed: () => Get.back(),
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Text(
+                        tr.preferenceCardFavorites,
+                        style: GoogleFonts.arimo(
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(
@@ -80,7 +95,9 @@ class _PreferenceCardFavoritesState extends State<PreferenceCardFavorites> {
                     ),
                     SizedBox(height: 12.h),
                     Obx(() {
-                      if (_bottomNabBarController.isFavoriteCardsLoading.value &&
+                      if (_bottomNabBarController
+                              .isFavoriteCardsLoading
+                              .value &&
                           _bottomNabBarController.favoriteCards.isEmpty) {
                         return const Center(child: CircularProgressIndicator());
                       }

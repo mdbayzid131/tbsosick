@@ -9,9 +9,11 @@ import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import '../../../config/constants/image_paths.dart';
 import 'payment_method_bottom.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
+import 'package:tbsosick/core/services/iap_service.dart';
 
 void showUpdatePackageBottomSheet(BuildContext context) {
   final selectedPlan = 1.obs;
+  final iapService = Get.find<IapService>();
 
   showModalBottomSheet(
     isDismissible: false,
@@ -169,10 +171,14 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                             // Premium
                             GestureDetector(
                               onTap: () => selectedPlan.value = 1,
-                              child: Obx(
-                                () => _planCard(
+                              child: Obx(() {
+                                final price =
+                                    iapService.monthlyProducts.isNotEmpty
+                                    ? iapService.monthlyProducts[0].price
+                                    : '\$1.99';
+                                return _planCard(
                                   title: tr.premiumPlanTitle,
-                                  price: '\$5.99',
+                                  price: price,
                                   badge: tr.popularBadge,
                                   features: [
                                     '20 preference cards',
@@ -183,8 +189,8 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                                   ],
                                   isSelected: selectedPlan.value == 1,
                                   showCheck: true,
-                                ),
-                              ),
+                                );
+                              }),
                             ),
 
                             SizedBox(height: 16),
@@ -192,10 +198,14 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                             // Enterprise
                             GestureDetector(
                               onTap: () => selectedPlan.value = 2,
-                              child: Obx(
-                                () => _planCard(
+                              child: Obx(() {
+                                final price =
+                                    iapService.monthlyProducts.length > 1
+                                    ? iapService.monthlyProducts[1].price
+                                    : '\$9.99';
+                                return _planCard(
                                   title: tr.enterprisePlanTitle,
-                                  price: '\$9.99',
+                                  price: price,
                                   badge: tr.popularBadge,
                                   features: [
                                     'Unlimited cards',
@@ -205,8 +215,8 @@ void showUpdatePackageBottomSheet(BuildContext context) {
                                     'Verified preference cards',
                                   ],
                                   isSelected: selectedPlan.value == 2,
-                                ),
-                              ),
+                                );
+                              }),
                             ),
                             SizedBox(height: 25),
 

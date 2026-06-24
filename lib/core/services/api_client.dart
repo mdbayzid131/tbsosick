@@ -349,11 +349,15 @@ class ApiClient extends GetxService {
       );
       if (refreshTokenValue.isEmpty) {
         completer.complete(false);
+        _refreshFuture = null;
         return false;
       }
 
       // Separate clean Dio instance to completely bypass our main client's interceptor chain
-      final refreshDio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
+      // validateStatus: (_) => true prevents Dio from throwing on 4xx/5xx responses
+      final refreshDio = Dio(
+        BaseOptions(baseUrl: ApiConstants.baseUrl, validateStatus: (_) => true),
+      );
       final response = await refreshDio.post(
         ApiConstants.refreshToken,
         data: {'refreshToken': refreshTokenValue},
@@ -378,15 +382,19 @@ class ApiClient extends GetxService {
           );
         }
         completer.complete(true);
+        _refreshFuture = null;
         return true;
+      } else {
+        Helpers.debug(
+          'Token refresh failed with status ${response.statusCode}',
+        );
       }
     } catch (e) {
       Helpers.debug('Error refreshing token: $e');
-    } finally {
-      _refreshFuture = null; // Always unlock after completion/error
     }
 
     completer.complete(false);
+    _refreshFuture = null;
     return false;
   }
 

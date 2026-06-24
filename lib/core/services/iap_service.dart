@@ -19,6 +19,8 @@ class IapService extends GetxService {
 
   // Observables
   final RxList<ProductDetails> products = <ProductDetails>[].obs;
+  final RxList<ProductDetails> monthlyProducts = <ProductDetails>[].obs;
+  final RxList<ProductDetails> yearlyProducts = <ProductDetails>[].obs;
   final RxBool isLoading = false.obs;
   final Rx<SubscriptionModel?> currentSubscription = Rx<SubscriptionModel?>(
     null,
@@ -74,6 +76,11 @@ class IapService extends GetxService {
       } else {
         currentSubscription.value = null;
       }
+    });
+
+    // Map products when products change
+    ever(products, (List<ProductDetails> productsList) {
+      _updateLocalProducts(productsList);
     });
 
     initialize();
@@ -360,5 +367,44 @@ class IapService extends GetxService {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void _updateLocalProducts(List<ProductDetails> productsList) {
+    if (productsList.isEmpty) return;
+
+    if (Platform.isAndroid &&
+        productsList.every((p) => p.id == 'smrtscrub_subscription')) {
+      // Android workaround: The plugin returns 4 products with identical IDs but different prices.
+      // We map them by sorting their raw price:
+      // Assumed Pricing: Premium Monthly < Enterprise Monthly < Premium Yearly < Enterprise Yearly
+      final sortedProducts = List<ProductDetails>.from(productsList);
+      sortedProducts.sort((a, b) => a.rawPrice.compareTo(b.rawPrice));
+
+      if (sortedProducts.length >= 4) {
+        monthlyProducts.assignAll([sortedProducts[0], sortedProducts[1]]);
+        yearlyProducts.assignAll([sortedProducts[2], sortedProducts[3]]);
+      }
+    } else {
+      // Original logic for iOS or distinct IDs
+      final List<ProductDetails> monthly = [];
+      final List<ProductDetails> yearly = [];
+
+      for (var product in productsList) {
+        if (product.id.contains('monthly')) {
+          monthly.add(product);
+        } else if (product.id.contains('yearly')) {
+          yearly.add(product);
+        }
+      }
+
+      monthly.sort((a, b) => a.id.contains('premium') ? -1 : 1);
+      yearly.sort((a, b) => a.id.contains('premium') ? -1 : 1);
+
+      monthlyProducts.assignAll(monthly);
+      yearlyProducts.assignAll(yearly);
+    }
+
+    Helpers.debug(
+        'IAP: Service mapped ${monthlyProducts.length} monthly and ${yearlyProducts.length} yearly products');
   }
 }

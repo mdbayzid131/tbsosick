@@ -16,67 +16,19 @@ class SubscriptionController extends GetxController with GetSingleTickerProvider
   
   final RxInt selectedPlan = 1.obs; // 0: Free, 1: Premium, 2: Enterprise
   
-  final RxList<ProductDetails> monthlyProducts = <ProductDetails>[].obs;
-  final RxList<ProductDetails> yearlyProducts = <ProductDetails>[].obs;
+  RxList<ProductDetails> get monthlyProducts => _iapService.monthlyProducts;
+  RxList<ProductDetails> get yearlyProducts => _iapService.yearlyProducts;
 
   @override
   void onInit() {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
-    _mapProducts();
   }
 
   @override
   void onClose() {
     tabController.dispose();
     super.onClose();
-  }
-
-  void _mapProducts() {
-    _updateLocalProducts(_iapService.products);
-    
-    ever(_iapService.products, (List<ProductDetails> products) {
-      _updateLocalProducts(products);
-    });
-  }
-
-  void _updateLocalProducts(List<ProductDetails> products) {
-    if (products.isEmpty) return;
-
-    if (Platform.isAndroid &&
-        products.every((p) => p.id == 'smrtscrub_subscription')) {
-      // Android workaround: The plugin returns 4 products with identical IDs but different prices.
-      // We map them by sorting their raw price:
-      // Assumed Pricing: Premium Monthly < Enterprise Monthly < Premium Yearly < Enterprise Yearly
-      final sortedProducts = List<ProductDetails>.from(products);
-      sortedProducts.sort((a, b) => a.rawPrice.compareTo(b.rawPrice));
-
-      if (sortedProducts.length >= 4) {
-        monthlyProducts.assignAll([sortedProducts[0], sortedProducts[1]]);
-        yearlyProducts.assignAll([sortedProducts[2], sortedProducts[3]]);
-      }
-    } else {
-      // Original logic for iOS or distinct IDs
-      final List<ProductDetails> monthly = [];
-      final List<ProductDetails> yearly = [];
-
-      for (var product in products) {
-        if (product.id.contains('monthly')) {
-          monthly.add(product);
-        } else if (product.id.contains('yearly')) {
-          yearly.add(product);
-        }
-      }
-
-      monthly.sort((a, b) => a.id.contains('premium') ? -1 : 1);
-      yearly.sort((a, b) => a.id.contains('premium') ? -1 : 1);
-
-      monthlyProducts.assignAll(monthly);
-      yearlyProducts.assignAll(yearly);
-    }
-
-    Helpers.debug(
-        'IAP: Controller mapped ${monthlyProducts.length} monthly and ${yearlyProducts.length} yearly products');
   }
 
   void selectPlan(int index) {

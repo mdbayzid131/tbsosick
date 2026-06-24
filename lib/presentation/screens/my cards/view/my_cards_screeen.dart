@@ -119,13 +119,28 @@ class _MyCardsScreenState extends State<MyCardsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'My Cards',
-            style: GoogleFonts.arimo(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
+          Row(
+            children: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                onPressed: () => Get.back(),
+              ),
+              SizedBox(width: 10.w),
+              Text(
+                'My Cards',
+                style: GoogleFonts.arimo(
+                  fontSize: 22.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16.h),
           Container(

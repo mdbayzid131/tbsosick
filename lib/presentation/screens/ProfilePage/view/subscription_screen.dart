@@ -73,7 +73,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: Text('🚀', style: TextStyle(fontSize: 24.sp)),
+                      child: Text('⭐️', style: TextStyle(fontSize: 24.sp)),
                     ),
                   ),
                   SizedBox(height: 12.h),
@@ -150,10 +150,11 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                   label: controller.isSelectedPlanCurrent
                       ? 'Current Plan'
                       : (controller.selectedPlan.value == 0
-                          ? 'Select Free Plan'
-                          : 'Subscribe Now'),
-                  onPressed:
-                      controller.isSelectedPlanCurrent ? null : controller.subscribe,
+                            ? 'Select Free Plan'
+                            : 'Subscribe Now'),
+                  onPressed: controller.isSelectedPlanCurrent
+                      ? null
+                      : controller.subscribe,
                 ),
               ),
             ),
@@ -182,7 +183,6 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 price: '\$0',
                 period: '',
                 features: [
-                  
                   '2 basic preference cards',
                   'No library access',
                   'Email support',
@@ -232,10 +232,16 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                               'Verified cards',
                             ],
                       isSelected: controller.selectedPlan.value == planIndex,
-                      currentPlan: (isPremium 
-                          ? controller.currentSubscription?.plan == 'PREMIUM'
-                          : controller.currentSubscription?.plan == 'ENTERPRISE') &&
-                          (controller.currentSubscription?.productId?.contains(isYearly ? 'yearly' : 'monthly') ?? true),
+                      currentPlan:
+                          (isPremium
+                              ? controller.currentSubscription?.plan ==
+                                    'PREMIUM'
+                              : controller.currentSubscription?.plan ==
+                                    'ENTERPRISE') &&
+                          (controller.currentSubscription?.productId?.contains(
+                                isYearly ? 'yearly' : 'monthly',
+                              ) ??
+                              true),
                     ),
                   ),
                 );

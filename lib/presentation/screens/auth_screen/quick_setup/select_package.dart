@@ -11,12 +11,14 @@ import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
+import 'package:tbsosick/core/services/iap_service.dart';
 
 import '../../../../config/constants/image_paths.dart';
 
 void showSelectPackageBottomSheet(BuildContext context) {
   final selectedPlan = 1.obs;
   final tr = AppLocalizations.of(context)!;
+  final iapService = Get.find<IapService>();
 
   showModalBottomSheet(
     isDismissible: false,
@@ -101,7 +103,7 @@ void showSelectPackageBottomSheet(BuildContext context) {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    '⭐️',
+                                    '🚀',
                                     style: GoogleFonts.arimo(
                                       fontSize: 24.sp,
                                       color: Colors.white,
@@ -179,21 +181,26 @@ void showSelectPackageBottomSheet(BuildContext context) {
                               GestureDetector(
                                 onTap: () => selectedPlan.value = 1,
                                 child: Obx(
-                                  () => _planCard(
-                                    context: context,
-                                    title: tr.premiumPlanTitle,
-                                    price: '\$5.99',
-                                    badge: tr.popularBadge,
-                                    features: [
-                                      tr.featurePremiumCards,
-                                      tr.featureBasicCalendar,
-                                      tr.featurePublicLibrary,
-                                      tr.featureNoCollaboration,
-                                      tr.featureNoVerifiedCard,
-                                    ],
-                                    isSelected: selectedPlan.value == 1,
-                                    showCheck: true,
-                                  ),
+                                  () {
+                                    final price = iapService.monthlyProducts.isNotEmpty
+                                        ? iapService.monthlyProducts[0].price
+                                        : '\$1.99';
+                                    return _planCard(
+                                      context: context,
+                                      title: tr.premiumPlanTitle,
+                                      price: price,
+                                      badge: tr.popularBadge,
+                                      features: [
+                                        tr.featurePremiumCards,
+                                        tr.featureBasicCalendar,
+                                        tr.featurePublicLibrary,
+                                        tr.featureNoCollaboration,
+                                        tr.featureNoVerifiedCard,
+                                      ],
+                                      isSelected: selectedPlan.value == 1,
+                                      showCheck: true,
+                                    );
+                                  },
                                 ),
                               ),
 
@@ -203,20 +210,25 @@ void showSelectPackageBottomSheet(BuildContext context) {
                               GestureDetector(
                                 onTap: () => selectedPlan.value = 2,
                                 child: Obx(
-                                  () => _planCard(
-                                    context: context,
-                                    title: tr.enterprisePlanTitle,
-                                    price: '\$9.99',
-                                    badge: tr.popularBadge,
-                                    features: [
-                                      tr.featureUnlimitedCards,
-                                      tr.featureAdvancedCalendar,
-                                      tr.featurePublicLibrary,
-                                      tr.featureTeamCollaboration,
-                                      tr.featureVerifiedCards,
-                                    ],
-                                    isSelected: selectedPlan.value == 2,
-                                  ),
+                                  () {
+                                    final price = iapService.monthlyProducts.length > 1
+                                        ? iapService.monthlyProducts[1].price
+                                        : '\$9.99';
+                                    return _planCard(
+                                      context: context,
+                                      title: tr.enterprisePlanTitle,
+                                      price: price,
+                                      badge: tr.popularBadge,
+                                      features: [
+                                        tr.featureUnlimitedCards,
+                                        tr.featureAdvancedCalendar,
+                                        tr.featurePublicLibrary,
+                                        tr.featureTeamCollaboration,
+                                        tr.featureVerifiedCards,
+                                      ],
+                                      isSelected: selectedPlan.value == 2,
+                                    );
+                                  },
                                 ),
                               ),
                               SizedBox(height: 16),
