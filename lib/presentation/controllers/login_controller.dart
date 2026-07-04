@@ -65,7 +65,7 @@ class LoginController extends GetxController {
         final bool isOnboardingCompleted =
             authData['isOnboardingCompleted'] ?? true;
 
-        if (isOnboardingCompleted) {
+        if (!isOnboardingCompleted) {
           Get.offAllNamed(AppRoutes.welcomePage);
         } else {
           Get.offAllNamed(AppRoutes.bottomNavBar);
