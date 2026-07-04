@@ -2,11 +2,6 @@ import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-
-
-
-
-
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
 import 'package:tbsosick/core/services/auth_service.dart';
@@ -20,7 +15,7 @@ class LoginController extends GetxController {
   final passwordController = TextEditingController();
 
   final emailError = RxnString();
-  final passwordError = RxnString(); 
+  final passwordError = RxnString();
 
   final isLoading = false.obs;
   final isPasswordVisible = false.obs;
@@ -70,7 +65,7 @@ class LoginController extends GetxController {
         final bool isOnboardingCompleted =
             authData['isOnboardingCompleted'] ?? true;
 
-        if (!isOnboardingCompleted) {
+        if (isOnboardingCompleted) {
           Get.offAllNamed(AppRoutes.welcomePage);
         } else {
           Get.offAllNamed(AppRoutes.bottomNavBar);
@@ -93,7 +88,7 @@ class LoginController extends GetxController {
 
   void goToRegister() {
     clearControllers();
-    Get.toNamed(AppRoutes.register);      
+    Get.toNamed(AppRoutes.register);
   }
 
   void goToForgotPassword() {

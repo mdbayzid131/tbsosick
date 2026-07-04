@@ -4,6 +4,7 @@ import 'package:tbsosick/presentation/screens/auth_screen/login_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/interactive_tutorial/interactive_tutorial_screen.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/interactive_tutorial/interactive_tutorial_binding.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/preferred_note_method.dart';
+import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/select_package.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/welcome_page.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/quick_setup/what_your_speciality.dart';
 import 'package:tbsosick/presentation/screens/auth_screen/otp_verification_screen.dart';
@@ -33,6 +34,7 @@ class AppRoutes {
   static const String search = '/search';
   static const String settings = '/settings';
   static const String welcomePage = '/welcome-page';
+  static const String selectPackage = '/select-package';
   static const String whatYourSpeciality = '/what-your-speciality';
   static const String preferredNoteMethod = '/preferred-note-method';
   static const String interactiveTutorial = '/interactive-tutorial';
@@ -71,6 +73,11 @@ final pages = [
     name: AppRoutes.welcomePage,
     page: () => WelcomePage(),
     bindings: [],
+  ),
+  GetPage(
+    name: AppRoutes.selectPackage,
+    page: () => const SelectPackageScreen(),
+    bindings: [SubscriptionBinding()],
   ),
   GetPage(
     name: AppRoutes.whatYourSpeciality,

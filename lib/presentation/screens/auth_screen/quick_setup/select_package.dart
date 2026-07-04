@@ -2,282 +2,314 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
-
-
-
 import 'package:google_fonts/google_fonts.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
 import 'package:tbsosick/core/services/iap_service.dart';
-
+import 'package:tbsosick/presentation/screens/ProfilePage/controller/subscription_controller.dart';
 import '../../../../config/constants/image_paths.dart';
 
-void showSelectPackageBottomSheet(BuildContext context) {
-  final selectedPlan = 1.obs;
-  final tr = AppLocalizations.of(context)!;
-  final iapService = Get.find<IapService>();
+class SelectPackageScreen extends GetView<SubscriptionController> {
+  const SelectPackageScreen({super.key});
 
-  showModalBottomSheet(
-    isDismissible: false,
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (_) {
-      return Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
+  @override
+  Widget build(BuildContext context) {
+    // Resolve or retrieve SubscriptionController
+    final controller = Get.isRegistered<SubscriptionController>()
+        ? Get.find<SubscriptionController>()
+        : Get.put(SubscriptionController());
+
+    final tr = AppLocalizations.of(context)!;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black,
+            size: 20.sp,
+          ),
+          onPressed: () => Get.back(),
         ),
-        child: SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.9,
-            padding: EdgeInsets.fromLTRB(0, 16.w, 0, 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        title: Text(
+          tr.choosePlanTitle,
+          style: GoogleFonts.arimo(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: controller.restorePurchases,
+            child: Text(
+              'Restore',
+              style: GoogleFonts.arimo(
+                color: AppTheme.primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        tr.choosePlanTitle,
-                        style: GoogleFonts.arimo(
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF000000),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => Get.back(),
-                        child: Container(
-                          height: 36.w,
-                          width: 36.w,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF2F2F7),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            size: 20.sp,
-                            color: const Color(0xFF1C1B1F),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Purple Gradient Header Banner (App Logo, Unlock text, subtitle)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 24.h),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFf9945FF), Color(0xFF7B2FD4)],
                 ),
-                SizedBox(height: 5.h),
-
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.only(top: 24, bottom: 28),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [Color(0xFf9945FF), Color(0xFF7B2FD4)],
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              SizedBox(height: 12),
-
-                              Container(
-                                height: 56.w,
-                                width: 56.w,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: .20),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '🚀',
-                                    style: GoogleFonts.arimo(
-                                      fontSize: 24.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              SizedBox(height: 16),
-
-                              Text(
-                                tr.unlockSmrtscrub,
-                                style: GoogleFonts.arimo(
-                                  fontSize: 22.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-
-                              SizedBox(height: 6),
-
-                              Text(
-                                tr.chooseWorksForYou,
-                                style: GoogleFonts.arimo(
-                                  fontSize: 14.sp,
-                                  color: Colors.white.withValues(alpha: .9),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            children: [
-                              SizedBox(height: 16),
-
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  tr.choosePlanTitle,
-                                  style: GoogleFonts.arimo(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 16),
-
-                              // Free
-                              GestureDetector(
-                                onTap: () => selectedPlan.value = 0,
-                                child: Obx(
-                                  () => _planCard(
-                                    context: context,
-                                    title: tr.freePlanTitle,
-                                    price: '\$0 ',
-                                    features: [
-                                      tr.featureBasicCards,
-                                      tr.featureNoLibrary,
-                                      tr.featureNoCalendar,
-                                      tr.featureEmailSupport,
-                                    ],
-                                    isSelected: selectedPlan.value == 0,
-                                  ),
-                                ),
-                              ),
-
-                              SizedBox(height: 16.h),
-
-                              // Premium
-                              GestureDetector(
-                                onTap: () => selectedPlan.value = 1,
-                                child: Obx(
-                                  () {
-                                    final price = iapService.monthlyProducts.isNotEmpty
-                                        ? iapService.monthlyProducts[0].price
-                                        : '\$1.99';
-                                    return _planCard(
-                                      context: context,
-                                      title: tr.premiumPlanTitle,
-                                      price: price,
-                                      badge: tr.popularBadge,
-                                      features: [
-                                        tr.featurePremiumCards,
-                                        tr.featureBasicCalendar,
-                                        tr.featurePublicLibrary,
-                                        tr.featureNoCollaboration,
-                                        tr.featureNoVerifiedCard,
-                                      ],
-                                      isSelected: selectedPlan.value == 1,
-                                      showCheck: true,
-                                    );
-                                  },
-                                ),
-                              ),
-
-                              SizedBox(height: 16),
-
-                              // Enterprise
-                              GestureDetector(
-                                onTap: () => selectedPlan.value = 2,
-                                child: Obx(
-                                  () {
-                                    final price = iapService.monthlyProducts.length > 1
-                                        ? iapService.monthlyProducts[1].price
-                                        : '\$9.99';
-                                    return _planCard(
-                                      context: context,
-                                      title: tr.enterprisePlanTitle,
-                                      price: price,
-                                      badge: tr.popularBadge,
-                                      features: [
-                                        tr.featureUnlimitedCards,
-                                        tr.featureAdvancedCalendar,
-                                        tr.featurePublicLibrary,
-                                        tr.featureTeamCollaboration,
-                                        tr.featureVerifiedCards,
-                                      ],
-                                      isSelected: selectedPlan.value == 2,
-                                    );
-                                  },
-                                ),
-                              ),
-                              SizedBox(height: 16),
-
-                              Obx(
-                                () => CustomElevatedButton(
-                                  label: selectedPlan.value == 0
-                                      ? tr.continueWithFree
-                                      : selectedPlan.value == 1
-                                      ? tr.continueWithPremium
-                                      : tr.continueWithEnterprise,
-                                  onPressed: () {
-                                    Get.toNamed(AppRoutes.whatYourSpeciality);
-                                  },
-                                ),
-                              ),
-                              SizedBox(height: 10.h),
-                            ],
-                          ),
-                        ),
-                      ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    height: 56.w,
+                    width: 56.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: .20),
+                      shape: BoxShape.circle,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(28.w),
+                      child: Image.asset(
+                        ImagePaths.appLogo,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    tr.unlockSmrtscrub,
+                    style: GoogleFonts.arimo(
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    tr.chooseWorksForYou,
+                    style: GoogleFonts.arimo(
+                      fontSize: 13.sp,
+                      color: Colors.white.withValues(alpha: .9),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Pill-shaped TabBar for switching between Monthly/Yearly plans
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+              height: 45.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(25.r),
+              ),
+              child: TabBar(
+                controller: controller.tabController,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25.r),
+                  color: AppTheme.primaryColor,
                 ),
+                labelColor: Colors.white,
+                dividerColor: Colors.transparent,
+                unselectedLabelColor: Colors.grey[600],
+                labelStyle: GoogleFonts.arimo(fontWeight: FontWeight.w700),
+                tabs: const [
+                  Tab(text: 'Monthly'),
+                  Tab(text: 'Yearly'),
+                ],
+              ),
+            ),
+
+            // Scrollable TabBarView for Plan List options
+            Expanded(
+              child: TabBarView(
+                controller: controller.tabController,
+                children: [
+                  _buildPlanList(
+                    context,
+                    controller,
+                    controller.monthlyProducts,
+                    isYearly: false,
+                  ),
+                  _buildPlanList(
+                    context,
+                    controller,
+                    controller.yearlyProducts,
+                    isYearly: true,
+                  ),
+                ],
+              ),
+            ),
+
+            // Bottom Action Button with onboarding logic
+            Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Obx(
+                () => CustomElevatedButton(
+                  isLoading: controller.isLoading,
+                  label: controller.isSelectedPlanCurrent
+                      ? 'Continue'
+                      : (controller.selectedPlan.value == 0
+                          ? tr.continueWithFree
+                          : (controller.selectedPlan.value == 1
+                              ? tr.continueWithPremium
+                              : tr.continueWithEnterprise)),
+                  onPressed: () async {
+                    if (controller.isSelectedPlanCurrent || controller.selectedPlan.value == 0) {
+                      // Free plan or currently active plan - directly proceed to next onboarding step
+                      Get.toNamed(AppRoutes.whatYourSpeciality);
+                    } else {
+                      // Try to subscribe to the paid plan
+                      await controller.subscribe();
+                      // Once successfully subscribed and confirmed, proceed to next step
+                      if (controller.isSelectedPlanCurrent && !controller.isLoading) {
+                        Get.toNamed(AppRoutes.whatYourSpeciality);
+                      }
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Plan List helper
+Widget _buildPlanList(
+  BuildContext context,
+  SubscriptionController controller,
+  RxList<ProductDetails> products, {
+  required bool isYearly,
+}) {
+  final tr = AppLocalizations.of(context)!;
+  return SingleChildScrollView(
+    padding: EdgeInsets.symmetric(horizontal: 20.w),
+    child: Column(
+      children: [
+        // Free Plan - Always shown first
+        GestureDetector(
+          onTap: () => controller.selectPlan(0),
+          child: Obx(
+            () => _planCard(
+              context: context,
+              title: tr.freePlanTitle,
+              price: '\$0',
+              period: '',
+              features: [
+                tr.featureBasicCards,
+                tr.featureNoLibrary,
+                tr.featureNoCalendar,
+                tr.featureEmailSupport,
               ],
+              isSelected: controller.selectedPlan.value == 0,
+              currentPlan: controller.currentSubscription?.plan == 'FREE',
             ),
           ),
         ),
-      );
-    },
+        SizedBox(height: 16.h),
+
+        // Paid Plans list
+        Obx(() {
+          if (products.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Column(
+            children: products.asMap().entries.map((entry) {
+              final index = entry.key;
+              final product = entry.value;
+
+              final isPremium = index == 0;
+              final planIndex = isPremium ? 1 : 2;
+
+              return Padding(
+                padding: EdgeInsets.only(bottom: 16.h),
+                child: GestureDetector(
+                  onTap: () => controller.selectPlan(planIndex),
+                  child: _planCard(
+                    context: context,
+                    title: isPremium
+                        ? tr.premiumPlanTitle
+                        : tr.enterprisePlanTitle,
+                    price: product.price,
+                    period: isYearly ? '/year' : tr.monthLabel,
+                    badge: isPremium ? tr.popularBadge : null,
+                    features: isPremium
+                        ? [
+                            tr.featurePremiumCards,
+                            tr.featureBasicCalendar,
+                            tr.featurePublicLibrary,
+                            tr.featureNoCollaboration,
+                            tr.featureNoVerifiedCard,
+                          ]
+                        : [
+                            tr.featureUnlimitedCards,
+                            tr.featureAdvancedCalendar,
+                            tr.featurePublicLibrary,
+                            tr.featureTeamCollaboration,
+                            tr.featureVerifiedCards,
+                          ],
+                    isSelected: controller.selectedPlan.value == planIndex,
+                    currentPlan:
+                        (isPremium
+                            ? controller.currentSubscription?.plan ==
+                                  'PREMIUM'
+                            : controller.currentSubscription?.plan ==
+                                  'ENTERPRISE') &&
+                        (controller.currentSubscription?.productId?.contains(
+                              isYearly ? 'yearly' : 'monthly',
+                            ) ??
+                            true),
+                  ),
+                ),
+              );
+            }).toList(),
+          );
+        }),
+      ],
+    ),
   );
 }
 
+// Plan Card styling layout
 Widget _planCard({
   required BuildContext context,
   required String title,
   required String price,
+  required String period,
   required List<String> features,
   bool isSelected = false,
-  bool showCheck = false,
+  bool currentPlan = false,
   String? badge,
 }) {
   final tr = AppLocalizations.of(context)!;
   return Container(
     padding: EdgeInsets.all(16),
     decoration: BoxDecoration(
+      color: isSelected
+          ? AppTheme.primaryColor.withValues(alpha: 0.05)
+          : Colors.white,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
-        color: isSelected ? AppTheme.primaryColor : Color(0xffC6C6C8),
+        color: isSelected ? AppTheme.primaryColor : const Color(0xffC6C6C8),
         width: isSelected ? 2 : 1,
       ),
     ),
@@ -298,7 +330,7 @@ Widget _planCard({
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: Color(0xff14F195),
+                  color: const Color(0xff14F195),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -311,9 +343,29 @@ Widget _planCard({
                 ),
               ),
             ],
-            Spacer(),
-            if (isSelected)
-              Icon(Icons.check_circle, color: Color(0xff9945FF), size: 20.sp),
+            const Spacer(),
+            if (currentPlan)
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Current Plan',
+                  style: GoogleFonts.arimo(
+                    fontSize: 11.sp,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              )
+            else if (isSelected)
+              Icon(
+                Icons.check_circle,
+                color: const Color(0xff9945FF),
+                size: 20.sp,
+              ),
           ],
         ),
         SizedBox(height: 6.h),
@@ -326,15 +378,17 @@ Widget _planCard({
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(width: 4.w),
-            Text(
-              tr.monthLabel,
-              style: GoogleFonts.arimo(
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff8E8E93),
+            if (period.isNotEmpty) ...[
+              SizedBox(width: 4.w),
+              Text(
+                period,
+                style: GoogleFonts.arimo(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xff8E8E93),
+                ),
               ),
-            ),
+            ],
           ],
         ),
         SizedBox(height: 12),

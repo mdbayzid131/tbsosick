@@ -8,139 +8,136 @@ import 'package:tbsosick/l10n/app_localizations.dart';
 void showSignOutConfirmationBottomSheet(BuildContext context) {
   final controller = Get.find<LoginController>();
   final tr = AppLocalizations.of(context)!;
-  showModalBottomSheet(
+  
+  showDialog(
     context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (_) {
-      return Container(
-        padding: EdgeInsets.fromLTRB(20.w, 15.w, 20.w, 0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.r),
         ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with title and close button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      tr.signOut,
-                      style: GoogleFonts.arimo(
-                        fontSize: 22.sp,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF000000),
-                      ),
+        backgroundColor: Colors.white,
+        elevation: 10,
+        child: Padding(
+          padding: EdgeInsets.all(20.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header with title and close button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    tr.signOut,
+                    style: GoogleFonts.arimo(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF000000),
                     ),
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Container(
-                        height: 32.w,
-                        width: 32.w,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFF2F2F7),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.close,
-                          size: 20.sp,
-                          color: const Color(0xFF1C1B1F),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 32.h),
-
-                // Confirmation question
-                Text(
-                  tr.signOutConfirm,
-                  style: GoogleFonts.arimo(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF000000),
-                    height: 1.3,
                   ),
-                ),
-
-                SizedBox(height: 16.h),
-
-                // Description text
-                Text(
-                  tr.signOutDesc,
-                  style: GoogleFonts.arimo(
-                    fontSize: 13.sp,
-                    color: const Color(0xFF8E8E93),
-                    height: 1.5,
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child: Container(
+                      height: 32.w,
+                      width: 32.w,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFF2F2F7),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.close,
+                        size: 20.sp,
+                        color: const Color(0xFF1C1B1F),
+                      ),
+                    ),
                   ),
+                ],
+              ),
+
+              SizedBox(height: 20.h),
+
+              // Confirmation question
+              Text(
+                tr.signOutConfirm,
+                style: GoogleFonts.arimo(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF000000),
+                  height: 1.3,
                 ),
+              ),
 
-                SizedBox(height: 32.h),
+              SizedBox(height: 12.h),
 
-                // Action buttons
-                Row(
-                  children: [
-                    // Cancel button
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => Get.back(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF2F2F7),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.r),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 16.h),
-                          elevation: 0,
+              // Description text
+              Text(
+                tr.signOutDesc,
+                style: GoogleFonts.arimo(
+                  fontSize: 13.sp,
+                  color: const Color(0xFF8E8E93),
+                  height: 1.5,
+                ),
+              ),
+
+              SizedBox(height: 24.h),
+
+              // Action buttons row (Cancel & Sign Out)
+              Row(
+                children: [
+                  // Cancel button
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Get.back(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF2F2F7),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
-                        child: Text(
-                          tr.cancel,
-                          style: GoogleFonts.arimo(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF9945FF),
-                          ),
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        tr.cancel,
+                        style: GoogleFonts.arimo(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF9945FF),
                         ),
                       ),
                     ),
+                  ),
 
-                    SizedBox(width: 12.w),
+                  SizedBox(width: 12.w),
 
-                    // Sign Out button
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          controller.logout();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF3B30),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.r),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 16.h),
-                          elevation: 0,
+                  // Sign Out button
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        controller.logout();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF3B30),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
-                        child: Text(
-                          tr.signOut,
-                          style: GoogleFonts.arimo(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        tr.signOut,
+                        style: GoogleFonts.arimo(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  ],
-                ),
-
-                SizedBox(height: 16.h),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       );

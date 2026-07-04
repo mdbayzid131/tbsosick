@@ -405,6 +405,7 @@ class IapService extends GetxService {
     }
 
     Helpers.debug(
-        'IAP: Service mapped ${monthlyProducts.length} monthly and ${yearlyProducts.length} yearly products');
+      'IAP: Service mapped ${monthlyProducts.length} monthly and ${yearlyProducts.length} yearly products',
+    );
   }
 }
