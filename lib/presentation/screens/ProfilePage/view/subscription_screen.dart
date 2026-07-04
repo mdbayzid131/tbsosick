@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:tbsosick/config/constants/image_paths.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/subscription_controller.dart';
@@ -72,8 +73,9 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                       color: Colors.white.withValues(alpha: .20),
                       shape: BoxShape.circle,
                     ),
-                    child: Center(
-                      child: Text('⭐️', style: TextStyle(fontSize: 24.sp)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(28.w),
+                      child: Image.asset(ImagePaths.appLogo, fit: BoxFit.cover),
                     ),
                   ),
                   SizedBox(height: 12.h),
