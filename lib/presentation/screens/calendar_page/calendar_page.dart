@@ -668,6 +668,7 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
+  /*
   // Event Types legend
   Widget _buildEventTypesLegend() {
     return _buildCard(
@@ -700,7 +701,9 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
     );
   }
+  */
 
+  /*
   Widget _buildEventTypeLegendItem(String label, Color color) {
     return Row(
       children: [
@@ -720,6 +723,7 @@ class _CalendarPageState extends State<CalendarPage> {
       ],
     );
   }
+  */
 
   void _showDeleteDialog(BuildContext context, String id) {
     showDialog(

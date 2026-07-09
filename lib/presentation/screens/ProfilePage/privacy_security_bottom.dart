@@ -284,6 +284,7 @@ class _PrivacyAndSecurityPageState extends State<PrivacyAndSecurityPage> {
     );
   }
 
+  /*
   // Setting item switch widget
   Widget _buildSettingItem({
     required IconData icon,
@@ -357,6 +358,7 @@ class _PrivacyAndSecurityPageState extends State<PrivacyAndSecurityPage> {
       ],
     );
   }
+  */
 }
 
 // GetX Controller for managing Change Password state & actions

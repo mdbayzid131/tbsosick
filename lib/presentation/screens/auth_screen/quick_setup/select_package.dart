@@ -8,7 +8,6 @@ import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/config/themes/app_theme.dart';
 import 'package:tbsosick/presentation/widgets/custom_elevated_button.dart';
 import 'package:tbsosick/l10n/app_localizations.dart';
-import 'package:tbsosick/core/services/iap_service.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/subscription_controller.dart';
 import '../../../../config/constants/image_paths.dart';
 
@@ -300,7 +299,6 @@ Widget _planCard({
   bool currentPlan = false,
   String? badge,
 }) {
-  final tr = AppLocalizations.of(context)!;
   return Container(
     padding: EdgeInsets.all(16),
     decoration: BoxDecoration(

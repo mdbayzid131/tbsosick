@@ -178,31 +178,8 @@ class IapService extends GetxService {
 
       products.assignAll(response.productDetails);
       for (var prod in response.productDetails) {
-        String androidInfo = '';
-        if (Platform.isAndroid && prod is GooglePlayProductDetails) {
-          final offers = prod.productDetails.subscriptionOfferDetails;
-          final allBasePlans = offers?.map((e) => e.basePlanId).toList();
-          final offerIds = offers?.map((e) => e.offerId).toList();
-          final offerIdsToken = offers?.map((e) => e.offerIdToken).toList();
-          final offerTags = offers?.map((e) => e.offerTags).toList();
-          final offerId = offers?.map((e) => e.installmentPlanDetails).toList();
-          final pricingPhases = offers?.map((e) => e.pricingPhases).toList();
-          final priceCurrencyCode = offers
-              ?.map((e) => e.pricingPhases.map((e) => e.priceCurrencyCode))
-              .toList();
-
-          // Let's try to see if there's a specific offer index or token in the product details wrapper
-          androidInfo = ' | All Base Plans in Wrapper: $allBasePlans';
-
-          Helpers.debug("offerIds: $offerIds");
-          Helpers.debug("offerIdsToken: $offerIdsToken");
-          Helpers.debug("offerTags: $offerTags");
-          Helpers.debug("offerId: $offerId");
-          Helpers.debug("pricingPhases: $pricingPhases");
-          Helpers.debug("priceCurrencyCode: $priceCurrencyCode");
-        }
         Helpers.debug(
-          'IAP: Loaded Product: ID: ${prod.id}, Price: ${prod.price}$androidInfo',
+          'IAP: Loaded Product: ID: ${prod.id}, Price: ${prod.price}',
         );
       }
     } catch (e) {
@@ -265,6 +242,10 @@ class IapService extends GetxService {
             );
           } else {
             Helpers.error('Purchase Error: ${purchase.error}');
+            final message = purchase.error?.message ?? 'Purchase failed';
+            if (!message.toLowerCase().contains('cancel') && !message.toLowerCase().contains('user_canceled')) {
+              Helpers.showError(message);
+            }
           }
 
           try {
@@ -346,10 +327,12 @@ class IapService extends GetxService {
           await syncSubscriptionWithBackend();
         } else {
           Helpers.debug('Verification failed: $errorMessage');
+          Helpers.showError('Subscription verification failed: $errorMessage');
         }
       }
     } catch (e) {
       Helpers.error('Error verifying purchase: $e');
+      Helpers.showError('Purchase verification failed. Please try again.');
     }
   }
 
@@ -364,6 +347,7 @@ class IapService extends GetxService {
       );
     } catch (e) {
       Helpers.error('Error restoring purchases: $e');
+      Helpers.showError('Failed to restore purchases: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }

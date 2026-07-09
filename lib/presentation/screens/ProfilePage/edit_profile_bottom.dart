@@ -225,7 +225,9 @@ void showEditProfileBottomSheet(BuildContext context) {
                                   hospital: hospitalController.text.trim(),
                                   email: emailController.text.trim(),
                                 );
-                                Navigator.pop(context);
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                }
                               },
                             );
                     }),

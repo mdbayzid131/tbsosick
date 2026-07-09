@@ -49,7 +49,9 @@ void showOtpVerifyBottomSheet(BuildContext context, String email) {
 
         if (resetToken != null) {
           Helpers.showSuccess(tr.otpVerifySuccess);
-          Navigator.pop(context);
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
           showResetPasswordBottomSheet2(Get.context!, resetToken);
         } else {
           Helpers.showError('Reset token not found');

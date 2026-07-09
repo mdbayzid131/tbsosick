@@ -266,6 +266,7 @@ Widget _notificationCard(
   );
 }
 
+/*
 void _showDeleteConfirmation(BuildContext context, VoidCallback onDelete) {
   final tr = AppLocalizations.of(context)!;
   showDialog(
@@ -289,4 +290,5 @@ void _showDeleteConfirmation(BuildContext context, VoidCallback onDelete) {
     ),
   );
 }
+*/
 
