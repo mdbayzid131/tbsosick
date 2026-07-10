@@ -50,10 +50,7 @@ class AuthRepo {
     required String password,
     String? deviceToken,
   }) async {
-    final body = {
-      "email": email,
-      "password": password,
-    };
+    final body = {"email": email, "password": password};
     if (deviceToken != null) {
       body["deviceToken"] = deviceToken;
     }
@@ -62,7 +59,9 @@ class AuthRepo {
 
   /// ===================== SYNC DEVICE TOKEN =====================
   Future<Response> syncDeviceToken(String token) async {
-    return await apiClient.patchData(ApiConstants.profile, {"deviceToken": token});
+    return await apiClient.patchData(ApiConstants.profile, {
+      "deviceToken": token,
+    });
   }
 
   /// ===================== FORGOT PASSWORD =====================
@@ -106,19 +105,11 @@ class AuthRepo {
   Future<Response> socialLogin({
     required String provider,
     required String idToken,
-    String? nonce,
-    String? deviceToken,
-    required String platform,
   }) async {
-    final Map<String, dynamic> body = {
+    return await apiClient.postData(ApiConstants.socialLogin, {
       "provider": provider,
       "idToken": idToken,
-      "platform": platform,
-    };
-    if (nonce != null) body["nonce"] = nonce;
-    if (deviceToken != null) body["deviceToken"] = deviceToken;
-
-    return await apiClient.postData(ApiConstants.socialLogin, body);
+    });
   }
 
   /// ===================== LOGOUT =====================
