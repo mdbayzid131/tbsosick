@@ -123,6 +123,22 @@ The backend must verify the `idToken` using the **Firebase Admin SDK**.
 
 ---
 
+## ⚠️ 2nd-Time Login (User Already Exists Issue) - IMPORTANT!
+
+A very common issue in social logins is throwing a `"User already exists"` error when the user logs in for the second time. 
+
+To prevent this:
+1. **Do not use a registration-only flow.** The `/auth/social-login` endpoint is a **combined Registration + Login (Upsert)** flow.
+2. When the token is verified, **first search** the database for a user with the matching `email` or `firebaseUid`.
+3. **If the user exists:**
+   - Immediately log them in, generate their JWT tokens (`accessToken` and `refreshToken`), and return them with a `200 OK` status.
+   - **Do not** attempt to re-register them or throw a duplicate key validation error.
+4. **If the user does not exist:**
+   - Create and save the new user record in your database.
+   - Generate their JWT tokens and return them with a `200 OK` status.
+
+---
+
 ## ✨ Benefits of this Approach
 1. **No Redirect Handlers Needed:** The mobile app handles Apple & Google redirects natively (no custom server-side OAuth callback page required).
 2. **Unified Verification:** The backend code to verify Google and Apple users is exactly the same—both tokens are verified using `admin.auth().verifyIdToken(idToken)`.
