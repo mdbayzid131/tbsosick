@@ -1,7 +1,7 @@
 class ApiConstants {
   // Base URLs
-  static const String baseUrl = 'https://api.smrtscrub.app/api/v1';
-  // static const String baseUrl = 'https://nayem5001.binarybards.online/api/v1';
+ // static const String baseUrl = 'https://api.smrtscrub.app/api/v1';
+   static const String baseUrl = 'https://adnan5002.binarybards.online/api/v1';
   // static const String apiVersion = '';
   //
   // Auth Endpoints
