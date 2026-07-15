@@ -68,7 +68,16 @@ class SubscriptionController extends GetxController with GetSingleTickerProvider
         return;
       }
       Helpers.info('IAP: Initiating buySubscription for ${product.id}');
-      await _iapService.buySubscription(product, userId);
+      String? expectedBasePlanId;
+      if (Platform.isAndroid) {
+        final isMonthly = tabController.index == 0;
+        if (selectedPlan.value == 1) {
+          expectedBasePlanId = isMonthly ? 'premium-monthly' : 'premium-yearly';
+        } else if (selectedPlan.value == 2) {
+          expectedBasePlanId = isMonthly ? 'enterprise-monthly' : 'enterprise-yearly';
+        }
+      }
+      await _iapService.buySubscription(product, userId, expectedBasePlanId);
     } else {
       Helpers.error('IAP: Error - Product not found in store for selected plan');
       Helpers.showError('Product not available in store');

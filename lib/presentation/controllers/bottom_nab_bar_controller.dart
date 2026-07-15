@@ -81,6 +81,7 @@ class BottomNabBarController extends GetxController {
 
     // Watch subscription changes to automatically refresh library screen when user becomes paid
     ever(Get.find<IapService>().currentSubscription, (sub) {
+    
       if (sub?.isPremium == true) {
         isLibrarySubscriptionInactive.value = false;
         getLibraryCards(showLoading: false);

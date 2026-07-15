@@ -243,7 +243,8 @@ class IapService extends GetxService {
           } else {
             Helpers.error('Purchase Error: ${purchase.error}');
             final message = purchase.error?.message ?? 'Purchase failed';
-            if (!message.toLowerCase().contains('cancel') && !message.toLowerCase().contains('user_canceled')) {
+            if (!message.toLowerCase().contains('cancel') &&
+                !message.toLowerCase().contains('user_canceled')) {
               Helpers.showError(message);
             }
           }
