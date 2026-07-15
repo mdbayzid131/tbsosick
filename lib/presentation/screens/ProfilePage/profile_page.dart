@@ -461,11 +461,13 @@ class _ProfilePageState extends State<ProfilePage> {
     final isFree = planName == 'FREE';
 
     String expiryText = '';
-    if (sub?.currentPeriodEnd != null) {
+    if (isFree) {
+      expiryText = 'Basic features enabled';
+    } else if (sub?.currentPeriodEnd != null) {
       final date = sub!.currentPeriodEnd!;
       expiryText = 'Active until ${date.day}/${date.month}/${date.year}';
     } else {
-      expiryText = isFree ? 'Basic features enabled' : 'Lifetime Access';
+      expiryText = 'Lifetime Access';
     }
 
     return Container(
@@ -506,8 +508,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     isFree
                         ? 'Free Plan'
                         : (planName == 'ENTERPRISE'
-                            ? tr.enterprisePlanTitle
-                            : tr.premiumPlanTitle),
+                              ? tr.enterprisePlanTitle
+                              : tr.premiumPlanTitle),
                     style: GoogleFonts.arimo(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.w700,
@@ -579,7 +581,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 style: GoogleFonts.arimo(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: isFree ? const Color(0xFF4B5563) : const Color(0xFF6750A4),
+                  color: isFree
+                      ? const Color(0xFF4B5563)
+                      : const Color(0xFF6750A4),
                 ),
               ),
             ),

@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:tbsosick/core/services/api_checker.dart';
@@ -10,6 +9,7 @@ import 'package:tbsosick/data/models/library_card_model.dart';
 import 'package:tbsosick/data/models/user_model.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
 import 'package:tbsosick/data/models/specialty_model.dart';
+import 'package:tbsosick/core/services/iap_service.dart';
 
 class BottomNabBarController extends GetxController {
   final UserDataRepository _userDataRepository = UserDataRepository();
@@ -78,6 +78,14 @@ class BottomNabBarController extends GetxController {
     debounce(searchController, (_) {
       getLibraryCards(showLoading: true);
     }, time: const Duration(milliseconds: 500));
+
+    // Watch subscription changes to automatically refresh library screen when user becomes paid
+    ever(Get.find<IapService>().currentSubscription, (sub) {
+      if (sub?.isPremium == true) {
+        isLibrarySubscriptionInactive.value = false;
+        getLibraryCards(showLoading: false);
+      }
+    });
   }
 
   Future<void> loadHomeData() async {
@@ -124,7 +132,7 @@ class BottomNabBarController extends GetxController {
       );
 
       if (response.statusCode == 402) {
-        isLibrarySubscriptionInactive.value = true;
+        isLibrarySubscriptionInactive.value = !Get.find<IapService>().isPremiumUser;
         return;
       }
 
@@ -140,10 +148,10 @@ class BottomNabBarController extends GetxController {
         hasMoreLibrary.value = _libraryPage < result.meta.totalPages;
       }
       if(response.statusCode == 402 || response.statusCode == 403){
-            isLibrarySubscriptionInactive.value = true;
+            isLibrarySubscriptionInactive.value = !Get.find<IapService>().isPremiumUser;
       }
     } catch (e) {
-       {
+      {
         Helpers.error("Error loading library cards: $e");
       }
     } finally {
@@ -166,7 +174,7 @@ class BottomNabBarController extends GetxController {
       );
 
       if (response.statusCode == 402) {
-        isLibrarySubscriptionInactive.value = true;
+        isLibrarySubscriptionInactive.value = !Get.find<IapService>().isPremiumUser;
         return;
       }
 

@@ -158,7 +158,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
         children: [
           // Card count
           Obx(() {
-            if (controller.isLibrarySubscriptionInactive.value) {
+            if (controller.isLibrarySubscriptionInactive.value &&
+                !Get.find<IapService>().isPremiumUser) {
               return const SizedBox.shrink();
             }
             return Text(
@@ -170,7 +171,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
               ),
             );
           }),
-          Obx(() => controller.isLibrarySubscriptionInactive.value
+          Obx(() => (controller.isLibrarySubscriptionInactive.value &&
+                  !Get.find<IapService>().isPremiumUser)
               ? const SizedBox.shrink()
               : SizedBox(height: 12.h)),
           // Cards list
@@ -181,7 +183,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (controller.isLibrarySubscriptionInactive.value) {
+              if (controller.isLibrarySubscriptionInactive.value &&
+                  !Get.find<IapService>().isPremiumUser) {
                 return _buildSubscriptionRequiredUI();
               }
 
