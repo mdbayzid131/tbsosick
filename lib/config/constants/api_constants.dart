@@ -29,7 +29,7 @@ class ApiConstants {
   static const String getCardCount = '/preference-cards/stats';
   static const String getAllCard = '/preference-card';
   static const String getAllCardsList = '/preference-cards';
-
+ 
   static const String getMyCards = '/preference-cards/my-cards';
   static const String getCardDetails = '/preference-cards/{id}';
   static const String downloadCard = '/preference-cards/{id}/download';
