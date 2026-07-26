@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "344458357764-2at4ojuu1ofj7qjqhlqt8nbl2r2942nj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tbsosick.smrtscrub",
+            "certificate_hash": "9c44273c40ef19199292e52a386bec5920ccee07"
+          }
+        },
+        {
           "client_id": "344458357764-67ssgico4fe378cjce9ihgd6ddbi44bb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

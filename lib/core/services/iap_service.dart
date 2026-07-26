@@ -307,6 +307,7 @@ class IapService extends GetxService {
 
       if (response != null && response.statusCode == 200) {
         Helpers.info('Purchase verified successfully');
+        await StorageService.setString('pending_purchase_id', '');
         if (Platform.isAndroid && purchase is GooglePlayPurchaseDetails) {
           await _iap.completePurchase(purchase);
         } else if (Platform.isIOS && purchase is AppStorePurchaseDetails) {
@@ -314,18 +315,32 @@ class IapService extends GetxService {
         }
         await syncSubscriptionWithBackend();
       } else {
-        // If the transaction was superseded by an upgrade, we should still complete it
-        // so the store stops sending it to us.
+        // If transaction was superseded by upgrade, already expired, or 409 higher entitlement,
+        // complete purchase so the store stops retrying.
         final errorMessage = response?.data?['message']?.toString() ?? '';
-        if (errorMessage.contains('superseded by an upgrade') ||
-            errorMessage.contains('already expired')) {
+        final isConflictOrUpgrade =
+            response?.statusCode == 409 ||
+            errorMessage.contains('higher priority enterprise') ||
+            errorMessage.contains('superseded by an upgrade') ||
+            errorMessage.contains('already expired');
+
+        if (isConflictOrUpgrade) {
           Helpers.warning(
-            'Transaction $errorMessage. Completing to stop retries.',
+            'Transaction notice: $errorMessage. Completing transaction to stop retries.',
           );
-          if (Platform.isIOS && purchase is AppStorePurchaseDetails) {
+          await StorageService.setString('pending_purchase_id', '');
+          if (Platform.isAndroid && purchase is GooglePlayPurchaseDetails) {
+            await _iap.completePurchase(purchase);
+          } else if (Platform.isIOS && purchase is AppStorePurchaseDetails) {
             await _iap.completePurchase(purchase);
           }
           await syncSubscriptionWithBackend();
+          if (response?.statusCode == 409 ||
+              errorMessage.contains('higher priority')) {
+            Helpers.showWarning(
+              'You already hold a higher priority active entitlement.',
+            );
+          }
         } else {
           Helpers.debug('Verification failed: $errorMessage');
           Helpers.showError('Subscription verification failed: $errorMessage');
@@ -359,7 +374,7 @@ class IapService extends GetxService {
 
     if (Platform.isAndroid &&
         productsList.every((p) => p.id == 'smrtscrub_subscription')) {
-      // Android workaround: The plugin returns 4 products with identical IDs but different prices.
+      // Android workaround: The plugin returns multiple products with identical IDs but different prices.
       // We map them by sorting their raw price:
       // Assumed Pricing: Premium Monthly < Enterprise Monthly < Premium Yearly < Enterprise Yearly
       final sortedProducts = List<ProductDetails>.from(productsList);
@@ -368,6 +383,11 @@ class IapService extends GetxService {
       if (sortedProducts.length >= 4) {
         monthlyProducts.assignAll([sortedProducts[0], sortedProducts[1]]);
         yearlyProducts.assignAll([sortedProducts[2], sortedProducts[3]]);
+      } else if (sortedProducts.length >= 2) {
+        monthlyProducts.assignAll([sortedProducts[0]]);
+        yearlyProducts.assignAll([sortedProducts[1]]);
+      } else if (sortedProducts.isNotEmpty) {
+        monthlyProducts.assignAll([sortedProducts[0]]);
       }
     } else {
       // Original logic for iOS or distinct IDs

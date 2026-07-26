@@ -12,8 +12,8 @@ import 'package:google_fonts/google_fonts.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Disable runtime fetching of Google Fonts to prevent network/SocketException crashes when offline
-  GoogleFonts.config.allowRuntimeFetching = false;
+  // Allow runtime fetching of Google Fonts if not found in local assets
+  GoogleFonts.config.allowRuntimeFetching = true;
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await NotificationService().init();
