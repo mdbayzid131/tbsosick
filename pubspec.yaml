@@ -63,13 +63,13 @@ dependencies:
   google_sign_in: ^6.2.1
   sign_in_with_apple: ^6.1.1
   crypto: ^3.0.3
-  in_app_purchase: ^3.1.13
+  in_app_purchase: ^3.3.0
   flutter_localizations:
     sdk: flutter
   flutter_html: ^3.0.0
   socket_io_client: ^3.1.4
-  in_app_purchase_storekit: ^0.4.8+1
-  in_app_purchase_android: ^0.4.0+10
+  in_app_purchase_storekit: ^0.4.11
+  in_app_purchase_android: ^0.5.2
   package_info_plus: ^8.1.2
   url_launcher: ^6.3.2
 
