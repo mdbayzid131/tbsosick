@@ -1,16 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:tbsosick/core/utils/helpers.dart';
-
-
-
-
-
 import 'package:tbsosick/config/constants/storage_constants.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 import 'package:tbsosick/data/repositories/user_repository.dart';
-
 
 class TutorialController extends GetxController {
   final pageController = PageController();

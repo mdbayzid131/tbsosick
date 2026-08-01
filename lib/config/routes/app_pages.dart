@@ -76,7 +76,7 @@ final pages = [
   ),
   GetPage(
     name: AppRoutes.selectPackage,
-    page: () => const SelectPackageScreen(),
+    page: () => const SubscriptionScreen(),
     bindings: [SubscriptionBinding()],
   ),
   GetPage(

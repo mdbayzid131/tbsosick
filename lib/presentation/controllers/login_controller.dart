@@ -81,6 +81,7 @@ class LoginController extends GetxController {
       }
     } catch (e) {
       Helpers.error("login error => $e");
+      Helpers.showError(e.toString().replaceFirst('Exception: ', ''));
     } finally {
       isLoading.value = false;
     }

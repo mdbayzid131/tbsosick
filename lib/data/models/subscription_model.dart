@@ -32,11 +32,26 @@ class SubscriptionModel {
       productId: json['productId'],
       autoRenewing: json['autoRenewing'],
       currentPeriodEnd: json['currentPeriodEnd'] != null
-          ? DateTime.parse(json['currentPeriodEnd'])
+          ? DateTime.tryParse(json['currentPeriodEnd'].toString())
           : null,
     );
   }
 
-  bool get isPremium => plan == 'PREMIUM' || plan == 'ENTERPRISE';
-  bool get isEnterprise => plan == 'ENTERPRISE';
+  // Returns true if the subscription status is considered active (not expired/cancelled).
+  bool get isActiveStatus {
+    final s = status.toUpperCase();
+    return s != 'EXPIRED' &&
+        s != 'CANCELLED' && // British spelling (backend)
+        s != 'CANCELED' && // American spelling (Google Play API)
+        s != 'INACTIVE';
+  }
+
+  // A subscription is only premium if the plan AND status are both valid.
+  bool get isPremium {
+    if (!isActiveStatus) return false;
+    final upper = plan.toUpperCase();
+    return upper == 'PREMIUM' || upper == 'ENTERPRISE';
+  }
+
+  bool get isEnterprise => isActiveStatus && plan.toUpperCase() == 'ENTERPRISE';
 }

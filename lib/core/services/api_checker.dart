@@ -22,7 +22,6 @@ class ApiChecker {
   /// Check WRITE (POST/PUT/PATCH/DELETE) response — shows user snackbar
   static void checkWriteApi(Response response) {
     final statusCode = response.statusCode ?? 0;
-    if (statusCode == 401) return; // Handled by interceptor
 
     if (statusCode < 200 || statusCode >= 300) {
       final message = _extractMessage(response, fallback: 'Operation failed');
@@ -33,8 +32,17 @@ class ApiChecker {
   /// Extract error message from response data
   static String _extractMessage(Response response, {required String fallback}) {
     final data = response.data;
-    if (data is Map && data['message'] != null) {
-      return data['message'].toString();
+    if (data is Map) {
+      if (data['message'] != null && data['message'].toString().isNotEmpty) {
+        return data['message'].toString();
+      }
+      if (data['errorMessages'] is List &&
+          (data['errorMessages'] as List).isNotEmpty) {
+        final firstError = (data['errorMessages'] as List).first;
+        if (firstError is Map && firstError['message'] != null) {
+          return firstError['message'].toString();
+        }
+      }
     }
     return response.statusMessage ?? fallback;
   }

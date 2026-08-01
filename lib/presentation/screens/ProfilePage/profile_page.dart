@@ -457,8 +457,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildPremiumPlanCard() {
     final tr = AppLocalizations.of(context)!;
     final sub = profileController.currentSubscription;
-    final planName = sub?.plan ?? 'FREE';
-    final isFree = planName == 'FREE';
+    final isPremium = sub?.isPremium ?? false;
+    final planName = isPremium ? (sub?.plan.toUpperCase() ?? 'FREE') : 'FREE';
+    final isFree = !isPremium;
 
     String expiryText = '';
     if (isFree) {

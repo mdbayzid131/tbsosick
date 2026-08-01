@@ -2,23 +2,17 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/presentation/screens/ProfilePage/controller/subscription_controller.dart';
-import 'package:tbsosick/core/utils/helpers.dart';
 
 class SubscriptionScreen extends GetView<SubscriptionController> {
   const SubscriptionScreen({super.key});
 
-  static const Color bgDark = Colors.white;
-  static const Color cardDark = Colors.white;
-  static const Color cardBorderDark = Color(0xFFE2E8F0);
-  static const Color accentBlue = Color(0xFF9945FF); // AppTheme.primaryColor
-  static const Color accentBlueDark = Color(0xFF7B2FD4);
-  static const Color accentGold = Color(0xFFFFB800);
-  static const Color accentPurple = Color(0xFF9945FF);
-  static const Color emeraldGreen = Color(
-    0xFF9945FF,
-  ); // Unified Brand Purple Accent
-  static const Color textMuted = Color(0xFF64748B);
+  static const Color primaryColor = Color(0xFF9945FF);
+  static const Color cardBorder = Color(0xFFE5E7EB);
+  static const Color textDark = Color(0xFF1F2937);
+  static const Color textMuted = Color(0xFF6B7280);
+  static const Color emeraldGreen = Color(0xFF10B981);
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +25,10 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
           icon: Container(
             padding: EdgeInsets.all(8.w),
             decoration: const BoxDecoration(
-              color: Color(0xFFF1F5F9),
+              color: Color(0xFFF3F4F6),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              Icons.arrow_back_ios_new,
-              color: Colors.black,
-              size: 16.sp,
-            ),
+            child: Icon(Icons.arrow_back_ios_new, color: textDark, size: 16.sp),
           ),
           onPressed: () => Get.back(),
         ),
@@ -47,7 +37,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
           style: GoogleFonts.arimo(
             fontSize: 18.sp,
             fontWeight: FontWeight.w700,
-            color: Colors.black,
+            color: textDark,
           ),
         ),
         centerTitle: true,
@@ -57,7 +47,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
             child: Text(
               'Restore',
               style: GoogleFonts.arimo(
-                color: accentBlue,
+                color: primaryColor,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -67,91 +57,107 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
         ],
       ),
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // Fixed Header & Segmented Toggle Section
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-              child: Column(
-                children: [
-                  // Current Plan Header / Active Banner
-                  _buildCurrentPlanIndicator(context),
-                  SizedBox(height: 8.h),
+            Column(
+              children: [
+                // Header & Segmented Toggle Section
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 4.h,
+                  ),
+                  child: Column(
+                    children: [
+                      // Active Plan Banner or Header
+                      _buildCurrentPlanIndicator(context),
+                      SizedBox(height: 10.h),
 
-                  // Hero Title Section (Only visible for Free Tier users)
-                  Obx(() {
-                    if (controller.currentPlanTier > 0) {
-                      return SizedBox(height: 6.h);
-                    }
-                    return Column(
-                      children: [
-                        Text(
-                          'Upgrade Your Plan',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.arimo(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.black,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          child: Text(
-                            'Unlock premium features and choose the plan that fits your needs.',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.arimo(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: textMuted,
-                              height: 1.3,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                      ],
-                    );
-                  }),
-
-                  // Fixed Segmented Toggle (Monthly / Yearly)
-                  _buildSegmentedToggle(context),
-                ],
-              ),
-            ),
-
-            // Scrollable Content (Plan Cards & Footer)
-            Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return SingleChildScrollView(
-                    physics: const ScrollPhysics(),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 8.h,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // Title (Only visible for Free Tier users)
+                      Obx(() {
+                        if (controller.currentPlanTier > 0) {
+                          return const SizedBox.shrink();
+                        }
+                        return Column(
                           children: [
-                            // Animated Cards View (Only 2 Cards: Premium & Enterprise)
-                            _buildSubscriptionCards(context),
-                            Padding(
-                              padding: EdgeInsets.only(top: 16.h, bottom: 8.h),
-                              child: _buildFooterSection(context),
+                            Text(
+                              'Upgrade Your Plan',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.arimo(
+                                fontSize: 22.sp,
+                                fontWeight: FontWeight.w700,
+                                color: textDark,
+                              ),
                             ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              'Choose the plan that fits your needs.',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.arimo(
+                                fontSize: 13.sp,
+                                color: textMuted,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
                           ],
+                        );
+                      }),
+
+                      // Segmented Toggle (Monthly / Yearly)
+                      _buildSegmentedToggle(context),
+                    ],
+                  ),
+                ),
+
+                // Scrollable Plan Cards & Footer
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        physics: const ScrollPhysics(),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 10.h,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildSubscriptionCards(context),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 16.h,
+                                    bottom: 8.h,
+                                  ),
+                                  child: _buildFooterSection(context),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
+            Obx(() {
+              if (controller.isLoading) {
+                return Container(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
           ],
         ),
       ),
@@ -159,7 +165,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
   }
 
   // ---------------------------------------------------------------------------
-  // 1. Current Plan Header / Active Plan Banner
+  // 1. Current Plan Header / Active Plan Banner (Clean Style)
   // ---------------------------------------------------------------------------
   Widget _buildCurrentPlanIndicator(BuildContext context) {
     return Obx(() {
@@ -173,25 +179,15 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
         final endDate = sub.currentPeriodEnd;
         final formattedDate = endDate != null
             ? '${_getMonthName(endDate.month)} ${endDate.day}, ${endDate.year}'
-            : 'July 28, 2026';
+            : 'N/A';
 
         return Container(
           width: double.infinity,
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF9945FF), Color(0xFF6C36B2)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20.r),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF9945FF).withValues(alpha: 0.3),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            color: const Color(0xFFF5F3FF),
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: const Color(0xFFDDD6FE)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,31 +196,30 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 children: [
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 4.h,
+                      horizontal: 8.w,
+                      vertical: 3.h,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12.r),
+                      color: const Color(0xFFEDE9FE),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           tier == 2
-                              ? Icons.diamond_rounded
-                              : Icons.workspace_premium_rounded,
-                          color: Colors.amber,
+                              ? Icons.diamond_outlined
+                              : Icons.workspace_premium_outlined,
+                          color: primaryColor,
                           size: 14.sp,
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          'ACTIVE SUBSCRIPTION',
+                          'ACTIVE PLAN',
                           style: GoogleFonts.arimo(
                             fontSize: 10.sp,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                            letterSpacing: 0.8,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF5B21B6),
                           ),
                         ),
                       ],
@@ -233,62 +228,49 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                   const Spacer(),
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
+                      horizontal: 8.w,
                       vertical: 3.h,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.r),
+                      color: const Color(0xFFDEF7EC),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Text(
                       sub.status.toUpperCase(),
                       style: GoogleFonts.arimo(
                         fontSize: 10.sp,
-                        fontWeight: FontWeight.w800,
-                        color: emeraldGreen,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF03543F),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: 10.h),
               Text(
-                '$planName ${isYearly ? "(YEARLY)" : "(MONTHLY)"}',
+                '$planName ${isYearly ? "(Yearly)" : "(Monthly)"}',
                 style: GoogleFonts.arimo(
                   fontSize: 18.sp,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  color: textDark,
                 ),
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: 4.h),
               Row(
                 children: [
-                  Icon(
-                    Icons.calendar_today_rounded,
-                    color: Colors.white.withValues(alpha: 0.8),
-                    size: 13.sp,
+                  Text(
+                    'Renews on: $formattedDate',
+                    style: GoogleFonts.arimo(fontSize: 12.sp, color: textMuted),
                   ),
-                  SizedBox(width: 6.w),
-                  Expanded(
-                    child: Text(
-                      'Renews on: $formattedDate',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.arimo(
-                        fontSize: 12.sp,
-                        color: Colors.white.withValues(alpha: 0.9),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
+                  const Spacer(),
                   GestureDetector(
                     onTap: controller.manageSubscription,
                     child: Text(
                       'Manage',
                       style: GoogleFonts.arimo(
                         fontSize: 12.sp,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        color: primaryColor,
                         decoration: TextDecoration.underline,
                       ),
                     ),
@@ -300,13 +282,13 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
         );
       }
 
-      // Default Free User Pill
+      // Free Plan indicator
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
+          color: const Color(0xFFF9FAFB),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: cardBorder),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -329,7 +311,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
               style: GoogleFonts.arimo(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w700,
-                color: Colors.black,
+                color: textDark,
               ),
             ),
           ],
@@ -357,45 +339,33 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
   }
 
   // ---------------------------------------------------------------------------
-  // 2. Segmented Toggle (Monthly vs Yearly)
+  // 2. Segmented Toggle (Clean Minimal Style)
   // ---------------------------------------------------------------------------
   Widget _buildSegmentedToggle(BuildContext context) {
     return Container(
-      height: 44.h,
+      height: 42.h,
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F5F9),
-        borderRadius: BorderRadius.circular(22.r),
-        border: Border.all(color: cardBorderDark),
+        color: const Color(0xFFF3F4F6),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: TabBar(
         controller: controller.tabController,
         indicatorSize: TabBarIndicatorSize.tab,
         indicator: BoxDecoration(
-          borderRadius: BorderRadius.circular(19.r),
-          gradient: const LinearGradient(
-            colors: [Color(0xFF9945FF), Color(0xFF7B2FD4)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: accentBlue.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(10.r),
+          color: primaryColor,
         ),
         labelColor: Colors.white,
         unselectedLabelColor: textMuted,
         dividerColor: Colors.transparent,
         labelStyle: GoogleFonts.arimo(
           fontSize: 13.sp,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w600,
         ),
         unselectedLabelStyle: GoogleFonts.arimo(
           fontSize: 13.sp,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
         ),
         tabs: [
           const Tab(text: 'Monthly'),
@@ -408,15 +378,15 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981),
-                    borderRadius: BorderRadius.circular(10.r),
+                    color: const Color(0xFFDEF7EC),
+                    borderRadius: BorderRadius.circular(6.r),
                   ),
                   child: Text(
                     'Save 25%',
                     style: GoogleFonts.arimo(
                       fontSize: 10.sp,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF03543F),
                     ),
                   ),
                 ),
@@ -429,7 +399,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
   }
 
   // ---------------------------------------------------------------------------
-  // 3. Subscription Cards Display (Only 2 Cards: Premium & Enterprise)
+  // 3. Subscription Cards Display
   // ---------------------------------------------------------------------------
   Widget _buildSubscriptionCards(BuildContext context) {
     return AnimatedBuilder(
@@ -441,7 +411,6 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
             : controller.monthlyProducts;
 
         return Obx(() {
-          // Dynamic pricing or elegant fallbacks
           String premiumPrice = isYearly ? '\$79.99' : '\$9.99';
           String enterprisePrice = isYearly ? '\$149.99' : '\$19.99';
 
@@ -472,7 +441,6 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
 
           return Column(
             children: [
-              // Premium Card (Index 1)
               _buildPlanCard(
                 context,
                 planIndex: 1,
@@ -481,9 +449,9 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 period: isYearly ? '/year' : '/month',
                 subtitle: 'Essential power for surgical professionals',
                 badgeText: 'Most Popular',
-                badgeColor: accentBlue,
-                iconData: Icons.workspace_premium_rounded,
-                accentColor: accentBlue,
+                badgeBg: const Color(0xFFF3E8FF),
+                badgeTextColor: const Color(0xFF6B21A8),
+                iconData: Icons.workspace_premium_outlined,
                 features: const [
                   '20 Preference Cards',
                   'Calendar Sync & Public Library Access',
@@ -494,13 +462,9 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 isDisabled: isPremiumDisabled,
                 ctaText: isPremiumCurrent
                     ? 'Current Plan'
-                    : (isPremiumDisabled
-                          ? 'Plan Active'
-                          : 'Get Premium'),
+                    : (isPremiumDisabled ? 'Plan Active' : 'Get Premium'),
               ),
-              SizedBox(height: 10.h),
-
-              // Enterprise Card (Index 2)
+              SizedBox(height: 12.h),
               _buildPlanCard(
                 context,
                 planIndex: 2,
@@ -509,9 +473,9 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 period: isYearly ? '/year' : '/month',
                 subtitle: 'Unlimited access & advanced team features',
                 badgeText: 'Best Value',
-                badgeColor: accentPurple,
-                iconData: Icons.diamond_rounded,
-                accentColor: accentPurple,
+                badgeBg: const Color(0xFFE0E7FF),
+                badgeTextColor: const Color(0xFF3730A3),
+                iconData: Icons.diamond_outlined,
                 features: const [
                   'Unlimited Preference Cards',
                   'Advanced Team Collaboration & Sharing',
@@ -536,7 +500,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
   }
 
   // ---------------------------------------------------------------------------
-  // 4. Individual Plan Card Widget
+  // 4. Individual Plan Card Widget (Clean & Minimal)
   // ---------------------------------------------------------------------------
   Widget _buildPlanCard(
     BuildContext context, {
@@ -546,62 +510,44 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
     required String period,
     required String subtitle,
     required String badgeText,
-    required Color badgeColor,
+    required Color badgeBg,
+    required Color badgeTextColor,
     required IconData iconData,
-    required Color accentColor,
     required List<String> features,
     required bool isSelected,
     required bool isCurrent,
     required bool isDisabled,
     required String ctaText,
   }) {
-    final borderColor = isCurrent
-        ? emeraldGreen
-        : (isSelected && !isDisabled ? accentColor : cardBorderDark);
+    final isHighlight = (isSelected || isCurrent) && !isDisabled;
 
-    final cardWidget = GestureDetector(
+    return GestureDetector(
       onTap: () => controller.selectPlan(planIndex),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        padding: EdgeInsets.all(14.w),
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: cardDark,
-          borderRadius: BorderRadius.circular(20.r),
+          color: isHighlight ? const Color(0xFFFAF5FF) : Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: borderColor,
-            width: (isSelected || isCurrent) ? 2.w : 1.w,
+            color: isHighlight ? primaryColor : cardBorder,
+            width: isHighlight ? 1.5.w : 1.w,
           ),
-          boxShadow: isSelected && !isDisabled
-              ? [
-                  BoxShadow(
-                    color: accentColor.withValues(alpha: 0.15),
-                    blurRadius: 16,
-                    spreadRadius: 1,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : [],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Badge & Icon Row
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.all(10.w),
+                  padding: EdgeInsets.all(8.w),
                   decoration: BoxDecoration(
-                    color: accentColor.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(14.r),
-                    border: Border.all(
-                      color: accentColor.withValues(alpha: 0.3),
-                    ),
+                    color: const Color(0xFFF3E8FF),
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
-                  child: Icon(iconData, color: accentColor, size: 22.sp),
+                  child: Icon(iconData, color: primaryColor, size: 20.sp),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: 10.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -609,15 +555,14 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                       Text(
                         title,
                         style: GoogleFonts.arimo(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.black,
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w700,
+                          color: textDark,
                         ),
                       ),
-                      SizedBox(height: 2.h),
                       Text(
                         subtitle,
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.arimo(
                           fontSize: 11.sp,
@@ -627,43 +572,39 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                     ],
                   ),
                 ),
-                SizedBox(width: 8.w),
                 if (isCurrent)
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 4.h,
+                      horizontal: 8.w,
+                      vertical: 3.h,
                     ),
                     decoration: BoxDecoration(
-                      color: emeraldGreen.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(
-                        color: emeraldGreen.withValues(alpha: 0.4),
-                      ),
+                      color: const Color(0xFFDEF7EC),
+                      borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Text(
                       'Current',
                       style: GoogleFonts.arimo(
-                        fontSize: 11.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w700,
-                        color: emeraldGreen,
+                        color: const Color(0xFF03543F),
                       ),
                     ),
                   )
                 else if (isDisabled)
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 4.h,
+                      horizontal: 8.w,
+                      vertical: 3.h,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(12.r),
+                      color: const Color(0xFFF3F4F6),
+                      borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Text(
                       'Lower Tier',
                       style: GoogleFonts.arimo(
-                        fontSize: 11.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w600,
                         color: textMuted,
                       ),
@@ -672,80 +613,60 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 else
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 4.h,
+                      horizontal: 8.w,
+                      vertical: 3.h,
                     ),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [badgeColor, badgeColor.withValues(alpha: 0.8)],
-                      ),
-                      borderRadius: BorderRadius.circular(12.r),
+                      color: badgeBg,
+                      borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Text(
                       badgeText,
                       style: GoogleFonts.arimo(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w700,
+                        color: badgeTextColor,
                       ),
                     ),
                   ),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 12.h),
 
-            // Price Display
+            // Price Row
             Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                Flexible(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      price,
-                      style: GoogleFonts.arimo(
-                        fontSize: 26.sp,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.black,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
+                Text(
+                  price,
+                  style: GoogleFonts.arimo(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w800,
+                    color: textDark,
                   ),
                 ),
                 SizedBox(width: 4.w),
                 Text(
                   period,
-                  style: GoogleFonts.arimo(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w500,
-                    color: textMuted,
-                  ),
+                  style: GoogleFonts.arimo(fontSize: 13.sp, color: textMuted),
                 ),
               ],
             ),
-            SizedBox(height: 8.h),
-            Container(height: 1.h, color: cardBorderDark),
-            SizedBox(height: 8.h),
+            SizedBox(height: 10.h),
+            const Divider(height: 1, color: cardBorder),
+            SizedBox(height: 10.h),
 
-            // Feature Bullets
+            // Features
             ...features.map(
               (feature) => Padding(
                 padding: EdgeInsets.only(bottom: 6.h),
                 child: Row(
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(2.w),
-                      decoration: BoxDecoration(
-                        color: emeraldGreen.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.check_rounded,
-                        color: emeraldGreen,
-                        size: 13.sp,
-                      ),
+                    Icon(
+                      Icons.check_circle_rounded,
+                      color: emeraldGreen,
+                      size: 16.sp,
                     ),
                     SizedBox(width: 8.w),
                     Expanded(
@@ -753,8 +674,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                         feature,
                         style: GoogleFonts.arimo(
                           fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF1E293B),
+                          color: textDark,
                         ),
                       ),
                     ),
@@ -762,58 +682,34 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 ),
               ),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 12.h),
 
-            // CTA Button
+            // CTA Button (Clean Flat Style)
             SizedBox(
               width: double.infinity,
               height: 42.h,
               child: ElevatedButton(
-                onPressed: (isCurrent || isDisabled)
+                onPressed: (isCurrent || isDisabled || controller.isLoading)
                     ? null
                     : () {
                         controller.selectPlan(planIndex);
                         controller.subscribe();
                       },
-                style:
-                    ElevatedButton.styleFrom(
-                      elevation: isSelected && !isDisabled ? 6 : 0,
-                      shadowColor: accentColor.withValues(alpha: 0.4),
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      backgroundColor: Colors.transparent,
-                      disabledBackgroundColor: const Color(0xFFF1F5F9),
-                    ).copyWith(
-                      elevation: WidgetStateProperty.resolveWith(
-                        (states) =>
-                            states.contains(WidgetState.disabled) ? 0 : 4,
-                      ),
-                    ),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: (isCurrent || isDisabled)
-                        ? null
-                        : const LinearGradient(
-                            colors: [Color(0xFF9945FF), Color(0xFF7B2FD4)],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                    borderRadius: BorderRadius.circular(16.r),
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: (isCurrent || isDisabled)
+                      ? const Color(0xFFF3F4F6)
+                      : primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      ctaText,
-                      style: GoogleFonts.arimo(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w700,
-                        color: (isCurrent || isDisabled)
-                            ? textMuted
-                            : Colors.white,
-                      ),
-                    ),
+                ),
+                child: Text(
+                  ctaText,
+                  style: GoogleFonts.arimo(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: (isCurrent || isDisabled) ? textMuted : Colors.white,
                   ),
                 ),
               ),
@@ -822,12 +718,10 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
         ),
       ),
     );
-
-    return cardWidget;
   }
 
   // ---------------------------------------------------------------------------
-  // 4. Footer Section (Security, Microcopy, Policy Links)
+  // 5. Footer Section
   // ---------------------------------------------------------------------------
   Widget _buildFooterSection(BuildContext context) {
     return Column(
@@ -843,21 +737,19 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
             ),
           ],
         ),
-        SizedBox(height: 6.h),
+        SizedBox(height: 4.h),
         Text(
           'Auto-renews until canceled. Cancel anytime in store settings.',
           textAlign: TextAlign.center,
-          style: GoogleFonts.arimo(
-            fontSize: 11.sp,
-            color: textMuted.withValues(alpha: 0.7),
-          ),
+          style: GoogleFonts.arimo(fontSize: 11.sp, color: textMuted),
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: 12.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: () => _launchLegalUrl('https://smrtscrub.app/terms'),
+              onTap: () =>
+                  controller.launchLegalUrl('https://smrtscrub.app/terms'),
               child: Text(
                 'Terms of Service',
                 style: GoogleFonts.arimo(
@@ -875,7 +767,8 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
               ),
             ),
             GestureDetector(
-              onTap: () => _launchLegalUrl('https://smrtscrub.app/privacy'),
+              onTap: () =>
+                  controller.launchLegalUrl('https://smrtscrub.app/privacy'),
               child: Text(
                 'Privacy Policy',
                 style: GoogleFonts.arimo(
@@ -887,11 +780,70 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
             ),
           ],
         ),
+        Obx(() {
+          final hasActiveSub = controller.currentPlanTier > 0;
+
+          if (!Get.currentRoute.contains(AppRoutes.selectPackage)) {
+            return const SizedBox.shrink();
+          }
+
+          return Padding(
+            padding: EdgeInsets.only(top: 14.h),
+            child: SizedBox(
+              width: double.infinity,
+              height: 44.h,
+              child: hasActiveSub
+                  ? ElevatedButton(
+                      onPressed: () =>
+                          Get.toNamed(AppRoutes.whatYourSpeciality),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Continue',
+                            style: GoogleFonts.arimo(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(width: 6.w),
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                            color: Colors.white,
+                            size: 18.sp,
+                          ),
+                        ],
+                      ),
+                    )
+                  : OutlinedButton(
+                      onPressed: controller.chooseFreePlanAndProceed,
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        side: const BorderSide(color: primaryColor, width: 1.2),
+                      ),
+                      child: Text(
+                        'Continue with Free Plan',
+                        style: GoogleFonts.arimo(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+            ),
+          );
+        }),
       ],
     );
-  }
-
-  void _launchLegalUrl(String url) {
-    Helpers.info('Legal Link Tapped: $url');
   }
 }

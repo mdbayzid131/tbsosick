@@ -79,12 +79,15 @@ class BottomNabBarController extends GetxController {
       getLibraryCards(showLoading: true);
     }, time: const Duration(milliseconds: 500));
 
-    // Watch subscription changes to automatically refresh library screen when user becomes paid
+    // Watch subscription changes to automatically refresh library screen
     ever(Get.find<IapService>().currentSubscription, (sub) {
-    
       if (sub?.isPremium == true) {
+        // User just became premium → clear restriction and refresh
         isLibrarySubscriptionInactive.value = false;
         getLibraryCards(showLoading: false);
+      } else {
+        // Subscription expired, cancelled, or cleared → enforce restriction
+        isLibrarySubscriptionInactive.value = true;
       }
     });
   }

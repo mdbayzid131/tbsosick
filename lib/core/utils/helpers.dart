@@ -47,7 +47,6 @@ class Helpers {
   }
 
   // ──────────────────── LOGGING ────────────────────
-  
 
   /// General debug log (only in debug mode)
   static void debug(String message) {
@@ -119,11 +118,9 @@ class Helpers {
     }
   }
 
-  // ──────────────────── SNACKBAR (DUAL MODE) ────────────────────
+  // ──────────────────── GETX SNACKBAR ────────────────────
 
-  /// Show a snackbar.
-  /// [useGetxSnackbar] = true (default) → uses Get.snackbar with type-specific colors.
-  /// [useGetxSnackbar] = false → uses the premium blurred iPhone-style snackbar.
+  /// Displays default Get.snackbar without icon and without mandatory title.
   static void showCustomSnackBar(
     String message, {
     String? title,
@@ -133,173 +130,62 @@ class Helpers {
   }) {
     final Map<String, dynamic> config = _getSnackBarConfig(type);
 
-    if (useGetxSnackbar) {
-      // ── GetX Snackbar (default) ──────────────────────────────
-      Get.snackbar(
-        title ?? config['defaultTitle'] as String,
-        message,
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: (config['bg'] as Color).withValues(alpha: 0.92),
-        colorText: Colors.white,
-        icon: Icon(
-          config['icon'] as IconData,
-          color: Colors.white,
-          size: 26.sp,
-        ),
-        duration: duration,
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.easeOutCubic,
-        reverseAnimationCurve: Curves.easeInCubic,
-        animationDuration: const Duration(milliseconds: 450),
-        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        borderRadius: 14.r,
-        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-        titleText: Text(
-          title ?? config['defaultTitle'] as String,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
-        ),
-        messageText: Text(
-          message,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w400,
-            color: Colors.white.withValues(alpha: 0.9),
-          ),
-        ),
-      );
-    } else {
-      // ── Custom Blur / Glassmorphism Snackbar ─────────────────
-      Get.rawSnackbar(
-        messageText: ClipRRect(
-          borderRadius: BorderRadius.circular(16.r),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              height: 64.h,
-              decoration: BoxDecoration(
-                color: (config['bg'] as Color).withValues(alpha: 0.7),
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  // Left Icon Area
-                  Container(
-                    width: 56.w,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      color: (config['iconBg'] as Color).withValues(alpha: 0.8),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16.r),
-                        bottomLeft: Radius.circular(16.r),
-                      ),
-                    ),
-                    child: Icon(
-                      config['icon'],
-                      color: Colors.white,
-                      size: 28.sp,
-                    ),
-                  ),
-                  SizedBox(width: 16.w),
-                  // Text Content
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title ?? config['defaultTitle'],
-                          style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          message,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white.withValues(alpha: 0.9),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Close Button
-                  IconButton(
-                    onPressed: () => Get.back(),
-                    icon: Icon(
-                      Icons.close_rounded,
-                      color: Colors.white.withValues(alpha: 0.5),
-                      size: 20.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        duration: duration,
-        isDismissible: true,
-        animationDuration: const Duration(milliseconds: 500),
-        snackStyle: SnackStyle.FLOATING,
-      );
+    if (Get.isSnackbarOpen) {
+      Get.closeCurrentSnackbar();
     }
+
+    final bool hasTitle = title != null && title.trim().isNotEmpty;
+
+    Get.snackbar(
+      hasTitle ? title : '',
+      message,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: (config['bg'] as Color).withValues(alpha: 0.92),
+      colorText: Colors.white,
+      duration: duration,
+      isDismissible: true,
+      dismissDirection: DismissDirection.horizontal,
+      forwardAnimationCurve: Curves.easeOutCubic,
+      reverseAnimationCurve: Curves.easeInCubic,
+      animationDuration: const Duration(milliseconds: 400),
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      borderRadius: 14.r,
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+      titleText: hasTitle
+          ? Text(
+              title,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            )
+          : const SizedBox.shrink(),
+      messageText: Text(
+        message,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: 13.sp,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
 
   static Map<String, dynamic> _getSnackBarConfig(SnackBarType type) {
     switch (type) {
       case SnackBarType.success:
-        return {
-          'bg': const Color(0xFF10B981),
-          'iconBg': const Color(0xFF059669),
-          'icon': Icons.check_rounded,
-          'defaultTitle': 'Success',
-        };
+        return {'bg': const Color(0xFF10B981)};
       case SnackBarType.error:
-        return {
-          'bg': const Color(0xFFEF4444),
-          'iconBg': const Color(0xFFDC2626),
-          'icon': Icons.block_rounded,
-          'defaultTitle': 'Error',
-        };
+        return {'bg': const Color(0xFFEF4444)};
       case SnackBarType.warning:
-        return {
-          'bg': const Color(0xFFF59E0B),
-          'iconBg': const Color(0xFFD97706),
-          'icon': Icons.warning_rounded,
-          'defaultTitle': 'Warning',
-        };
+        return {'bg': const Color(0xFFF59E0B)};
       case SnackBarType.secondary:
-        return {
-          'bg': const Color(0xFF3B82F6),
-          'iconBg': const Color(0xFF2563EB),
-          'icon': Icons.notifications_none_rounded,
-          'defaultTitle': 'Secondary',
-        };
+        return {'bg': const Color(0xFF3B82F6)};
       case SnackBarType.info:
-        return {
-          'bg': const Color(0xFF9CA3AF),
-          'iconBg': const Color(0xFF6B7280),
-          'icon': Icons.info_outline_rounded,
-          'defaultTitle': 'Info',
-        };
+        return {'bg': const Color(0xFF6366F1)};
     }
   }
 

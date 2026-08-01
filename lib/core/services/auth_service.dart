@@ -253,6 +253,14 @@ class AuthService extends GetxService {
       );
     }
 
+    final dynamic rawUserId = authData['user']?['id'] ??
+        authData['user']?['_id'] ??
+        authData['userId'] ??
+        authData['id'];
+    if (rawUserId != null) {
+      await saveUserId(rawUserId.toString());
+    }
+
     final bool? isOnboardingCompleted = authData['isOnboardingCompleted'];
     if (isOnboardingCompleted != null) {
       await StorageService.setBool(
