@@ -38,7 +38,7 @@ class SplashController extends GetxController {
         false;
 
     if (quickSetupCompleted) {
-      Get.offAllNamed(AppRoutes.welcomePage);
+      Get.offAllNamed(AppRoutes.bottomNavBar);
     } else {
       Get.offAllNamed(AppRoutes.welcomePage);
     }
