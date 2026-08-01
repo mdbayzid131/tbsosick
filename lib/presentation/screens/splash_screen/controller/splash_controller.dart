@@ -4,7 +4,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tbsosick/config/routes/app_pages.dart';
 import 'package:tbsosick/core/services/storage_service.dart';
 
-
 class SplashController extends GetxController {
   final RxString appVersion = ''.obs;
 
