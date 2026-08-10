@@ -357,7 +357,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get featureEmailSupport => 'E-Mail-Unterstützung';
 
   @override
-  String get featurePremiumCards => '20 Präferenzkarten';
+  String get featurePremiumCards => '20 Präferenzkarten / Monat';
 
   @override
   String get featureBasicCalendar => 'Basis-Kalender';

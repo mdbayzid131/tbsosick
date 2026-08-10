@@ -796,7 +796,7 @@ abstract class AppLocalizations {
   /// No description provided for @featurePremiumCards.
   ///
   /// In en, this message translates to:
-  /// **'20 preference cards'**
+  /// **'20 preference cards / month'**
   String get featurePremiumCards;
 
   /// No description provided for @featureBasicCalendar.

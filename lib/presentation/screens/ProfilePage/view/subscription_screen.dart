@@ -453,7 +453,7 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                 badgeTextColor: const Color(0xFF6B21A8),
                 iconData: Icons.workspace_premium_outlined,
                 features: const [
-                  '20 Preference Cards',
+                  '20 Preference Cards / Month',
                   'Calendar Sync & Public Library Access',
                   'Standard Search & Email Support',
                 ],

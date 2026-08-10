@@ -385,7 +385,7 @@ class PdfService {
         ),
         pw.SizedBox(height: 2),
         pw.Text(
-          'https://smrtscrub.app',
+          'www.smrtscrub.com',
           style: const pw.TextStyle(
             fontSize: 8,
             color: PdfColors.grey500,

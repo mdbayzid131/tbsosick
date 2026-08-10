@@ -550,7 +550,7 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 8.h),
             _buildFeatureItem('Email support'),
           ] else if (planName == 'PREMIUM') ...[
-            _buildFeatureItem('20 preference cards'),
+            _buildFeatureItem('20 preference cards / month'),
             SizedBox(height: 8.h),
             _buildFeatureItem('Basic calendar'),
             SizedBox(height: 8.h),
