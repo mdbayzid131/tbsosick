@@ -119,3 +119,21 @@ flutter:
     - google_fonts/Manrope-Bold.ttf
     - google_fonts/Roboto-Regular.ttf
     - shorebird.yaml
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/app_icon.png"
+  remove_alpha_ios: true
+  background_color_ios: "#FFFFFF"
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/images/native_splash.png"
+  android: true
+  ios: true
+  web: false
+  android_12:
+    image: "assets/images/native_splash.png"
+    color: "#FFFFFF"
+
